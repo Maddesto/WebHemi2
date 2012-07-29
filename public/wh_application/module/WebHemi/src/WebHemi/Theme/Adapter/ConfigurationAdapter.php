@@ -22,7 +22,7 @@
 
 namespace WebHemi\Theme\Adapter;
 
-use WebHemi\Theme\Adapter\AbstractAdapter;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * WebHemi Adapter
@@ -33,8 +33,20 @@ use WebHemi\Theme\Adapter\AbstractAdapter;
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class ConfigurationAdapter extends AbstractAdapter
+class ConfigurationAdapter
 {
+	/** @var ServiceManager $servicelocator */
+	protected $serviceLocator;
+
+	/**
+	 * Constructor
+	 *
+	 * @param ServiceLocatorInterface $serviceLocator
+	 */
+	public function __construct(ServiceManager $serviceLocator)
+	{
+		$this->serviceLocator = $serviceLocator;
+	}
 
 	/**
 	 * Get the name of the theme from the adapter
@@ -48,4 +60,14 @@ class ConfigurationAdapter extends AbstractAdapter
 		return isset($config['wh_themes']['current_theme']) ? $config['wh_themes']['current_theme'] : null;
 	}
 
+	/**
+	 * Set the name of the theme in the adapter
+	 *
+	 * @param string $themeName    The filtered name of the theme
+	 * @return bool
+	 */
+	public function setTheme($themeName)
+	{
+		return false;
+	}
 }

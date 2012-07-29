@@ -14,56 +14,39 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Theme_Adapter
+ * @package    WebHemi_Theme
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Theme\Adapter;
+namespace WebHemi\Service;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\FactoryInterface,
+	Zend\ServiceManager\ServiceLocatorInterface,
+	WebHemi\Theme\ThemeManager;
 
 /**
- * WebHemi Adapter abstraction
+ * WebHemi theme manager factory
  *
  * @category   WebHemi
- * @package    WebHemi_Theme_Adapter
+ * @package    WebHemi_Theme
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-abstract class AbstractAdapter
+class ThemeServiceFactory implements FactoryInterface
 {
-	/** @var Zend\ServiceManager\ServiceLocatorInterface $servicelocator */
-	protected $serviceLocator;
-
 	/**
-	 * Constructor
+	 * Factory method for WebHemi theme manager service
 	 *
-	 * @param ServiceLocatorInterface $serviceLocator
+	 * @param  ServiceLocatorInterface $serviceLocator
+	 * @return WebHemi\ServiceManager\ThemeManager
 	 */
-	public function __construct(ServiceLocatorInterface $serviceLocator)
+	public function createService(ServiceLocatorInterface $serviceLocator)
 	{
-		$this->serviceLocator = $serviceLocator;
+		$config  = $serviceLocator->get('Configuration');
+		$manager = ThemeManager::factory($config['wh_themes'], $serviceLocator);
+		return $manager;
 	}
-
-	/**
-	 * Get the name of the theme from the adapter
-	 *
-	 * @return string
-	 */
-	abstract public function getTheme();
-
-	/**
-	 * Set the name of the theme in the adapter if possible
-	 *
-	 * @param string $themeName    The filtered name of the theme
-	 * @return bool
-	 */
-	public function setTheme($themeName)
-	{
-		return false;
-	}
-
 }

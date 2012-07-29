@@ -61,7 +61,7 @@ return array(
 	),
 	'service_manager' => array(
 		'factories' => array(
-			'theme_manager' => 'WebHemi\Theme\ThemeServiceFactory'
+			'theme_manager' => 'WebHemi\Service\ThemeServiceFactory'
 		),
 	),
 	'controllers' => array(
