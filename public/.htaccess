@@ -1,0 +1,26 @@
+SetEnvIf Host .*\.localhost APPLICATION_ENV=development
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+	SetEnv APPLICATION_ROUTING rewrite
+	RewriteEngine On
+	RewriteBase /
+
+	RewriteCond %{REQUEST_FILENAME} -s [OR]
+	RewriteCond %{REQUEST_FILENAME} -l [OR]
+	RewriteCond %{REQUEST_FILENAME} -d
+	RewriteRule ^.*$ - [NC,L]
+	RewriteRule ^.*$ index.php [NC,L]
+</IfModule>
+<IfModule !mod_rewrite.c>
+	SetEnv APPLICATION_ROUTING query_string
+</IfModule>
+
+SetEnvIf Host .*\.localhost php_value xdebug.remote_enable 1
+SetEnvIf Host .*\.localhost php_value xdebug.remote_host www.webhemi.localhost
+SetEnvIf Host .*\.localhost php_value xdebug.auto_profile 1
+SetEnvIf Host .*\.localhost php_value xdebug.profiler_enable 1
+SetEnvIf Host .*\.localhost php_value xdebug.auto_trace 1
+
+
