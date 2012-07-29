@@ -35,6 +35,8 @@ Installation
 
 1. Clone this project's `public` folder into your website's document root. It is recommended that the target folder to be empty before you put WebHemi's contents into it.
 2. Clone the [Zend Framework 2](https://github.com/zendframework/zf2) project into `wh_application/venor` folder
+
 _In future_
-3. Import the SQL schema located in `schema/install.sql`.
-4. Call `http://yourdomain.org/install` to configure your site
+
+- Import the SQL schema located in `schema/install.sql`.
+- Call `http://yourdomain.org/install` to configure your site
