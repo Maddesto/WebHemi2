@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WebHemi
  *
@@ -19,65 +20,64 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 return array(
-    'wh_themes' => array(
-        'current_theme' => 'silver',
-        'theme_paths'   => array(
-            WEB_ROOT . '/wh_themes/'
-        ),
-        'adapters' => array(
-            'WebHemi\Theme\Adapter\ConfigurationAdapter',
-        ),
-    ),
+	'wh_themes' => array(
+		'current_theme' => 'silver',
+		'theme_paths' => array(
+			WEB_ROOT . '/wh_themes/'
+		),
+		'adapters' => array(
+			'WebHemi\Theme\Adapter\ConfigurationAdapter',
+		),
+	),
 	'router' => array(
-        'routes' => array(
+		'routes' => array(
 			// website application
-            'website' => array(
-                'type' => 'Zend\Mvc\Router\Http\Literal',
-                'options' => array(
-                    'route'    => '/',
-                    'defaults' => array(
+			'website' => array(
+				'type' => 'Zend\Mvc\Router\Http\Literal',
+				'options' => array(
+					'route' => '/',
+					'defaults' => array(
 						'__NAMESPACE__' => 'WebHemi\Controller\Website',
-                        'controller'    => 'Index',
-                        'action'        => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/[:controller[/:action]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'service_manager' => array(
-        'factories' => array(
-            'theme_manager' => 'WebHemi\Theme\ThemeServiceFactory'
-        ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
-            'WebHemi\Controller\Website\Index' => 'WebHemi\Controller\Website\IndexController'
-        ),
-    ),
-
+						'controller' => 'Index',
+						'action' => 'index',
+					),
+				),
+				'may_terminate' => true,
+				'child_routes' => array(
+					'default' => array(
+						'type' => 'Segment',
+						'options' => array(
+							'route' => '/[:controller[/:action]]',
+							'constraints' => array(
+								'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+								'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							),
+							'defaults' => array(
+							),
+						),
+					),
+				),
+			),
+		),
+	),
+	'service_manager' => array(
+		'factories' => array(
+			'theme_manager' => 'WebHemi\Theme\ThemeServiceFactory'
+		),
+	),
+	'controllers' => array(
+		'invokables' => array(
+			'WebHemi\Controller\Website\Index' => 'WebHemi\Controller\Website\IndexController'
+		),
+	),
 	'view_manager' => array(
-        'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
-        'exception_template'       => 'error/index',
-        'template_path_stack' => array(
-           'website' => __DIR__ . '/../view/website',
-        ),
-    ),
+		'display_not_found_reason' => true,
+		'display_exceptions' => true,
+		'doctype' => 'HTML5',
+		'not_found_template' => 'error/404',
+		'exception_template' => 'error/index',
+		'template_path_stack' => array(
+			'website' => __DIR__ . '/../view/website',
+		),
+	),
 );
