@@ -19,10 +19,11 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
 namespace WebHemi\Theme;
 
 use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface,
+	Zend\ServiceManager\ServiceLocatorInterface,
 	WebHemi\Theme\ThemeManager;
 
 /**
@@ -36,16 +37,18 @@ use Zend\ServiceManager\FactoryInterface,
  */
 class ThemeServiceFactory implements FactoryInterface
 {
-    /**
-     * Factory method for WebHemi theme manager service
-     *
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return WebHemi\ServiceManager\ThemeManager
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $config  = $serviceLocator->get('Configuration');
-        $manager = ThemeManager::factory($config['wh_themes'], $serviceLocator);
-        return $manager;
-    }
+
+	/**
+	 * Factory method for WebHemi theme manager service
+	 *
+	 * @param  ServiceLocatorInterface $serviceLocator
+	 * @return WebHemi\ServiceManager\ThemeManager
+	 */
+	public function createService(ServiceLocatorInterface $serviceLocator)
+	{
+		$config = $serviceLocator->get('Configuration');
+		$manager = ThemeManager::factory($config['wh_themes'], $serviceLocator);
+		return $manager;
+	}
+
 }

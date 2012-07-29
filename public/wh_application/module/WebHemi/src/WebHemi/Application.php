@@ -19,6 +19,7 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
 namespace WebHemi;
 
 /**
@@ -40,7 +41,6 @@ final class Application
 
 	/** @var WebHemi\Application */
 	public static $instance = null;
-
 	/** @var array   A colletcion of configurations */
 	private $configs;
 
@@ -54,19 +54,19 @@ final class Application
 		$this->setPaths();
 
 		// Define current application module
-		list($subdomain, $domain) = explode('.',$_SERVER['HTTP_HOST'],2);
+		list($subdomain, $domain) = explode('.', $_SERVER['HTTP_HOST'], 2);
 		// If the address is built only from 'domain.tld', then subdomain should be handled as 'www'
-		if(strpos($domain, '.') === false) {
+		if (strpos($domain, '.') === false) {
 			$subdomain = 'www';
 		}
-		list(,$subdir)   = explode('/',$_SERVER['REQUEST_URI'],3);
-		$modules         = require_once APPLICATION_PATH . '/config/application.modules.config.php';
-		$module          = false;
+		list(, $subdir) = explode('/', $_SERVER['REQUEST_URI'], 3);
+		$modules = require_once APPLICATION_PATH . '/config/application.modules.config.php';
+		$module = false;
 
 		// we run through the available application-modules
 		foreach ($modules as $moduleName => $moduleData) {
 			// the default is the website-module
-			if($moduleData['path'] == 'www' && $subdomain == 'www') {
+			if ($moduleData['path'] == 'www' && $subdomain == 'www') {
 				$module = $moduleName;
 				break;
 			}
@@ -82,7 +82,7 @@ final class Application
 			}
 			else {
 				// subdomain-based modules
-				if($moduleData['type'] == 'subdomain'
+				if ($moduleData['type'] == 'subdomain'
 						&& $moduleData['path'] == $subdomain
 				) {
 					$module = $moduleName;
@@ -91,7 +91,7 @@ final class Application
 			}
 		}
 		defined('APPLICATION_MODULE')
-			|| define('APPLICATION_MODULE', ($module ? $module : 'Website'));
+				|| define('APPLICATION_MODULE', ($module ? $module : 'Website'));
 
 		$this->setConfig('Application', APPLICATION_PATH . '/config/application.config.php');
 		$this->checkZendFrameworkVersion();
@@ -156,7 +156,7 @@ final class Application
 					$this->configs[$name] = $config;
 				}
 				else {
-					$this->configs[$name] = array_merge_recursive($this->configs[$name],  $config);
+					$this->configs[$name] = array_merge_recursive($this->configs[$name], $config);
 				}
 			}
 			else {
@@ -197,7 +197,7 @@ final class Application
 		if (!class_exists('Zend\Version')
 				|| \Zend\Version::compareVersion(self::MINIMUM_ZF_REQUIREMENT) > 0) {
 			throw new \Exception('<b>Your Zend Framework version is below required!'
-				. ' (' . (\Zend\Version::VERSION) . ' vs. ' . self::MINIMUM_ZF_REQUIREMENT . ')</b>');
+					. ' (' . (\Zend\Version::VERSION) . ' vs. ' . self::MINIMUM_ZF_REQUIREMENT . ')</b>');
 		}
 	}
 
@@ -214,7 +214,7 @@ final class Application
 			'Zend\Loader\StandardAutoloader' => array(
 				'namespaces' => array(
 					'WebHemi' => APPLICATION_PATH . '/module/WebHemi',
-					'Zend'    => ZF2_PATH,
+					'Zend' => ZF2_PATH,
 				),
 				'autoregister_zf' => true,
 				'fallback_autoloader' => true,
@@ -252,4 +252,5 @@ final class Application
 
 		return self::$instance;
 	}
+
 }

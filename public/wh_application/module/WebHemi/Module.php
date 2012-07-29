@@ -19,13 +19,14 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
 namespace WebHemi;
 
 use WebHemi\Application,
 	Zend\Mvc\MvcEvent as Event,
 	Zend\Mvc\ModuleRouteListener,
 	Zend\ModuleManager\Feature\ConfigProviderInterface,
-    Zend\ModuleManager\Feature\ServiceProviderInterface,
+	Zend\ModuleManager\Feature\ServiceProviderInterface,
 	Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 
 /**
@@ -38,19 +39,18 @@ use WebHemi\Application,
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class Module implements
-    ConfigProviderInterface,
-    ServiceProviderInterface,
-	AutoloaderProviderInterface
+ConfigProviderInterface, ServiceProviderInterface, AutoloaderProviderInterface
 {
+
 	/**
 	 * Runs automatically upon bootstrapping
 	 *
 	 * @param \Zend\Mvc\MvcEvent $e
 	 */
-    public function onBootstrap(Event $e)
-    {
+	public function onBootstrap(Event $e)
+	{
 		$serviceManager = $e->getApplication()->getServiceManager();
-        $eventManager	  = $e->getApplication()->getEventManager();
+		$eventManager = $e->getApplication()->getEventManager();
 
 		// Instantialize services
 		if ($serviceManager->has('translator')) {
@@ -63,48 +63,49 @@ class Module implements
 
 		// Link the event manager to the modoule route listener
 		$moduleRouteListener = new ModuleRouteListener();
-        $moduleRouteListener->attach($eventManager);
-    }
+		$moduleRouteListener->attach($eventManager);
+	}
 
 	/**
 	 * Retrieves the Module Configuration
 	 *
 	 * @return array
 	 */
-    public function getConfig()
-    {
+	public function getConfig()
+	{
 		$hemiApplication = Application::getInstance();
 		if (!$hemiApplication->hasConfig('Module')) {
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/module.config.php');
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/' . APPLICATION_MODULE . '.module.config.php');
 		}
 		return $hemiApplication->getConfig('Module');
-    }
+	}
 
 	/**
 	 * Retrieves the Autoloader Configuration
 	 *
 	 * @return array
 	 */
-    public function getAutoloaderConfig()
-    {
-        return array(
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
-                    __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
-    }
+	public function getAutoloaderConfig()
+	{
+		return array(
+			'Zend\Loader\StandardAutoloader' => array(
+				'namespaces' => array(
+					__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
+				),
+			),
+		);
+	}
 
 	/**
-     * Retrieves the Service Configuration
+	 * Retrieves the Service Configuration
 	 *
-     * @return array
-     */
-    public function getServiceConfig()
-    {
-        // already defined in the module-specific config file
+	 * @return array
+	 */
+	public function getServiceConfig()
+	{
+		// already defined in the module-specific config file
 		return array();
-    }
+	}
+
 }

@@ -19,6 +19,7 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
 namespace WebHemi\Theme\Adapter;
 
 use WebHemi\Theme\Adapter\AbstractAdapter;
@@ -34,15 +35,17 @@ use WebHemi\Theme\Adapter\AbstractAdapter;
  */
 class ConfigurationAdapter extends AbstractAdapter
 {
-	/**
-     * Get the name of the theme from the adapter
-	 *
-     * @return string
-     */
-    public function getTheme()
-    {
-        $config = $this->serviceLocator->get('Configuration');
 
-        return isset($config['wh_themes']['current_theme']) ? $config['wh_themes']['current_theme'] : null;
-    }
+	/**
+	 * Get the name of the theme from the adapter
+	 *
+	 * @return string
+	 */
+	public function getTheme()
+	{
+		$config = $this->serviceLocator->get('Configuration');
+
+		return isset($config['wh_themes']['current_theme']) ? $config['wh_themes']['current_theme'] : null;
+	}
+
 }

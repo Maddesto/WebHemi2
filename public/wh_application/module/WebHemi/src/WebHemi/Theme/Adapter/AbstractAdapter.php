@@ -19,6 +19,7 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
 namespace WebHemi\Theme\Adapter;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
@@ -34,34 +35,35 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 abstract class AbstractAdapter
 {
-    /** @var Zend\ServiceManager\ServiceLocatorInterface $servicelocator */
+	/** @var Zend\ServiceManager\ServiceLocatorInterface $servicelocator */
 	protected $serviceLocator;
 
-    /**
-     * Constructor
+	/**
+	 * Constructor
 	 *
 	 * @param ServiceLocatorInterface $serviceLocator
-     */
-    public function __construct(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
+	 */
+	public function __construct(ServiceLocatorInterface $serviceLocator)
+	{
+		$this->serviceLocator = $serviceLocator;
+	}
 
 	/**
-     * Get the name of the theme from the adapter
+	 * Get the name of the theme from the adapter
 	 *
-     * @return string
-     */
-    abstract public function getTheme();
+	 * @return string
+	 */
+	abstract public function getTheme();
 
-    /**
-     * Set the name of the theme in the adapter if possible
-     *
+	/**
+	 * Set the name of the theme in the adapter if possible
+	 *
 	 * @param string $themeName    The filtered name of the theme
-     * @return bool
-     */
-    public function setTheme($themeName)
-    {
-        return false;
-    }
+	 * @return bool
+	 */
+	public function setTheme($themeName)
+	{
+		return false;
+	}
+
 }
