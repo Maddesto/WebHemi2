@@ -43,7 +43,7 @@ class ThemeManager
 	/** @var Zend\Stdlib\PriorityQueue  $adapters */
 	protected $adapterList;
 	/** @var string  $currentTheme */
-	protected $currentTheme = null;
+	protected $currentTheme   = null;
 	/** @var WebHemi\Adapter\AdapterInterface  $currentAdapter */
 	protected $currentAdapter = null;
 	/** @var Zend\ServiceManager\ServiceManager $serviceManager */
@@ -84,13 +84,13 @@ class ThemeManager
 	protected function __construct($options = array(), ServiceManager $serviceManager)
 	{
 		// set the options
-		$this->options = $options;
+		$this->options        = $options;
 		// set the service manager
 		$this->serviceManager = $serviceManager;
 		// set the theme path list
-		$this->themePathList = new PriorityQueue();
+		$this->themePathList  = new PriorityQueue();
 		// set the theme selector adapter list
-		$this->adapterList = new PriorityQueue();
+		$this->adapterList    = new PriorityQueue();
 	}
 
 	/**
@@ -124,7 +124,7 @@ class ThemeManager
 		// get the theme configuration
 		$config = $this->getThemeConfig($this->currentTheme);
 		// we're about to change the system-default view settings to custom
-		$viewResolver = $this->serviceManager->get('ViewResolver');
+		$viewResolver  = $this->serviceManager->get('ViewResolver');
 		$themeResolver = new \Zend\View\Resolver\AggregateResolver();
 
 		if (isset($config['template_map'])) {
@@ -186,8 +186,7 @@ class ThemeManager
 			$themePath = $this->themePathList->extract() . $themeName . '/theme.config.php';
 
 			// if found it and readable, return it
-			if (file_exists($themePath) && is_readable($themePath)
-			) {
+			if (file_exists($themePath) && is_readable($themePath)) {
 				return include $themePath;
 			}
 		}
@@ -215,11 +214,11 @@ class ThemeManager
 	{
 		for ($i = 0; $i < $this->adapterList->count(); $i++) {
 			$adapter = $this->adapterList->extract();
-			$theme = $adapter->getTheme();
+			$theme   = $adapter->getTheme();
 			// if we found an adapter that provides a valid theme, we set them
 			if ($theme) {
 				$this->currentAdapter = $adapter;
-				$this->currentTheme = $theme;
+				$this->currentTheme   = $theme;
 				break;
 			}
 		}

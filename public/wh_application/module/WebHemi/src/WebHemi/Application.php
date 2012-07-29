@@ -34,12 +34,12 @@ namespace WebHemi;
 final class Application
 {
 	/** The WebHemi's version */
-	const WEBHEMI_VERSION = '2.0.1';
+	const WEBHEMI_VERSION        = '2.0.1';
 
 	/** The required minimal version of the Zend Framework */
 	const MINIMUM_ZF_REQUIREMENT = '2.0';
 
-	/** @var WebHemi\Application */
+	/** @staticvar WebHemi\Application */
 	public static $instance = null;
 	/** @var array   A colletcion of configurations */
 	private $configs;
@@ -55,13 +55,15 @@ final class Application
 
 		// Define current application module
 		list($subdomain, $domain) = explode('.', $_SERVER['HTTP_HOST'], 2);
+
 		// If the address is built only from 'domain.tld', then subdomain should be handled as 'www'
 		if (strpos($domain, '.') === false) {
 			$subdomain = 'www';
 		}
+
 		list(, $subdir) = explode('/', $_SERVER['REQUEST_URI'], 3);
 		$modules = require_once APPLICATION_PATH . '/config/application.modules.config.php';
-		$module = false;
+		$module  = false;
 
 		// we run through the available application-modules
 		foreach ($modules as $moduleName => $moduleData) {
@@ -212,12 +214,12 @@ final class Application
 
 		\Zend\Loader\AutoloaderFactory::factory(array(
 			'Zend\Loader\StandardAutoloader' => array(
-				'namespaces' => array(
-					'WebHemi' => APPLICATION_PATH . '/module/WebHemi',
-					'Zend' => ZF2_PATH,
-				),
-				'autoregister_zf' => true,
+				'autoregister_zf'     => true,
 				'fallback_autoloader' => true,
+				'namespaces'          => array(
+					'WebHemi' => APPLICATION_PATH . '/module/WebHemi',
+					'Zend'    => ZF2_PATH,
+				),
 			),
 		));
 	}
@@ -232,7 +234,7 @@ final class Application
 		$instance = self::getInstance();
 
 		// initialize the Zend Application
-		$mvc = \Zend\Mvc\Application::init($instance->getConfig('Application'));
+		$mvc      = \Zend\Mvc\Application::init($instance->getConfig('Application'));
 		// get the Zend\Http\PhpEnvironment\Response object
 		$response = $mvc->run();
 		// send the response to the client

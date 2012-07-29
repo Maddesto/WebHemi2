@@ -21,11 +21,11 @@
  */
 return array(
 	'wh_themes' => array(
-		'current_theme' => 'silver',
-		'theme_paths' => array(
+		'current_theme' => 'default',
+		'theme_paths'   => array(
 			WEB_ROOT . '/wh_themes/'
 		),
-		'adapters' => array(
+		'adapters'      => array(
 			'WebHemi\Theme\Adapter\ConfigurationAdapter',
 		),
 	),
@@ -33,26 +33,25 @@ return array(
 		'routes' => array(
 			// website application
 			'website' => array(
-				'type' => 'Zend\Mvc\Router\Http\Literal',
+				'type'    => 'Zend\Mvc\Router\Http\Literal',
 				'options' => array(
-					'route' => '/',
+					'route'    => '/',
 					'defaults' => array(
 						'__NAMESPACE__' => 'WebHemi\Controller\Website',
-						'controller' => 'Index',
-						'action' => 'index',
+						'controller'    => 'Index',
+						'action'        => 'index',
 					),
 				),
 				'may_terminate' => true,
-				'child_routes' => array(
-					'default' => array(
-						'type' => 'Segment',
+				'child_routes'  => array(
+					'default'   => array(
+						'type'    => 'Segment',
 						'options' => array(
-							'route' => '/[:controller[/:action]]',
+							'route'       => '/[:controller[/:action]]',
+							'defaults'    => array(),
 							'constraints' => array(
 								'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-								'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-							),
-							'defaults' => array(
+								'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
 							),
 						),
 					),
@@ -72,11 +71,11 @@ return array(
 	),
 	'view_manager' => array(
 		'display_not_found_reason' => true,
-		'display_exceptions' => true,
-		'doctype' => 'HTML5',
-		'not_found_template' => 'error/404',
-		'exception_template' => 'error/index',
-		'template_path_stack' => array(
+		'display_exceptions'       => true,
+		'doctype'                  => 'HTML5',
+		'not_found_template'       => 'error/404',
+		'exception_template'       => 'error/index',
+		'template_path_stack'      => array(
 			'website' => __DIR__ . '/../view/website',
 		),
 	),

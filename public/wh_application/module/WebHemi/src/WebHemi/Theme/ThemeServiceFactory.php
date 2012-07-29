@@ -46,7 +46,7 @@ class ThemeServiceFactory implements FactoryInterface
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
 	{
-		$config = $serviceLocator->get('Configuration');
+		$config  = $serviceLocator->get('Configuration');
 		$manager = ThemeManager::factory($config['wh_themes'], $serviceLocator);
 		return $manager;
 	}
