@@ -45,15 +45,15 @@ class Acl
 	/** @var Zend\ServiceManager\ServiceManager $serviceManager */
 	protected $serviceManager;
 	/** @var Zend\Permissions\Acl\Acl $acl */
-    protected $acl;
+	protected $acl;
 	/** @var string $template */
-    protected $template = 'error/403';
+	protected $template = 'error/403';
 	/** @var RoleProvider $roleProvider */
-    protected $roleProvider;
+	protected $roleProvider;
 	/** @var ResourceProvider $resourceProvider */
-    protected $resourceProvider;
+	protected $resourceProvider;
 	/** @var RuleProvider $ruleProvider */
-    protected $ruleProvider;
+	protected $ruleProvider;
 
 	/**
 	 * Instantiate the Access Control
@@ -71,7 +71,7 @@ class Acl
 		}
 		elseif (!is_array($options)) {
 			throw new Exception\InvalidArgumentException(sprintf(
-				'%s expects an array or Traversable object; received "%s"', __METHOD__, (is_object($options) ? get_class($options) : gettype($options))
+							'%s expects an array or Traversable object; received "%s"', __METHOD__, (is_object($options) ? get_class($options) : gettype($options))
 			));
 		}
 
@@ -81,20 +81,20 @@ class Acl
 		return $acl;
 	}
 
-    /**
+	/**
 	 * Constructor
 	 *
 	 * @param array|Traversable $options
 	 * @param ServiceManager    $serviceManager
 	 */
 	protected function __construct($options = array(), ServiceManager $serviceManager)
-    {
+	{
 		// set the options
-		$this->options        = $options;
+		$this->options = $options;
 		// set the service manager
 		$this->serviceManager = $serviceManager;
 		// set the ACL object
-		$this->acl            = new ZendAcl();
+		$this->acl = new ZendAcl();
 	}
 
 	/**
@@ -103,13 +103,13 @@ class Acl
 	public function init()
 	{
 		// set the template if given (otherwise the default will be used)
-        if (isset($this->options['template'])) {
-            $this->template = $this->options['template'];
-        }
+		if (isset($this->options['template'])) {
+			$this->template = $this->options['template'];
+		}
 
-		$this->roleProvider     = new RoleProvider($this->options['roles'], $this->serviceManager);
+		$this->roleProvider = new RoleProvider($this->options['roles'], $this->serviceManager);
 		$this->resourceProvider = new ResourceProvider($this->options['resources'], $this->serviceManager);
-		$this->ruleProvider     = new RuleProvider($this->options['rules'], $this->serviceManager);
+		$this->ruleProvider = new RuleProvider($this->options['rules'], $this->serviceManager);
 
 		// build role tree in ACL
 		$this->buildRoleTree($this->roleProvider->getRoles());
@@ -153,64 +153,65 @@ class Acl
 			// if the role is a troll :)
 			if (!$role instanceof Role) {
 				throw new Exception\InvalidArgumentException(sprintf(
-					'%s expects an array of Role objects; received "%s"', __METHOD__, (is_object($role) ? get_class($role) : gettype($role))
+								'%s expects an array of Role objects; received "%s"', __METHOD__, (is_object($role) ? get_class($role) : gettype($role))
 				));
 			}
 
 			// if the role has already been set
-            if ($this->acl->hasRole($role)) {
-                continue;
-            }
+			if ($this->acl->hasRole($role)) {
+				continue;
+			}
 
 			$parentRole = $role->getParentRole();
 
-            // if there is parent, we recursively add it
+			// if there is parent, we recursively add it
 			if ($parentRole !== null) {
-                $this->buildRoleTree($parentRole);
-                $this->acl->addRole($role, $parentRole);
-            }
+				$this->buildRoleTree($parentRole);
+				$this->acl->addRole($role, $parentRole);
+			}
 			else {
-                $this->acl->addRole($role);
-            }
-        }
+				$this->acl->addRole($role);
+			}
+		}
 	}
 
-    /**
+	/**
 	 * Retrieve the template path
 	 *
 	 * @return string
 	 */
 	public function getTemplate()
-    {
-        return $this->template;
-    }
+	{
+		return $this->template;
+	}
 
-    /**
+	/**
 	 * Returns true if and only if the Role has access to the Resource
 	 *
 	 * @param  Role\RoleInterface|string            $role
-     * @param  Resource\ResourceInterface|string    $resource
+	 * @param  Resource\ResourceInterface|string    $resource
 	 * @return boolean
 	 */
 	public function isAllowed($role, $resource = null)
-    {
-        try {
+	{
+		try {
 			// if no resource is given, but the role seems to be a valid resource then we expect it is resource indeed
 			// and try to retrieve the role from the user session
 			if (empty($resource)
-				&& ($role instanceof Zend\Permissions\Acl\Resource\ResourceInterface
+					&& ($role instanceof Zend\Permissions\Acl\Resource\ResourceInterface
 					|| $this->acl->hasResource($role)
-			)) {
+					)) {
 				$resource = $role;
 				// @TODO: megcsinalni majd, ha lesz auth, hogy az aktualis felhasznalo role-ja keruljon be
 				$role = 'guest';
 			}
 
-            return $this->acl->isAllowed($role, $resource);
-        }
+			return $this->acl->isAllowed($role, $resource);
+		}
 		// it is not necessary to throw exception here. Fair enough to return with a FALSE
 		catch (Exception\InvalidArgumentException $e) {
-            return false;
-        }
-    }
+			return false;
+		}
+	}
+
 }

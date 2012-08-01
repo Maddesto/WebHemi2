@@ -36,31 +36,32 @@ use \WebHemi\Auth\Resource;
 class ResourceProvider
 {
 	/** @var array $resources */
-    protected $resources = array();
+	protected $resources = array();
 
 	/**
 	 * Constructor
 	 *
 	 * @param array $config
 	 */
-    public function __construct(array $config = array())
-    {
+	public function __construct(array $config = array())
+	{
 		$resources = array();
 		// we process the config and build the Role "tree" (actually it is a list with references to parents)
-        foreach ($config as $resourceName) {
+		foreach ($config as $resourceName) {
 			$resources[$resourceName] = new Resource($resourceName);
 		}
 
-        $this->resources = $resources;
-    }
+		$this->resources = $resources;
+	}
 
 	/**
 	 * Retrieve all resources
 	 *
 	 * @return array
 	 */
-    public function getResources()
-    {
-        return $this->resources;
-    }
+	public function getResources()
+	{
+		return $this->resources;
+	}
+
 }

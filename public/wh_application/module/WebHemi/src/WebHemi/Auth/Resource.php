@@ -19,6 +19,7 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
 namespace WebHemi\Auth;
 
 use Zend\Permissions\Acl\Resource\ResourceInterface;
@@ -34,7 +35,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  */
 class Resource implements ResourceInterface
 {
-    /** @var string $resourceId */
+	/** @var string $resourceId */
 	protected $resourceId;
 
 	/**
@@ -43,20 +44,20 @@ class Resource implements ResourceInterface
 	 *
 	 * @param string $resourceId
 	 */
-    public function __construct($resourceId = null)
-    {
-        $this->resourceId = $resourceId;
-    }
+	public function __construct($resourceId = null)
+	{
+		$this->resourceId = $resourceId;
+	}
 
 	/**
 	 * Retrieve resourceId
 	 *
 	 * @return string
 	 */
-    public function getResourceId()
-    {
-        return $this->resourceId;
-    }
+	public function getResourceId()
+	{
+		return $this->resourceId;
+	}
 
 	/**
 	 * Set resourceId
@@ -64,9 +65,10 @@ class Resource implements ResourceInterface
 	 * @param string $resourceId
 	 * @return \WebHemi\Auth\Resource
 	 */
-    public function setResourceId($resourceId)
-    {
-        $this->resourceId = $resourceId;
-        return $this;
-    }
+	public function setResourceId($resourceId)
+	{
+		$this->resourceId = $resourceId;
+		return $this;
+	}
+
 }

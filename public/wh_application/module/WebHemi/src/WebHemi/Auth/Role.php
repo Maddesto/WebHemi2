@@ -19,6 +19,7 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
 namespace WebHemi\Auth;
 
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -34,10 +35,10 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  */
 class Role implements RoleInterface
 {
-    /** @var string $roleId */
+	/** @var string $roleId */
 	protected $roleId;
 	/** @var RoleInterface $parentRole */
-    protected $parentRole;
+	protected $parentRole;
 
 	/**
 	 * Contructor
@@ -46,26 +47,26 @@ class Role implements RoleInterface
 	 * @param string $roleId
 	 * @param string|RoleInterface $parent
 	 */
-    public function __construct($roleId = null, $parentRole = null)
-    {
+	public function __construct($roleId = null, $parentRole = null)
+	{
 		// if only the name of the Parent is given we Instantiate it
-        if (isset($parentRole) && !($parentRole instanceof RoleInterface)) {
-            $parentRole = new Role($parentRole);
-        }
+		if (isset($parentRole) && !($parentRole instanceof RoleInterface)) {
+			$parentRole = new Role($parentRole);
+		}
 
-        $this->roleId     = $roleId;
-        $this->parentRole = $parentRole;
-    }
+		$this->roleId = $roleId;
+		$this->parentRole = $parentRole;
+	}
 
 	/**
 	 * Retrieve roleId
 	 *
 	 * @return string
 	 */
-    public function getRoleId()
-    {
-        return $this->roleId;
-    }
+	public function getRoleId()
+	{
+		return $this->roleId;
+	}
 
 	/**
 	 * Set roleId
@@ -73,21 +74,21 @@ class Role implements RoleInterface
 	 * @param string $roleId
 	 * @return \WebHemi\Auth\Role
 	 */
-    public function setRoleId($roleId)
-    {
-        $this->roleId = $roleId;
-        return $this;
-    }
+	public function setRoleId($roleId)
+	{
+		$this->roleId = $roleId;
+		return $this;
+	}
 
 	/**
 	 * Retrieve parentRole
 	 *
 	 * @return RoleInterface
 	 */
-    public function getParentRole()
-    {
-        return $this->parentRole;
-    }
+	public function getParentRole()
+	{
+		return $this->parentRole;
+	}
 
 	/**
 	 * Set parentRole
@@ -95,9 +96,10 @@ class Role implements RoleInterface
 	 * @param RoleInterface $parentRole
 	 * @return \WebHemi\Auth\Role
 	 */
-    public function setParentRole(RoleInterface $parentRole)
-    {
-        $this->parentRole = $parentRole;
-        return $this;
-    }
+	public function setParentRole(RoleInterface $parentRole)
+	{
+		$this->parentRole = $parentRole;
+		return $this;
+	}
+
 }

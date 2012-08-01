@@ -41,18 +41,19 @@ class RuleProvider
 	 *
 	 * @param array $config
 	 */
-    public function __construct(array $config = array())
-    {
-        $this->rules = $config;
-    }
+	public function __construct(array $config = array())
+	{
+		$this->rules = $config;
+	}
 
 	/**
 	 * Retrieve all rules
-	 * 
+	 *
 	 * @return array
 	 */
-    public function getRules()
-    {
-        return $this->rules;
-    }
+	public function getRules()
+	{
+		return $this->rules;
+	}
+
 }

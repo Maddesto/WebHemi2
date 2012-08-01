@@ -35,19 +35,19 @@ use WebHemi\Auth\Role;
  */
 class RoleProvider
 {
-    /** @var array $roles */
+	/** @var array $roles */
 	protected $roles = array();
 
-    /**
+	/**
 	 * Contructor
 	 *
 	 * @param array $config
 	 */
 	public function __construct(array $config = array())
-    {
-        $roles = array();
+	{
+		$roles = array();
 		// we process the config and build the Role "tree" (actually it is a list with references to parents)
-        foreach ($config as $roleName => $roleOptions) {
+		foreach ($config as $roleName => $roleOptions) {
 			// if it is a new role, we set it
 			if (!isset($roles[$roleName])) {
 				$roles[$roleName] = new Role($roleName);
@@ -64,19 +64,20 @@ class RoleProvider
 				// we set the parent for the role
 				$roles[$roleName]->setParentRole($roles[$parentRoleName]);
 			}
-        }
+		}
 
 		// save the role list
-        $this->roles = $roles;
-    }
+		$this->roles = $roles;
+	}
 
 	/**
 	 * Retrieve roles
 	 *
 	 * @return array
 	 */
-    public function getRoles()
-    {
-        return $this->roles;
-    }
+	public function getRoles()
+	{
+		return $this->roles;
+	}
+
 }
