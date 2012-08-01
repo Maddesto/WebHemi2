@@ -23,8 +23,96 @@ return array(
 	'service_manager' => array(
 		'factories' => array(
 			'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
+			'acl'        => 'WebHemi\ServiceFactory\AclServiceFactory',
 		),
 	),
+	'controllers' => array(
+		// common invokables
+	),
+	'controller_plugins' => array(
+		'factories' => array(
+			'isAllowed' => 'WebHemi\Controller\Plugin\Factory\IsAllowedFactory',
+		),
+	),
+	'view_helpers' => array(
+		'factories' => array(
+			'isAllowed' => 'WebHemi\View\Helper\Factory\IsAllowedFactory',
+		),
+	),
+	'access_control' => array(
+        'default_role' => 'guest',
+		'template'     => 'error/403',
+//        'identity_provider'  => 'WebHemi\Provider\Identity\ZfcUserZendDb',
+        'roles'        => array(
+			'guest'     => array(
+				'parent'   => null,
+			),
+			'member'    => array(
+				'parent'   => 'guest',
+			),
+			'moderator' => array(
+				'parent'   => 'member',
+			),
+			'editor'    => array(
+				'parent'   => 'moderator',
+			),
+			'publisher' => array(
+				'parent'   => 'editor',
+			),
+			'admin'     => array(
+				'parent'   => 'publisher',
+			),
+		),
+        'resources'    => array(
+			'view',
+			'comment',
+			'moderate',
+			'edit',
+			'publish',
+			'revoke',
+			'delete',
+			'manage',
+		),
+		// only handles 'ALLOWED' rules
+        'rules'        => array(
+			array(
+				'role'       => 'guest',
+				'resources'  => 'view',
+				'privileges' => null,
+				'assertion'  => null,
+			),
+			array(
+				'role'       => 'member',
+				'resources'  => 'comment',
+				'privileges' => null,
+				'assertion'  => null,
+			),
+			array(
+				'role'       => 'moderator',
+				'resources'  => 'moderate',
+				'privileges' => null,
+				'assertion'  => null,
+			),
+			array(
+				'role'       => 'editor',
+				'resources'  => 'edit',
+				'privileges' => null,
+				'assertion'  => null,
+			),
+			array(
+				'role'       => 'publisher',
+				'resources'  => array('publish', 'revoke', 'delete'),
+				'privileges' => null,
+				'assertion'  => null,
+			),
+			array(
+				'role'       => 'admin',
+				'resources'  => 'manage',
+				'privileges' => null,
+				'assertion'  => null,
+			),
+		),
+    ),
 	'translator' => array(
 		'locale'               => 'en_US',
 		'translation_patterns' => array(

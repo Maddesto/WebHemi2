@@ -23,10 +23,11 @@
 namespace WebHemi;
 
 use WebHemi\Application,
-	Zend\Mvc\MvcEvent as Event,
 	Zend\Mvc\ModuleRouteListener,
+	Zend\EventManager\EventInterface,
 	Zend\ModuleManager\Feature\ConfigProviderInterface,
 	Zend\ModuleManager\Feature\ServiceProviderInterface,
+	Zend\ModuleManager\Feature\BootstrapListenerInterface,
 	Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 
 /**
@@ -39,7 +40,10 @@ use WebHemi\Application,
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class Module implements
-ConfigProviderInterface, ServiceProviderInterface, AutoloaderProviderInterface
+	AutoloaderProviderInterface,
+	BootstrapListenerInterface,
+	ConfigProviderInterface,
+	ServiceProviderInterface
 {
 
 	/**
@@ -47,15 +51,15 @@ ConfigProviderInterface, ServiceProviderInterface, AutoloaderProviderInterface
 	 *
 	 * @param \Zend\Mvc\MvcEvent $e
 	 */
-	public function onBootstrap(Event $e)
+	public function onBootstrap(EventInterface $e)
 	{
 		$serviceManager = $e->getApplication()->getServiceManager();
-		$eventManager = $e->getApplication()->getEventManager();
+		$eventManager   = $e->getApplication()->getEventManager();
+//		$eventManager->attach($serviceManager->get('WebHemi\View\UnauthorizedStrategy'));
 
 		// Instantialize services
-		if ($serviceManager->has('translator')) {
-			$serviceManager->get('translator');
-		}
+		$serviceManager->get('translator');
+		$serviceManager->get('acl');
 
 		if ($serviceManager->has('theme_manager')) {
 			$serviceManager->get('theme_manager');
@@ -98,6 +102,28 @@ ConfigProviderInterface, ServiceProviderInterface, AutoloaderProviderInterface
 	}
 
 	/**
+	 * Retrieves the View Helper Configuration
+	 *
+	 * @return array
+	 */
+	public function getViewHelperConfig()
+    {
+        // already defined in the module config file
+		return array();
+    }
+
+	/**
+	 * Retrieves the Controller Plugin Configuration
+	 *
+	 * @return array
+	 */
+    public function getControllerPluginConfig()
+    {
+		// already defined in the module config file
+		return array();
+    }
+
+	/**
 	 * Retrieves the Service Configuration
 	 *
 	 * @return array
@@ -107,5 +133,4 @@ ConfigProviderInterface, ServiceProviderInterface, AutoloaderProviderInterface
 		// already defined in the module-specific config file
 		return array();
 	}
-
 }

@@ -14,39 +14,40 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Theme
+ * @package    WebHemi_View_Helper_Factory
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Service;
+namespace WebHemi\View\Helper\Factory;
 
 use Zend\ServiceManager\FactoryInterface,
 	Zend\ServiceManager\ServiceLocatorInterface,
-	WebHemi\Theme\ThemeManager;
+	WebHemi\View\Helper\IsAllowed;
 
 /**
- * WebHemi theme manager factory
+ * WebHemi isAllowed view helper factory
  *
  * @category   WebHemi
- * @package    WebHemi_Theme
+ * @package    WebHemi_View_Helper_Factory
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class ThemeServiceFactory implements FactoryInterface
+class IsAllowedFactory implements FactoryInterface
 {
 	/**
-	 * Factory method for WebHemi theme manager service
+	 * Factory method for WebHemi's isAllowed view helper
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return WebHemi\ServiceManager\ThemeManager
+	 * @return WebHemi\View\Helper\IsAllowed
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
 	{
-		$config  = $serviceLocator->get('Configuration');
-		$manager = ThemeManager::factory($config['wh_themes'], $serviceLocator);
-		return $manager;
+//		$serviceLocator = $serviceLocator->getServiceLocator();
+		$helper = new IsAllowed();
+		$helper->setAuthorizeService($serviceLocator->get('acl'));
+		return $helper;
 	}
 }

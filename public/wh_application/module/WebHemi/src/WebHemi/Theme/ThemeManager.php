@@ -23,7 +23,8 @@
 namespace WebHemi\Theme;
 
 use Zend\Stdlib\PriorityQueue,
-	Zend\ServiceManager\ServiceManager;
+	Zend\ServiceManager\ServiceManager,
+	Zend\ServiceManager\Exception;
 
 /**
  * WebHemi theme manager
