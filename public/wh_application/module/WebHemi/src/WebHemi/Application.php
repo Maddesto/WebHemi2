@@ -181,7 +181,7 @@ final class Application
 					$this->configs[$name] = $config;
 				}
 				else {
-					$this->configs[$name] = array_merge_recursive($this->configs[$name], $config);
+					$this->configs[$name] = $this->mergeConfig($this->configs[$name], $config);
 				}
 			}
 			else {
@@ -191,6 +191,48 @@ final class Application
 		else {
 			throw new \Exception('File not exists or not readable: ' . $filename);
 		}
+	}
+
+	/**
+	 * Merges config arrays in the correct way
+	 * This rewrites the given key->value pairs and does not make key->array(value1, value2) like the
+	 * `array_merge_recursive` does
+	 *
+	 * @return array
+	 */
+	private function mergeConfig()
+	{
+		if (func_num_args() < 2) {
+			throw new \Exception(__CLASS__ . '::' . __METHOD__ . ' needs two or more array arguments');
+		}
+		$arrays = func_get_args();
+		$merged = array();
+
+		while ($arrays) {
+			$array = array_shift($arrays);
+			if (!is_array($array)) {
+				throw new \Exception(__CLASS__ . '::' . __METHOD__ . ' encountered a non array argument');
+			}
+
+			if (!$array) {
+				continue;
+			}
+
+			foreach ($array as $key => $value) {
+				if (is_string($key)) {
+					if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+						$merged[$key] = call_user_func(array(__CLASS__, __METHOD__), $merged[$key], $value);
+					}
+					else {
+						$merged[$key] = $value;
+					}
+				}
+				else {
+					$merged[] = $value;
+				}
+			}
+		}
+		return $merged;
 	}
 
 	/**
