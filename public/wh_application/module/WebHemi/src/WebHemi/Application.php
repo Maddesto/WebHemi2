@@ -34,10 +34,13 @@ namespace WebHemi;
 final class Application
 {
 	/** The WebHemi's version */
-	const WEBHEMI_VERSION        = '2.0.1';
-
+	const WEBHEMI_VERSION        = '2.0.0.3';
 	/** The required minimal version of the Zend Framework */
 	const MINIMUM_ZF_REQUIREMENT = '2.0';
+	/** The name of the admin module */
+	const ADMIN_MODULE           = 'Admin';
+	/** The name of the default module */
+	const WEBSITE_MODULE         = 'Website';
 
 	/** @staticvar WebHemi\Application */
 	public static $instance = null;
@@ -52,49 +55,6 @@ final class Application
 	private function __construct()
 	{
 		$this->setPaths();
-
-		// Define current application module
-		list($subdomain, $domain) = explode('.', $_SERVER['HTTP_HOST'], 2);
-
-		// If the address is built only from 'domain.tld', then subdomain should be handled as 'www'
-		if (strpos($domain, '.') === false) {
-			$subdomain = 'www';
-		}
-
-		list(, $subdir) = explode('/', $_SERVER['REQUEST_URI'], 3);
-		$modules = require_once APPLICATION_PATH . '/config/application.modules.config.php';
-		$module  = false;
-
-		// we run through the available application-modules
-		foreach ($modules as $moduleName => $moduleData) {
-			// the default is the website-module
-			if ($moduleData['path'] == 'www' && $subdomain == 'www') {
-				$module = $moduleName;
-				break;
-			}
-			elseif ($subdomain == 'www') {
-				// subdirectory-based modules
-				if (!empty($subdir)
-						&& $moduleData['type'] == 'subdir'
-						&& $moduleData['path'] == $subdir
-				) {
-					$module = $moduleName;
-					break;
-				}
-			}
-			else {
-				// subdomain-based modules
-				if ($moduleData['type'] == 'subdomain'
-						&& $moduleData['path'] == $subdomain
-				) {
-					$module = $moduleName;
-					break;
-				}
-			}
-		}
-		defined('APPLICATION_MODULE')
-				|| define('APPLICATION_MODULE', ($module ? $module : 'Website'));
-
 		$this->setConfig('Application', APPLICATION_PATH . '/config/application.config.php');
 		$this->checkZendFrameworkVersion();
 		$this->setAutoLoader();
@@ -107,12 +67,13 @@ final class Application
 	 */
 	private function setPaths()
 	{
+		// add the vendor folder to the path
 		set_include_path(
 				get_include_path() . PATH_SEPARATOR .
 				APPLICATION_PATH . '/vendor' . PATH_SEPARATOR
 		);
 
-		// Define Zend Framework path
+		// define Zend Framework path
 		if (!getenv('ZF2_PATH')) {
 			foreach (explode(PATH_SEPARATOR, get_include_path()) as $path) {
 				if (is_dir($path . '/Zend')) {
@@ -124,6 +85,68 @@ final class Application
 		else {
 			define('ZF2_PATH', getenv('ZF2_PATH'));
 		}
+	}
+
+	/**
+	 * Parse the URL and match against the config to determine the current module
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	public static function getCurrentModuleFromUrl($url = '')
+	{
+		$modules   = require_once APPLICATION_PATH . '/config/application.modules.config.php';
+		$module    = self::WEBSITE_MODULE;
+		$subDomain = '';
+
+		// if no URL is present, then the current URL will be used
+		if (empty($url)) {
+			$url  = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 's' : '') . '://';
+			$url .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING'];;
+		}
+
+		// parse the URL into
+		$urlParts    = parse_url($url);
+
+		// if the host is not an IP address, then we can check the subdomain-based module names too
+		if (!preg_match('/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $urlParts['host'])) {
+			$domainParts = explode('.', $urlParts['host']);
+			$tld         = array_pop($domainParts);
+			$domain      = array_pop($domainParts) . '.' . $tld;
+			$subDomain   = implode('.', $domainParts);
+		}
+
+		// If no subdomain present, then it should be handled as 'www'
+		if (empty($subDomain)) {
+			$subDomain = 'www';
+		}
+
+		// we ignore the first (actually an emtpy string) and last (the rest of the URL)
+		list(, $subdir) = explode('/', $urlParts['path'], 3);
+
+		// we run through the available application-modules
+		foreach ($modules as $moduleName => $moduleData) {
+			// subdirectory-based modules
+			if ($subDomain == 'www') {
+				if (!empty($subdir)
+						&& $moduleData['type'] == 'subdir'
+						&& $moduleData['path'] == $subdir
+				) {
+					$module = $moduleName;
+					break;
+				}
+			}
+			// subdomain-based modules
+			else {
+				if ($moduleData['type'] == 'subdomain'
+						&& $moduleData['path'] == $subDomain
+				) {
+					$module = $moduleName;
+					break;
+				}
+			}
+		}
+		return $module;
 	}
 
 	/**
@@ -190,16 +213,16 @@ final class Application
 	private function checkZendFrameworkVersion()
 	{
 		// Check path
-		if (!defined('ZF2_PATH') || !file_exists(ZF2_PATH . '/Version.php')) {
+		if (!defined('ZF2_PATH') || !file_exists(ZF2_PATH . '/Version/Version.php')) {
 			throw new \Exception('<b>No Zend Framework found!</b>');
 		}
-		require_once ZF2_PATH . '/Version.php';
+		require_once ZF2_PATH . '/Version/Version.php';
 
 		// Check namespace and class and version
-		if (!class_exists('Zend\Version')
-				|| \Zend\Version::compareVersion(self::MINIMUM_ZF_REQUIREMENT) > 0) {
+		if (!class_exists('Zend\Version\Version')
+				|| \Zend\Version\Version::compareVersion(self::MINIMUM_ZF_REQUIREMENT) > 0) {
 			throw new \Exception('<b>Your Zend Framework version is below required!'
-					. ' (' . (\Zend\Version::VERSION) . ' vs. ' . self::MINIMUM_ZF_REQUIREMENT . ')</b>');
+					. ' (' . (\Zend\Version\Version::VERSION) . ' vs. ' . self::MINIMUM_ZF_REQUIREMENT . ')</b>');
 		}
 	}
 

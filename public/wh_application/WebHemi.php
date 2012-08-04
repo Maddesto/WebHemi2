@@ -19,6 +19,9 @@
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
+
+require_once __DIR__ . '/module/WebHemi/src/WebHemi/Application.php';
+
 defined('APPLICATION_PATH')
 		|| define('APPLICATION_PATH', __DIR__);
 
@@ -28,7 +31,8 @@ defined('WEB_ROOT')
 defined('APPLICATION_ENV')
 		|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
-require_once APPLICATION_PATH . '/module/WebHemi/src/WebHemi/Application.php';
+defined('APPLICATION_MODULE')
+		|| define('APPLICATION_MODULE', WebHemi\Application::getCurrentModuleFromUrl());
 
 /**
  * Run WebHemi Application

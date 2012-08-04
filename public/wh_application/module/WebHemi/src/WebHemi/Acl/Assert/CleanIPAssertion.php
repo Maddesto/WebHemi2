@@ -53,7 +53,7 @@ class CleanIPAssertion implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        // @TODO megcsinalni a Loch tablat
+        // @TODO megcsinalni a Lock tablat
 		return (int)date('s') % 3 == 0 ? false : true;
     }
 }

@@ -55,7 +55,7 @@ class Module implements
 	{
 		$serviceManager = $e->getApplication()->getServiceManager();
 		$eventManager   = $e->getApplication()->getEventManager();
-		// @TODO: implementalni
+		// @TODO: implementalni az Unauthorized Strategy-t
 //		$eventManager->attach($serviceManager->get('WebHemi\View\UnauthorizedStrategy'));
 
 		// Instantialize services
@@ -79,9 +79,22 @@ class Module implements
 	public function getConfig()
 	{
 		$hemiApplication = Application::getInstance();
+
 		if (!$hemiApplication->hasConfig('Module')) {
+			// There's only tho physical modules (Admin and Website) the others are virtual modules and inherit from Website module
+			$mainModule = APPLICATION_MODULE == Application::ADMIN_MODULE
+					? Application::ADMIN_MODULE
+					: Application::WEBSITE_MODULE;
+
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/module.config.php');
-			$hemiApplication->setConfig('Module', __DIR__ . '/config/' . APPLICATION_MODULE . '.module.config.php');
+			$hemiApplication->setConfig('Module', __DIR__ . '/config/' . $mainModule . '.module.config.php');
+
+			// it the courrent module is a virtual module and it has its own config, we load it as well
+			if (APPLICATION_MODULE !== $mainModule
+					&& file_exists(__DIR__ . '/config/' . APPLICATION_MODULE . '.module.config.php')
+			) {
+				$hemiApplication->setConfig('Module', __DIR__ . '/config/' . APPLICATION_MODULE . '.module.config.php');
+			}
 		}
 		return $hemiApplication->getConfig('Module');
 	}
