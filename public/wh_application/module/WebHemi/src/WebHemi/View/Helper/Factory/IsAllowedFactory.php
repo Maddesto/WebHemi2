@@ -45,9 +45,8 @@ class IsAllowedFactory implements FactoryInterface
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
 	{
-//		$serviceLocator = $serviceLocator->getServiceLocator();
 		$helper = new IsAllowed();
-		$helper->setAuthorizeService($serviceLocator->get('acl'));
+		$helper->setAclService($serviceLocator->getServiceLocator()->get('acl'));
 		return $helper;
 	}
 }

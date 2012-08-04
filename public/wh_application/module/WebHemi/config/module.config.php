@@ -42,7 +42,6 @@ return array(
 	'access_control' => array(
         'default_role' => 'guest',
 		'template'     => 'error/403',
-//        'identity_provider'  => 'WebHemi\Provider\Identity\ZfcUserZendDb',
         'roles'        => array(
 			'guest'     => array(
 				'parent'   => null,

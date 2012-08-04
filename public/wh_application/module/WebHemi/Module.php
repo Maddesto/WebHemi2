@@ -55,6 +55,7 @@ class Module implements
 	{
 		$serviceManager = $e->getApplication()->getServiceManager();
 		$eventManager   = $e->getApplication()->getEventManager();
+		// @TODO: implementalni
 //		$eventManager->attach($serviceManager->get('WebHemi\View\UnauthorizedStrategy'));
 
 		// Instantialize services

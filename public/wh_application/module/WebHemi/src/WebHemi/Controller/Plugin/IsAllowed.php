@@ -23,7 +23,7 @@
 namespace webHemi\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-	WebHemi\Auth\AuthService;
+	WebHemi\Acl\Acl;
 
 /**
  * Controller plugin for ACL
@@ -36,8 +36,8 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  */
 class IsAllowed extends AbstractPlugin
 {
-    /** @var AuthService $authService */
-	protected $authService;
+    /** @var WebHemi\Acl\Acl $authService */
+	protected $aclService;
 
 	/**
 	 * Checks privilege
@@ -48,28 +48,28 @@ class IsAllowed extends AbstractPlugin
 	 */
     public function __invoke($resource, $privilege = null)
     {
-        return $this->getAuthService()->isAllowed($resource, $privilege);
+        return $this->getAclService()->isAllowed($resource, $privilege);
     }
 
 	/**
-	 * Retrieve authorization service object
+	 * Retrieve ACL service object
 	 *
-	 * @return AuthService
+	 * @return WebHemi\Acl\Acl
 	 */
-    public function getAuthService()
+    public function getAclService()
     {
-        return $this->authService;
+        return $this->aclService;
     }
 
 	/**
-	 * Set auhtorization service object
+	 * Set ACL service object
 	 *
-	 * @param AuthService $authService
+	 * @param WebHemi\Acl\Acl $aclService
 	 * @return IsAllowed
 	 */
-    public function setAuthService(AuthService $authService)
+    public function setAuthService(Acl $aclService)
     {
-        $this->authService = $authService;
+        $this->aclService = $aclService;
         return $this;
     }
 }

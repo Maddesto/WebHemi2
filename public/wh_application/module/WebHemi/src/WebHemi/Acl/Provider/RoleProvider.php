@@ -14,54 +14,70 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Auth_Provider
+ * @package    WebHemi_Acl_Provider
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Auth\Provider;
+namespace WebHemi\Acl\Provider;
 
-use \WebHemi\Auth\Resource;
+use WebHemi\Acl\Role;
 
 /**
- * WebHemi Resource Container and Provider
+ * WebHemi Role Container and Provider
  *
  * @category   WebHemi
- * @package    WebHemi_Auth_Provider
+ * @package    WebHemi_Acl_Provider
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class ResourceProvider
+class RoleProvider
 {
-	/** @var array $resources */
-	protected $resources = array();
+	/** @var array $roles */
+	protected $roles = array();
 
 	/**
-	 * Constructor
+	 * Contructor
 	 *
 	 * @param array $config
 	 */
 	public function __construct(array $config = array())
 	{
-		$resources = array();
+		$roles = array();
 		// we process the config and build the Role "tree" (actually it is a list with references to parents)
-		foreach ($config as $resourceName) {
-			$resources[$resourceName] = new Resource($resourceName);
+		foreach ($config as $roleName => $roleOptions) {
+			// if it is a new role, we set it
+			if (!isset($roles[$roleName])) {
+				$roles[$roleName] = new Role($roleName);
+			}
+
+			// if there is a parent given in the options
+			if (isset($roleOptions['parent']) && !empty($roleOptions['parent'])) {
+				$parentRoleName = $roleOptions['parent'];
+				// if the parent is a new role, we set it
+				if (!isset($roles[$parentRoleName])) {
+					$roles[$parentRoleName] = new Role($parentRoleName);
+				}
+
+				// we set the parent for the role
+				$roles[$roleName]->setParentRole($roles[$parentRoleName]);
+			}
 		}
 
-		$this->resources = $resources;
+		// save the role list
+		$this->roles = $roles;
 	}
 
 	/**
-	 * Retrieve all resources
+	 * Retrieve roles
 	 *
 	 * @return array
 	 */
-	public function getResources()
+	public function getRoles()
 	{
-		return $this->resources;
+		return $this->roles;
 	}
 
 }

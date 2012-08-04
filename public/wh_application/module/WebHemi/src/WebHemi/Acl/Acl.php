@@ -14,26 +14,27 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Auth
+ * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Auth;
+namespace WebHemi\Acl;
 
 use Zend\ServiceManager\ServiceManager,
 	Zend\Permissions\Acl\Acl as ZendAcl,
 	Zend\Permissions\Acl\Exception,
-	WebHemi\Auth\Provider\RoleProvider,
-	WebHemi\Auth\Provider\ResourceProvider,
-	WebHemi\Auth\Provider\RuleProvider;
+	WebHemi\Acl\Provider\RoleProvider,
+	WebHemi\Acl\Provider\ResourceProvider,
+	WebHemi\Acl\Provider\RuleProvider,
+	WebHemi\Acl\Assert\CleanIPAssertion;
 
 /**
  * WebHemi Access Control
  *
  * @category   WebHemi
- * @package    WebHemi_Auth
+ * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
@@ -132,8 +133,8 @@ class Acl
 			$rules = array_values(array_merge($defaults, $rules));
 			// export the values from the array;
 			list($roles, $resources, $privileges, $assertion) = $rules;
-			// allow the resources for the roles
-			$this->acl->allow($roles, $resources, $privileges, $assertion);
+			// allow the resources for the roles, except when the requesting IP is blacklisted.
+			$this->acl->allow($roles, $resources, $privileges, new CleanIPAssertion());
 		}
 	}
 
@@ -200,15 +201,14 @@ class Acl
 			if (empty($resource)
 					&& ($role instanceof Zend\Permissions\Acl\Resource\ResourceInterface
 					|| $this->acl->hasResource($role)
-					)) {
+			)) {
 				$resource = $role;
 				// @TODO: megcsinalni majd, ha lesz auth, hogy az aktualis felhasznalo role-ja keruljon be
 				$role = 'guest';
 			}
-
 			return $this->acl->isAllowed($role, $resource);
 		}
-		// it is not necessary to throw exception here. Fair enough to return with a FALSE
+		// It is not necessary to terminate the script. Fair enough to return with a FALSE
 		catch (Exception\InvalidArgumentException $e) {
 			return false;
 		}

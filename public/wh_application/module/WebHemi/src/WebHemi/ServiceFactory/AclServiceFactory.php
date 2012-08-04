@@ -24,7 +24,7 @@ namespace WebHemi\ServiceFactory;
 
 use Zend\ServiceManager\FactoryInterface,
 	Zend\ServiceManager\ServiceLocatorInterface,
-	WebHemi\Auth\Acl;
+	WebHemi\Acl\Acl;
 
 /**
  * WebHemi acl manager factory

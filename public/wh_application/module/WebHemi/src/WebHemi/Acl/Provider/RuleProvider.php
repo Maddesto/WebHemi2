@@ -14,19 +14,19 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Auth_Provider
+ * @package    WebHemi_Acl_Provider
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Auth\Provider;
+namespace WebHemi\Acl\Provider;
 
 /**
  * WebHemi Rule Container and Provider
  *
  * @category   WebHemi
- * @package    WebHemi_Auth_Provider
+ * @package    WebHemi_Acl_Provider
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License

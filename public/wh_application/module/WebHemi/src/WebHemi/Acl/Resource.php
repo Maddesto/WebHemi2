@@ -14,13 +14,13 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Auth
+ * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Auth;
+namespace WebHemi\Acl;
 
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 
@@ -28,7 +28,7 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  * WebHemi Resource
  *
  * @category   WebHemi
- * @package    WebHemi_Auth
+ * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
@@ -63,7 +63,7 @@ class Resource implements ResourceInterface
 	 * Set resourceId
 	 *
 	 * @param string $resourceId
-	 * @return \WebHemi\Auth\Resource
+	 * @return \WebHemi\Acl\Resource
 	 */
 	public function setResourceId($resourceId)
 	{

@@ -14,13 +14,13 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Auth
+ * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Auth;
+namespace WebHemi\Acl;
 
 use Zend\Permissions\Acl\Role\RoleInterface;
 
@@ -28,7 +28,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  * WebHemi Role
  *
  * @category   WebHemi
- * @package    WebHemi_Auth
+ * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
@@ -72,7 +72,7 @@ class Role implements RoleInterface
 	 * Set roleId
 	 *
 	 * @param string $roleId
-	 * @return \WebHemi\Auth\Role
+	 * @return \WebHemi\Acl\Role
 	 */
 	public function setRoleId($roleId)
 	{
@@ -94,7 +94,7 @@ class Role implements RoleInterface
 	 * Set parentRole
 	 *
 	 * @param RoleInterface $parentRole
-	 * @return \WebHemi\Auth\Role
+	 * @return \WebHemi\Acl\Role
 	 */
 	public function setParentRole(RoleInterface $parentRole)
 	{
