@@ -24,7 +24,7 @@ Features / Goals
 - Logical separation of 'Admin' and 'Website' applications [DONE]
 - Support for custom themes in 'Website' application [DONE]
 - Subdomain support for applications except 'Website' which is always on 'www' [DONE]
-- Privilege system with IP blacklist [DONE]
+- Privilege system with IP blacklist [PARTIAL]
 - Secure authentication [PLANNING]
 - Secure Form solution [PLANNING]
 - 'Virtual folder structure'-like content management [PLANNING]
