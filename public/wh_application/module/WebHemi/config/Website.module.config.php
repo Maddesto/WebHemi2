@@ -36,35 +36,26 @@ return array(
 		'routes' => array(
 			// website application
 			'website' => array(
-				'type'    => 'Zend\Mvc\Router\Http\Literal',
+				'type'    => 'Segment',
 				'options' => array(
-					'route'    => '/',
-					'defaults' => array(
+					'route'       => '/[:controller[/:action]]',
+					'defaults'    => array(
 						'__NAMESPACE__' => 'WebHemi\Controller\Website',
 						'controller'    => 'Index',
 						'action'        => 'index',
 					),
-				),
-				'may_terminate' => true,
-				'child_routes'  => array(
-					'default'   => array(
-						'type'    => 'Segment',
-						'options' => array(
-							'route'       => '/[:controller[/:action]]',
-							'defaults'    => array(),
-							'constraints' => array(
-								'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-								'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-							),
-						),
+					'constraints' => array(
+						'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+						'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
 					),
 				),
+				'may_terminate' => true,
 			),
 		),
 	),
 	'service_manager' => array(
 		'factories' => array(
-			'theme_manager' => 'WebHemi\ServiceFactory\ThemeServiceFactory'
+			'theme_manager' => 'WebHemi\ServiceFactory\ThemeManagerServiceFactory'
 		),
 	),
 	'controllers' => array(
@@ -73,13 +64,19 @@ return array(
 		),
 	),
 	'view_manager' => array(
-		'display_not_found_reason' => true,
-		'display_exceptions'       => true,
-		'doctype'                  => 'HTML5',
-		'not_found_template'       => 'error/404',
-		'exception_template'       => 'error/index',
 		'template_path_stack'      => array(
 			'website' => __DIR__ . '/../view/website',
+		),
+	),
+	'access_control' => array(
+		'access' => array(
+			'controller' => array(
+				 'Index/*' => array('editor'),
+				 'Index/privatePage'  => array('guest'),
+			),
+			'route'      => array(
+				'/index/personal-page' => array('admin'),
+			),
 		),
 	),
 );

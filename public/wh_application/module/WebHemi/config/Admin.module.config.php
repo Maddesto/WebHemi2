@@ -24,29 +24,20 @@ return array(
 		'routes' => array(
 			// Admin application
 			'admin' => array(
-				'type'    => 'Zend\Mvc\Router\Http\Literal',
+				'type'    => 'Segment',
 				'options' => array(
-					'route'    => '/',
-					'defaults' => array(
+					'route'       => '/[:controller[/:action]]',
+					'defaults'    => array(
 						'__NAMESPACE__' => 'WebHemi\Controller\Admin',
 						'controller'    => 'Index',
 						'action'        => 'index',
 					),
-				),
-				'may_terminate' => true,
-				'child_routes'  => array(
-					'default'   => array(
-						'type'    => 'Segment',
-						'options' => array(
-							'route'       => '/[:controller[/:action]]',
-							'defaults'    => array(),
-							'constraints' => array(
-								'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-								'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-							),
-						),
+					'constraints' => array(
+						'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+						'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
 					),
 				),
+				'may_terminate' => true,
 			),
 		),
 	),
@@ -56,11 +47,6 @@ return array(
 		),
 	),
 	'view_manager' => array(
-		'display_not_found_reason' => true,
-		'display_exceptions'       => true,
-		'doctype'                  => 'HTML5',
-		'not_found_template'       => 'error/404',
-		'exception_template'       => 'error/index',
 		'template_path_stack'      => array(
 			'admin' => __DIR__ . '/../view/admin',
 		),

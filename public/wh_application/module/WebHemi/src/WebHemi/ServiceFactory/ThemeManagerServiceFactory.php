@@ -35,7 +35,7 @@ use Zend\ServiceManager\FactoryInterface,
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class ThemeServiceFactory implements FactoryInterface
+class ThemeManagerServiceFactory implements FactoryInterface
 {
 	/**
 	 * Factory method for WebHemi theme manager service

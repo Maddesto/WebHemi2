@@ -23,14 +23,23 @@
 namespace WebHemi\Controller\Website;
 
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
 {
 
 	public function indexAction()
 	{
-		return new ViewModel();
+		return array();
+	}
+
+	public function privatePageAction()
+	{
+		return array();
+	}
+
+	public function personalPageAction()
+	{
+		return array();
 	}
 
 }

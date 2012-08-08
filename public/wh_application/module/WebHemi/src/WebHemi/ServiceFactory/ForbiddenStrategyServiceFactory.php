@@ -14,59 +14,40 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Acl_Provider
+ * @package    WebHemi_ServiceFactory
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Acl\Provider;
+namespace WebHemi\ServiceFactory;
+
+use Zend\ServiceManager\FactoryInterface,
+	Zend\ServiceManager\ServiceLocatorInterface,
+	WebHemi\View\Strategy\ForbiddenStrategy;
 
 /**
- * WebHemi Rule Container and Provider
+ * WebHemi Forbidden view strategy factory
  *
  * @category   WebHemi
- * @package    WebHemi_Acl_Provider
+ * @package    WebHemi_ServiceFactory
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class RuleProvider
+class ForbiddenStrategyServiceFactory implements FactoryInterface
 {
-	/** @var array $rules */
-	protected $rules = array();
-
 	/**
-	 * Constructor
+	 * Factory method for WebHemi Forbidden view strategy service
 	 *
-	 * @param array $config
+	 * @param  ServiceLocatorInterface $serviceLocator
+	 * @return WebHemi\View\Strategy\ForbiddenStrategy
 	 */
-	public function __construct(array $config = array())
+	public function createService(ServiceLocatorInterface $serviceLocator)
 	{
-		$this->rules = $config;
-	}
-
-	/**
-	 * Retrieve all rules
-	 *
-	 * @return array
-	 */
-	public function getRules()
-	{
-		return $this->rules;
-	}
-
-	/**
-	 * Add a new rule
-	 * 
-	 * @param string $role
-	 * @param array $resources
-	 */
-	public function addRule($role, array $resources)
-	{
-		$this->rules[] = array(
-			'role'       => $role,
-			'resources'  => $resources
-		);
+		$template = $serviceLocator->get('acl')->getTemplate();
+		$strategy = new ForbiddenStrategy();
+		$strategy->setTemplate($template);
+		return $strategy;
 	}
 }

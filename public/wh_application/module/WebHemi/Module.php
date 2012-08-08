@@ -47,16 +47,14 @@ class Module implements
 {
 
 	/**
-	 * Runs automatically upon bootstrapping
+	 * Listen to the bootstrap event
 	 *
-	 * @param \Zend\Mvc\MvcEvent $e
+	 * @param \Zend\EventManager\EventInterface $e
 	 */
 	public function onBootstrap(EventInterface $e)
 	{
 		$serviceManager = $e->getApplication()->getServiceManager();
 		$eventManager   = $e->getApplication()->getEventManager();
-		// @TODO: implementalni az Unauthorized Strategy-t
-//		$eventManager->attach($serviceManager->get('WebHemi\View\UnauthorizedStrategy'));
 
 		// Instantialize services
 		$serviceManager->get('translator');
@@ -65,6 +63,9 @@ class Module implements
 		if ($serviceManager->has('theme_manager')) {
 			$serviceManager->get('theme_manager');
 		}
+
+		$eventManager->attach($serviceManager->get('forbidden'));
+		$eventManager->attach('route', array('WebHemi\Acl\Event\EventManager', 'onRoute'), -1000);
 
 		// Link the event manager to the modoule route listener
 		$moduleRouteListener = new ModuleRouteListener();
@@ -80,6 +81,7 @@ class Module implements
 	{
 		$hemiApplication = Application::getInstance();
 
+		// for the first call, we set the Config
 		if (!$hemiApplication->hasConfig('Module')) {
 			// There's only tho physical modules (Admin and Website) the others are virtual modules and inherit from Website module
 			$mainModule = APPLICATION_MODULE == Application::ADMIN_MODULE
@@ -89,7 +91,7 @@ class Module implements
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/module.config.php');
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/' . $mainModule . '.module.config.php');
 
-			// it the courrent module is a virtual module and it has its own config, we load it as well
+			// if the courrent module is a virtual module and it has its own config, we load it as well
 			if (APPLICATION_MODULE !== $mainModule
 					&& file_exists(__DIR__ . '/config/' . APPLICATION_MODULE . '.module.config.php')
 			) {

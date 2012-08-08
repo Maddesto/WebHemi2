@@ -67,7 +67,7 @@ class IsAllowed extends AbstractPlugin
 	 * @param WebHemi\Acl\Acl $aclService
 	 * @return IsAllowed
 	 */
-    public function setAuthService(Acl $aclService)
+    public function setAclService(Acl $aclService)
     {
         $this->aclService = $aclService;
         return $this;

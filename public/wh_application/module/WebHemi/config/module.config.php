@@ -24,10 +24,21 @@ return array(
 		'factories' => array(
 			'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
 			'acl'        => 'WebHemi\ServiceFactory\AclServiceFactory',
+			'forbidden'  => 'WebHemi\ServiceFactory\ForbiddenStrategyServiceFactory',
 		),
 	),
 	'controllers' => array(
 		// common invokables
+	),
+	'view_manager' => array(
+		'display_not_found_reason' => true,
+		'display_exceptions'       => true,
+		'doctype'                  => 'HTML5',
+		'not_found_template'       => 'error/404',
+		'exception_template'       => 'error/index',
+		'strategies' => array(
+			'forbidden',
+        ),
 	),
 	'controller_plugins' => array(
 		'factories' => array(
@@ -77,38 +88,26 @@ return array(
 			array(
 				'role'       => 'guest',
 				'resources'  => 'view',
-				'privileges' => null,
-				'assertion'  => null,
 			),
 			array(
 				'role'       => 'member',
 				'resources'  => 'comment',
-				'privileges' => null,
-				'assertion'  => null,
 			),
 			array(
 				'role'       => 'moderator',
 				'resources'  => 'moderate',
-				'privileges' => null,
-				'assertion'  => null,
 			),
 			array(
 				'role'       => 'editor',
 				'resources'  => 'edit',
-				'privileges' => null,
-				'assertion'  => null,
 			),
 			array(
 				'role'       => 'publisher',
 				'resources'  => array('publish', 'revoke', 'delete'),
-				'privileges' => null,
-				'assertion'  => null,
 			),
 			array(
 				'role'       => 'admin',
 				'resources'  => 'manage',
-				'privileges' => null,
-				'assertion'  => null,
 			),
 		),
     ),

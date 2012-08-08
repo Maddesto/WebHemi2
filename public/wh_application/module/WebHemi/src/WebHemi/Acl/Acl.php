@@ -108,9 +108,9 @@ class Acl
 			$this->template = $this->options['template'];
 		}
 
-		$this->roleProvider = new RoleProvider($this->options['roles'], $this->serviceManager);
+		$this->roleProvider     = new RoleProvider($this->options['roles'],         $this->serviceManager);
 		$this->resourceProvider = new ResourceProvider($this->options['resources'], $this->serviceManager);
-		$this->ruleProvider = new RuleProvider($this->options['rules'], $this->serviceManager);
+		$this->ruleProvider     = new RuleProvider($this->options['rules'],         $this->serviceManager);
 
 		// build role tree in ACL
 		$this->buildRoleTree($this->roleProvider->getRoles());
@@ -119,6 +119,25 @@ class Acl
 		foreach ($this->resourceProvider->getResources() as $resource) {
 			$key = new \Zend\Permissions\Acl\Resource\GenericResource($resource->getResourceId());
 			$this->acl->addResource($key, null);
+		}
+
+		// we define 'controller-action'-based resources and rules
+		if (isset($this->options['access'])) {
+			$resources = $this->options['access'];
+			$controllerResources = isset($resources['controller']) ? (array)$resources['controller'] : array();
+			$routeResources      = isset($resources['route'])      ? (array)$resources['route']      : array();
+			$specialResources    = array_merge($controllerResources, $routeResources);
+
+			// if there is any special resource defined
+			if (!empty($specialResources)) {
+				foreach ($specialResources as $resourceName => $roles) {
+					// add the new resource to the acl
+					$key = new \Zend\Permissions\Acl\Resource\GenericResource($resourceName);
+					$this->acl->addResource($key, null);
+					// add the roles and resources to the rule list
+					$this->ruleProvider->addRule($roles, (array)$resourceName);
+				}
+			}
 		}
 
 		// set rules
@@ -133,8 +152,13 @@ class Acl
 			$rules = array_values(array_merge($defaults, $rules));
 			// export the values from the array;
 			list($roles, $resources, $privileges, $assertion) = $rules;
+
+			// if there's no assertation given, we define one
+			if (is_null($assertion)) {
+				$assertion = new CleanIPAssertion();
+			}
 			// allow the resources for the roles, except when the requesting IP is blacklisted.
-			$this->acl->allow($roles, $resources, $privileges, new CleanIPAssertion());
+			$this->acl->allow($roles, $resources, $privileges, $assertion);
 		}
 	}
 
@@ -203,7 +227,7 @@ class Acl
 					|| $this->acl->hasResource($role)
 			)) {
 				$resource = $role;
-				// @TODO: megcsinalni majd, ha lesz auth, hogy az aktualis felhasznalo role-ja keruljon be
+				// @TODO: If the webhemi\auth is complete, make this to use the current user's role
 				$role = 'guest';
 			}
 			return $this->acl->isAllowed($role, $resource);
@@ -214,4 +238,8 @@ class Acl
 		}
 	}
 
+	public function getIdentity()
+	{
+		return true;
+	}
 }
