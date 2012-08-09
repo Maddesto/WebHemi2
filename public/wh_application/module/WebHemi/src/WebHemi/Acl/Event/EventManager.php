@@ -27,15 +27,16 @@ class EventManager
 		);
 
 		// allows access to a full conntroller (be careful with it, wildcard for guests on your own risk)
-		$wildCardControllerResource = $controller . '/*';
+		$wildCardControllerResource = 'Controller-' . $controller . '/*';
 		// allows access to an action
-		$controllerActionResource   = $controller . '/' . $action;
+		$controllerActionResource   = 'Controller-' . $controller . '/' . $action;
 		// allows access to an URL (be sure that the URL cannot be changed)
-		$routeResource              = $_SERVER['REQUEST_URI'];
+		$routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
 
+		// isAllowed will return true for non-exist resources to not make the expression being false
         $allowed = $acl->isAllowed($wildCardControllerResource)
-			|| $acl->isAllowed($controllerActionResource)
-			|| $acl->isAllowed($routeResource);
+			&& $acl->isAllowed($controllerActionResource)
+			&& $acl->isAllowed($routeResource);
 
 		if (!$allowed) {
             $e->setError('error-unauthorized-controller')

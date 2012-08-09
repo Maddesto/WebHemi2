@@ -69,13 +69,19 @@ return array(
 		),
 	),
 	'access_control' => array(
-		'access' => array(
-			'controller' => array(
-				 'Index/*' => array('editor'),
-				 'Index/privatePage'  => array('guest'),
+		'resources' => array(
+			'Controller-Index/*',
+			'Route-/index/personal-page',
+			'Controller-Index/privatePage'
+		),
+		'rules' => array(
+			'allow' => array(
+				'Controller-Index/*'           => 'guest',
+				'Route-/index/personal-page'   => 'admin',
 			),
-			'route'      => array(
-				'/index/personal-page' => array('admin'),
+			'deny' => array(
+				'Controller-Index/privatePage' => 'guest',
+				'Route-/index/personal-page'   => 'guest',
 			),
 		),
 	),

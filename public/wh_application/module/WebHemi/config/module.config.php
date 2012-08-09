@@ -85,30 +85,16 @@ return array(
 		),
 		// only handles 'ALLOWED' rules
         'rules'        => array(
-			array(
-				'role'       => 'guest',
-				'resources'  => 'view',
-			),
-			array(
-				'role'       => 'member',
-				'resources'  => 'comment',
-			),
-			array(
-				'role'       => 'moderator',
-				'resources'  => 'moderate',
-			),
-			array(
-				'role'       => 'editor',
-				'resources'  => 'edit',
-			),
-			array(
-				'role'       => 'publisher',
-				'resources'  => array('publish', 'revoke', 'delete'),
-			),
-			array(
-				'role'       => 'admin',
-				'resources'  => 'manage',
-			),
+			'allow' => array(
+				'view'     => 'guest',
+				'comment'  => 'member',
+				'moderate' => 'moderator',
+				'edit'     => 'editor',
+				'publish'  => 'publisher',
+				'revoke'   => 'publisher',
+				'delete'   => 'publisher',
+				'manage'   => 'admin',
+			)
 		),
     ),
 	'translator' => array(

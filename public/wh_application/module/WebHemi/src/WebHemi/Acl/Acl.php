@@ -121,44 +121,24 @@ class Acl
 			$this->acl->addResource($key, null);
 		}
 
-		// we define 'controller-action'-based resources and rules
-		if (isset($this->options['access'])) {
-			$resources = $this->options['access'];
-			$controllerResources = isset($resources['controller']) ? (array)$resources['controller'] : array();
-			$routeResources      = isset($resources['route'])      ? (array)$resources['route']      : array();
-			$specialResources    = array_merge($controllerResources, $routeResources);
-
-			// if there is any special resource defined
-			if (!empty($specialResources)) {
-				foreach ($specialResources as $resourceName => $roles) {
-					// add the new resource to the acl
-					$key = new \Zend\Permissions\Acl\Resource\GenericResource($resourceName);
-					$this->acl->addResource($key, null);
-					// add the roles and resources to the rule list
-					$this->ruleProvider->addRule($roles, (array)$resourceName);
+		// set rules
+		$rules = $this->ruleProvider->getRules();
+		if (isset($rules['allow'])) {
+			foreach ($rules['allow'] as $resourceName => $roleName) {
+				if ($this->acl->hasResource($resourceName) && $this->acl->hasRole($roleName)) {
+					// allow the resources for the roles, except when the requesting IP is blacklisted.
+					$this->acl->allow($roleName, $resourceName, null, new CleanIPAssertion());
 				}
 			}
 		}
 
-		// set rules
-		$defaults = array(
-			'role'       => null,
-			'resources'  => null,
-			'privileges' => null,
-			'assertion'  => null,
-		);
-		foreach ($this->ruleProvider->getRules() as $rules) {
-			// make sure every index is set
-			$rules = array_values(array_merge($defaults, $rules));
-			// export the values from the array;
-			list($roles, $resources, $privileges, $assertion) = $rules;
-
-			// if there's no assertation given, we define one
-			if (is_null($assertion)) {
-				$assertion = new CleanIPAssertion();
+		if (isset($rules['deny'])) {
+			foreach ($rules['deny'] as $resourceName => $roleName) {
+				if ($this->acl->hasResource($resourceName) && $this->acl->hasRole($roleName)) {
+					// deny the resources for the roles.
+					$this->acl->deny($roleName, $resourceName);
+				}
 			}
-			// allow the resources for the roles, except when the requesting IP is blacklisted.
-			$this->acl->allow($roles, $resources, $privileges, $assertion);
 		}
 	}
 
@@ -211,24 +191,32 @@ class Acl
 	}
 
 	/**
+	 * Restrieve the Zend ACL object
+	 *
+	 * @return Zend\Permissions\Acl\Acl
+	 */
+	public function getService()
+	{
+		return $this->acl;
+	}
+
+	/**
 	 * Returns true if and only if the Role has access to the Resource
 	 *
-	 * @param  Role\RoleInterface|string            $role
 	 * @param  Resource\ResourceInterface|string    $resource
+	 * @param  Role\RoleInterface|string            $role
 	 * @return boolean
 	 */
-	public function isAllowed($role, $resource = null)
+	public function isAllowed($resource, $role = null)
 	{
 		try {
-			// if no resource is given, but the role seems to be a valid resource then we expect it is resource indeed
-			// and try to retrieve the role from the user session
-			if (empty($resource)
-					&& ($role instanceof Zend\Permissions\Acl\Resource\ResourceInterface
-					|| $this->acl->hasResource($role)
-			)) {
-				$resource = $role;
+			if (empty($role)) {
 				// @TODO: If the webhemi\auth is complete, make this to use the current user's role
 				$role = 'guest';
+			}
+			// If no role or no resourse we allow access
+			if (!$this->acl->hasRole($role) || !$this->acl->hasResource($resource)) {
+				return true;
 			}
 			return $this->acl->isAllowed($role, $resource);
 		}
@@ -236,10 +224,5 @@ class Acl
 		catch (Exception\InvalidArgumentException $e) {
 			return false;
 		}
-	}
-
-	public function getIdentity()
-	{
-		return true;
 	}
 }
