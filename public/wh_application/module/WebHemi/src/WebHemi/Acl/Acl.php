@@ -123,21 +123,10 @@ class Acl
 
 		// set rules
 		$rules = $this->ruleProvider->getRules();
-		if (isset($rules['allow'])) {
-			foreach ($rules['allow'] as $resourceName => $roleName) {
-				if ($this->acl->hasResource($resourceName) && $this->acl->hasRole($roleName)) {
-					// allow the resources for the roles, except when the requesting IP is blacklisted.
-					$this->acl->allow($roleName, $resourceName, null, new CleanIPAssertion());
-				}
-			}
-		}
-
-		if (isset($rules['deny'])) {
-			foreach ($rules['deny'] as $resourceName => $roleName) {
-				if ($this->acl->hasResource($resourceName) && $this->acl->hasRole($roleName)) {
-					// deny the resources for the roles.
-					$this->acl->deny($roleName, $resourceName);
-				}
+		foreach ($rules as $resourceName => $roleName) {
+			if ($this->acl->hasResource($resourceName) && $this->acl->hasRole($roleName)) {
+				// allow the resources for the roles, except when the requesting IP is blacklisted.
+				$this->acl->allow($roleName, $resourceName, null, new CleanIPAssertion());
 			}
 		}
 	}
@@ -201,7 +190,9 @@ class Acl
 	}
 
 	/**
-	 * Returns true if and only if the Role has access to the Resource
+	 * Returns true if and only if the Role has access to the Resource.
+	 * If a valid role is not coupled with a valid resource it will result FALSE.
+	 * If the role or the resourse is not valid it will result TRUE.
 	 *
 	 * @param  Resource\ResourceInterface|string    $resource
 	 * @param  Role\RoleInterface|string            $role
@@ -214,11 +205,13 @@ class Acl
 				// @TODO: If the webhemi\auth is complete, make this to use the current user's role
 				$role = 'guest';
 			}
-			// If no role or no resourse we allow access
+
+			// allow access
 			if (!$this->acl->hasRole($role) || !$this->acl->hasResource($resource)) {
 				return true;
 			}
-			return $this->acl->isAllowed($role, $resource);
+
+			return (bool)$this->acl->isAllowed($role, $resource);
 		}
 		// It is not necessary to terminate the script. Fair enough to return with a FALSE
 		catch (Exception\InvalidArgumentException $e) {

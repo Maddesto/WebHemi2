@@ -75,14 +75,9 @@ return array(
 			'Controller-Index/privatePage'
 		),
 		'rules' => array(
-			'allow' => array(
-				'Controller-Index/*'           => 'guest',
-				'Route-/index/personal-page'   => 'admin',
-			),
-			'deny' => array(
-				'Controller-Index/privatePage' => 'guest',
-				'Route-/index/personal-page'   => 'guest',
-			),
+			'Controller-Index/*'           => 'guest',
+			'Controller-Index/privatePage' => 'moderator',
+			'Route-/index/personal-page'   => 'admin',
 		),
 	),
 );

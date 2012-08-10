@@ -85,16 +85,14 @@ return array(
 		),
 		// only handles 'ALLOWED' rules
         'rules'        => array(
-			'allow' => array(
-				'view'     => 'guest',
-				'comment'  => 'member',
-				'moderate' => 'moderator',
-				'edit'     => 'editor',
-				'publish'  => 'publisher',
-				'revoke'   => 'publisher',
-				'delete'   => 'publisher',
-				'manage'   => 'admin',
-			)
+			'view'     => 'guest',
+			'comment'  => 'member',
+			'moderate' => 'moderator',
+			'edit'     => 'editor',
+			'publish'  => 'publisher',
+			'revoke'   => 'publisher',
+			'delete'   => 'publisher',
+			'manage'   => 'admin',
 		),
     ),
 	'translator' => array(
