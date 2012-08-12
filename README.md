@@ -3,7 +3,7 @@ WebHemi2
 
 Version 2.0 alpha 4 Created by Gixx.
 
-**HIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
+**THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
 Introduction
 ------------
