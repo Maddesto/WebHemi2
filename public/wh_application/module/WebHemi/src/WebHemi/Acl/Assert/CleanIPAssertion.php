@@ -22,7 +22,9 @@
 
 namespace WebHemi\Acl\Assert;
 
-use Zend\Permissions\Acl\Acl,
+use WebHemi\Model\Table\Lock,
+	Zend\ServiceManager\ServiceManager,
+	Zend\Permissions\Acl\Acl,
 	Zend\Permissions\Acl\Resource\ResourceInterface,
 	Zend\Permissions\Acl\Role\RoleInterface,
 	Zend\Permissions\Acl\Assertion\AssertionInterface;
@@ -38,6 +40,14 @@ use Zend\Permissions\Acl\Acl,
  */
 class CleanIPAssertion implements AssertionInterface
 {
+	/** @var Zend\ServiceManager\ServiceManager $serviceManager */
+	protected $serviceManager;
+
+	public function __construct(ServiceManager $serviceManager)
+	{
+		$this->serviceManager = $serviceManager;
+	}
+
 	/**
      * Returns true if and only if the assertion conditions are met
      *
@@ -53,7 +63,6 @@ class CleanIPAssertion implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        // @TODO create valid logic
-		return true;
+		return $this->serviceManager->get('lockTable')->getLock()->tryings >= Lock::MAXTRYINGS ? false : true;
     }
 }

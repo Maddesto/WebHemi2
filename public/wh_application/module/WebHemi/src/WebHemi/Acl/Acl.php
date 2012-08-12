@@ -126,7 +126,7 @@ class Acl
 		foreach ($rules as $resourceName => $roleName) {
 			if ($this->acl->hasResource($resourceName) && $this->acl->hasRole($roleName)) {
 				// allow the resources for the roles, except when the requesting IP is blacklisted.
-				$this->acl->allow($roleName, $resourceName, null, new CleanIPAssertion());
+				$this->acl->allow($roleName, $resourceName, null, new CleanIPAssertion($this->serviceManager));
 			}
 		}
 	}
@@ -206,7 +206,7 @@ class Acl
 				$role = 'guest';
 			}
 
-			// allow access
+			// allow access for invalid role or resource
 			if (!$this->acl->hasRole($role) || !$this->acl->hasResource($resource)) {
 				return true;
 			}
