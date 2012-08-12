@@ -34,7 +34,7 @@ namespace WebHemi;
 final class Application
 {
 	/** The WebHemi's version */
-	const WEBHEMI_VERSION        = '2.0.0.3';
+	const WEBHEMI_VERSION        = '2.0alpha4';
 	/** The required minimal version of the Zend Framework */
 	const MINIMUM_ZF_REQUIREMENT = '2.0';
 	/** The name of the admin module */

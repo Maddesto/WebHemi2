@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.3 (a.k.a. 2.0 alpha 3) Created by Gixx.
+Version 2.0 alpha 4 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT YET. DO NOT USE!**
 
@@ -24,7 +24,7 @@ Features / Goals
 - Logical separation of 'Admin' and 'Website' applications [DONE]
 - Support for custom themes in 'Website' application [DONE]
 - Subdomain support for applications except 'Website' which is always on 'www' [DONE]
-- Privilege system with IP blacklist [PARTIAL]
+- Privilege system with IP blacklist [DONE]
 - Secure authentication [PLANNING]
 - Secure Form solution [PLANNING]
 - 'Virtual folder structure'-like content management [PLANNING]
