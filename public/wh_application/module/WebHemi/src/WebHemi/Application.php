@@ -166,13 +166,24 @@ final class Application
 	 * @param string $name         The name of the config section
 	 * @param string $filename     The path to the config file
 	 * @param boolean $overwrite   Merge or overwrite
+	 * @param string $segment      Includes only a segment of the config
 	 * @throws Exception
 	 * @return void
 	 */
-	public function setConfig($name, $filename, $overwrite = false)
+	public function setConfig($name, $filename, $overwrite = false, $segment = null)
 	{
 		if (file_exists($filename) && is_readable($filename)) {
 			$config = include $filename;
+
+			// if segment is given
+			if (!empty($segment) ) {
+				if (isset($config[$segment])) {
+					$config = $config[$segment];
+				}
+				else {
+					throw new \Exception('Unknown segment (' . $segment . ') in the config.');
+				}
+			}
 
 			// if the given path returns as an array
 			if (is_array($config)) {

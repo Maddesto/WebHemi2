@@ -20,9 +20,6 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 return array(
-	'translator' => array(
-		'locale' => 'hu_HU',
-	),
 	'wh_themes' => array(
 		'current_theme' => 'default',
 		'theme_paths'   => array(

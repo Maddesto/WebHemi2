@@ -88,15 +88,12 @@ class Module implements
 					? Application::ADMIN_MODULE
 					: Application::WEBSITE_MODULE;
 
+			// load the general config
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/module.config.php');
+			// load the main module config
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/' . $mainModule . '.module.config.php');
-
-			// if the courrent module is a virtual module and it has its own config, we load it as well
-			if (APPLICATION_MODULE !== $mainModule
-					&& file_exists(__DIR__ . '/config/' . APPLICATION_MODULE . '.module.config.php')
-			) {
-				$hemiApplication->setConfig('Module', __DIR__ . '/config/' . APPLICATION_MODULE . '.module.config.php');
-			}
+			// load the customizable configs
+			$hemiApplication->setConfig('Module', __DIR__ . '/config/custom.module.config.php', false, APPLICATION_MODULE);
 		}
 		return $hemiApplication->getConfig('Module');
 	}
