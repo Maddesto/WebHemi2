@@ -1,5 +1,4 @@
 <?php
-
 return array(
 	WebHemi\Application::ADMIN_MODULE => array(
 		'type' => 'subdomain',

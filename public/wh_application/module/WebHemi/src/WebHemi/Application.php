@@ -95,7 +95,7 @@ final class Application
 	 */
 	public static function getCurrentModuleFromUrl($url = '')
 	{
-		$modules   = require_once APPLICATION_PATH . '/config/application.modules.config.php';
+		$modules   = require_once WEBHEMI_PATH . '/config/application.config.php';
 		$module    = self::WEBSITE_MODULE;
 		$subDomain = '';
 
@@ -232,7 +232,8 @@ final class Application
 			foreach ($array as $key => $value) {
 				if (is_string($key)) {
 					if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-						$merged[$key] = call_user_func(array(__CLASS__, __METHOD__), $merged[$key], $value);
+//						$merged[$key] = call_user_func(array(__CLASS__, __METHOD__), $merged[$key], $value);
+						$merged[$key] = $this->mergeConfig($merged[$key], $value);
 					}
 					else {
 						$merged[$key] = $value;
@@ -286,18 +287,26 @@ final class Application
 	 */
 	private function setAutoLoader()
 	{
-		require_once ZF2_PATH . '/Loader/AutoloaderFactory.php';
+		$factoryConfig = array();
+		// there is a ZF2 autoload map file, we use it prior of the standard autoload
+		if (file_exists(ZF2_PATH . '/autoload_classmap.php')) {
+			require_once ZF2_PATH . '/Loader/ClassMapAutoloader.php';
+			$factoryConfig['Zend\Loader\ClassMapAutoloader'] = array(
+                ZF2_PATH . '/autoload_classmap.php',
+            );
+		}
 
-		\Zend\Loader\AutoloaderFactory::factory(array(
-			'Zend\Loader\StandardAutoloader' => array(
-				'autoregister_zf'     => true,
-				'fallback_autoloader' => true,
-				'namespaces'          => array(
-					'WebHemi' => APPLICATION_PATH . '/module/WebHemi',
-					'Zend'    => ZF2_PATH,
-				),
+		$factoryConfig['Zend\Loader\StandardAutoloader'] = array(
+			'autoregister_zf'     => true,
+			'fallback_autoloader' => true,
+			'namespaces'          => array(
+				'WebHemi' => WEBHEMI_PATH,
+				'Zend'    => ZF2_PATH,
 			),
-		));
+		);
+
+		require_once ZF2_PATH . '/Loader/AutoloaderFactory.php';
+		\Zend\Loader\AutoloaderFactory::factory($factoryConfig);
 	}
 
 	/**

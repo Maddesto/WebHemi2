@@ -89,7 +89,7 @@ class Module implements
 					: Application::WEBSITE_MODULE;
 
 			// load the general config
-			$hemiApplication->setConfig('Module', __DIR__ . '/config/module.config.php');
+			$hemiApplication->setConfig('Module', __DIR__ . '/config/common.module.config.php');
 			// load the main module config
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/' . $mainModule . '.module.config.php');
 			// load the customizable configs
@@ -106,6 +106,9 @@ class Module implements
 	public function getAutoloaderConfig()
 	{
 		return array(
+			'Zend\Loader\ClassMapAutoloader' => array(
+                __DIR__ . '/autoload_classmap.php',
+            ),
 			'Zend\Loader\StandardAutoloader' => array(
 				'namespaces' => array(
 					__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,

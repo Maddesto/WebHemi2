@@ -20,16 +20,20 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-require_once __DIR__ . '/module/WebHemi/src/WebHemi/Application.php';
 
 defined('APPLICATION_PATH')
 		|| define('APPLICATION_PATH', __DIR__);
+
+defined('WEBHEMI_PATH')
+		|| define('WEBHEMI_PATH', APPLICATION_PATH . '/module/WebHemi');
 
 defined('WEB_ROOT')
 		|| define('WEB_ROOT', realpath(APPLICATION_PATH . '/../'));
 
 defined('APPLICATION_ENV')
 		|| define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
+
+require_once WEBHEMI_PATH . '/src/WebHemi/Application.php';
 
 defined('APPLICATION_MODULE')
 		|| define('APPLICATION_MODULE', WebHemi\Application::getCurrentModuleFromUrl());

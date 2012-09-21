@@ -16,11 +16,3 @@ Options -Indexes
 <IfModule !mod_rewrite.c>
 	SetEnv APPLICATION_ROUTING query_string
 </IfModule>
-
-SetEnvIf Host .*\.localhost php_value xdebug.remote_enable 1
-SetEnvIf Host .*\.localhost php_value xdebug.remote_host www.webhemi.localhost
-SetEnvIf Host .*\.localhost php_value xdebug.auto_profile 1
-SetEnvIf Host .*\.localhost php_value xdebug.profiler_enable 1
-SetEnvIf Host .*\.localhost php_value xdebug.auto_trace 1
-
-
