@@ -1,15 +1,25 @@
 <?php
+
 return array(
-	WebHemi\Application::ADMIN_MODULE => array(
-		'type' => 'subdomain',
-		'path' => 'admin'
+	'Admin' => array(
+		'translator' => array(
+			'locale' => 'en_US',
+		),
 	),
-	 WebHemi\Application::WEBSITE_MODULE => array(
-		'type' => 'subdomain',
-		'path' => 'www'
+	'Website' => array(
+		'translator' => array(
+			'locale' => 'hu_HU',
+		),
+		'wh_themes' => array(
+			'current_theme' => 'default',
+		),
 	),
 	'AdminWiki' => array(
-		'type' => 'subdomain',
-		'path' => 'admin.wiki'
+		'translator' => array(
+			'locale' => 'en_US',
+		),
+		'wh_themes' => array(
+			'current_theme' => 'silver',
+		),
 	),
 );
