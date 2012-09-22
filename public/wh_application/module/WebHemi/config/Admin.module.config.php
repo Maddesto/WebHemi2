@@ -26,10 +26,10 @@ return array(
 			'admin' => array(
 				'type'    => 'Segment',
 				'options' => array(
-					'route'       => '/[:controller[/:action]]',
+					'route'       => '/[:action]',
 					'defaults'    => array(
-						'__NAMESPACE__' => 'WebHemi\Controller\Admin',
-						'controller'    => 'Index',
+						'__NAMESPACE__' => 'WebHemi\Controller',
+						'controller'    => 'Admin',
 						'action'        => 'index',
 					),
 					'constraints' => array(
@@ -43,12 +43,26 @@ return array(
 	),
 	'controllers' => array(
 		'invokables' => array(
-			'WebHemi\Controller\Admin\Index' => 'WebHemi\Controller\Admin\IndexController',
+			'WebHemi\Controller\Admin' => 'WebHemi\Controller\AdminController',
 		),
 	),
+	'module_layouts' => array(
+        'WebHemi' => 'layout/admin',
+    ),
 	'view_manager' => array(
 		'template_path_stack'      => array(
-			'admin' => __DIR__ . '/../view/admin',
+			'admin' => __DIR__ . '/../view',
+		),
+		'template_map'               => array(
+			'layout/layout'          => __DIR__ . '/../view/layout/admin.phtml',
+		),
+	),
+	'access_control' => array(
+		'resources' => array(
+			'Controller-Admin/*',
+		),
+		'rules' => array(
+			'Controller-Admin/*' => 'member',
 		),
 	),
 );

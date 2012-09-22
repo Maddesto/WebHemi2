@@ -63,6 +63,7 @@ class CleanIPAssertion implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-		return $this->serviceManager->get('lockTable')->getLock()->tryings >= Lock::MAXTRYINGS ? false : true;
+		$lockTable = new Lock($this->serviceManager->get('Zend\Db\Adapter\Adapter'));
+		return $lockTable->getLock()->getTryings() >= Lock::MAXTRYINGS ? false : true;
     }
 }

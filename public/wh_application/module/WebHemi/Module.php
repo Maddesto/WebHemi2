@@ -67,6 +67,17 @@ class Module implements
 		$eventManager->attach($serviceManager->get('forbidden'));
 		$eventManager->attach('route', array('WebHemi\Acl\Event\EventManager', 'onRoute'), -1000);
 
+		// Tell the controllers to use Module specific layouts
+		$eventManager->getSharedManager()->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch', function($e) {
+            $controller = $e->getTarget();
+            $controllerClass = get_class($controller);
+            $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
+            $config = $e->getApplication()->getServiceManager()->get('config');
+            if (isset($config['module_layouts'][$moduleNamespace])) {
+                $controller->layout($config['module_layouts'][$moduleNamespace]);
+            }
+        }, 100);
+
 		// Link the event manager to the modoule route listener
 		$moduleRouteListener = new ModuleRouteListener();
 		$moduleRouteListener->attach($eventManager);
@@ -93,7 +104,7 @@ class Module implements
 			// load the main module config
 			$hemiApplication->setConfig('Module', __DIR__ . '/config/' . $mainModule . '.module.config.php');
 			// load the customizable configs
-			$hemiApplication->setConfig('Module', __DIR__ . '/config/custom.module.config.php', false, APPLICATION_MODULE);
+			$hemiApplication->setConfig('Module', __DIR__ . '/config/application.config.php', false, APPLICATION_MODULE);
 		}
 		return $hemiApplication->getConfig('Module');
 	}

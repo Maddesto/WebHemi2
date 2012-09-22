@@ -33,14 +33,106 @@ namespace WebHemi\Model;
  */
 class Lock
 {
-	/** @var int    $lock_id  */
-	public $lock_id;
-	/** @var string $client_ip  */
-	public $client_ip;
-	/** @var int    $tryings  */
-	public $tryings;
-	/** @var date   $lock_time  */
-	public $lock_time;
+	/** @var int       $lockId  */
+	protected $lockId;
+	/** @var string    $clientIp  */
+	protected $clientIp;
+	/** @var int       $tryings  */
+	protected $tryings;
+	/** @var DateTime  $timeLock  */
+	protected $timeLock;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct()
+	{
+		$this->lockId   = null;
+		$this->clientIp = $_SERVER['REMOTE_ADDR'];
+		$this->tryings  = 0;
+		$this->timeLock = null;
+	}
+
+	/**
+	 * Get lockId
+	 *
+	 * @return int
+	 */
+	public function getLockId()
+	{
+		return $this->lockId;
+	}
+
+	/**
+	 * Get clientIp
+	 *
+	 * @return string
+	 */
+	public function getClientIp()
+	{
+		return $this->clientIp;
+	}
+
+	/**
+	 * Set clientIp.
+	 *
+	 * @param $clientIp
+	 * @return Lock
+	 */
+	public function setClienIp($clientIp)
+	{
+		$this->clientIp = $clientIp;
+		return $this;
+	}
+
+	/**
+	 * Get tryings
+	 *
+	 * @return int
+	 */
+	public function getTryings()
+	{
+		return $this->tryings;
+	}
+
+	/**
+	 * Set tryings
+	 *
+	 * @param int $tryings
+	 * @return Lock
+	 */
+	public function setTryings($tryings)
+	{
+		$this->tryings = (int)$tryings;
+		return $this;
+	}
+
+	/**
+	 * Get timeLock
+	 *
+	 * @return DateTime
+	 */
+	public function getTimeLock()
+	{
+		return $this->timeLock;
+	}
+
+	/**
+	 * Set timeLock
+	 *
+	 * @param DateTime/string $timeLock
+	 * @return Lock
+	 */
+	public function setTimeLock($timeLock = null)
+	{
+		if (is_null($timeLock) || $timeLock instanceof DateTime) {
+			$this->timeLock = $timeLock;
+		}
+		else {
+			$this->timeLock = new DateTime($timeLock);
+		}
+		return $this;
+	}
 
 	/**
 	 * Exchange array values into object properties
@@ -49,10 +141,10 @@ class Lock
 	 */
 	public function exchangeArray($data)
 	{
-		$this->lock_id   = (isset($data['lock_id']))   ? (int)$data['lock_id'] : null;
-		$this->client_ip = (isset($data['client_ip'])) ? $data['client_ip'] : null;
-		$this->tryings   = (isset($data['tryings']))   ? (int)$data['tryings'] : null;
-		$this->lock_time = (isset($data['lock_time'])) ? $data['lock_time'] : null;
+		$this->lockId   = (isset($data['lock_id']))   ? (int)$data['lock_id'] : null;
+		$this->clientIp = (isset($data['client_ip'])) ? $data['client_ip'] : null;
+		$this->tryings  = (isset($data['tryings']))   ? (int)$data['tryings'] : null;
+		$this->timeLock = (isset($data['time_lock'])) ? new DateTime($data['time_lock']) : null;
 	}
 
 	/**
@@ -63,11 +155,10 @@ class Lock
 	public function toArray()
 	{
 		return array(
-			'lock_id'   => $this->lock_id,
-			'client_ip' => $this->client_ip,
+			'lock_id'   => $this->lockId,
+			'client_ip' => $this->clientIp,
 			'tryings'   => $this->tryings,
-			'lock_time' => $this->lock_time
+			'time_lock' => $this->timeLock->format('Y-m-d H:i:s')
 		);
 	}
-
 }

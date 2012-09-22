@@ -25,7 +25,6 @@ return array(
 			'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
 			'acl'        => 'WebHemi\ServiceFactory\AclServiceFactory',
 			'forbidden'  => 'WebHemi\ServiceFactory\ForbiddenStrategyServiceFactory',
-			'lockTable'  => 'WebHemi\ServiceFactory\LockTableServiceFactory',
 		),
 	),
 	'controllers' => array(

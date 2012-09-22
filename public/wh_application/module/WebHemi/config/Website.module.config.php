@@ -35,10 +35,10 @@ return array(
 			'website' => array(
 				'type'    => 'Segment',
 				'options' => array(
-					'route'       => '/[:controller[/:action]]',
+					'route'       => '/[:action]',
 					'defaults'    => array(
-						'__NAMESPACE__' => 'WebHemi\Controller\Website',
-						'controller'    => 'Index',
+						'__NAMESPACE__' => 'WebHemi\Controller',
+						'controller'    => 'Website',
 						'action'        => 'index',
 					),
 					'constraints' => array(
@@ -57,24 +57,30 @@ return array(
 	),
 	'controllers' => array(
 		'invokables' => array(
-			'WebHemi\Controller\Website\Index' => 'WebHemi\Controller\Website\IndexController'
+			'WebHemi\Controller\Website' => 'WebHemi\Controller\WebsiteController'
 		),
 	),
+	'module_layouts' => array(
+        'WebHemi' => 'layout/default',
+    ),
 	'view_manager' => array(
 		'template_path_stack'      => array(
-			'website' => __DIR__ . '/../view/website',
+			'website' => __DIR__ . '/../view',
+		),
+		'template_map'               => array(
+			'layout/layout'          => __DIR__ . '/../view/layout/default.phtml',
 		),
 	),
 	'access_control' => array(
 		'resources' => array(
-			'Controller-Index/*',
-			'Route-/index/personal-page',
-			'Controller-Index/privatePage'
+			'Controller-Website/*',
+			'Controller-Website/privatePage',
+			'Route-/personal-page',
 		),
 		'rules' => array(
-			'Controller-Index/*'           => 'guest',
-			'Controller-Index/privatePage' => 'moderator',
-			'Route-/index/personal-page'   => 'admin',
+			'Controller-Website/*'           => 'guest',
+			'Controller-Website/privatePage' => 'moderator',
+			'Route-/personal-page'           => 'admin',
 		),
 	),
 );

@@ -43,6 +43,7 @@ class Lock extends AbstractTableGateway
 	/** @var int The number of minutes the login is locked upon reaching the maximum number of access attempts */
 	const LOCKTIME = 15;
 
+	/** @var string $table   The name of the database table */
 	protected $table = 'webhemi_lock';
 
 	/**
@@ -71,40 +72,57 @@ class Lock extends AbstractTableGateway
 
 		// if no record, we create one
 		if (!$lockModel) {
-			// instantiate the return object
+			// instantiate the return object and save the new record
 			$lockModel = new LockModel();
-			$lockModel->lock_id   = null;
-			$lockModel->client_ip = $_SERVER['REMOTE_ADDR'];
-			$lockModel->tryings   = 0;
-			$lockModel->lock_time = null;
-			// save the new record
-			$this->insert($lockModel->toArray());
+			// if we can't save
+			if (!$this->insert($lockModel->toArray())) {
+				$lockModel = false;
+			}
 		}
 		return $lockModel;
 	}
 
 	/**
 	 * Set lock data for current IP
+	 *
+	 * @return int
 	 */
 	public function setLock()
 	{
 		$lockModel = $this->getLock();
-		$lockModel->tryings = (int)$lockModel->tryings + 1;
-		if ($lockModel->tryings >= self::MAXTRYINGS) {
-			$lockModel->lock_time = gmdate('Y-m-d H:i:s');
+
+		// only if the data is valid
+		if ($lockModel instanceof Lock) {
+			// count the tryings
+			$tryings = (int)$lockModel->getTryings() + 1;
+			// set the new value
+			$lockModel->setTryings($tryings);
+			if ($tryings >= self::MAXTRYINGS) {
+				$lockModel->setTimeLock(gmdate('Y-m-d H:i:s'));
+			}
+			return $this->update($lockModel->toArray(), array('lock_id' => $lockModel->getLockId()));
 		}
-		$this->update($lockModel->toArray(), array('lock_id' => $lockModel->lock_id));
+		// on error
+		return 0;
 	}
 
 	/**
 	 * Release (reset) lock data for current IP
+	 *
+	 * @return int
 	 */
 	public function releaseLock()
 	{
 		$lockModel = $this->getLock();
-		$lockModel->tryings   = 0;
-		$lockModel->lock_time = null;
-		$this->update($lockModel->toArray(), array('lock_id' => $lockModel->lock_id));
+
+		// only if the data is valid
+		if ($lockModel instanceof Lock) {
+			$lockModel->setTryings(0)
+					->setTimeLock();
+			return $this->update($lockModel->toArray(), array('lock_id' => $lockModel->getLockId()));
+		}
+		// on error
+		return 0;
 	}
 
 }
