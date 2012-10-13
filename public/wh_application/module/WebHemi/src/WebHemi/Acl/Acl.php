@@ -25,10 +25,13 @@ namespace WebHemi\Acl;
 use Zend\ServiceManager\ServiceManager,
 	Zend\Permissions\Acl\Acl as ZendAcl,
 	Zend\Permissions\Acl\Exception,
+	Zend\Permissions\Acl\Resource\GenericResource,
+	Zend\Authentication\AuthenticationService,
 	WebHemi\Acl\Provider\RoleProvider,
 	WebHemi\Acl\Provider\ResourceProvider,
 	WebHemi\Acl\Provider\RuleProvider,
-	WebHemi\Acl\Assert\CleanIPAssertion;
+	WebHemi\Acl\Assert\CleanIPAssertion,
+	WebHemi\Model\User as UserModel;
 
 /**
  * WebHemi Access Control
@@ -47,6 +50,8 @@ class Acl
 	protected $serviceManager;
 	/** @var Zend\Permissions\Acl\Acl $acl */
 	protected $acl;
+	/** @var Zend\Authentication\AuthenticationService $auth */
+	protected $auth;
 	/** @var string $template */
 	protected $template = 'error/403';
 	/** @var RoleProvider $roleProvider */
@@ -62,7 +67,7 @@ class Acl
 	 * @param  array|Traversable $options
 	 * @param ServiceManager     $serviceManager
 	 *
-	 * @return WebHemi\ServiceManager\ThemeManager
+	 * @return WebHemi\Acl\Acl
 	 * @throws Exception\InvalidArgumentException
 	 */
 	public static function factory($options, ServiceManager $serviceManager)
@@ -96,6 +101,8 @@ class Acl
 		$this->serviceManager = $serviceManager;
 		// set the ACL object
 		$this->acl = new ZendAcl();
+		// set the UserAuth service
+		$this->auth = $this->serviceManager->get('auth');
 	}
 
 	/**
@@ -117,7 +124,7 @@ class Acl
 
 		// add the resources to the ACL
 		foreach ($this->resourceProvider->getResources() as $resource) {
-			$key = new \Zend\Permissions\Acl\Resource\GenericResource($resource->getResourceId());
+			$key = new GenericResource($resource->getResourceId());
 			$this->acl->addResource($key, null);
 		}
 
@@ -202,8 +209,9 @@ class Acl
 	{
 		try {
 			if (empty($role)) {
-				// @TODO: If the webhemi\auth is complete, make this to use the current user's role
-				$role = 'guest';
+				$role = $this->hasIdentity()
+						? $this->getIdentity()->getRole()
+						: $this->options['default_role'];
 			}
 
 			// allow access for invalid role or resource
@@ -217,5 +225,55 @@ class Acl
 		catch (Exception\InvalidArgumentException $e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Returns true if the user is authenticated
+	 *
+	 * @return boolean
+	 */
+	public function hasIdentity()
+	{
+		if ($this->auth instanceof AuthenticationService) {
+			return $this->auth->hasIdentity();
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the User entity
+	 *
+	 * @return UserModel
+	 */
+	public function getIdentity()
+	{
+		if ($this->hasIdentity()) {
+			return $this->auth->getIdentity();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Check whether a resource exists
+	 *
+	 * @param  Resource\ResourceInterface|string    $resource
+	 * @return boolean
+	 */
+	public function hasResource($resource)
+	{
+		return $this->acl->hasResource($resource);
+	}
+
+	/**
+	 * Check whether a role exists
+	 *
+	 * @param  Role\RoleInterface|string   $role
+	 * @return boolean
+	 */
+	public function hasRole($role)
+	{
+		return $this->acl->hasRole($role);
 	}
 }

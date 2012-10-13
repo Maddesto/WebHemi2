@@ -129,7 +129,7 @@ class Lock
 			$this->timeLock = $timeLock;
 		}
 		else {
-			$this->timeLock = new DateTime($timeLock);
+			$this->timeLock = new \DateTime($timeLock);
 		}
 		return $this;
 	}
@@ -144,7 +144,7 @@ class Lock
 		$this->lockId   = (isset($data['lock_id']))   ? (int)$data['lock_id'] : null;
 		$this->clientIp = (isset($data['client_ip'])) ? $data['client_ip'] : null;
 		$this->tryings  = (isset($data['tryings']))   ? (int)$data['tryings'] : null;
-		$this->timeLock = (isset($data['time_lock'])) ? new DateTime($data['time_lock']) : null;
+		$this->timeLock = (isset($data['time_lock'])) ? new \DateTime($data['time_lock']) : null;
 	}
 
 	/**
@@ -158,7 +158,7 @@ class Lock
 			'lock_id'   => $this->lockId,
 			'client_ip' => $this->clientIp,
 			'tryings'   => $this->tryings,
-			'time_lock' => $this->timeLock->format('Y-m-d H:i:s')
+			'time_lock' => $this->timeLock instanceof \DateTime ? $this->timeLock->format('Y-m-d H:i:s') : null,
 		);
 	}
 }

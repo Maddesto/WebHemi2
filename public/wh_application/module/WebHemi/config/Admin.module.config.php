@@ -23,7 +23,7 @@ return array(
 	'router' => array(
 		'routes' => array(
 			// Admin application
-			'admin' => array(
+			'index' => array(
 				'type'    => 'Segment',
 				'options' => array(
 					'route'       => '/[:action]',

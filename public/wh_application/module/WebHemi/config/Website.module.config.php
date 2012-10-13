@@ -32,7 +32,7 @@ return array(
 	'router' => array(
 		'routes' => array(
 			// website application
-			'website' => array(
+			'index' => array(
 				'type'    => 'Segment',
 				'options' => array(
 					'route'       => '/[:action]',
@@ -64,11 +64,11 @@ return array(
         'WebHemi' => 'layout/default',
     ),
 	'view_manager' => array(
-		'template_path_stack'      => array(
+		'template_path_stack' => array(
 			'website' => __DIR__ . '/../view',
 		),
-		'template_map'               => array(
-			'layout/layout'          => __DIR__ . '/../view/layout/default.phtml',
+		'template_map' => array(
+			'layout/layout' => __DIR__ . '/../view/layout/default.phtml',
 		),
 	),
 	'access_control' => array(

@@ -217,11 +217,11 @@ class User
 	 */
 	public function setTimeLogin($timeLogin)
 	{
-		if ($timeLogin instanceof DateTime) {
+		if ($timeLogin instanceof \DateTime) {
 			$this->timeLogin = $timeLogin;
 		}
 		else {
-			$this->timeLogin = new DateTime($timeLogin);
+			$this->timeLogin = new \DateTime($timeLogin);
 		}
 		return $this;
 	}
@@ -266,11 +266,11 @@ class User
 	 */
 	public function setTimeRegister($timeRegister)
 	{
-		if ($timeRegister instanceof DateTime) {
+		if ($timeRegister instanceof \DateTime) {
 			$this->timeRegister = $timeRegister;
 		}
 		else {
-			$this->timeRegister = new DateTime($timeRegister);
+			$this->timeRegister = new \DateTime($timeRegister);
 		}
 		return $this;
 	}
@@ -358,8 +358,8 @@ class User
 		$this->registerIp   = (isset($data['register_ip']))   ? $data['register_ip'] : null;
 		$this->isActive     = (isset($data['is_active']))     ? (bool) $data['is_active'] : null;
 		$this->isEnabled    = (isset($data['is_enabled']))    ? (bool) $data['is_enabled'] : null;
-		$this->timeLogin    = (isset($data['time_login']))    ? new DateTime($data['time_login']) : null;
-		$this->timeRegister = (isset($data['time_register'])) ? new DateTime($data['time_register']) : null;
+		$this->timeLogin    = (isset($data['time_login']))    ? new \DateTime($data['time_login']) : null;
+		$this->timeRegister = (isset($data['time_register'])) ? new \DateTime($data['time_register']) : null;
 	}
 
 	/**

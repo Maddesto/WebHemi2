@@ -21,14 +21,22 @@
  */
 return array(
 	'service_manager' => array(
+		'invokables' => array(
+			'authAdapterDb' => 'WebHemi\Auth\Adapter\Db',
+			'authStorageDb' => 'WebHemi\Auth\Storage\Db',
+		),
 		'factories' => array(
-			'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
-			'acl'        => 'WebHemi\ServiceFactory\AclServiceFactory',
-			'forbidden'  => 'WebHemi\ServiceFactory\ForbiddenStrategyServiceFactory',
+			'acl'         => 'WebHemi\ServiceFactory\AclServiceFactory',
+			'auth'        => 'WebHemi\ServiceFactory\AuthServiceFactory',
+			'authAdapter' => 'WebHemi\ServiceFactory\AuthAdapterServiceFactory',
+			'formService' => 'WebHemi\ServiceFactory\FormServiceFactory',
+			'translator'  => 'Zend\I18n\Translator\TranslatorServiceFactory',
 		),
 	),
 	'controllers' => array(
-		// common invokables
+		'invokables' => array(
+			'WebHemi\Controller\User' => 'WebHemi\Controller\UserController'
+		),
 	),
 	'view_manager' => array(
 		'display_not_found_reason' => true,
@@ -36,18 +44,20 @@ return array(
 		'doctype'                  => 'HTML5',
 		'not_found_template'       => 'error/404',
 		'exception_template'       => 'error/index',
-		'strategies' => array(
-			'forbidden',
-        ),
+//		'strategies' => array(
+//			'forbidden',
+//        ),
 	),
 	'controller_plugins' => array(
 		'factories' => array(
 			'isAllowed' => 'WebHemi\Controller\Plugin\Factory\IsAllowedFactory',
+			'userAuth'  => 'WebHemi\Controller\Plugin\Factory\UserAuthFactory',
 		),
 	),
 	'view_helpers' => array(
 		'factories' => array(
-			'isAllowed' => 'WebHemi\View\Helper\Factory\IsAllowedFactory',
+			'isAllowed'   => 'WebHemi\View\Helper\Factory\IsAllowedFactory',
+			'getIdentity' => 'WebHemi\View\Helper\Factory\GetIdentityFactory',
 		),
 	),
 	'access_control' => array(
@@ -73,7 +83,7 @@ return array(
 				'parent'   => 'publisher',
 			),
 		),
-        'resources'    => array(
+        'resources' => array(
 			'view',
 			'comment',
 			'moderate',
@@ -82,17 +92,19 @@ return array(
 			'revoke',
 			'delete',
 			'manage',
+			'Controller-User/*',
 		),
 		// only handles 'ALLOWED' rules
-        'rules'        => array(
-			'view'     => 'guest',
-			'comment'  => 'member',
-			'moderate' => 'moderator',
-			'edit'     => 'editor',
-			'publish'  => 'publisher',
-			'revoke'   => 'publisher',
-			'delete'   => 'publisher',
-			'manage'   => 'admin',
+        'rules' => array(
+			'view'              => 'guest',
+			'comment'           => 'member',
+			'moderate'          => 'moderator',
+			'edit'              => 'editor',
+			'publish'           => 'publisher',
+			'revoke'            => 'publisher',
+			'delete'            => 'publisher',
+			'manage'            => 'admin',
+			'Controller-User/*' => 'guest',
 		),
     ),
 	'translator' => array(
@@ -105,4 +117,43 @@ return array(
 			),
 		),
 	),
+	'router' => array(
+        'routes' => array(
+            'user' => array(
+                'type'     => 'Literal',
+                'priority' => 1000,
+                'options'  => array(
+                    'route' => '/user',
+                    'defaults' => array(
+						'__NAMESPACE__' => 'WebHemi\Controller',
+                        'controller' => 'User',
+                        'action'     => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes'  => array(
+                    'login' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/login',
+                            'defaults' => array(
+                                'controller' => 'User',
+                                'action'     => 'login',
+                            ),
+                        ),
+                    ),
+                    'logout' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/logout',
+                            'defaults' => array(
+                                'controller' => 'User',
+                                'action'     => 'logout',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

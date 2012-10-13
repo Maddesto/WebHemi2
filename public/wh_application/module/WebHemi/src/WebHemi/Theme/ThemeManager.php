@@ -39,15 +39,15 @@ class ThemeManager
 {
 	/** @var array $opions */
 	protected $options;
-	/** @var Zend\Stdlib\PriorityQueue $themePath */
+	/** @var \Zend\Stdlib\PriorityQueue $themePath */
 	protected $themePathList;
-	/** @var Zend\Stdlib\PriorityQueue  $adapters */
+	/** @var \Zend\Stdlib\PriorityQueue  $adapters */
 	protected $adapterList;
 	/** @var string  $currentTheme */
 	protected $currentTheme   = null;
-	/** @var WebHemi\Adapter\AdapterInterface  $currentAdapter */
+	/** @var \WebHemi\Adapter\AdapterInterface  $currentAdapter */
 	protected $currentAdapter = null;
-	/** @var Zend\ServiceManager\ServiceManager $serviceManager */
+	/** @var \Zend\ServiceManager\ServiceManager $serviceManager */
 	protected $serviceManager;
 
 	/**
@@ -56,8 +56,8 @@ class ThemeManager
 	 * @param  array|Traversable $options
 	 * @param ServiceManager     $serviceManager
 	 *
-	 * @return WebHemi\ServiceManager\ThemeManager
-	 * @throws Exception\InvalidArgumentException
+	 * @return \WebHemi\ServiceManager\ThemeManager
+	 * @throws \Zend\ServiceManager\Exception\InvalidArgumentException
 	 */
 	public static function factory($options, ServiceManager $serviceManager)
 	{
@@ -77,7 +77,7 @@ class ThemeManager
 	}
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
 	 * @param array|Traversable $options
 	 * @param ServiceManager    $serviceManager
@@ -96,6 +96,8 @@ class ThemeManager
 
 	/**
 	 * Initialize the theme and update the view resolver
+	 *
+	 * @return boolean
 	 */
 	public function init()
 	{
@@ -147,7 +149,7 @@ class ThemeManager
 	}
 
 	/**
-	 * Get the current used theme
+	 * Retrieve the current used theme
 	 *
 	 * @return string
 	 */
@@ -157,10 +159,10 @@ class ThemeManager
 	}
 
 	/**
-	 * Sets the name of the new theme
+	 * Set the name of the new theme
 	 *
 	 * @param string $themeName
-	 * @return bool
+	 * @return boolean
 	 */
 	public function setTheme($themeName)
 	{
@@ -173,7 +175,7 @@ class ThemeManager
 	}
 
 	/**
-	 * Retrieves the theme configuration
+	 * Retrieve the theme configuration
 	 *
 	 * @param string $themeName     The name of the theme
 	 * @return array

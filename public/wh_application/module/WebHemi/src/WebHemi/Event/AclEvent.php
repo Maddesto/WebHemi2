@@ -1,10 +1,10 @@
 <?php
 
-namespace WebHemi\Acl\Event;
+namespace WebHemi\Event;
 
 use Zend\Mvc\MvcEvent;
 
-class EventManager
+class AclEvent
 {
     public static function onRoute(MvcEvent $e)
     {
@@ -40,7 +40,7 @@ class EventManager
 
 		if (!$allowed) {
             $e->setError('error-unauthorized-controller')
-//                ->setParam('identity', $acl->getIdentity())
+                ->setParam('identity', $acl->getIdentity())
                 ->setParam('controller', $controllerName)
                 ->setParam('action', $actionName);
 

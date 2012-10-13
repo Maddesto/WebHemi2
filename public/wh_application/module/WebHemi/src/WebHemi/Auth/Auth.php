@@ -14,40 +14,25 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_ServiceFactory
+ * @package    WebHemi_Auth
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\ServiceFactory;
+namespace WebHemi\Auth;
 
-use Zend\ServiceManager\FactoryInterface,
-	Zend\ServiceManager\ServiceLocatorInterface,
-	WebHemi\View\Strategy\ForbiddenStrategy;
+use Zend\Authentication\AuthenticationService;
 
 /**
- * WebHemi Forbidden view strategy factory
+ * WebHemi authentication service
  *
  * @category   WebHemi
- * @package    WebHemi_ServiceFactory
+ * @package    WebHemi_Auth
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class ForbiddenStrategyServiceFactory implements FactoryInterface
+class Auth extends AuthenticationService
 {
-	/**
-	 * Factory method for WebHemi Forbidden view strategy service
-	 *
-	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return WebHemi\View\Strategy\ForbiddenStrategy
-	 */
-	public function createService(ServiceLocatorInterface $serviceLocator)
-	{
-		$template = $serviceLocator->get('acl')->getTemplate();
-		$strategy = new ForbiddenStrategy();
-		$strategy->setTemplate($template);
-		return $strategy;
-	}
 }

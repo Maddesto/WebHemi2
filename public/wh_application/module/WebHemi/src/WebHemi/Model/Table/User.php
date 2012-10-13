@@ -23,6 +23,7 @@
 namespace WebHemi\Model\Table;
 
 use WebHemi\Model\User as UserModel,
+	Zend\Db\Exception,
 	Zend\Db\TableGateway\AbstractTableGateway,
 	Zend\Db\Adapter\Adapter,
 	Zend\Db\ResultSet\ResultSet;
@@ -58,7 +59,7 @@ class User extends AbstractTableGateway
 	 * Get User by Id
 	 *
 	 * @param $userId
-	 * @return \WebHemi\Model\User
+	 * @return UserModel
 	 */
 	public function getUserById($userId)
 	{
@@ -72,7 +73,7 @@ class User extends AbstractTableGateway
 	 * Get User by Username
 	 *
 	 * @param $username
-	 * @return \WebHemi\Model\User
+	 * @return UserModel
 	 */
 	public function getUserByName($username)
 	{
@@ -81,23 +82,41 @@ class User extends AbstractTableGateway
 
 		return $userModel;
 	}
+	/**
+	 * Get User by Username
+	 *
+	 * @param $email
+	 * @return UserModel
+	 */
+	public function getUserByEmail($email)
+	{
+		$rowset    = $this->select(array('email' => $email));
+		$userModel = $rowset->current();
+
+		return $userModel;
+	}
+
 
 	/**
 	 * Insert new user record
-	 * 
-	 * @param \WebHemi\Model\User $userModel
+     *
+     * @param  \WebHemi\Model\User $userModel
 	 * @return int
 	 * @throws \Exception
-	 */
-	public function insert(UserModel $userModel)
+     */
+    public function insert($userModel)
 	{
+		if (!$userModel instanceof UserModel) {
+			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
+		}
+
 		$userId = $userModel->getUserId();
 		if (!empty($userId)
 				&& $this->getUserById($userId)
 		) {
 			throw new \Exception('Record already exists!');
 		}
-		return $this->insert($userModel->toArray());
+		return parent::insert($userModel->toArray());
 	}
 
 	/**
@@ -107,8 +126,12 @@ class User extends AbstractTableGateway
 	 * @return int
 	 * @throws \Exception
 	 */
-	public function update(UserModel $userModel)
+	public function update($userModel, $where = null)
 	{
+		if (!$userModel instanceof UserModel) {
+			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
+		}
+
 		$userId = $userModel->getUserId();
 		if (empty($userId)
 				|| !$this->getUserById($userId)
@@ -116,7 +139,7 @@ class User extends AbstractTableGateway
 			throw new \Exception('Record does not exist!');
 		}
 
-		return $this->update($userModel->toArray(), array('user_id' => $userId));
+		return parent::update($userModel->toArray(), array('user_id' => $userId));
 	}
 
 }

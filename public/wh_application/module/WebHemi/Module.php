@@ -23,6 +23,7 @@
 namespace WebHemi;
 
 use WebHemi\Application,
+	Zend\Mvc\MvcEvent,
 	Zend\Mvc\ModuleRouteListener,
 	Zend\EventManager\EventInterface,
 	Zend\ModuleManager\Feature\ConfigProviderInterface,
@@ -56,7 +57,7 @@ class Module implements
 		$serviceManager = $e->getApplication()->getServiceManager();
 		$eventManager   = $e->getApplication()->getEventManager();
 
-		// Instantialize services
+		// instantialize services
 		$serviceManager->get('translator');
 		$serviceManager->get('acl');
 
@@ -64,21 +65,12 @@ class Module implements
 			$serviceManager->get('theme_manager');
 		}
 
-		$eventManager->attach($serviceManager->get('forbidden'));
-		$eventManager->attach('route', array('WebHemi\Acl\Event\EventManager', 'onRoute'), -1000);
+		// attach events to the event manager
+		$eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array('WebHemi\Event\ForbiddenEvent', 'prepareViewModel'), -5000);
+		$eventManager->attach(MvcEvent::EVENT_ROUTE,          array('WebHemi\Event\AclEvent',       'onRoute'),          -1000);
+		$eventManager->attach(MvcEvent::EVENT_DISPATCH,       array('WebHemi\Event\LayoutEvent',    'preDispatch'),       100);
 
-		// Tell the controllers to use Module specific layouts
-		$eventManager->getSharedManager()->attach('Zend\Mvc\Controller\AbstractActionController', 'dispatch', function($e) {
-            $controller = $e->getTarget();
-            $controllerClass = get_class($controller);
-            $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
-            $config = $e->getApplication()->getServiceManager()->get('config');
-            if (isset($config['module_layouts'][$moduleNamespace])) {
-                $controller->layout($config['module_layouts'][$moduleNamespace]);
-            }
-        }, 100);
-
-		// Link the event manager to the modoule route listener
+		// link the event manager to the modoule route listener
 		$moduleRouteListener = new ModuleRouteListener();
 		$moduleRouteListener->attach($eventManager);
 	}

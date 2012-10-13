@@ -14,23 +14,28 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_Controller
+ * @package    WebHemi_Form_Filter
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\Controller;
+namespace WebHemi\Form\Filter;
 
-use Zend\Mvc\Controller\AbstractActionController,
-	Zend\View\Model\ViewModel;
+use Zend\InputFilter\InputFilter,
+	Zend\InputFilter\Exception;
 
-class AdminController extends AbstractActionController
+/**
+ * WebHemi Form Filtrer Abstraction
+ *
+ * @category   WebHemi
+ * @package    WebHemi_Form_Filter
+ * @author     Gixx @ www.gixx-web.com
+ * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ */
+abstract class AbstractFilter extends InputFilter
 {
-
-	public function indexAction()
-	{
-		return new ViewModel();
-	}
-
+	/** @var array $options */
+	protected $options;
 }
