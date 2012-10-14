@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.10 Created by Gixx.
+Version 2.0.0.11 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -44,8 +44,31 @@ Installation
 
 1. Clone this project's `public` folder into your website's document root. It is recommended that the target folder to be empty before you put WebHemi's contents into it.
 2. Clone the [Zend Framework 2](https://github.com/zendframework/zf2) project into `wh_application/vendor` folder
+3. Import the SQL schema located in `schema/install.sql` into your MySQL DBMS and set credentials in the `config/autoload/db.global.php` file.
 
-_In future_
 
-- Import the SQL schema located in `schema/install.sql`.
+_Soon_
+
 - Call `http://yourdomain.org/install` to configure your site
+
+
+[Dev notes - Change log]
+
+----------------
+Version 2.0.0.11
+----------------
+- Improvements in authentication: BCrypt credential hashing, DDos-proof banning system (ALC-assert)
+- Fixed ACL's Clean IP Assertion function (auto-release lock after timeout)
+- Changes in webhemi_user schema (no update file presented)
+- Code optimization
+- Minor bug fixes
+
+----------------
+Version 2.0.0.10
+----------------
+- Added basic authentication
+- Added basic form solution
+- Refactored event management
+- Added authentication-related helpers
+- Code optimization
+- Minor bug fixes

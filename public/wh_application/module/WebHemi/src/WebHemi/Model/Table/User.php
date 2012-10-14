@@ -58,12 +58,12 @@ class User extends AbstractTableGateway
 	/**
 	 * Get User by Id
 	 *
-	 * @param $userId
+	 * @param int $userId
 	 * @return UserModel
 	 */
 	public function getUserById($userId)
 	{
-		$rowset    = $this->select(array('user_id' => $userId));
+		$rowset    = $this->select(array('user_id' => (int)$userId));
 		$userModel = $rowset->current();
 
 		return $userModel;
@@ -72,7 +72,7 @@ class User extends AbstractTableGateway
 	/**
 	 * Get User by Username
 	 *
-	 * @param $username
+	 * @param string $username
 	 * @return UserModel
 	 */
 	public function getUserByName($username)
@@ -85,7 +85,7 @@ class User extends AbstractTableGateway
 	/**
 	 * Get User by Username
 	 *
-	 * @param $email
+	 * @param string $email
 	 * @return UserModel
 	 */
 	public function getUserByEmail($email)
@@ -100,9 +100,9 @@ class User extends AbstractTableGateway
 	/**
 	 * Insert new user record
      *
-     * @param  \WebHemi\Model\User $userModel
+     * @param  UserModel $userModel
 	 * @return int
-	 * @throws \Exception
+	 * @throws Exception\InvalidArgumentException
      */
     public function insert($userModel)
 	{
@@ -122,9 +122,9 @@ class User extends AbstractTableGateway
 	/**
 	 * Update user record
 	 *
-	 * @param \WebHemi\Model\User $userModel
+	 * @param UserModel $userModel
 	 * @return int
-	 * @throws \Exception
+	 * @throws Exception\InvalidArgumentException
 	 */
 	public function update($userModel, $where = null)
 	{
@@ -132,14 +132,7 @@ class User extends AbstractTableGateway
 			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
 		}
 
-		$userId = $userModel->getUserId();
-		if (empty($userId)
-				|| !$this->getUserById($userId)
-		) {
-			throw new \Exception('Record does not exist!');
-		}
-
-		return parent::update($userModel->toArray(), array('user_id' => $userId));
+		return parent::update($userModel->toArray(), array('user_id' => $userModel->getUserId()));
 	}
 
 }

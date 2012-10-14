@@ -24,8 +24,7 @@ namespace WebHemi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController,
 	Zend\View\Model\ViewModel,
-	Zend\Authentication\Result,
-	WebHemi\Form\AbstractForm;
+	Zend\Authentication\Result;
 
 /**
  * WebHemi User Controller
@@ -55,7 +54,7 @@ class UserController extends AbstractActionController
 	 */
 	public function loginAction()
 	{
-		$form = $this->getLoginForm();
+		$form = $this->getForm('LoginForm');
 		$request = $this->getRequest();
 
 		if ($request->isPost()) {
@@ -83,6 +82,10 @@ class UserController extends AbstractActionController
 				$authResult = $this->userAuth()->getAuthService()->authenticate($authAdapter);
 
 				if (Result::SUCCESS == $authResult->getCode()) {
+
+					$userModel = $authResult->getIdentity();
+					
+
 					return $this->redirect()->toRoute('index');
 				}
 				$form->get('username')->setMessages($authResult->getMessages());
@@ -102,15 +105,5 @@ class UserController extends AbstractActionController
 		$this->userAuth()->clearIdentity();
 
 		return $this->redirect()->toRoute('index');
-	}
-
-	/**
-	 * Retrieve Login form instance
-	 *
-	 * @return AbstractForm
-	 */
-	protected function getLoginForm()
-	{
-		return $this->getServiceLocator()->get('formService')->getLoginForm();
 	}
 }

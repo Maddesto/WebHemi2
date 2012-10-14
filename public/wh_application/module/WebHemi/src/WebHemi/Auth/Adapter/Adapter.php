@@ -22,11 +22,13 @@
 
 namespace WebHemi\Auth\Adapter;
 
-use Zend\Authentication\Adapter\DbTable,
+use Zend\Authentication\Adapter\AdapterInterface,
 	Zend\Authentication\Result,
 	Zend\ServiceManager\ServiceManagerAwareInterface,
 	Zend\ServiceManager\ServiceManager,
-	WebHemi\Model\Table\User as UserTable;
+	Zend\Crypt\Password\Bcrypt,
+	WebHemi\Model\Table\User as UserTable,
+	WebHemi\Model\Table\Lock as UserLockTable;
 
 /**
  * WebHemi User Authentication Adapter
@@ -37,76 +39,186 @@ use Zend\Authentication\Adapter\DbTable,
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class Adapter extends DbTable implements ServiceManagerAwareInterface
+class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 {
-	 /**
-     * This method is called to attempt an authentication. Previous to this
-     * call, this adapter would have already been configured with all
-     * necessary information to successfully connect to a database table and
-     * attempt to find a record matching the provided identity.
-     *
-     * @throws Exception\RuntimeException if answering the authentication query is impossible
-     * @return AuthenticationResult
-     */
-    public function authenticate()
-    {
-		$authResult = parent::authenticate();
+	/** @var Default bcrypt password cost */
+	const PASSWORD_COST = 14;
 
-		if($authResult->isValid())  {
-			$userModel = $this->getTable()->getUserByName($authResult->getIdentity());
-			$authResult = new Result(
-					$authResult->getCode(),
-					$userModel,
-					$authResult->getMessages()
+    /** @var string $identity */
+    public $identity = null;
+    /** @var string $credential */
+    protected $credential = null;
+	/** @var UserTable $userTable */
+	protected $userTable;
+	/** @var UserLockTable $userLockTable */
+	protected $userLockTable;
+
+	/**
+	 * This method is called to attempt an authentication. Previous to this
+	 * call, this adapter would have already been configured with all
+	 * necessary information to successfully connect to a database table and
+	 * attempt to find a record matching the provided identity.
+	 *
+	 * @throws Exception\RuntimeException if answering the authentication query is impossible
+	 * @return Result
+	 */
+	public function authenticate()
+	{
+		// identified by email
+		if (strpos($this->identity, '@') !== false) {
+			$userModel = $this->getUserTable()->getUserByEmail($this->identity);
+		}
+		// identified by username
+		else {
+			$userModel = $this->getUserTable()->getUserByName($this->identity);
+		}
+
+		$bcrypt = new Bcrypt();
+		$bcrypt->setCost(self::PASSWORD_COST);
+
+		// if identity not found
+		if (!$userModel) {
+			$authResult =  new Result(
+					Result::FAILURE_IDENTITY_NOT_FOUND,
+					$this->identity,
+					array('A record with the supplied identity could not be found.')
+			);
+		}
+		// else if the identity exists but not activated or disabled
+		else if (!$userModel->getActive() || !$userModel->getEnabled()) {
+			$authResult =  new Result(
+					Result::FAILURE_UNCATEGORIZED,
+					$this->identity,
+					array('A record with the supplied identity is not avaliable.')
+			);
+		}
+		// else if the supplied cretendtial is not valid
+		else if (!$bcrypt->verify($this->credential, $userModel->getPassword())) {
+			$authResult =  new Result(
+					Result::FAILURE_CREDENTIAL_INVALID,
+					$this->identity,
+					array('Supplied credential is invalid.')
 			);
 		}
 
-        return $authResult;
-    }
+		// if authentication was successful
+		if (!isset($authResult)) {
+			// update some additional info
+			$userModel->setLastIp($_SERVER['REMOTE_ADDR']);
+			$userModel->setTimeLogin(gmdate('Y-m-d H:i:s'));
+			$this->getUserTable()->update($userModel);
+
+			$authResult = new Result(
+				Result::SUCCESS,
+				$userModel,
+				array('Authentication successful.')
+			);
+
+			// reset the counter
+			$this->getUserLockTable()->releaseLock();
+		}
+		else {
+			// increment the counter so the ACL's IP assert can ban for a specific time (LockTable::LOCKTIME)
+			$this->getUserLockTable()->setLock();
+		}
+
+		return $authResult;
+	}
 
 	/**
-     * Get User Table
+     * Set the value to be used as the identity
      *
-     * @return UserTable
+     * @param  string $value
+     * @return Adapter
      */
-    public function getTable()
+    public function setIdentity($identity)
     {
-        if (!isset($this->userTable)) {
-            $this->userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
-        }
-        return $this->userTable;
-    }
-
-    /**
-     * Set User Table
-     *
-     * @param UserTable $userTable
-     * @return Db
-     */
-    public function setTable(UserTable $userTable)
-    {
-        $this->userTable = $userTable;
+        $this->identity = $identity;
         return $this;
     }
 
     /**
-     * Retrieve service manager instance
+     * Set the credential value to be used
      *
-     * @return ServiceManager
+     * @param  string $credential
+     * @return Adapter
      */
-    public function getServiceManager()
+    public function setCredential($credential)
     {
-        return $this->serviceManager;
+        $this->credential = $credential;
+        return $this;
     }
 
-    /**
-     * Set service manager instance
-     *
-     * @param ServiceManager $locator
-     * @return void
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-    }
+	/**
+	 * Get User Table
+	 *
+	 * @return UserTable
+	 */
+	public function getUserTable()
+	{
+		if (!isset($this->userTable)) {
+			$this->userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+		}
+		return $this->userTable;
+	}
+
+	/**
+	 * Set User Table
+	 *
+	 * @param UserTable $userTable
+	 * @return Adapter
+	 */
+	public function setUserTable(UserTable $userTable)
+	{
+		$this->userTable = $userTable;
+		return $this;
+	}
+
+	/**
+	 * Get User Lock Table
+	 *
+	 * @return UserLockTable
+	 */
+	public function getUserLockTable()
+	{
+		if (!isset($this->userLockTable)) {
+			$this->userLockTable = new UserLockTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+		}
+		return $this->userLockTable;
+	}
+
+	/**
+	 * Set User Lock Table
+	 *
+	 * @param UserTable $userLockTable
+	 * @return Adapter
+	 */
+	public function setUserLockTable(UserLockTable $userLockTable)
+	{
+		$this->userLockTable = $userLockTable;
+		return $this;
+	}
+
+	/**
+	 * Retrieve service manager instance
+	 *
+	 * @return ServiceManager
+	 */
+	public function getServiceManager()
+	{
+		return $this->serviceManager;
+	}
+
+	/**
+	 * Set service manager instance
+	 *
+	 * @param ServiceManager $locator
+	 * @return Adapter
+	 */
+	public function setServiceManager(ServiceManager $serviceManager)
+	{
+		$this->serviceManager = $serviceManager;
+		return $this;
+	}
+
 }

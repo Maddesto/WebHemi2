@@ -6,8 +6,8 @@ return array(
     'WebHemi\Controller\AdminController'                 => __DIR__ . '/src/WebHemi/Controller/AdminController.php',
     'webHemi\Controller\Plugin\IsAllowed'                => __DIR__ . '/src/WebHemi/Controller/Plugin/IsAllowed.php',
     'webHemi\Controller\Plugin\UserAuth'                 => __DIR__ . '/src/WebHemi/Controller/Plugin/UserAuth.php',
+    'webHemi\Controller\Plugin\GetForm'                  => __DIR__ . '/src/WebHemi/Controller/Plugin/GetForm.php',
     'WebHemi\Controller\Plugin\Factory\IsAllowedFactory' => __DIR__ . '/src/WebHemi/Controller/Plugin/Factory/IsAllowedFactory.php',
-    'WebHemi\Controller\Plugin\Factory\UserAuthFactory'  => __DIR__ . '/src/WebHemi/Controller/Plugin/Factory/UserAuthFactory.php',
     'WebHemi\Auth\Auth'                                  => __DIR__ . '/src/WebHemi/Auth/Auth.php',
     'WebHemi\Auth\Storage\Db'                            => __DIR__ . '/src/WebHemi/Auth/Storage/Db.php',
     'WebHemi\Auth\Adapter\Adapter'                       => __DIR__ . '/src/WebHemi/Auth/Adapter/Adapter.php',
@@ -41,7 +41,6 @@ return array(
     'WebHemi\ServiceFactory\AclServiceFactory'           => __DIR__ . '/src/WebHemi/ServiceFactory/AclServiceFactory.php',
     'WebHemi\ServiceFactory\AuthServiceFactory'          => __DIR__ . '/src/WebHemi/ServiceFactory/AuthServiceFactory.php',
     'WebHemi\ServiceFactory\FormServiceFactory'          => __DIR__ . '/src/WebHemi/ServiceFactory/FormServiceFactory.php',
-    'WebHemi\ServiceFactory\AuthAdapterServiceFactory'   => __DIR__ . '/src/WebHemi/ServiceFactory/AuthAdapterServiceFactory.php',
     'WebHemi\ServiceFactory\ThemeManagerServiceFactory'  => __DIR__ . '/src/WebHemi/ServiceFactory/ThemeManagerServiceFactory.php',
     'WebHemi\Module'                                     => __DIR__ . '/Module.php',
 );

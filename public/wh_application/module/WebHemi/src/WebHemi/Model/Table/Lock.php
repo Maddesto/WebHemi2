@@ -43,13 +43,16 @@ class Lock extends AbstractTableGateway
 	/** @var int The number of minutes the login is locked upon reaching the maximum number of access attempts */
 	const LOCKTIME = 15;
 
+	/** @staticvar LockModel|boolean $lockModel */
+	static $lockModel;
+
 	/** @var string $table   The name of the database table */
 	protected $table = 'webhemi_lock';
 
 	/**
 	 * Constructor
 	 *
-	 * @param \Zend\Db\Adapter\Adapter $adapter
+	 * @param Adapter $adapter
 	 */
 	public function __construct(Adapter $adapter)
 	{
@@ -63,23 +66,28 @@ class Lock extends AbstractTableGateway
 	 * Get lock data for current IP
 	 * It creates a new record if not found
 	 *
-	 * @return \WebHemi\Model\Lock
+	 * @return LockModel
 	 */
 	public function getLock()
 	{
-		$rowset = $this->select(array('client_ip' => $_SERVER['REMOTE_ADDR']));
-		$lockModel = $rowset->current();
+		if (!isset(self::$lockModel)) {
+			$rowset = $this->select(array('client_ip' => $_SERVER['REMOTE_ADDR']));
+			$lockModel = $rowset->current();
 
-		// if no record, we create one
-		if (!$lockModel) {
-			// instantiate the return object and save the new record
-			$lockModel = new LockModel();
-			// if we can't save
-			if (!$this->insert($lockModel->toArray())) {
-				$lockModel = false;
+			// if no record, we create one
+			if (!$lockModel) {
+				// instantiate the return object and save the new record
+				$lockModel = new LockModel();
+				// if we can't save
+				if (!$this->insert($lockModel->toArray())) {
+					$lockModel = false;
+				}
 			}
+
+			self::$lockModel = $lockModel;
 		}
-		return $lockModel;
+
+		return self::$lockModel;
 	}
 
 	/**
@@ -92,11 +100,13 @@ class Lock extends AbstractTableGateway
 		$lockModel = $this->getLock();
 
 		// only if the data is valid
-		if ($lockModel instanceof Lock) {
+		if ($lockModel instanceof LockModel) {
 			// count the tryings
 			$tryings = (int)$lockModel->getTryings() + 1;
 			// set the new value
 			$lockModel->setTryings($tryings);
+
+			// if reached the maximum
 			if ($tryings >= self::MAXTRYINGS) {
 				$lockModel->setTimeLock(gmdate('Y-m-d H:i:s'));
 			}
@@ -116,7 +126,7 @@ class Lock extends AbstractTableGateway
 		$lockModel = $this->getLock();
 
 		// only if the data is valid
-		if ($lockModel instanceof Lock) {
+		if ($lockModel instanceof LockModel) {
 			$lockModel->setTryings(0)
 					->setTimeLock();
 			return $this->update($lockModel->toArray(), array('lock_id' => $lockModel->getLockId()));

@@ -22,6 +22,8 @@
 
 namespace WebHemi\Model;
 
+use \DateTime;
+
 /**
  * WebHemi Lock Model
  *

@@ -24,11 +24,11 @@ return array(
 		'invokables' => array(
 			'authAdapterDb' => 'WebHemi\Auth\Adapter\Db',
 			'authStorageDb' => 'WebHemi\Auth\Storage\Db',
+			'authAdapter'   => 'WebHemi\Auth\Adapter\Adapter',
 		),
 		'factories' => array(
 			'acl'         => 'WebHemi\ServiceFactory\AclServiceFactory',
 			'auth'        => 'WebHemi\ServiceFactory\AuthServiceFactory',
-			'authAdapter' => 'WebHemi\ServiceFactory\AuthAdapterServiceFactory',
 			'formService' => 'WebHemi\ServiceFactory\FormServiceFactory',
 			'translator'  => 'Zend\I18n\Translator\TranslatorServiceFactory',
 		),
@@ -44,14 +44,14 @@ return array(
 		'doctype'                  => 'HTML5',
 		'not_found_template'       => 'error/404',
 		'exception_template'       => 'error/index',
-//		'strategies' => array(
-//			'forbidden',
-//        ),
 	),
 	'controller_plugins' => array(
+		'invokables' => array(
+			'getForm'   => 'WebHemi\Controller\Plugin\GetForm',
+			'userAuth'  => 'WebHemi\Controller\Plugin\UserAuth',
+		),
 		'factories' => array(
 			'isAllowed' => 'WebHemi\Controller\Plugin\Factory\IsAllowedFactory',
-			'userAuth'  => 'WebHemi\Controller\Plugin\Factory\UserAuthFactory',
 		),
 	),
 	'view_helpers' => array(

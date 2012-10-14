@@ -22,7 +22,8 @@
 
 namespace WebHemi\Acl\Assert;
 
-use WebHemi\Model\Table\Lock,
+use DateTime,
+	WebHemi\Model\Table\Lock as UserLockTable,
 	Zend\ServiceManager\ServiceManager,
 	Zend\Permissions\Acl\Acl,
 	Zend\Permissions\Acl\Resource\ResourceInterface,
@@ -40,7 +41,7 @@ use WebHemi\Model\Table\Lock,
  */
 class CleanIPAssertion implements AssertionInterface
 {
-	/** @var Zend\ServiceManager\ServiceManager $serviceManager */
+	/** @var ServiceManager $serviceManager */
 	protected $serviceManager;
 
 	public function __construct(ServiceManager $serviceManager)
@@ -63,7 +64,24 @@ class CleanIPAssertion implements AssertionInterface
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-		$lockTable = new Lock($this->serviceManager->get('Zend\Db\Adapter\Adapter'));
-		return $lockTable->getLock()->getTryings() >= Lock::MAXTRYINGS ? false : true;
+		$lockTable = new UserLockTable($this->serviceManager->get('Zend\Db\Adapter\Adapter'));
+
+		// determine the current timestamp according to the UTC time
+		$currentTime      = new DateTime(gmdate('Y-m-d H:i:s'));
+		$currentTimestamp = $currentTime->getTimestamp();
+
+		// determine the lock timestamp
+		$lockTime      = $lockTable->getLock()->getTimeLock();
+		$lockTimestamp = $lockTime instanceof DateTime ? $lockTime->getTimestamp() : $currentTimestamp;
+
+		// determine the timeout in seconds
+		$timeout = UserLockTable::LOCKTIME * 60;
+
+		// if the lock times out, it should be released
+		if ($timeout < $currentTimestamp - $lockTimestamp) {
+			$lockTable->releaseLock();
+		}
+
+		return $lockTable->getLock()->getTryings() >= UserLockTable::MAXTRYINGS ? false : true;
     }
 }
