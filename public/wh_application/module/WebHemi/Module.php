@@ -50,7 +50,7 @@ class Module implements
 	/**
 	 * Listen to the bootstrap event
 	 *
-	 * @param \Zend\EventManager\EventInterface $e
+	 * @param EventInterface $e
 	 */
 	public function onBootstrap(EventInterface $e)
 	{
@@ -102,7 +102,7 @@ class Module implements
 	}
 
 	/**
-	 * Retrieves the Autoloader Configuration
+	 * Retrieve the Autoloader Configuration
 	 *
 	 * @return array
 	 */
@@ -121,7 +121,7 @@ class Module implements
 	}
 
 	/**
-	 * Retrieves the View Helper Configuration
+	 * Retrieve the View Helper Configuration
 	 *
 	 * @return array
 	 */
@@ -132,7 +132,7 @@ class Module implements
     }
 
 	/**
-	 * Retrieves the Controller Plugin Configuration
+	 * Retrieve the Controller Plugin Configuration
 	 *
 	 * @return array
 	 */
@@ -143,13 +143,13 @@ class Module implements
     }
 
 	/**
-	 * Retrieves the Service Configuration
+	 * Retrieve the Service Configuration
 	 *
 	 * @return array
 	 */
 	public function getServiceConfig()
 	{
-		// already defined in the module-specific config file
+		// already defined in the module config file
 		return array();
 	}
 }
