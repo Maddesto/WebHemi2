@@ -37,7 +37,7 @@ class RuleProvider
 	protected $rules = array();
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
 	 * @param array $config
 	 */
@@ -47,7 +47,7 @@ class RuleProvider
 	}
 
 	/**
-	 * Retrieve all rules
+	 * Retrieve rules
 	 *
 	 * @return array
 	 */
@@ -58,9 +58,10 @@ class RuleProvider
 
 	/**
 	 * Add a new rule
-	 * 
+	 *
 	 * @param string $role
 	 * @param array $resources
+	 * @return RuleProvider
 	 */
 	public function addRule($role, array $resources)
 	{
@@ -68,5 +69,7 @@ class RuleProvider
 			'role'       => $role,
 			'resources'  => $resources
 		);
+
+		return $this;
 	}
 }

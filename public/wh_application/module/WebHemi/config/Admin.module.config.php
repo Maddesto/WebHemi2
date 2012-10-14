@@ -60,9 +60,11 @@ return array(
 	'access_control' => array(
 		'resources' => array(
 			'Controller-Admin/*',
+			'Controller-Admin/index',
 		),
 		'rules' => array(
-			'Controller-Admin/*' => 'member',
+			'Controller-Admin/*'     => 'member',
+			'Controller-Admin/index' => 'guest',
 		),
 	),
 );

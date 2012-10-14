@@ -39,9 +39,9 @@ class ConfigurationAdapter
 	protected $serviceLocator;
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
-	 * @param ServiceLocatorInterface $serviceLocator
+	 * @param ServiceManager $serviceLocator
 	 */
 	public function __construct(ServiceManager $serviceLocator)
 	{
@@ -49,7 +49,7 @@ class ConfigurationAdapter
 	}
 
 	/**
-	 * Get the name of the theme from the adapter
+	 * Retrieve the name of the theme from the adapter
 	 *
 	 * @return string
 	 */

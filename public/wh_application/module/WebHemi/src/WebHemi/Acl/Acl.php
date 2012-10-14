@@ -30,6 +30,8 @@ use Zend\ServiceManager\ServiceManager,
 	WebHemi\Acl\Provider\RoleProvider,
 	WebHemi\Acl\Provider\ResourceProvider,
 	WebHemi\Acl\Provider\RuleProvider,
+	WebHemi\Acl\Role,
+	WebHemi\Acl\Resource,
 	WebHemi\Acl\Assert\CleanIPAssertion,
 	WebHemi\Model\User as UserModel;
 
@@ -67,7 +69,7 @@ class Acl
 	 * @param  array|Traversable $options
 	 * @param ServiceManager     $serviceManager
 	 *
-	 * @return WebHemi\Acl\Acl
+	 * @return Acl
 	 * @throws Exception\InvalidArgumentException
 	 */
 	public static function factory($options, ServiceManager $serviceManager)
@@ -88,7 +90,7 @@ class Acl
 	}
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
 	 * @param array|Traversable $options
 	 * @param ServiceManager    $serviceManager
@@ -107,6 +109,8 @@ class Acl
 
 	/**
 	 * Initialize the access control service
+	 *
+	 * @return Acl
 	 */
 	public function init()
 	{
@@ -136,6 +140,8 @@ class Acl
 				$this->acl->allow($roleName, $resourceName, null, new CleanIPAssertion($this->serviceManager));
 			}
 		}
+
+		return $this;
 	}
 
 	/**
@@ -187,9 +193,9 @@ class Acl
 	}
 
 	/**
-	 * Restrieve the Zend ACL object
+	 * Retrieve the Zend ACL object
 	 *
-	 * @return Zend\Permissions\Acl\Acl
+	 * @return ZendAcl
 	 */
 	public function getService()
 	{
@@ -197,12 +203,12 @@ class Acl
 	}
 
 	/**
-	 * Returns true if and only if the Role has access to the Resource.
+	 * Return true if and only if the Role has access to the Resource.
 	 * If a valid role is not coupled with a valid resource it will result FALSE.
 	 * If the role or the resourse is not valid it will result TRUE.
 	 *
-	 * @param  Resource\ResourceInterface|string    $resource
-	 * @param  Role\RoleInterface|string            $role
+	 * @param  Resource|string    $resource
+	 * @param  Role|string        $role
 	 * @return boolean
 	 */
 	public function isAllowed($resource, $role = null)
@@ -228,7 +234,7 @@ class Acl
 	}
 
 	/**
-	 * Returns true if the user is authenticated
+	 * Check whether the user is authenticated
 	 *
 	 * @return boolean
 	 */
@@ -242,7 +248,7 @@ class Acl
 	}
 
 	/**
-	 * Returns the User entity
+	 * Retrive the User entity
 	 *
 	 * @return UserModel
 	 */
@@ -258,7 +264,7 @@ class Acl
 	/**
 	 * Check whether a resource exists
 	 *
-	 * @param  Resource\ResourceInterface|string    $resource
+	 * @param  Resource|string    $resource
 	 * @return boolean
 	 */
 	public function hasResource($resource)
@@ -269,7 +275,7 @@ class Acl
 	/**
 	 * Check whether a role exists
 	 *
-	 * @param  Role\RoleInterface|string   $role
+	 * @param  Role|string   $role
 	 * @return boolean
 	 */
 	public function hasRole($role)

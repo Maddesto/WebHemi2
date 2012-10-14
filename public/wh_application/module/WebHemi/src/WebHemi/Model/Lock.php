@@ -22,7 +22,7 @@
 
 namespace WebHemi\Model;
 
-use \DateTime;
+use DateTime;
 
 /**
  * WebHemi Lock Model
@@ -45,7 +45,7 @@ class Lock
 	protected $timeLock;
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 */
 	public function __construct()
 	{
@@ -56,7 +56,7 @@ class Lock
 	}
 
 	/**
-	 * Get lockId
+	 * Retrieve the lock ID
 	 *
 	 * @return int
 	 */
@@ -66,7 +66,7 @@ class Lock
 	}
 
 	/**
-	 * Get clientIp
+	 * Retrieve client IP
 	 *
 	 * @return string
 	 */
@@ -76,9 +76,9 @@ class Lock
 	}
 
 	/**
-	 * Set clientIp.
+	 * Set client IP
 	 *
-	 * @param $clientIp
+	 * @param string $clientIp
 	 * @return Lock
 	 */
 	public function setClienIp($clientIp)
@@ -88,7 +88,7 @@ class Lock
 	}
 
 	/**
-	 * Get tryings
+	 * Retrieve trying counter
 	 *
 	 * @return int
 	 */
@@ -98,7 +98,7 @@ class Lock
 	}
 
 	/**
-	 * Set tryings
+	 * Set trying counter
 	 *
 	 * @param int $tryings
 	 * @return Lock
@@ -110,7 +110,7 @@ class Lock
 	}
 
 	/**
-	 * Get timeLock
+	 * Retrieve timelock
 	 *
 	 * @return DateTime
 	 */
@@ -120,9 +120,9 @@ class Lock
 	}
 
 	/**
-	 * Set timeLock
+	 * Set timelock
 	 *
-	 * @param DateTime/string $timeLock
+	 * @param DateTime|string $timeLock
 	 * @return Lock
 	 */
 	public function setTimeLock($timeLock = null)
@@ -131,7 +131,7 @@ class Lock
 			$this->timeLock = $timeLock;
 		}
 		else {
-			$this->timeLock = new \DateTime($timeLock);
+			$this->timeLock = new DateTime($timeLock);
 		}
 		return $this;
 	}
@@ -141,12 +141,12 @@ class Lock
 	 *
 	 * @param array $data
 	 */
-	public function exchangeArray($data)
+	public function exchangeArray(array $data)
 	{
 		$this->lockId   = (isset($data['lock_id']))   ? (int)$data['lock_id'] : null;
 		$this->clientIp = (isset($data['client_ip'])) ? $data['client_ip'] : null;
 		$this->tryings  = (isset($data['tryings']))   ? (int)$data['tryings'] : null;
-		$this->timeLock = (isset($data['time_lock'])) ? new \DateTime($data['time_lock']) : null;
+		$this->timeLock = (isset($data['time_lock'])) ? new DateTime($data['time_lock']) : null;
 	}
 
 	/**
@@ -160,7 +160,7 @@ class Lock
 			'lock_id'   => $this->lockId,
 			'client_ip' => $this->clientIp,
 			'tryings'   => $this->tryings,
-			'time_lock' => $this->timeLock instanceof \DateTime ? $this->timeLock->format('Y-m-d H:i:s') : null,
+			'time_lock' => $this->timeLock instanceof DateTime ? $this->timeLock->format('Y-m-d H:i:s') : null,
 		);
 	}
 }

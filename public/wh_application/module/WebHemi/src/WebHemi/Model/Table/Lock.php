@@ -50,7 +50,7 @@ class Lock extends AbstractTableGateway
 	protected $table = 'webhemi_lock';
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
 	 * @param Adapter $adapter
 	 */
@@ -63,8 +63,7 @@ class Lock extends AbstractTableGateway
 	}
 
 	/**
-	 * Get lock data for current IP
-	 * It creates a new record if not found
+	 * Retrieve lock data for current IP. It creates a new record if none found
 	 *
 	 * @return LockModel
 	 */

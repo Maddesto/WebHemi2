@@ -41,10 +41,11 @@ class FormServiceFactory implements FactoryInterface
 	 * Factory method for WebHemi form service
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return WebHemi\Form\FormService
+	 * @return FormService
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
     {
+		// @TODO: use it via 'service_manager => invokables'
 		$service = new FormService($serviceLocator);
         return $service;
     }

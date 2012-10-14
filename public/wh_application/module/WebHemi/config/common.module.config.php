@@ -49,9 +49,7 @@ return array(
 		'invokables' => array(
 			'getForm'   => 'WebHemi\Controller\Plugin\GetForm',
 			'userAuth'  => 'WebHemi\Controller\Plugin\UserAuth',
-		),
-		'factories' => array(
-			'isAllowed' => 'WebHemi\Controller\Plugin\Factory\IsAllowedFactory',
+			'isAllowed' => 'WebHemi\Controller\Plugin\IsAllowed',
 		),
 	),
 	'view_helpers' => array(

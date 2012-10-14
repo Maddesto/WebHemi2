@@ -59,7 +59,7 @@ class User
 	protected $timeRegister;
 
 	/**
-	 * Get userId
+	 * Retrieve user ID
 	 *
 	 * @return int
 	 */
@@ -69,7 +69,7 @@ class User
 	}
 
 	/**
-	 * Set userId
+	 * Set user ID
 	 *
 	 * @param int $userId
 	 * @return User
@@ -81,7 +81,7 @@ class User
 	}
 
 	/**
-	 * Get username
+	 * Retrieve username
 	 *
 	 * @return string
 	 */
@@ -103,7 +103,7 @@ class User
 	}
 
 	/**
-	 * Get email
+	 * Retrieve email address
 	 *
 	 * @return string
 	 */
@@ -113,7 +113,7 @@ class User
 	}
 
 	/**
-	 * Set email
+	 * Set email address
 	 *
 	 * @param string $email
 	 * @return User
@@ -125,7 +125,7 @@ class User
 	}
 
 	/**
-	 * Get displayName
+	 * Retrieve displayname
 	 *
 	 * @return string
 	 */
@@ -144,7 +144,7 @@ class User
 	}
 
 	/**
-	 * Set displayName
+	 * Set displayname
 	 *
 	 * @param string $displayName
 	 * @return User
@@ -156,7 +156,7 @@ class User
 	}
 
 	/**
-	 * Get password
+	 * Retrieve password (BCrypt)
 	 *
 	 * @return string
 	 */
@@ -178,7 +178,7 @@ class User
 	}
 
 	/**
-	 * Get role
+	 * Retrieve role
 	 *
 	 * @return string
 	 */
@@ -200,7 +200,7 @@ class User
 	}
 
 	/**
-	 * Get timeLogin
+	 * Retrieve time of last login
 	 *
 	 * @return DateTime timeLogin
 	 */
@@ -210,7 +210,7 @@ class User
 	}
 
 	/**
-	 * Set timeLogin
+	 * Set time of last login
 	 *
 	 * @param DateTime/string $timeLogin
 	 * @return User
@@ -227,7 +227,7 @@ class User
 	}
 
 	/**
-	 * Get lastIp
+	 * Retrieve the IP address of the last login
 	 *
 	 * @return string
 	 */
@@ -237,9 +237,9 @@ class User
 	}
 
 	/**
-	 * Set lastIp.
+	 * Set the IP address of the last login
 	 *
-	 * @param $lastIp
+	 * @param string $lastIp
 	 * @return User
 	 */
 	public function setLastIp($lastIp)
@@ -249,7 +249,7 @@ class User
 	}
 
 	/**
-	 * Get timeRegister
+	 * Retrieve time of registration
 	 *
 	 * @return DateTime
 	 */
@@ -259,7 +259,7 @@ class User
 	}
 
 	/**
-	 * Set timeRegister
+	 * Set time of registration
 	 *
 	 * @param DateTime/string $timeRegister
 	 * @return User
@@ -276,7 +276,7 @@ class User
 	}
 
 	/**
-	 * Get registerIp
+	 * Retrieve the IP address of the registration
 	 *
 	 * @return string
 	 */
@@ -286,7 +286,7 @@ class User
 	}
 
 	/**
-	 * Set registerIp
+	 * Set the IP address of the registration
 	 *
 	 * @param $registerIp the value to be set
 	 * @return User
@@ -298,7 +298,7 @@ class User
 	}
 
 	/**
-	 * Get active
+	 * Retrieve the user active status
 	 *
 	 * @return bool
 	 */
@@ -308,7 +308,7 @@ class User
 	}
 
 	/**
-	 * Set active
+	 * Set user active status
 	 *
 	 * @param bool $active
 	 * @return User
@@ -320,7 +320,7 @@ class User
 	}
 
 	/**
-	 * Get enabled
+	 * Get user enabled status
 	 *
 	 * @return bool
 	 */
@@ -330,7 +330,7 @@ class User
 	}
 
 	/**
-	 * Set enabled
+	 * Set user enabled status
 	 *
 	 * @param bool $enabled
 	 * @return User
@@ -346,7 +346,7 @@ class User
 	 *
 	 * @param array $data
 	 */
-	public function exchangeArray($data)
+	public function exchangeArray(array $data)
 	{
 		$this->userId       = (isset($data['user_id']))       ? (int) $data['user_id'] : null;
 		$this->username     = (isset($data['username']))      ? $data['username'] : null;

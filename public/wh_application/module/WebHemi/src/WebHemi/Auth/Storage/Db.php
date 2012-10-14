@@ -49,7 +49,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     protected $serviceManager;
 
     /**
-     * Returns true if and only if storage is empty
+     * Check whether the storage is empty
      *
      * @return boolean
      */
@@ -85,7 +85,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     }
 
     /**
-     * Writes $contents to storage
+     * Write contents to storage
      *
      * @param  mixed $contents
      * @return void
@@ -97,7 +97,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     }
 
     /**
-     * Clears contents from storage
+     * Clear contents from storage
      *
      * @return void
      */
@@ -133,7 +133,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     }
 
     /**
-     * Get User Table
+     * Retrieve User Table instance
      *
      * @return UserTable
      */
@@ -146,7 +146,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     }
 
     /**
-     * Set User Table
+     * Set User Table instance
      *
      * @param UserTable $userTable
      * @return Db

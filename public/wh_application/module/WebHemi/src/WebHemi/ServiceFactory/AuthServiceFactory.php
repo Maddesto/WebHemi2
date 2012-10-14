@@ -41,7 +41,7 @@ class AuthServiceFactory implements FactoryInterface
 	 * Factory method for WebHemi authentication service
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return WebHemi\Auth\Auth
+	 * @return Auth
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
     {

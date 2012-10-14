@@ -48,7 +48,7 @@ class UserMeta implements ServiceManagerAwareInterface
     protected $serviceManager;
 
     /**
-     * The Zend Framework will inject the ServiceManager to this object
+     * Set ServiceManager
 	 *
 	 * @param ServiceManager $serviceManager
      * @return UserMeta
@@ -60,7 +60,7 @@ class UserMeta implements ServiceManagerAwareInterface
     }
 
     /**
-     * Get user
+     * Retrieve User
      *
      * @return User
      */
@@ -70,7 +70,7 @@ class UserMeta implements ServiceManagerAwareInterface
     }
 
     /**
-     * Set user
+     * Set User
      *
      * @param User $user
      * @return UserMeta
@@ -82,7 +82,7 @@ class UserMeta implements ServiceManagerAwareInterface
     }
 
     /**
-     * Get metaKey
+     * Retrieve meta key
      *
      * @return string
      */
@@ -92,7 +92,7 @@ class UserMeta implements ServiceManagerAwareInterface
     }
 
     /**
-     * Set metaKey
+     * Set meta key
      *
      * @param string $metaKey
      * @return UserMeta
@@ -104,7 +104,7 @@ class UserMeta implements ServiceManagerAwareInterface
     }
 
     /**
-     * Get meta
+     * Retrieve meta data
      *
      * @return mixed
      */
@@ -114,7 +114,7 @@ class UserMeta implements ServiceManagerAwareInterface
     }
 
     /**
-     * Set meta
+     * Set meta data
      *
      * @param mixed $meta
      * @return UserMeta
@@ -130,7 +130,7 @@ class UserMeta implements ServiceManagerAwareInterface
 	 *
 	 * @param array $data
 	 */
-	public function exchangeArray($data)
+	public function exchangeArray(array $data)
 	{
 		$userId = (isset($data['user_id'])) ? (int) $data['user_id'] : null;
 

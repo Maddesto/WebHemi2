@@ -42,9 +42,9 @@ class UserMeta extends AbstractTableGateway
 	protected $table = 'webhemi_user_meta';
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
-	 * @param \Zend\Db\Adapter\Adapter $adapter
+	 * @param Adapter $adapter
 	 */
 	public function __construct(Adapter $adapter)
 	{
@@ -55,11 +55,11 @@ class UserMeta extends AbstractTableGateway
 	}
 
 	/**
-	 * Get User meta data
+	 * Get User meta data for a user
 	 *
 	 * @param string $userId
 	 * @param string $metaKey
-	 * @return \WebHemi\Model\UserMeta
+	 * @return UserMetaModel
 	 */
 	public function getUserMeta($userId, $metaKey)
 	{

@@ -23,7 +23,6 @@
 namespace WebHemi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController,
-	Zend\View\Model\ViewModel,
 	Zend\Authentication\Result;
 
 /**
@@ -37,26 +36,32 @@ use Zend\Mvc\Controller\AbstractActionController,
  */
 class UserController extends AbstractActionController
 {
-
 	/**
-	 * User page
-	 */
+     * Default action
+     *
+     * @return array
+     */
 	public function indexAction()
 	{
-		if (!$this->userAuth()->hasIdentity()) {
+		// if the user is not authenticated
+        if (!$this->userAuth()->hasIdentity()) {
+			// redirect to login page
 			return $this->redirect()->toRoute('user/login');
 		}
-		return new ViewModel();
+		return array();
 	}
 
 	/**
-	 * Login page
+	 * Login action
+	 *
+	 * @return array
 	 */
 	public function loginAction()
 	{
 		$form = $this->getForm('LoginForm');
 		$request = $this->getRequest();
 
+		// upon login attempt
 		if ($request->isPost()) {
 			$error = false;
 			$form->setData($request->getPost());
@@ -64,16 +69,19 @@ class UserController extends AbstractActionController
 			$username = $form->get('username')->getValue();
 			$password = $form->get('password')->getValue();
 
+			// if no username present
 			if (empty($username)) {
 				$form->get('username')->setMessages(array('No username given.'));
 				$error = true;
 			}
 
+			// if no password present
 			if (empty($password)) {
 				$form->get('password')->setMessages(array('No password given.'));
 				$error = true;
 			}
 
+			// it everything seems to be valid
 			if (!$error && $form->isValid()) {
 				$authAdapter = $this->userAuth()->getAuthAdapter();
 				$authAdapter->setIdentity($username);
@@ -81,19 +89,16 @@ class UserController extends AbstractActionController
 
 				$authResult = $this->userAuth()->getAuthService()->authenticate($authAdapter);
 
+				// if user is authenticated
 				if (Result::SUCCESS == $authResult->getCode()) {
-
-					$userModel = $authResult->getIdentity();
-					
-
+					// redirect to main page
+					// @TODO: implement redirect to referer if needed
 					return $this->redirect()->toRoute('index');
 				}
+				// attach error message to the form
 				$form->get('username')->setMessages($authResult->getMessages());
 			}
-
-
 		}
-
 		return array('loginForm' => $form);
 	}
 
@@ -106,4 +111,6 @@ class UserController extends AbstractActionController
 
 		return $this->redirect()->toRoute('index');
 	}
+
+	// @TODO: further actions
 }

@@ -43,7 +43,7 @@ class User extends AbstractTableGateway
 	protected $table = 'webhemi_user';
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
 	 * @param \Zend\Db\Adapter\Adapter $adapter
 	 */
@@ -56,7 +56,7 @@ class User extends AbstractTableGateway
 	}
 
 	/**
-	 * Get User by Id
+	 * Retrieve UserModel by Id
 	 *
 	 * @param int $userId
 	 * @return UserModel
@@ -70,7 +70,7 @@ class User extends AbstractTableGateway
 	}
 
 	/**
-	 * Get User by Username
+	 * Retrieve UserModel by Username
 	 *
 	 * @param string $username
 	 * @return UserModel
@@ -83,7 +83,7 @@ class User extends AbstractTableGateway
 		return $userModel;
 	}
 	/**
-	 * Get User by Username
+	 * Retrieve UserModel by Username
 	 *
 	 * @param string $email
 	 * @return UserModel

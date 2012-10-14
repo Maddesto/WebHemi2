@@ -40,7 +40,7 @@ class IsAllowed extends AbstractHelper
 	protected $aclService;
 
 	/**
-	 * Checks privilege
+	 * Check privilege
 	 *
 	 * @param type $resource
 	 * @param type $privilege

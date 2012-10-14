@@ -56,7 +56,7 @@ class FormService
 	}
 
 	/**
-	 * Megic method for instantiate and retrieve From objects
+	 * Magic method for instantiate and retrieve From objects
 	 *
 	 * @param string $name
 	 * @param array $arguments

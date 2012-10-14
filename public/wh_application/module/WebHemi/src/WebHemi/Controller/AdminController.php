@@ -22,15 +22,34 @@
 
 namespace WebHemi\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController,
-	Zend\View\Model\ViewModel;
+use Zend\Mvc\Controller\AbstractActionController;
 
+/**
+ * WebHemi Admin Controller
+ *
+ * @category   WebHemi
+ * @package    WebHemi_Controller
+ * @author     Gixx @ www.gixx-web.com
+ * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ */
 class AdminController extends AbstractActionController
 {
-
+	/**
+     * Default action
+     *
+     * @return array
+     */
 	public function indexAction()
 	{
-		return new ViewModel();
+		// if the user is not authenticated
+        if (!$this->userAuth()->hasIdentity()) {
+			// redirect to login page
+			return $this->redirect()->toRoute('user/login');
+		}
+
+		return array();
 	}
 
+	// @TODO: implement further actions
 }

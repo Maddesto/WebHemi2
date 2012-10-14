@@ -54,12 +54,8 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	protected $userLockTable;
 
 	/**
-	 * This method is called to attempt an authentication. Previous to this
-	 * call, this adapter would have already been configured with all
-	 * necessary information to successfully connect to a database table and
-	 * attempt to find a record matching the provided identity.
+	 * This method is called to attempt an authentication.
 	 *
-	 * @throws Exception\RuntimeException if answering the authentication query is impossible
 	 * @return Result
 	 */
 	public function authenticate()
@@ -150,7 +146,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     }
 
 	/**
-	 * Get User Table
+	 * Retrive User Table instance
 	 *
 	 * @return UserTable
 	 */
@@ -163,7 +159,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Set User Table
+	 * Set User Table instance
 	 *
 	 * @param UserTable $userTable
 	 * @return Adapter
@@ -175,7 +171,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Get User Lock Table
+	 * Retrieve User Lock Table instance
 	 *
 	 * @return UserLockTable
 	 */
@@ -188,7 +184,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Set User Lock Table
+	 * Set User Lock Table instance
 	 *
 	 * @param UserTable $userLockTable
 	 * @return Adapter

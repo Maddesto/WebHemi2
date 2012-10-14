@@ -72,7 +72,7 @@ class Role implements RoleInterface
 	 * Set roleId
 	 *
 	 * @param string $roleId
-	 * @return \WebHemi\Acl\Role
+	 * @return Role
 	 */
 	public function setRoleId($roleId)
 	{
@@ -94,7 +94,7 @@ class Role implements RoleInterface
 	 * Set parentRole
 	 *
 	 * @param RoleInterface $parentRole
-	 * @return \WebHemi\Acl\Role
+	 * @return Role
 	 */
 	public function setParentRole(RoleInterface $parentRole)
 	{

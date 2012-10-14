@@ -39,7 +39,7 @@ class ResourceProvider
 	protected $resources = array();
 
 	/**
-	 * Constructor
+	 * Class constructor
 	 *
 	 * @param array $config
 	 */
@@ -55,7 +55,7 @@ class ResourceProvider
 	}
 
 	/**
-	 * Retrieve all resources
+	 * Retrieve resources
 	 *
 	 * @return array
 	 */

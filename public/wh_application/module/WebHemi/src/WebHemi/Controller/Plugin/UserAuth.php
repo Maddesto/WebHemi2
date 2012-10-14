@@ -23,12 +23,10 @@
 namespace webHemi\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-	Zend\Authentication\AuthenticationService,
 	Zend\ServiceManager\ServiceManager,
-	Zend\ServiceManager\ServiceManagerAwareInterface;
-
-//use WebHemi\Auth\Adapter\Adapter as AuthAdapter,
-//	WebHemi\Auth\Auth;
+	Zend\ServiceManager\ServiceManagerAwareInterface,
+	WebHemi\Auth\Auth as AuthService,
+	WebHemi\Auth\Adapter\Adapter as AuthAdapter;
 
 /**
  * Controller plugin for Authentication
@@ -43,7 +41,7 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 {
 	/** @var AuthAdapter */
 	protected $authAdapter;
-	/** @var AuthenticationService */
+	/** @var AuthService */
 	protected $authService;
 	/** @var ServiceManager */
 	protected $serviceManager;
@@ -79,7 +77,7 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Get authAdapter
+	 * Retrieve AuthAdapter instance
 	 *
 	 * @return AuthAdapter
 	 */
@@ -92,7 +90,7 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Set authAdapter
+	 * Set AuthAdapter instance
 	 *
 	 * @param AuthAdapter $authAdapter
 	 * @retrun UserAuth
@@ -104,9 +102,9 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Get authService
+	 * Retrieve AuthService instance
 	 *
-	 * @return Auth
+	 * @return AuthService
 	 */
 	public function getAuthService()
 	{
@@ -117,19 +115,19 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Set authService
+	 * Set AuthService instance
 	 *
-	 * @param AuthenticationService $authService
+	 * @param AuthService $authService
 	 * @retrun UserAuth
 	 */
-	public function setAuthService(AuthenticationService $authService)
+	public function setAuthService(AuthService $authService)
 	{
 		$this->authService = $authService;
 		return $this;
 	}
 
 	/**
-	 * Retrieve service manager instance
+	 * Retrieve ServiceManager instance
 	 *
 	 * @return ServiceManager
 	 */
@@ -139,9 +137,9 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Set service manager instance
+	 * Set ServiceManager instance
 	 *
-	 * @param ServiceManager $locator
+	 * @param ServiceManager $serviceManager
 	 * @return UserAuth
 	 */
 	public function setServiceManager(ServiceManager $serviceManager)

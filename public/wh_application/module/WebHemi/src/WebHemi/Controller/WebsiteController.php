@@ -24,19 +24,44 @@ namespace WebHemi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 
+/**
+ * WebHemi Website Controller
+ *
+ * @category   WebHemi
+ * @package    WebHemi_Controller
+ * @author     Gixx @ www.gixx-web.com
+ * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ */
 class WebsiteController extends AbstractActionController
 {
-
+	/**
+     * Default action
+     *
+     * @return array
+     */
 	public function indexAction()
 	{
 		return array();
 	}
 
+	// @TODO: implement useful actions
+
+	/**
+     * Action for ACL-test
+     *
+     * @return array
+     */
 	public function privatePageAction()
 	{
 		return array();
 	}
 
+	/**
+     * Action for ACL-test
+     *
+     * @return array
+     */
 	public function personalPageAction()
 	{
 		return array();

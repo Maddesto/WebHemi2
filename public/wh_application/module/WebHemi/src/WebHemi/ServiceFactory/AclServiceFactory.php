@@ -41,7 +41,7 @@ class AclServiceFactory implements FactoryInterface
 	 * Factory method for WebHemi acl manager service
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return WebHemi\Acl\Acl
+	 * @return Acl
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
     {

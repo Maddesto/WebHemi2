@@ -39,7 +39,7 @@ class RoleProvider
 	protected $roles = array();
 
 	/**
-	 * Contructor
+	 * Class contructor
 	 *
 	 * @param array $config
 	 */

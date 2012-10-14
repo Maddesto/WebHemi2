@@ -44,13 +44,18 @@ class CleanIPAssertion implements AssertionInterface
 	/** @var ServiceManager $serviceManager */
 	protected $serviceManager;
 
+	/**
+	 * Class constructor
+	 *
+	 * @param ServiceManager $serviceManager
+	 */
 	public function __construct(ServiceManager $serviceManager)
 	{
 		$this->serviceManager = $serviceManager;
 	}
 
 	/**
-     * Returns true if and only if the assertion conditions are met
+     * Return true if and only if the assertion conditions are met
      *
      * This method is passed the ACL, Role, Resource, and privilege to which the authorization query applies. If the
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or

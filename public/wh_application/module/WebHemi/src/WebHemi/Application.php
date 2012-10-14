@@ -61,7 +61,7 @@ final class Application
 	}
 
 	/**
-	 * Defines common paths and inserts vendor folder into include path
+	 * Define common paths and inserts vendor folder into include path
 	 *
 	 * @return void
 	 */
@@ -150,7 +150,7 @@ final class Application
 	}
 
 	/**
-	 * Checks whether the specific configuration exists
+	 * Check whether the specific configuration exists
 	 *
 	 * @param string $name    The name of the config section
 	 * @return array
@@ -161,7 +161,7 @@ final class Application
 	}
 
 	/**
-	 * Loads the given configuration
+	 * Load the given configuration
 	 *
 	 * @param string $name         The name of the config section
 	 * @param string $filename     The path to the config file
@@ -205,7 +205,7 @@ final class Application
 	}
 
 	/**
-	 * Merges config arrays in the correct way
+	 * Merge config arrays in the correct way
 	 * This rewrites the given key->value pairs and does not make key->array(value1, value2) like the
 	 * `array_merge_recursive` does
 	 *
@@ -248,7 +248,7 @@ final class Application
 	}
 
 	/**
-	 * Gives back the specific configuration
+	 * retrievethe specific configuration
 	 *
 	 * @param string $name    The name of the config section
 	 * @return array

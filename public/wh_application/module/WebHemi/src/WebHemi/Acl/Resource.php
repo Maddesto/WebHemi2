@@ -39,7 +39,7 @@ class Resource implements ResourceInterface
 	protected $resourceId;
 
 	/**
-	 * Contructor
+	 * Class contructor
 	 * If no resourceId is given, then it can be set with $role->setResourceId($resourceId);
 	 *
 	 * @param string $resourceId
@@ -63,7 +63,7 @@ class Resource implements ResourceInterface
 	 * Set resourceId
 	 *
 	 * @param string $resourceId
-	 * @return \WebHemi\Acl\Resource
+	 * @return Resource
 	 */
 	public function setResourceId($resourceId)
 	{

@@ -41,7 +41,7 @@ class ThemeManagerServiceFactory implements FactoryInterface
 	 * Factory method for WebHemi theme manager service
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return WebHemi\Theme\ThemeManager
+	 * @return ThemeManager
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
 	{

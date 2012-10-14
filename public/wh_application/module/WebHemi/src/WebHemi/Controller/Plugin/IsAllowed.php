@@ -23,6 +23,10 @@
 namespace webHemi\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
+	Zend\ServiceManager\ServiceLocatorInterface,
+	Zend\ServiceManager\ServiceLocatorAwareInterface,
+	WebHemi\Acl\Role,
+	WebHemi\Acl\Resource,
 	WebHemi\Acl\Acl;
 
 /**
@@ -34,17 +38,21 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class IsAllowed extends AbstractPlugin
+class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
-    /** @var WebHemi\Acl\Acl $authService */
+    /** @var Acl $aclService */
 	protected $aclService;
+	/** @var ServiceManager */
+	protected $serviceManager;
 
 	/**
-	 * Checks privilege
+	 * Return true if and only if the Role has access to the Resource.
+	 * If a valid role is not coupled with a valid resource it will result FALSE.
+	 * If the role or the resourse is not valid it will result TRUE.
 	 *
-	 * @param type $resource
-	 * @param type $privilege
-	 * @return type
+	 * @param  Resource|string    $resource
+	 * @param  Role|string        $role
+	 * @return boolean
 	 */
     public function __invoke($resource, $privilege = null)
     {
@@ -54,22 +62,46 @@ class IsAllowed extends AbstractPlugin
 	/**
 	 * Retrieve ACL service object
 	 *
-	 * @return WebHemi\Acl\Acl
+	 * @return Acl
 	 */
     public function getAclService()
     {
+		if (!isset($this->aclService)) {
+			$this->setAclService($this->serviceManager->getServiceLocator()->get('acl'));
+		}
         return $this->aclService;
     }
 
 	/**
 	 * Set ACL service object
 	 *
-	 * @param WebHemi\Acl\Acl $aclService
+	 * @param Acl $aclService
 	 * @return IsAllowed
 	 */
     public function setAclService(Acl $aclService)
     {
         $this->aclService = $aclService;
         return $this;
+    }
+
+	/**
+     * Set ServiceLocatorInterface instance
+     *
+     * @param  ServiceLocatorInterface $serviceLocator
+     * @return void
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+    }
+
+    /**
+     * Retrieve ServiceLocatorInterface instance
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
+    {
+        return $this->serviceLocator;
     }
 }

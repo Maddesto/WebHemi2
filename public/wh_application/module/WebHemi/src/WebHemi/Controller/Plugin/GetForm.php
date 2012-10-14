@@ -25,11 +25,10 @@ namespace webHemi\Controller\Plugin;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
 	Zend\ServiceManager\ServiceLocatorInterface,
 	Zend\ServiceManager\ServiceLocatorAwareInterface,
-	Zend\ServiceManager\Exception,
 	WebHemi\Form\AbstractForm;
 
 /**
- * Controller plugin for ACL
+ * Controller plugin for WebHemi Form
  *
  * @category   WebHemi
  * @package    WebHemi_Controller_Plugin
@@ -43,11 +42,10 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
 	protected $serviceLocator;
 
 	/**
-	 * Retrieve specific WebHemi form
+	 * Retrieve specific WebHemi Form
 	 *
 	 * @param string $resource
 	 * @return AbstractForm
-	 * @throws Exception\InvalidArgumentException
 	 */
     public function __invoke($formName)
     {
@@ -55,7 +53,7 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
     }
 
 	/**
-     * Set serviceManager instance
+     * Set ServiceLocatorInterface instance
      *
      * @param  ServiceLocatorInterface $serviceLocator
      * @return void
@@ -66,7 +64,7 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
     }
 
     /**
-     * Retrieve serviceManager instance
+     * Retrieve ServiceLocatorInterface instance
      *
      * @return ServiceLocatorInterface
      */

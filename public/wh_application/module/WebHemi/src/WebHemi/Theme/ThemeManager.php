@@ -24,7 +24,11 @@ namespace WebHemi\Theme;
 
 use Zend\Stdlib\PriorityQueue,
 	Zend\ServiceManager\ServiceManager,
-	Zend\ServiceManager\Exception;
+	Zend\ServiceManager\Exception,
+	Zend\View\Resolver\AggregateResolver,
+	Zend\View\Resolver\TemplateMapResolver,
+	Zend\View\Resolver\TemplatePathStack,
+	WebHemi\Theme\Adapter\ConfigurationAdapter;
 
 /**
  * WebHemi theme manager
@@ -39,15 +43,15 @@ class ThemeManager
 {
 	/** @var array $opions */
 	protected $options;
-	/** @var \Zend\Stdlib\PriorityQueue $themePath */
+	/** @var PriorityQueue $themePath */
 	protected $themePathList;
-	/** @var \Zend\Stdlib\PriorityQueue  $adapters */
+	/** @var PriorityQueue  $adapters */
 	protected $adapterList;
 	/** @var string  $currentTheme */
 	protected $currentTheme   = null;
-	/** @var \WebHemi\Adapter\AdapterInterface  $currentAdapter */
+	/** @var ConfigurationAdapter  $currentAdapter */
 	protected $currentAdapter = null;
-	/** @var \Zend\ServiceManager\ServiceManager $serviceManager */
+	/** @var ServiceManager $serviceManager */
 	protected $serviceManager;
 
 	/**
@@ -56,8 +60,8 @@ class ThemeManager
 	 * @param  array|Traversable $options
 	 * @param ServiceManager     $serviceManager
 	 *
-	 * @return \WebHemi\ServiceManager\ThemeManager
-	 * @throws \Zend\ServiceManager\Exception\InvalidArgumentException
+	 * @return ThemeManager
+	 * @throws Exception\InvalidArgumentException
 	 */
 	public static function factory($options, ServiceManager $serviceManager)
 	{
@@ -128,15 +132,15 @@ class ThemeManager
 		$config = $this->getThemeConfig($this->currentTheme);
 		// we're about to change the system-default view settings to custom
 		$viewResolver  = $this->serviceManager->get('ViewResolver');
-		$themeResolver = new \Zend\View\Resolver\AggregateResolver();
+		$themeResolver = new AggregateResolver();
 
 		if (isset($config['template_map'])) {
-			$mapResolver = new \Zend\View\Resolver\TemplateMapResolver($config['template_map']);
+			$mapResolver = new TemplateMapResolver($config['template_map']);
 			$themeResolver->attach($mapResolver);
 		}
 
 		if (isset($config['template_path_stack'])) {
-			$pathResolver = new \Zend\View\Resolver\TemplatePathStack(
+			$pathResolver = new TemplatePathStack(
 							$config['template_path_stack']
 			);
 			$defaultPathStack = $this->serviceManager->get('ViewTemplatePathStack');
