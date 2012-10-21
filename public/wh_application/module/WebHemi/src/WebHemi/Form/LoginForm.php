@@ -22,7 +22,12 @@
 
 namespace WebHemi\Form;
 
-use WebHemi\Form\AbstractForm;
+use WebHemi\Form\AbstractForm,
+	WebHemi\Application,
+	Zend\Form\Fieldset,
+	Zend\Form\Element,
+	Zend\Validator,
+	Zend\Filter;
 
 /**
  * Login Form
@@ -42,70 +47,77 @@ class LoginForm extends AbstractForm
 	 */
 	public function __construct($name = null)
 	{
-		parent::__construct('product');
+		parent::__construct('login');
 
-		$this->add(array(
-			'name' => 'username',
-			'type' => 'Zend\Form\Element\Text',
-			'attributes' => array(
-				'id' => 'username',
-			),
-			'options' => array(
-				'label' => 'Your Name',
-				'required' => true,
-				'filters' => array(
-					array('StringTrim')
-				),
-				'validators' => array(
-					array(
-						'StringLength',
-						true,
-						array(
-							6,
-							999
-						)
-					)
-				),
-			),
-		));
+		// filedset for form elements
+		$fieldset = new Fieldset('loginInfo');
+		$fieldset->setLabel('Login information');
 
-		$this->add(array(
-			'name' => 'password',
-			'type' => 'Zend\Form\Element\Password',
-			'attributes' => array(
-				'id' => 'password',
-			),
-			'options' => array(
-				'label' => 'Password',
-				'required' => true,
-				'filters' => array(
-					array('StringTrim')
-				),
-				'validators' => array(
-					array(
-						'StringLength',
-						true,
-						array(
-							6,
-							999
-						)
-					)
-				),
-			),
-		));
+		// the username input
+		$username = new Element\Text('username');
+		$username->setOptions(array(
+					'required'   => true,
+					'filters'    => array(
+						new Filter\StringTrim(),
+					),
+					'validators' => array(
+						new Validator\StringLength(4, 255, true),
+						new Validator\Regex('/^[a-z]{1}\w+$/i')
+					),
+				))
+				->setLabel('Username')
+				->setAttribute('id', 'username')
+				->setAttribute('accesskey', 'u')
+				->setAttribute('maxlength', '255')
+				->setAttribute('tabindex', self::$tabindex++);
 
-		$this->add(array(
-			'name' => 'token',
-			'type' => '\Zend\Form\Element\Csrf',
-		));
+		// password input
+		$password = new Element\Password('password');
+		$password->setOptions(array(
+					'required'   => true,
+					'filters'    => array(
+						new Filter\StringTrim(),
+					),
+					'validators' => array(
+						new Validator\StringLength(8, 255, true),
+					),
+				))
+				->setLabel('Password')
+				->setAttribute('id', 'password')
+				->setAttribute('accesskey', 'p')
+				->setAttribute('maxlength', '255')
+				->setAttribute('tabindex', self::$tabindex++);
 
-		$this->add(array(
-			'name' => 'submit',
-			'type' => 'Zend\Form\Element\Submit',
-			'attributes' => array(
-				'value' => 'Login',
-			),
-		));
+		$fieldset->add($username)
+				->add($password);
+
+		// in ADMIN module there's no way to
+		if (APPLICATION_MODULE == Application::ADMIN_MODULE) {
+			$this->setAttribute('autocomplete=', 'off');
+		}
+		// otherwise we supply "remember me" functionality
+		else {
+			$remember = new Element\Checkbox('remember');
+			$remember->setLabel('Remember me')
+					->setOptions(array(
+						'use_hidden_element' => true,
+						'checked_value'      => 1,
+						'unchecked_value'    => 0
+
+					))
+					->setAttribute('accesskey', 'r')
+					->setAttribute('id', 'remember')
+					->setAttribute('tabindex', self::$tabindex++);
+			$fieldset->add($remember);
+		}
+
+		$submit = new Element\Submit('submit');
+		$submit->setValue('Login')
+				->setAttribute('accesskey', 's')
+				->setAttribute('tabindex', self::$tabindex++);
+
+		$this->setAttribute('action', '/user/login')
+				->add($fieldset)
+				->add($submit);
 	}
-
 }

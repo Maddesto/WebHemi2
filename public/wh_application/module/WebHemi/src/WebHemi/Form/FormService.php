@@ -75,6 +75,8 @@ class FormService
 			if (!isset(self::$form[$formName])) {
 
 				$form = new $formName();
+				$form->setServiceManager($this->serviceManager);
+				
 				if (class_exists($filterName)) {
 					$form->setInputFilter(new $filterName());
 				}

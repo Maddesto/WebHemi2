@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.11 Created by Gixx.
+Version 2.0.0.12 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -26,7 +26,7 @@ Features / Goals
 - Subdomain support for applications except 'Website' which is always on 'www' [DONE]
 - Privilege system with IP blacklist [DONE]
 - Secure authentication [DONE]
-- Secure Form solution [IN PROGRESS]
+- Secure Form solution [DONE]
 - 'Virtual folder structure'-like content management [PLANNING]
 - Support for 3rd-party plugins and modules [PLANNING]
 - Install script [PLANNING]
@@ -54,6 +54,12 @@ _Soon_
 
 [Dev notes - Change log]
 ========================
+
+----------------
+Version 2.0.0.12
+----------------
+- Unified HTML Form rendering solution with the __toString() magic method.
+- Minor bug fixes
 
 ----------------
 Version 2.0.0.11
