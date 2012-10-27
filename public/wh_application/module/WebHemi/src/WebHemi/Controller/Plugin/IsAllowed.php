@@ -20,7 +20,7 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace webHemi\Controller\Plugin;
+namespace WebHemi\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
 	Zend\ServiceManager\ServiceLocatorInterface,

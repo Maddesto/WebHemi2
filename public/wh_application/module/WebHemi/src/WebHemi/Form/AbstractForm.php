@@ -126,7 +126,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			$name = $element->getName();
 			$matches = array();
 
-			if (preg_match('/(?:.*\[)?([^\]]+)/', $name, $matches)) {
+			if (preg_match('/(?:.*\[)?([^\]]+)\]?$/', $name, $matches)) {
 				$id = $matches[1];
 				$element->setAttribute('id', $id);
 			}
@@ -167,22 +167,22 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			case 'hidden':
 			case 'button':
 			case 'submit':
-				$tag = $inputTag . PHP_EOL;
+				$tag = $inputTag . $errorTag;
 				break;
 			case 'checkbox':
 			case 'radio':
-				$tag = $openTag . $inputTag . $labelTag . $errorTag . $closeTag . PHP_EOL;
+				$tag = $openTag . $inputTag . $labelTag . $errorTag . $closeTag;
 				break;
 			case 'file':
 				// @TODO: create hidden input for MAX_FILE_SIZE
-				$tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag . PHP_EOL;
+				$tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
 				break;
 			default:
-				$tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag . PHP_EOL;
+				$tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
 				break;
 		}
 
-		return $tag;
+		return $tag . PHP_EOL;
 	}
 
 	/**

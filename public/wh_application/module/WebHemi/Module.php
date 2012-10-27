@@ -110,8 +110,8 @@ class Module implements
 	{
 		return array(
 			'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
+				__DIR__ . '/autoload_classmap.php',
+			),
 			'Zend\Loader\StandardAutoloader' => array(
 				'namespaces' => array(
 					__NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
@@ -126,21 +126,21 @@ class Module implements
 	 * @return array
 	 */
 	public function getViewHelperConfig()
-    {
-        // already defined in the module config file
+	{
+		// already defined in the module config file
 		return array();
-    }
+	}
 
 	/**
 	 * Retrieve the Controller Plugin Configuration
 	 *
 	 * @return array
 	 */
-    public function getControllerPluginConfig()
-    {
+	public function getControllerPluginConfig()
+	{
 		// already defined in the module config file
 		return array();
-    }
+	}
 
 	/**
 	 * Retrieve the Service Configuration

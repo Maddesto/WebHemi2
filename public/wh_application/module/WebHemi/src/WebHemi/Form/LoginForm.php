@@ -66,10 +66,14 @@ class LoginForm extends AbstractForm
 					),
 				))
 				->setLabel('Username')
-				->setAttribute('id', 'username')
-				->setAttribute('accesskey', 'u')
-				->setAttribute('maxlength', '255')
-				->setAttribute('tabindex', self::$tabindex++);
+				->setAttributes(array(
+					'id'        => 'username',
+					'accesskey' => 'u',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'required'  => 'required',
+					'pattern'   => '^[a-z]{1}\w+$'
+				));
 
 		// password input
 		$password = new Element\Password('password');
@@ -83,10 +87,14 @@ class LoginForm extends AbstractForm
 					),
 				))
 				->setLabel('Password')
-				->setAttribute('id', 'password')
-				->setAttribute('accesskey', 'p')
-				->setAttribute('maxlength', '255')
-				->setAttribute('tabindex', self::$tabindex++);
+				->setAttributes(array(
+					'id'        => 'password',
+					'accesskey' => 'p',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'required'  => 'required',
+					'pattern'   => '^\w+$'
+				));
 
 		$fieldset->add($username)
 				->add($password);
@@ -101,20 +109,26 @@ class LoginForm extends AbstractForm
 			$remember->setLabel('Remember me')
 					->setOptions(array(
 						'use_hidden_element' => true,
-						'checked_value'      => 1,
-						'unchecked_value'    => 0
+						'checked_value'      => '1',
+						'unchecked_value'    => '0'
 
 					))
-					->setAttribute('accesskey', 'r')
-					->setAttribute('id', 'remember')
-					->setAttribute('tabindex', self::$tabindex++);
+					->setAttributes(array(
+						'accesskey' => 'r',
+						'id' => 'remember',
+						'tabindex' => self::$tabindex++
+					));
+
 			$fieldset->add($remember);
 		}
 
 		$submit = new Element\Submit('submit');
 		$submit->setValue('Login')
-				->setAttribute('accesskey', 's')
-				->setAttribute('tabindex', self::$tabindex++);
+				->setAttributes(array(
+						'accesskey' => 's',
+						'id' => 'remember',
+						'tabindex' => self::$tabindex++
+					));
 
 		$this->setAttribute('action', '/user/login')
 				->add($fieldset)

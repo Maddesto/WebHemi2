@@ -29,6 +29,7 @@ CREATE TABLE `webhemi_user` (
     `email`         VARCHAR(255) NOT NULL,
     `displayname`   VARCHAR(100) DEFAULT NULL,
     `password`      BINARY(60) NOT NULL,
+	`hash`          VARCHAR(32) DEFAULT NULL,
 	`role`          ENUM('member','moderator','editor','publisher','admin') DEFAULT 'member',
     `last_ip`       VARCHAR(15) DEFAULT NULL,
     `register_ip`   VARCHAR(15) NOT NULL,

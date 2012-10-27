@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.12 Created by Gixx.
+Version 2.0.0.13 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -56,6 +56,13 @@ _Soon_
 ========================
 
 ----------------
+Version 2.0.0.13
+----------------
+- Major fixes in WebHemi Form
+- Fixed and secured the module-specific auto-login process
+- Minor bug fixes
+
+----------------
 Version 2.0.0.12
 ----------------
 - Unified HTML Form rendering solution with the __toString() magic method.
@@ -79,3 +86,11 @@ Version 2.0.0.10
 - Added authentication-related helpers
 - Code optimization
 - Minor bug fixes
+
+--------------------------
+Version 2.0.0.1 - 2.0.0.10
+--------------------------
+- Logical separation of 'Admin' and 'Website' applications
+- Support for custom themes in 'Website' application
+- Subdomain support for applications except 'Website' which is always on 'www'
+- Privilege system with IP blacklist

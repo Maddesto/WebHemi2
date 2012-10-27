@@ -42,6 +42,7 @@ class WebsiteController extends AbstractActionController
      */
 	public function indexAction()
 	{
+		$this->userAuth()->hasIdentity();
 		return array();
 	}
 

@@ -20,13 +20,17 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace webHemi\Controller\Plugin;
+namespace WebHemi\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
 	Zend\ServiceManager\ServiceManager,
 	Zend\ServiceManager\ServiceManagerAwareInterface,
+	Zend\Authentication\Result,
+	WebHemi\Application,
 	WebHemi\Auth\Auth as AuthService,
-	WebHemi\Auth\Adapter\Adapter as AuthAdapter;
+	WebHemi\Auth\Adapter\Adapter as AuthAdapter,
+	WebHemi\Model\Table\User as UserTable,
+	WebHemi\Model\User as UserModel;
 
 /**
  * Controller plugin for Authentication
@@ -53,7 +57,42 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	 */
 	public function hasIdentity()
 	{
-		return $this->getAuthService()->hasIdentity();
+		$identity = $this->getAuthService()->hasIdentity();
+
+		// if not already logged in and has autologin cookie for the module which is not the ADMIN module
+		if (!$identity
+				&& isset($_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)])
+				&& APPLICATION_MODULE !== Application::ADMIN_MODULE
+		) {
+			$encryptedHash = $_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)];
+
+			// decrypting the hash for this module
+			$decryptedHash = trim(rtrim(mcrypt_decrypt(
+					MCRYPT_RIJNDAEL_256,
+					md5(APPLICATION_MODULE),
+					base64_decode($encryptedHash),
+					MCRYPT_MODE_CBC,
+					md5(md5(APPLICATION_MODULE))
+			), "\0"));
+
+			// chech for the hash
+			$userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+			$userModel = $userTable->getUserByHash($decryptedHash);
+
+			if ($userModel instanceof UserModel) {
+				$authAdapter = $this->getAuthAdapter();
+				$authAdapter->setVerifiedUser($userModel);
+
+				$authResult = $this->getAuthService()->authenticate($authAdapter);
+
+				// if user is authenticated
+				if (Result::SUCCESS == $authResult->getCode()) {
+					$identity = true;
+				}
+			}
+		}
+
+		return $identity;
 	}
 
 	/**

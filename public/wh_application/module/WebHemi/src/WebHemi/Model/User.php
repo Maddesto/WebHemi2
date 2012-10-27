@@ -43,6 +43,8 @@ class User
 	protected $displayName;
 	/** @var string   $password */
 	protected $password;
+	/** @var string   $hash */
+	protected $hash;
 	/** @var string   $role */
 	protected $role;
 	/** @var string   $lastIp */
@@ -174,6 +176,28 @@ class User
 	public function setPassword($password)
 	{
 		$this->password = $password;
+		return $this;
+	}
+
+	/**
+	 * Retrieve hash (md5)
+	 *
+	 * @return string
+	 */
+	public function getHash()
+	{
+		return $this->hash;
+	}
+
+	/**
+	 * Set hash
+	 *
+	 * @param string $hash
+	 * @return User
+	 */
+	public function setHash($hash)
+	{
+		$this->hash = $hash;
 		return $this;
 	}
 
@@ -353,6 +377,7 @@ class User
 		$this->email        = (isset($data['email']))         ? $data['email'] : null;
 		$this->displayname  = (isset($data['displayname']))   ? $data['displayname'] : null;
 		$this->password     = (isset($data['password']))      ? $data['password'] : null;
+		$this->hash         = (isset($data['hash']))          ? $data['hash'] : null;
 		$this->role         = (isset($data['role']))          ? $data['role'] : null;
 		$this->lastIp       = (isset($data['last_ip']))       ? $data['last_ip'] : null;
 		$this->registerIp   = (isset($data['register_ip']))   ? $data['register_ip'] : null;
@@ -375,6 +400,7 @@ class User
 			'email'         => $this->email,
 			'displayname'   => $this->displayName,
 			'password'      => $this->password,
+			'hash'          => $this->hash,
 			'role'          => $this->role,
 			'last_ip'       => $this->lastIp,
 			'register_ip'   => $this->registerIp,

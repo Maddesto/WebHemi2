@@ -20,7 +20,7 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace webHemi\Controller\Plugin;
+namespace WebHemi\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
 	Zend\ServiceManager\ServiceLocatorInterface,
@@ -49,7 +49,7 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
 	 */
     public function __invoke($formName)
     {
-        return $this->serviceLocator->getServiceLocator()->get('formService')->$formName();
+        return $this->getServiceLocator()->get('formService')->$formName();
     }
 
 	/**
@@ -70,6 +70,6 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
      */
     public function getServiceLocator()
     {
-        return $this->serviceLocator;
+        return $this->serviceLocator->getServiceLocator();
     }
 }

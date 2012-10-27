@@ -37,17 +37,18 @@ use Zend\Mvc\Controller\AbstractActionController,
 class UserController extends AbstractActionController
 {
 	/**
-     * Default action
-     *
-     * @return array
-     */
+	 * Default action
+	 *
+	 * @return array
+	 */
 	public function indexAction()
 	{
 		// if the user is not authenticated
-        if (!$this->userAuth()->hasIdentity()) {
+		if (!$this->userAuth()->hasIdentity()) {
 			// redirect to login page
 			return $this->redirect()->toRoute('user/login');
 		}
+
 		return array();
 	}
 
@@ -91,6 +92,37 @@ class UserController extends AbstractActionController
 
 				// if user is authenticated
 				if (Result::SUCCESS == $authResult->getCode()) {
+					$rememberMe = $form->get('remember');
+
+					if ($rememberMe) {
+						// if there's such element and checked we save the flag into cookie
+						if ($rememberMe->isChecked()) {
+							$userModel = $authResult->getIdentity();
+							$hash = $userModel->getHash();
+
+							// if no hash has been set yet
+							if (empty($hash)) {
+								$userTable = $this->userAuth()->getAuthAdapter()->getUserTable();
+								$hash      = md5($userModel->getUsername() . '-' . $userModel->getEmail());
+
+								$userModel->setHash($hash);
+								$userTable->update($userModel);
+							}
+
+							// encrypting the hash for this module
+							$encryptedHash = base64_encode(mcrypt_encrypt(
+									MCRYPT_RIJNDAEL_256,
+									md5(APPLICATION_MODULE),
+									$hash,
+									MCRYPT_MODE_CBC,
+									md5(md5(APPLICATION_MODULE))
+							));
+
+							// set cookie for this module
+							setcookie('atln-' . bin2hex(APPLICATION_MODULE), $encryptedHash, time() + (60 * 60 * 24 * 14), '/', $_SERVER['SERVER_NAME'], false, true);
+						}
+					}
+
 					// redirect to main page
 					// @TODO: implement redirect to referer if needed
 					return $this->redirect()->toRoute('index');
@@ -108,6 +140,10 @@ class UserController extends AbstractActionController
 	public function logoutAction()
 	{
 		$this->userAuth()->clearIdentity();
+		// if there was autologin cookie, we remove it
+		if (isset($_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)])) {
+			setcookie('atln-' . bin2hex(APPLICATION_MODULE), 'exit', time() - 1, '/', $_SERVER['SERVER_NAME'], false, true);
+		}
 
 		return $this->redirect()->toRoute('index');
 	}

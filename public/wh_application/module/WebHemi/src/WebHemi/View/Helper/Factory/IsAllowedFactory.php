@@ -41,7 +41,7 @@ class IsAllowedFactory implements FactoryInterface
 	 * Factory method for WebHemi's isAllowed view helper
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return WebHemi\View\Helper\IsAllowed
+	 * @return IsAllowed
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
 	{

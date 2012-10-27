@@ -27,6 +27,7 @@ use Zend\Authentication\Adapter\AdapterInterface,
 	Zend\ServiceManager\ServiceManagerAwareInterface,
 	Zend\ServiceManager\ServiceManager,
 	Zend\Crypt\Password\Bcrypt,
+	WebHemi\Model\User as UserModel,
 	WebHemi\Model\Table\User as UserTable,
 	WebHemi\Model\Table\Lock as UserLockTable;
 
@@ -44,14 +45,16 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	/** @var Default bcrypt password cost */
 	const PASSWORD_COST = 14;
 
-    /** @var string $identity */
-    public $identity = null;
-    /** @var string $credential */
-    protected $credential = null;
+	/** @var string $identity */
+	public $identity = null;
+	/** @var string $credential */
+	protected $credential = null;
 	/** @var UserTable $userTable */
 	protected $userTable;
 	/** @var UserLockTable $userLockTable */
 	protected $userLockTable;
+	/** @var boolean $verifiedUser */
+	protected $verifiedUser = null;
 
 	/**
 	 * This method is called to attempt an authentication.
@@ -60,55 +63,73 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	 */
 	public function authenticate()
 	{
-		// identified by email
-		if (strpos($this->identity, '@') !== false) {
-			$userModel = $this->getUserTable()->getUserByEmail($this->identity);
+		// the autologin may set a user so no further checking will be needed
+		if (!$this->verifiedUser) {
+			// identified by email
+			if (strpos($this->identity, '@') !== false) {
+				$userModel = $this->getUserTable()->getUserByEmail($this->identity);
+			}
+			// identified by username
+			else {
+				$userModel = $this->getUserTable()->getUserByName($this->identity);
+			}
+
+			$bcrypt = new Bcrypt();
+			$bcrypt->setCost(self::PASSWORD_COST);
+
+			// if identity not found
+			if (!$userModel) {
+				$authResult = new Result(
+								Result::FAILURE_IDENTITY_NOT_FOUND,
+								$this->identity,
+								array('A record with the supplied identity could not be found.')
+				);
+			}
+			// else if the identity exists but not activated or disabled
+			else if (!$userModel->getActive() || !$userModel->getEnabled()) {
+				$authResult = new Result(
+								Result::FAILURE_UNCATEGORIZED,
+								$this->identity,
+								array('A record with the supplied identity is not avaliable.')
+				);
+			}
+			// else if the supplied cretendtial is not valid
+			else if (!$bcrypt->verify($this->credential, $userModel->getPassword())) {
+				$authResult = new Result(
+								Result::FAILURE_CREDENTIAL_INVALID,
+								$this->identity,
+								array('Supplied credential is invalid.')
+				);
+			}
 		}
-		// identified by username
 		else {
-			$userModel = $this->getUserTable()->getUserByName($this->identity);
-		}
-
-		$bcrypt = new Bcrypt();
-		$bcrypt->setCost(self::PASSWORD_COST);
-
-		// if identity not found
-		if (!$userModel) {
-			$authResult =  new Result(
-					Result::FAILURE_IDENTITY_NOT_FOUND,
-					$this->identity,
-					array('A record with the supplied identity could not be found.')
-			);
-		}
-		// else if the identity exists but not activated or disabled
-		else if (!$userModel->getActive() || !$userModel->getEnabled()) {
-			$authResult =  new Result(
-					Result::FAILURE_UNCATEGORIZED,
-					$this->identity,
-					array('A record with the supplied identity is not avaliable.')
-			);
-		}
-		// else if the supplied cretendtial is not valid
-		else if (!$bcrypt->verify($this->credential, $userModel->getPassword())) {
-			$authResult =  new Result(
-					Result::FAILURE_CREDENTIAL_INVALID,
-					$this->identity,
-					array('Supplied credential is invalid.')
-			);
+			$userModel = $this->verifiedUser;
 		}
 
 		// if authentication was successful
-		if (!isset($authResult)) {
+		if (!isset($authResult) && $userModel instanceof UserModel) {
 			// update some additional info
 			$userModel->setLastIp($_SERVER['REMOTE_ADDR']);
 			$userModel->setTimeLogin(gmdate('Y-m-d H:i:s'));
+			$hash = $userModel->getHash();
+
+			// if no hash has been set yet
+			if (empty($hash)) {
+				$hash = md5($userModel->getUsername() . '-' . $userModel->getEmail());
+				$userModel->setHash($hash);
+			}
+
 			$this->getUserTable()->update($userModel);
 
+			// result success
 			$authResult = new Result(
-				Result::SUCCESS,
-				$userModel,
-				array('Authentication successful.')
+							Result::SUCCESS,
+							$userModel,
+							array('Authentication successful.')
 			);
+
+			// avoid auth process in the same runtime
+			$this->setVerifiedUser($userModel);
 
 			// reset the counter
 			$this->getUserLockTable()->releaseLock();
@@ -122,28 +143,40 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	}
 
 	/**
-     * Set the value to be used as the identity
-     *
-     * @param  string $value
-     * @return Adapter
-     */
-    public function setIdentity($identity)
-    {
-        $this->identity = $identity;
-        return $this;
-    }
+	 * Set a pre-verified user for auto login
+	 *
+	 * @param UserModel $verifiedUser
+	 * @return Adapter
+	 */
+	public function setVerifiedUser(UserModel $verifiedUser)
+	{
+		$this->verifiedUser = $verifiedUser;
+		return $this;
+	}
 
-    /**
-     * Set the credential value to be used
-     *
-     * @param  string $credential
-     * @return Adapter
-     */
-    public function setCredential($credential)
-    {
-        $this->credential = $credential;
-        return $this;
-    }
+	/**
+	 * Set the value to be used as the identity
+	 *
+	 * @param  string $value
+	 * @return Adapter
+	 */
+	public function setIdentity($identity)
+	{
+		$this->identity = $identity;
+		return $this;
+	}
+
+	/**
+	 * Set the credential value to be used
+	 *
+	 * @param  string $credential
+	 * @return Adapter
+	 */
+	public function setCredential($credential)
+	{
+		$this->credential = $credential;
+		return $this;
+	}
 
 	/**
 	 * Retrive User Table instance

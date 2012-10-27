@@ -82,6 +82,7 @@ class User extends AbstractTableGateway
 
 		return $userModel;
 	}
+
 	/**
 	 * Retrieve UserModel by Username
 	 *
@@ -96,6 +97,21 @@ class User extends AbstractTableGateway
 		return $userModel;
 	}
 
+	/**
+	 * Retrieve UserModel by Hash
+	 *
+	 * @param int $userId
+	 * @return UserModel
+	 */
+	public function getUserByHash($hash)
+	{
+
+
+		$rowset    = $this->select(array('hash' => $hash));
+		$userModel = $rowset->current();
+
+		return $userModel;
+	}
 
 	/**
 	 * Insert new user record

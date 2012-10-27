@@ -340,4 +340,25 @@ final class Application
 		return self::$instance;
 	}
 
+	/**
+	 * Dump data
+	 *
+	 * @param  mixed   $var   The variable to dump
+     * @param  string  $label OPTIONAL Label to prepend to output
+     * @param  bool    $echo  OPTIONAL Echo output if true
+     * @return string
+	 */
+	function varDump($data, $label = null, $echo = true)
+	{
+		require_once ZF2_PATH . '/Debug/Debug.php';
+		$output = \Zend\Debug\Debug::dump($data, $label, false);
+
+		$output = highlight_string('<' . '?php' . PHP_EOL . PHP_EOL . strip_tags($output), true);
+
+		if ($echo) {
+			echo $output;
+		}
+		return $output;
+	}
+
 }

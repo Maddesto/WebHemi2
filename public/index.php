@@ -25,5 +25,5 @@ function processTime($microtime) {
 if ('development' == getenv('APPLICATION_ENV')) {
 	$stop = processTime(microtime());
 	// the +7 msec is the average Apache response time according to the Firebug
-	echo 'Total: ' . number_format(($stop - $start + 0.007), 3, '.', '') . ' sec';
+//	echo 'Total: ' . number_format(($stop - $start + 0.007), 3, '.', '') . ' sec';
 }

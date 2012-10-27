@@ -14,39 +14,46 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_View_Helper_Factory
+ * @package    WebHemi_View_Helper
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi\View\Helper\Factory;
+namespace WebHemi\View\Helper;
 
-use Zend\ServiceManager\FactoryInterface,
-	Zend\ServiceManager\ServiceLocatorInterface,
-	WebHemi\View\Helper\GetIdentity;
+use Zend\View\Helper\AbstractHelper,
+	WebHemi\Application;
 
 /**
- * WebHemi getIdentity view helper factory
+ * View helper for Debug
  *
  * @category   WebHemi
- * @package    WebHemi_View_Helper_Factory
+ * @package    WebHemi_View_Helper
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class GetIdentityFactory implements FactoryInterface
+class Debug extends AbstractHelper
 {
 	/**
-	 * Factory method for WebHemi's getIdentity view helper
+	 * Dump data
 	 *
-	 * @param  ServiceLocatorInterface $serviceLocator
-	 * @return GetIdentity
+	 * @param  mixed   $var   The variable to dump
+	 * @param  boolean $exit  OPTIONAL terminate after output
+     * @param  string  $label OPTIONAL Label to prepend to output
+     * @param  bool    $echo  OPTIONAL Echo output if true
+     * @return string
 	 */
-	public function createService(ServiceLocatorInterface $serviceLocator)
+	public function __invoke($data, $label = null, $exit = true)
 	{
-		$helper = new GetIdentity();
-		$helper->setAuthService($serviceLocator->getServiceLocator()->get('auth'));
-		return $helper;
+		$output = Application::varDump($data, $label, false);
+
+		if ($exit) {
+			echo $output;
+			exit();
+		}
+
+		return $output;
 	}
 }
