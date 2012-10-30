@@ -27,7 +27,7 @@ Features / Goals
 - Privilege system with IP blacklist [DONE]
 - Secure authentication [DONE]
 - Secure Form solution [DONE]
-- 'Virtual folder structure'-like content management [PLANNING]
+- 'Virtual folder structure'-like content management [IN PROGRESS]
 - Support for 3rd-party plugins and modules [PLANNING]
 - Install script [PLANNING]
 - Default website design [PLANNING]
@@ -88,7 +88,7 @@ Version 2.0.0.10
 - Minor bug fixes
 
 --------------------------
-Version 2.0.0.1 - 2.0.0.10
+Version 2.0.0.1 - 2.0.0.9
 --------------------------
 - Logical separation of 'Admin' and 'Website' applications
 - Support for custom themes in 'Website' application
