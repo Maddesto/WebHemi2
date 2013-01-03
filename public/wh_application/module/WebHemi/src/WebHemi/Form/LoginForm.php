@@ -99,9 +99,9 @@ class LoginForm extends AbstractForm
 		$fieldset->add($username)
 				->add($password);
 
-		// in ADMIN module there's no way to
+		// in ADMIN module there's no way to remember the password or autocomplete the input fields
 		if (APPLICATION_MODULE == Application::ADMIN_MODULE) {
-			$this->setAttribute('autocomplete=', 'off');
+			$this->setAttribute('autocomplete', 'off');
 		}
 		// otherwise we supply "remember me" functionality
 		else {

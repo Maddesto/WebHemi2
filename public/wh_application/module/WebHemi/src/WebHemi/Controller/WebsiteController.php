@@ -36,7 +36,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 class WebsiteController extends AbstractActionController
 {
 	/**
-     * Default action
+     * Main page
      *
      * @return array
      */
@@ -46,25 +46,20 @@ class WebsiteController extends AbstractActionController
 		return array();
 	}
 
-	// @TODO: implement useful actions
-
 	/**
-     * Action for ACL-test
+     * View content
      *
      * @return array
      */
-	public function privatePageAction()
+	public function viewAction()
 	{
-		return array();
-	}
-
-	/**
-     * Action for ACL-test
-     *
-     * @return array
-     */
-	public function personalPageAction()
-	{
+		$matches  = $this->getEvent()->getRouteMatch();
+		$category = $matches->getParam('category', 'default');
+		$id       = $matches->getParam('id', false);
+		$format   = $matches->getParam('format', 'html');
+		echo $this->debug($category, '$category', 0);
+		echo $this->debug($id, '$id', 0);
+		echo $this->debug($format, '$format', 0);
 		return array();
 	}
 

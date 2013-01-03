@@ -351,9 +351,10 @@ final class Application
 	function varDump($data, $label = null, $echo = true)
 	{
 		require_once ZF2_PATH . '/Debug/Debug.php';
-		$output = \Zend\Debug\Debug::dump($data, $label, false);
+		$output = \Zend\Debug\Debug::dump($data, null, false);
 
-		$output = highlight_string('<' . '?php' . PHP_EOL . PHP_EOL . strip_tags($output), true);
+		$output = highlight_string('<' . '?php ' . strip_tags($output), true);
+		$output = '<strong>' . $label . '</strong><br />' . str_replace('&lt;?php', '', $output) . '<br />';
 
 		if ($echo) {
 			echo $output;

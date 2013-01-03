@@ -33,18 +33,29 @@ return array(
 		'routes' => array(
 			// website application
 			'index' => array(
-				'type'    => 'Segment',
+				'type'    => 'Literal',
 				'options' => array(
-					'route'       => '/[:action]',
-					'defaults'    => array(
+					'route'    => '/',
+					'defaults' => array(
 						'__NAMESPACE__' => 'WebHemi\Controller',
 						'controller'    => 'Website',
 						'action'        => 'index',
+					)
+				),
+				'may_terminate' => true,
+			),
+			'view' => array(
+				'type'    => 'Regex',
+				'options' => array(
+					'regex'    => '(?:/(?<category>[a-zA-Z0-9_-]+))?/(?<id>[\/a-zA-Z0-9_-]+)(\.(?<format>(json|html|rss)))?',
+					'defaults' => array(
+						'__NAMESPACE__' => 'WebHemi\Controller',
+						'controller'    => 'Website',
+						'action'        => 'view',
+						'category'      => 'default',
+						'format'        => 'html',
 					),
-					'constraints' => array(
-						'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-						'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-					),
+					'spec' => '/%category%/%id%.%format%',
 				),
 				'may_terminate' => true,
 			),
@@ -61,8 +72,8 @@ return array(
 		),
 	),
 	'module_layouts' => array(
-        'WebHemi' => 'layout/default',
-    ),
+		'WebHemi' => 'layout/default',
+	),
 	'view_manager' => array(
 		'template_path_stack' => array(
 			'website' => __DIR__ . '/../view',
@@ -74,13 +85,9 @@ return array(
 	'access_control' => array(
 		'resources' => array(
 			'Controller-Website/*',
-			'Controller-Website/privatePage',
-			'Route-/personal-page',
 		),
 		'rules' => array(
-			'Controller-Website/*'           => 'guest',
-			'Controller-Website/privatePage' => 'moderator',
-			'Route-/personal-page'           => 'admin',
+			'Controller-Website/*' => 'guest',
 		),
 	),
 );
