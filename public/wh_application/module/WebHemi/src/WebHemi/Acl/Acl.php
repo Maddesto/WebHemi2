@@ -220,8 +220,8 @@ class Acl
 						: $this->options['default_role'];
 			}
 
-			// allow access for invalid role or resource
-			if (!$this->acl->hasRole($role) || !$this->acl->hasResource($resource)) {
+			// allow access for invalid role or non-forced resource
+			if (!$this->acl->hasRole($role) || (!$this->acl->hasResource($resource)) && strpos($resource, '!') === false) {
 				return true;
 			}
 

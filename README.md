@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.13 Created by Gixx.
+Version 2.0.0.14 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -54,6 +54,12 @@ _Soon_
 
 [Dev notes - Change log]
 ========================
+
+----------------
+Version 2.0.0.14
+----------------
+- Minor fixes in Authentication
+- Minor bug fixes
 
 ----------------
 Version 2.0.0.13

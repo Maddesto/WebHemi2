@@ -22,7 +22,7 @@
 
 namespace WebHemi\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
+use WebHemi\Controller\UserController;
 
 /**
  * WebHemi Admin Controller
@@ -33,7 +33,7 @@ use Zend\Mvc\Controller\AbstractActionController;
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class AdminController extends AbstractActionController
+class AdminController extends UserController
 {
 	/**
      * Default action
@@ -42,12 +42,11 @@ class AdminController extends AbstractActionController
      */
 	public function indexAction()
 	{
-		// if the user is not authenticated
-        if (!$this->userAuth()->hasIdentity()) {
-			// redirect to login page
-			return $this->redirect()->toRoute('user/login');
-		}
+		return array();
+	}
 
+	public function userAction()
+	{
 		return array();
 	}
 

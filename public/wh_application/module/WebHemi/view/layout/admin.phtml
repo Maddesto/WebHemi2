@@ -27,8 +27,6 @@
 <?php if ($this->getIdentity()) : ?>
 		<a href="<?php echo $this->url('user'); ?>">My Profile</a> |
 		<a href="<?php echo $this->url('user/logout'); ?>">Logout</a>
-<?php else : ?>
-		<a href="<?php echo $this->url('user/login'); ?>">Login</a>
 <?php endif; ?>
 		<hr>
       <?php echo $this->content; ?>

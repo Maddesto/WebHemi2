@@ -94,7 +94,6 @@ return array(
 			'revoke',
 			'delete',
 			'manage',
-			'Controller-User/*',
 		),
 		// only handles 'ALLOWED' rules
         'rules' => array(
@@ -106,7 +105,6 @@ return array(
 			'revoke'            => 'publisher',
 			'delete'            => 'publisher',
 			'manage'            => 'admin',
-			'Controller-User/*' => 'guest',
 		),
     ),
 	'translator' => array(
@@ -121,41 +119,7 @@ return array(
 	),
 	'router' => array(
         'routes' => array(
-            'user' => array(
-                'type'     => 'Literal',
-                'priority' => 1000,
-                'options'  => array(
-                    'route' => '/user',
-                    'defaults' => array(
-						'__NAMESPACE__' => 'WebHemi\Controller',
-                        'controller' => 'User',
-                        'action'     => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes'  => array(
-                    'login' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/login',
-                            'defaults' => array(
-                                'controller' => 'User',
-                                'action'     => 'login',
-                            ),
-                        ),
-                    ),
-                    'logout' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/logout',
-                            'defaults' => array(
-                                'controller' => 'User',
-                                'action'     => 'logout',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+
         ),
     ),
 );

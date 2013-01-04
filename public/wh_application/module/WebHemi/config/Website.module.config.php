@@ -59,6 +59,41 @@ return array(
 				),
 				'may_terminate' => true,
 			),
+			'user' => array(
+                'type'     => 'Literal',
+                'priority' => 1000,
+                'options'  => array(
+                    'route' => '/user',
+                    'defaults' => array(
+						'__NAMESPACE__' => 'WebHemi\Controller',
+                        'controller' => 'User',
+                        'action'     => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes'  => array(
+                    'login' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/login',
+                            'defaults' => array(
+                                'controller' => 'User',
+                                'action'     => 'login',
+                            ),
+                        ),
+                    ),
+                    'logout' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/logout',
+                            'defaults' => array(
+                                'controller' => 'User',
+                                'action'     => 'logout',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
 		),
 	),
 	'service_manager' => array(
@@ -85,9 +120,11 @@ return array(
 	'access_control' => array(
 		'resources' => array(
 			'Controller-Website/*',
+			'Controller-User/*',
 		),
 		'rules' => array(
 			'Controller-Website/*' => 'guest',
+			'Controller-User/*'    => 'guest',
 		),
 	),
 );

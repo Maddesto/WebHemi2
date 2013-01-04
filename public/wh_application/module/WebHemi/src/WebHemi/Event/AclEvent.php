@@ -64,24 +64,25 @@ class AclEvent
 
 		// allow access to a full conntroller (be careful with it, wildcard for guests on your own risk)
 		$wildCardControllerResource = 'Controller-' . $controller . '/*';
+		// allow access to an action override the wildcard
+		$controllerActionForcedResource   = '!Controller-' . $controller . '/' . $action;
 		// allow access to an action
 		$controllerActionResource   = 'Controller-' . $controller . '/' . $action;
 		// allow access to an URL (be sure that the URL cannot be changed)
 		$routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
 
 		// isAllowed will return true for non-exist resources to not make the expression being false
-        $allowed = $acl->isAllowed($wildCardControllerResource)
+        $allowed = ($acl->isAllowed($wildCardControllerResource) || $acl->isAllowed($controllerActionForcedResource))
 			&& $acl->isAllowed($controllerActionResource)
 			&& $acl->isAllowed($routeResource);
 
 		if (!$allowed) {
-			// in admin module if there's no authenticated user, but we are on the index page, the user
-			// should be redirected to the login page
+			// in admin module if there's no authenticated user, the user should be redirected to the login page
 			if (APPLICATION_MODULE == Application::ADMIN_MODULE
-					&& 'index' == $action
+					&& 'login' != $action
 			) {
 				$response = $e->getTarget()->getMvcEvent()->getResponse();
-				$response->getHeaders()->addHeaderLine('Location', '/user');
+				$response->getHeaders()->addHeaderLine('Location', '/user/login');
 				$response->setStatusCode(302);
 			}
 			// otherwise it's a 403 Frobidden error
