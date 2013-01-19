@@ -45,6 +45,11 @@ class AdminController extends UserController
 		return array();
 	}
 
+	/**
+	 * User info page
+	 * 
+	 * @return array
+	 */
 	public function userAction()
 	{
 		return array();
