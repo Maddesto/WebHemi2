@@ -22,7 +22,8 @@
 
 namespace WebHemi\Controller;
 
-use WebHemi\Controller\UserController;
+use WebHemi\Controller\UserController,
+	Zend\View\Model\ViewModel;
 
 /**
  * WebHemi Admin Controller
@@ -46,8 +47,30 @@ class AdminController extends UserController
 	}
 
 	/**
+	 * Login page
+	 */
+	public function loginAction()
+	{
+		$view = parent::loginAction();
+
+		// if we display the login page
+		if ($view instanceof ViewModel) {
+			// TODO: make this an editable config value
+			$view->setVariables(array(
+				'headerTitle' => 'WebHemi Administration Login',
+				'siteTitle'   => 'WH Admin',
+			));
+
+			// the login page has its built-in layout
+			$view->setTerminal(true);
+		}
+
+		return $view;
+	}
+
+	/**
 	 * User info page
-	 * 
+	 *
 	 * @return array
 	 */
 	public function userAction()

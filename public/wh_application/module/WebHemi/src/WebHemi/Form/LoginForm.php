@@ -72,7 +72,8 @@ class LoginForm extends AbstractForm
 					'maxlength' => '255',
 					'tabindex'  => self::$tabindex++,
 					'required'  => 'required',
-					'pattern'   => '^[a-z]{1}\w+$'
+					'pattern'   => '^[a-z]{1}\w+$',
+					'validity' => 'Hejjj'
 				));
 
 		// password input
@@ -122,11 +123,11 @@ class LoginForm extends AbstractForm
 			$fieldset->add($remember);
 		}
 
-		$submit = new Element\Submit('submit');
-		$submit->setValue('Login')
+		$submit = new Element\Button('submit');
+		$submit->setLabel('Login')
 				->setAttributes(array(
 						'accesskey' => 's',
-						'id' => 'remember',
+						'type' => 'submit',
 						'tabindex' => self::$tabindex++
 					));
 

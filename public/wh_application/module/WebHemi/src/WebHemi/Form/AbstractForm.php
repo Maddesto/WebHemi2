@@ -134,6 +134,12 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 
 		$required   = $element->getOption('required');
 		$type       = $element->getAttribute('type');
+
+		// button element fix
+		if ($element instanceof Element\Button) {
+			$type = 'button';
+		}
+
 		$openTag    = sprintf('<div class="element %s %s">', $type, $id);
 		$closeTag   = '</div>' . PHP_EOL;
 		$labelTag   =

@@ -23,7 +23,8 @@
 namespace WebHemi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController,
-	Zend\Authentication\Result;
+	Zend\Authentication\Result,
+	Zend\View\Model\ViewModel;
 
 /**
  * WebHemi User Controller
@@ -90,48 +91,58 @@ class UserController extends AbstractActionController
 
 				$authResult = $this->userAuth()->getAuthService()->authenticate($authAdapter);
 
-				// if user is authenticated
-				if (Result::SUCCESS == $authResult->getCode()) {
-					$rememberMe = $form->get('remember');
+				switch($authResult->getCode()) {
+					// if user is authenticated
+					case Result::SUCCESS:
+						$rememberMe = $form->get('remember');
 
-					if ($rememberMe) {
-						// if there's such element and checked we save the flag into cookie
-						if ($rememberMe->isChecked()) {
-							$userModel = $authResult->getIdentity();
-							$hash = $userModel->getHash();
+						if ($rememberMe) {
+							// if there's such element and checked we save the flag into cookie
+							if ($rememberMe->isChecked()) {
+								$userModel = $authResult->getIdentity();
+								$hash = $userModel->getHash();
 
-							// if no hash has been set yet
-							if (empty($hash)) {
-								$userTable = $this->userAuth()->getAuthAdapter()->getUserTable();
-								$hash      = md5($userModel->getUsername() . '-' . $userModel->getEmail());
+								// if no hash has been set yet
+								if (empty($hash)) {
+									$userTable = $this->userAuth()->getAuthAdapter()->getUserTable();
+									$hash      = md5($userModel->getUsername() . '-' . $userModel->getEmail());
 
-								$userModel->setHash($hash);
-								$userTable->update($userModel);
+									$userModel->setHash($hash);
+									$userTable->update($userModel);
+								}
+
+								// encrypting the hash for this module
+								$encryptedHash = base64_encode(mcrypt_encrypt(
+										MCRYPT_RIJNDAEL_256,
+										md5(APPLICATION_MODULE),
+										$hash,
+										MCRYPT_MODE_CBC,
+										md5(md5(APPLICATION_MODULE))
+								));
+
+								// set cookie for this module
+								setcookie('atln-' . bin2hex(APPLICATION_MODULE), $encryptedHash, time() + (60 * 60 * 24 * 14), '/', $_SERVER['SERVER_NAME'], false, true);
 							}
-
-							// encrypting the hash for this module
-							$encryptedHash = base64_encode(mcrypt_encrypt(
-									MCRYPT_RIJNDAEL_256,
-									md5(APPLICATION_MODULE),
-									$hash,
-									MCRYPT_MODE_CBC,
-									md5(md5(APPLICATION_MODULE))
-							));
-
-							// set cookie for this module
-							setcookie('atln-' . bin2hex(APPLICATION_MODULE), $encryptedHash, time() + (60 * 60 * 24 * 14), '/', $_SERVER['SERVER_NAME'], false, true);
 						}
-					}
 
-					// redirect to main page
-					// @TODO: implement redirect to referer if needed
-					return $this->redirect()->toRoute('index');
+						// redirect to main page
+						// @TODO: implement redirect to referer if needed
+						return $this->redirect()->toRoute('index');
+
+						//break;
+					case Result::FAILURE_CREDENTIAL_INVALID:
+						// attach error message to the form
+						$form->get('password')->setMessages($authResult->getMessages());
+						break;
+					default:
+						// attach error message to the form
+						$form->get('username')->setMessages($authResult->getMessages());
+						break;
 				}
-				// attach error message to the form
-				$form->get('username')->setMessages($authResult->getMessages());
 			}
 		}
-		return array('loginForm' => $form);
+		$view = new ViewModel(array('loginForm' => $form));
+		return $view;
 	}
 
 	/**

@@ -1,7 +1,25 @@
-<h1>Sign In the admin area</h1>
-
 <?php
 
-$form = $this->loginForm;
+// init
+$form      = $this->loginForm;
+$headTitle = $this->headTitle($this->translate($this->headerTitle))->setSeparator(' - ')->setAutoEscape(false);
+$css       = $this->headLink()->appendStylesheet('/wh_application/resources/style/login.css');
+echo $this->doctype();
 
-echo $form;
+?>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<?php
+	echo "\t\t" . $headTitle . PHP_EOL;
+	echo "\t\t" . $css . PHP_EOL;
+?>
+  </head>
+  <body>
+    <div id="loginForm">
+		<h1>Login to <?php echo $this->siteTitle; ?></h1>
+		<?php echo $form; ?>
+	</div> <!-- /container -->
+  </body>
+</html>

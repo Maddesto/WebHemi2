@@ -23,7 +23,7 @@ return array(
 	'wh_themes' => array(
 		'current_theme' => 'default',
 		'theme_paths'   => array(
-			WEB_ROOT . '/wh_themes/'
+			WEB_ROOT . '/wh_themes/' . APPLICATION_MODULE . '/'
 		),
 		'adapters'      => array(
 			'WebHemi\Theme\Adapter\ConfigurationAdapter',
