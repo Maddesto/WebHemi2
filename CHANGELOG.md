@@ -10,26 +10,22 @@ Version 2.0.0.15
 - Fixes in 403 and 404 error handling
 - Separating the layout to common blocks
 
-----------------
 Version 2.0.0.14
 ----------------
 - Minor fixes in Authentication
 - Minor bug fixes
 
-----------------
 Version 2.0.0.13
 ----------------
 - Major fixes in WebHemi Form
 - Fixed and secured the module-specific auto-login process
 - Minor bug fixes
 
-----------------
 Version 2.0.0.12
 ----------------
 - Unified HTML Form rendering solution with the __toString() magic method.
 - Minor bug fixes
 
-----------------
 Version 2.0.0.11
 ----------------
 - Improvements in authentication: BCrypt credential hashing, DDos-proof banning system (ALC-assert)
@@ -38,7 +34,6 @@ Version 2.0.0.11
 - Code optimization
 - Minor bug fixes
 
-----------------
 Version 2.0.0.10
 ----------------
 - Added basic authentication
@@ -48,7 +43,6 @@ Version 2.0.0.10
 - Code optimization
 - Minor bug fixes
 
---------------------------
 Version 2.0.0.1 - 2.0.0.9
 --------------------------
 - Logical separation of 'Admin' and 'Website' applications
