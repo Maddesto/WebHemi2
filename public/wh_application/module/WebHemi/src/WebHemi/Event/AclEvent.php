@@ -47,6 +47,7 @@ class AclEvent
         $serviceManager = $e->getTarget()->getServiceManager();
         $eventManager   = $e->getTarget()->getEventManager();
 		$acl            = $serviceManager->get('acl');
+		$auth           = $serviceManager->get('auth');
 		$routeMatch     = $e->getTarget()->getMvcEvent()->getRouteMatch();
 		$controllerName = $routeMatch->getParam('controller');
 		$actionName     = $routeMatch->getParam('action');
@@ -71,7 +72,7 @@ class AclEvent
 		// allow access to an URL (be sure that the URL cannot be changed)
 		$routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
 
-		// isAllowed will return true for non-exist resources to not make the expression being false
+		// isAllowed will return true for non-exist resources to not fail the expression for the valid parts
         $allowed = ($acl->isAllowed($wildCardControllerResource) || $acl->isAllowed($controllerActionForcedResource))
 			&& $acl->isAllowed($controllerActionResource)
 			&& $acl->isAllowed($routeResource);
@@ -80,6 +81,7 @@ class AclEvent
 			// in admin module if there's no authenticated user, the user should be redirected to the login page
 			if (APPLICATION_MODULE == Application::ADMIN_MODULE
 					&& 'login' != $action
+					&& !$auth->hasIdentity()
 			) {
 				$response = $e->getTarget()->getMvcEvent()->getResponse();
 				$response->getHeaders()->addHeaderLine('Location', '/user/login');

@@ -24,7 +24,8 @@ namespace WebHemi\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController,
 	Zend\Authentication\Result,
-	Zend\View\Model\ViewModel;
+	Zend\View\Model\ViewModel,
+	Zend\Mvc\MvcEvent;
 
 /**
  * WebHemi User Controller
@@ -38,6 +39,33 @@ use Zend\Mvc\Controller\AbstractActionController,
 class UserController extends AbstractActionController
 {
 	/**
+     * Execute the request
+     *
+     * @param  MvcEvent $e
+     * @return mixed
+     */
+    public function onDispatch(MvcEvent $e)
+	{
+		parent::onDispatch($e);
+
+		$layout = $this->layout();
+
+		$headerBlock = new ViewModel();
+		$headerBlock->setTemplate('block/HeaderBlock');
+
+		$menuBlock = new ViewModel();
+		$menuBlock->activeMenu = 'user';
+		$menuBlock->setTemplate('block/MenuBlock');
+
+		$footerBlock = new ViewModel();
+		$footerBlock->setTemplate('block/FooterBlock');
+
+		$layout->addChild($headerBlock, 'HeaderBlock')
+			->addChild($menuBlock, 'MenuBlock')
+			->addChild($footerBlock, 'FooterBlock');
+	}
+
+	/**
 	 * Default action
 	 *
 	 * @return array
@@ -50,6 +78,16 @@ class UserController extends AbstractActionController
 			return $this->redirect()->toRoute('user/login');
 		}
 
+		return array();
+	}
+
+	/**
+	 * Profile action
+	 *
+	 * @return array
+	 */
+	public function profileAction()
+	{
 		return array();
 	}
 
@@ -158,6 +196,4 @@ class UserController extends AbstractActionController
 
 		return $this->redirect()->toRoute('index');
 	}
-
-	// @TODO: further actions
 }

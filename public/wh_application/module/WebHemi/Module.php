@@ -66,9 +66,9 @@ class Module implements
 		}
 
 		// attach events to the event manager
-		$eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array('WebHemi\Event\ForbiddenEvent', 'prepareViewModel'), -5000);
-		$eventManager->attach(MvcEvent::EVENT_ROUTE,          array('WebHemi\Event\AclEvent',       'onRoute'),          -1000);
-		$eventManager->attach(MvcEvent::EVENT_DISPATCH,       array('WebHemi\Event\LayoutEvent',    'preDispatch'),       100);
+		$eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array('WebHemi\Event\ErrorEvent',  'preDispatch'), -5000);
+		$eventManager->attach(MvcEvent::EVENT_ROUTE,          array('WebHemi\Event\AclEvent',    'onRoute'),     -1000);
+		$eventManager->attach(MvcEvent::EVENT_DISPATCH,       array('WebHemi\Event\LayoutEvent', 'preDispatch'),   100);
 
 		// link the event manager to the modoule route listener
 		$moduleRouteListener = new ModuleRouteListener();

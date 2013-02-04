@@ -57,9 +57,13 @@ class WebsiteController extends AbstractActionController
 		$category = $matches->getParam('category', 'default');
 		$id       = $matches->getParam('id', false);
 		$format   = $matches->getParam('format', 'html');
-		echo $this->debug($category, '$category', 0);
-		echo $this->debug($id, '$id', 0);
-		echo $this->debug($format, '$format', 0);
+
+		if ('nope' == $id) {
+			$this->response->setStatusCode(404);
+		}
+		dump($category, '$category');
+		dump($id, '$id');
+		dump($format, '$format');
 		return array();
 	}
 

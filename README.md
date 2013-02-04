@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.14 Created by Gixx.
+Version 2.0.0.15 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -27,8 +27,12 @@ Features / Goals
 - Privilege system with IP blacklist [DONE]
 - Secure authentication [DONE]
 - Secure Form solution [DONE]
+- Easy-to-use 'Admin' application [IN PROGRESS]
 - 'Virtual folder structure'-like content management [IN PROGRESS]
-- Support for 3rd-party plugins and modules [PLANNING]
+- Support for 3rd-party plugins [PLANNING]
+- Language support [PLANNING]
+- User friendly design for 'Admin' application [PLANNING]
+- Responsive design for 'Admin' application to use the page from mobile devices [PLANNING]
 - Install script [PLANNING]
 - Default website design [PLANNING]
 
@@ -54,6 +58,15 @@ _Soon_
 
 [Dev notes - Change log]
 ========================
+
+----------------
+Version 2.0.0.15
+----------------
+- Custom admin login page
+- Basic menu structure in the admin area
+- Basic JavaScript component loader solution
+- Fixes in 403 and 404 error handling
+- Separating the layout to common blocks
 
 ----------------
 Version 2.0.0.14

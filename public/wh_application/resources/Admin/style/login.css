@@ -18,26 +18,36 @@ button,input,select,textarea{ font-size: 100%; }
 table{ border-collapse: collapse; border-spacing: 0; }
 
 /* ------------------------------------------------------------------------------------------------------------------ */
+
 #loginForm {
+    position: absolute;
 	bottom: 0;
     left: 0;
     margin: auto;
-    position: absolute;
     right: 0;
     top: 0;
     width: 300px;
-	height: 150px;
+	height: 135px;
+	padding: 2px;
 }
 
-#login legend {
+#loginForm form {
+	padding: 10px 0;
+}
+
+#loginForm form div.element {
+	padding: 5px;
+}
+
+#loginForm form legend {
 	display: none;
 }
 
-#login label {
+#loginForm form label {
 	display: inline-block;
-	width: 100px;
+	width: 70px;
 }
 
-#login input {
-	width: 150px;
+#loginForm form input {
+	width: 210px;
 }

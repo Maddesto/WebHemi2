@@ -24,20 +24,28 @@ return array(
 		'routes' => array(
 			// Admin application
 			'index' => array(
-				'type'    => 'Segment',
+				'type'    => 'Literal',
 				'options' => array(
-					'route'       => '/[:action]',
+					'route'       => '/',
 					'defaults'    => array(
 						'__NAMESPACE__' => 'WebHemi\Controller',
 						'controller'    => 'Admin',
 						'action'        => 'index',
 					),
-					'constraints' => array(
-						'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-						'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-					),
 				),
 				'may_terminate' => true,
+				 'child_routes'  => array(
+                    'about' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => 'about',
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'about',
+                            ),
+                        ),
+                    ),
+				),
 			),
 			'user' => array(
                 'type'     => 'Literal',
@@ -52,7 +60,17 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'login' => array(
+                    'profile' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/profile',
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'profile',
+                            ),
+                        ),
+                    ),
+					'login' => array(
                         'type'    => 'Literal',
                         'options' => array(
                             'route'    => '/login',
@@ -74,11 +92,38 @@ return array(
                     ),
                 ),
             ),
+			'application' => array(
+				'type'    => 'Literal',
+				'options' => array(
+					'route'       => '/application',
+					'defaults'    => array(
+						'__NAMESPACE__' => 'WebHemi\Controller',
+						'controller'    => 'Application',
+						'action'        => 'index',
+					),
+				),
+				'may_terminate' => true,
+			),
+			'component' => array(
+				'type'    => 'Literal',
+				'options' => array(
+					'route'       => '/component',
+					'defaults'    => array(
+						'__NAMESPACE__' => 'WebHemi\Controller',
+						'controller'    => 'Component',
+						'action'        => 'index',
+					),
+				),
+				'may_terminate' => true,
+			),
 		),
 	),
 	'controllers' => array(
 		'invokables' => array(
-			'WebHemi\Controller\Admin' => 'WebHemi\Controller\AdminController',
+			'WebHemi\Controller\Admin'       => 'WebHemi\Controller\AdminController',
+			'WebHemi\Controller\Application' => 'WebHemi\Controller\ApplicationController',
+			'WebHemi\Controller\Component'   => 'WebHemi\Controller\ComponentController',
+			'WebHemi\Controller\User'        => 'WebHemi\Controller\UserController',
 		),
 	),
 	'module_layouts' => array(
@@ -96,11 +141,14 @@ return array(
 		'resources' => array(
 			'Controller-Admin/*',
 			'!Controller-Admin/login',
+			'Controller-Application/*',
+			'Controller-Component/*',
 		),
 		'rules' => array(
-			'Controller-Admin/*'      => 'member',
-			'!Controller-Admin/login' => 'guest',
-
+			'Controller-Admin/*'       => 'member',
+			'!Controller-Admin/login'  => 'guest',
+			'Controller-Application/*' => 'moderator',
+			'Controller-Component/*'   => 'admin',
 		),
 	),
 );

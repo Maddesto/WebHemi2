@@ -16,26 +16,26 @@
  * @category   WebHemi
  * @package    WebHemi_Controller
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
 namespace WebHemi\Controller;
 
-use WebHemi\Controller\UserController,
+use Zend\Mvc\Controller\AbstractActionController,
 	Zend\View\Model\ViewModel,
 	Zend\Mvc\MvcEvent;
 
 /**
- * WebHemi Admin Controller
+ * WebHemi Application Controller
  *
  * @category   WebHemi
  * @package    WebHemi_Controller
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class AdminController extends UserController
+class ApplicationController extends AbstractActionController
 {
 	/**
      * Execute the request
@@ -53,7 +53,7 @@ class AdminController extends UserController
 		$headerBlock->setTemplate('block/HeaderBlock');
 
 		$menuBlock = new ViewModel();
-		$menuBlock->activeMenu = 'index';
+		$menuBlock->activeMenu = 'application';
 		$menuBlock->setTemplate('block/MenuBlock');
 
 		$footerBlock = new ViewModel();
@@ -72,47 +72,5 @@ class AdminController extends UserController
 	public function indexAction()
 	{
         return array();
-	}
-
-	/**
-	 * Login page
-	 */
-	public function loginAction()
-	{
-		$view = parent::loginAction();
-
-		// if we display the login page
-		if ($view instanceof ViewModel) {
-			// TODO: make this an editable config value
-			$view->setVariables(array(
-				'headerTitle' => 'WebHemi Administration Login',
-				'siteTitle'   => 'WH Admin',
-			));
-
-			// the login page has its built-in layout
-			$view->setTerminal(true);
-		}
-
-		return $view;
-	}
-
-	/**
-	 * User info page
-	 *
-	 * @return array
-	 */
-	public function userAction()
-	{
-		return array();
-	}
-
-	/**
-	 * WebHemi info page
-	 *
-	 * @return array
-	 */
-	public function aboutAction()
-	{
-		return array();
 	}
 }

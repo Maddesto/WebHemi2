@@ -34,10 +34,13 @@ use Zend\Mvc\MvcEvent,
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
 */
-class ForbiddenEvent
+class ErrorEvent
 {
     /** @staticvar string $template */
-    static $template = 'error/403';
+    static $template = array(
+		403 => 'error/403',
+		404 => 'error/404'
+	);
 
 	/**
 	 * Prepares the ACL error page
@@ -45,7 +48,7 @@ class ForbiddenEvent
 	 * @param MvcEvent $e
 	 * @return void
 	 */
-    public function prepareViewModel(MvcEvent $e)
+    public function preDispatch(MvcEvent $e)
     {
         // Do nothing if the result is a response object
         $result = $e->getResult();
@@ -63,20 +66,57 @@ class ForbiddenEvent
         switch($error)
         {
             case 'error-unauthorized-controller':
+            case 'error-unauthorized-route':
+				self::get403($e);
+                break;
+            default:
+				self::get404($e);
+        }
+
+
+    }
+
+	/**
+	 * Prepares the 403 error page
+	 *
+	 * @param MvcEvent $e
+	 * @return void
+	 */
+	protected static function get403(MvcEvent $e)
+	{
+		$error = $e->getError();
+        switch($error)
+        {
+            case 'error-unauthorized-controller':
                 $viewVariables['controller'] = $e->getParam('controller');
                 $viewVariables['action']     = $e->getParam('action');
                 break;
             case 'error-unauthorized-route':
                 $viewVariables['route'] = $e->getParam('route');
                 break;
-            default:
-                return;
         }
 
 		// add our error page to the view model
+		$layout = $e->getViewModel();
+		$layout->title = '403 Forbidden';
+
+		$headerBlock = new ViewModel();
+		$headerBlock->setTemplate('block/HeaderBlock');
+
+		$menuBlock = new ViewModel();
+		$menuBlock->setTemplate('block/MenuBlock');
+
+		$footerBlock = new ViewModel();
+		$footerBlock->setTemplate('block/FooterBlock');
+
+		$layout->addChild($headerBlock, 'HeaderBlock')
+			->addChild($menuBlock, 'MenuBlock')
+			->addChild($footerBlock, 'FooterBlock');
+
         $model = new ViewModel($viewVariables);
-        $model->setTemplate(self::$template);
-        $e->getViewModel()->addChild($model);
+        $model->setTemplate(self::$template[403]);
+		$model->error = $error;
+        $layout->addChild($model);
 
         $response = $e->getResponse();
 
@@ -86,5 +126,45 @@ class ForbiddenEvent
             $e->setResponse($response);
         }
         $response->setStatusCode(403);
-    }
+	}
+
+	/**
+	 * Prepares the 404 error page
+	 *
+	 * @param MvcEvent $e
+	 * @return void
+	 */
+	protected static function get404(MvcEvent $e)
+	{
+		// add our error page to the view model
+		$layout = $e->getViewModel();
+		$layout->title = '404 Not Found';
+
+		$headerBlock = new ViewModel();
+		$headerBlock->setTemplate('block/HeaderBlock');
+
+		$menuBlock = new ViewModel();
+		$menuBlock->setTemplate('block/MenuBlock');
+
+		$footerBlock = new ViewModel();
+		$footerBlock->setTemplate('block/FooterBlock');
+
+		$layout->addChild($headerBlock, 'HeaderBlock')
+			->addChild($menuBlock, 'MenuBlock')
+			->addChild($footerBlock, 'FooterBlock');
+
+        $model = new ViewModel();
+        $model->setTemplate(self::$template[404]);
+		$model->error = $e->getError();
+        $layout->addChild($model);
+
+        $response = $e->getResponse();
+
+		// if no response object present, we create one
+        if (!$response) {
+            $response = new HttpResponse();
+            $e->setResponse($response);
+        }
+        $response->setStatusCode(404);
+	}
 }
