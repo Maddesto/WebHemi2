@@ -56,6 +56,10 @@ function loadComponent()
 		// if the component is loaded but not initialized
 		else if (!window[componentName].initialized){
 			window[componentName].init();
+			loadComponent(index + 1);
+		}
+		else {
+			loadComponent(index + 1);
 		}
 	}
 	return;
