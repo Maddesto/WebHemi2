@@ -58,6 +58,7 @@ function loadComponent()
 			window[componentName].init();
 			loadComponent(index + 1);
 		}
+		// skip to the next component
 		else {
 			loadComponent(index + 1);
 		}
