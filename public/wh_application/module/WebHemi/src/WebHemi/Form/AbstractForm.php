@@ -16,7 +16,7 @@
  * @category   WebHemi
  * @package    WebHemi_Form
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -35,7 +35,7 @@ use Zend\Form\Form,
  * @category   WebHemi
  * @package    WebHemi_Form
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 abstract class AbstractForm extends Form implements ServiceManagerAwareInterface

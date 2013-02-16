@@ -16,7 +16,7 @@
  * @category   WebHemi
  * @package    WebHemi_Controller
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -30,7 +30,7 @@ use Zend\Mvc\Controller\AbstractActionController;
  * @category   WebHemi
  * @package    WebHemi_Controller
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class WebsiteController extends AbstractActionController

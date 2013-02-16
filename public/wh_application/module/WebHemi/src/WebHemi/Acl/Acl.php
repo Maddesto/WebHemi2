@@ -16,7 +16,7 @@
  * @category   WebHemi
  * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -41,7 +41,7 @@ use Zend\ServiceManager\ServiceManager,
  * @category   WebHemi
  * @package    WebHemi_Acl
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class Acl

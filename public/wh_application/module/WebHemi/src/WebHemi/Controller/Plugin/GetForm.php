@@ -16,7 +16,7 @@
  * @category   WebHemi
  * @package    WebHemi_Controller_Plugin
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -33,7 +33,7 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  * @category   WebHemi
  * @package    WebHemi_Controller_Plugin
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
