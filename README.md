@@ -59,4 +59,4 @@ _Soon_
 Change Log
 ----------
 
-Check [Change log](/Gixx/WebHemi2/blob/master/CHANGELOG.md)
+Check [Change log](CHANGELOG.md)
