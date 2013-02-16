@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.15 Created by Gixx.
+Version 2.0.0.16 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -54,3 +54,9 @@ Installation
 _Soon_
 
 - Call `http://yourdomain.org/install` to configure your site
+
+
+Change Log
+----------
+
+Check [Change log](/Gixx/WebHemi2/blob/master/CHANGELOG.md)

@@ -2,6 +2,11 @@ Change log
 ==========
 
 ----------------
+Version 2.0.0.16
+----------------
+- Porting code base from ZF 2.0.6 to ZF 2.1.1
+- Major fixes in error handling
+
 Version 2.0.0.15
 ----------------
 - Custom admin login page
