@@ -22,7 +22,8 @@
 
 namespace WebHemi\Event;
 
-use Zend\Mvc\MvcEvent,
+use WebHemi\Application,
+	Zend\Mvc\MvcEvent,
 	Zend\View\Model\ViewModel;
 
 /**
@@ -100,18 +101,22 @@ class ErrorEvent
 		$layout = $e->getViewModel();
 		$layout->title = '403 Forbidden';
 
-		$headerBlock = new ViewModel();
-		$headerBlock->setTemplate('block/HeaderBlock');
+		if (Application::ADMIN_MODULE == APPLICATION_MODULE
+				&& $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
+		) {
+			$headerBlock = new ViewModel();
+			$headerBlock->setTemplate('block/AdminHeaderBlock');
 
-		$menuBlock = new ViewModel();
-		$menuBlock->setTemplate('block/MenuBlock');
+			$menuBlock = new ViewModel();
+			$menuBlock->setTemplate('block/AdminMenuBlock');
 
-		$footerBlock = new ViewModel();
-		$footerBlock->setTemplate('block/FooterBlock');
+			$footerBlock = new ViewModel();
+			$footerBlock->setTemplate('block/AdminFooterBlock');
 
-		$layout->addChild($headerBlock, 'HeaderBlock')
-			->addChild($menuBlock, 'MenuBlock')
-			->addChild($footerBlock, 'FooterBlock');
+			$layout->addChild($headerBlock, 'HeaderBlock')
+				->addChild($menuBlock, 'MenuBlock')
+				->addChild($footerBlock, 'FooterBlock');
+		}
 
         $model = new ViewModel($viewVariables);
         $model->setTemplate(self::$template[403]);
@@ -140,18 +145,22 @@ class ErrorEvent
 		$layout = $e->getViewModel();
 		$layout->title = '404 Not Found';
 
-		$headerBlock = new ViewModel();
-		$headerBlock->setTemplate('block/HeaderBlock');
+		if (Application::ADMIN_MODULE == APPLICATION_MODULE
+				&& $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
+		) {
+			$headerBlock = new ViewModel();
+			$headerBlock->setTemplate('block/AdminHeaderBlock');
 
-		$menuBlock = new ViewModel();
-		$menuBlock->setTemplate('block/MenuBlock');
+			$menuBlock = new ViewModel();
+			$menuBlock->setTemplate('block/AdminMenuBlock');
 
-		$footerBlock = new ViewModel();
-		$footerBlock->setTemplate('block/FooterBlock');
+			$footerBlock = new ViewModel();
+			$footerBlock->setTemplate('block/AdminFooterBlock');
 
-		$layout->addChild($headerBlock, 'HeaderBlock')
-			->addChild($menuBlock, 'MenuBlock')
-			->addChild($footerBlock, 'FooterBlock');
+			$layout->addChild($headerBlock, 'HeaderBlock')
+				->addChild($menuBlock, 'MenuBlock')
+				->addChild($footerBlock, 'FooterBlock');
+		}
 
         $model = new ViewModel();
         $model->setTemplate(self::$template[404]);

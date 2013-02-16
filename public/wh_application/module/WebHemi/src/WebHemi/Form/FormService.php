@@ -23,7 +23,8 @@
 namespace WebHemi\Form;
 
 use Zend\ServiceManager\ServiceManager,
-	Zend\ServiceManager\Exception;
+	Zend\ServiceManager\Exception,
+	Zend\ServiceManager\ServiceManagerAwareInterface;
 
 /**
  * WebHemi Form Service
@@ -34,7 +35,7 @@ use Zend\ServiceManager\ServiceManager,
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class FormService
+class FormService implements ServiceManagerAwareInterface
 {
 	/** @var array $form */
 	protected static $form;
@@ -43,14 +44,9 @@ class FormService
 
 	/**
 	 * Class constructor
-	 *
-	 * @param array|Traversable $options
-	 * @param ServiceManager    $serviceManager
 	 */
-	public function __construct(ServiceManager $serviceManager)
+	public function __construct()
 	{
-		// set the service manager
-		$this->serviceManager = $serviceManager;
 		// set form container
 		self::$form = array();
 	}
@@ -76,7 +72,7 @@ class FormService
 
 				$form = new $formName();
 				$form->setServiceManager($this->serviceManager);
-				
+
 				if (class_exists($filterName)) {
 					$form->setInputFilter(new $filterName());
 				}
@@ -88,5 +84,27 @@ class FormService
 		else {
 			throw new Exception\InvalidArgumentException(sprintf('%s doesn\'t seem to be a valid class.', $formName));
 		}
+	}
+
+	/**
+	 * Retrieve ServiceManager instance
+	 *
+	 * @return ServiceManager
+	 */
+	public function getServiceManager()
+	{
+		return $this->serviceManager;
+	}
+
+	/**
+	 * Set ServiceManager instance
+	 *
+	 * @param ServiceManager $serviceManager
+	 * @return UserAuth
+	 */
+	public function setServiceManager(ServiceManager $serviceManager)
+	{
+		$this->serviceManager = $serviceManager;
+		return $this;
 	}
 }

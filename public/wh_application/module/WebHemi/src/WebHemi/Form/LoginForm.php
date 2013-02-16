@@ -61,7 +61,11 @@ class LoginForm extends AbstractForm
 						new Filter\StringTrim(),
 					),
 					'validators' => array(
-						new Validator\StringLength(4, 255, true),
+						new Validator\StringLength(array(
+							'min'      => 8,
+							'max'      => 255,
+							'encoding' => 'UTF-8'
+						)),
 						new Validator\Regex('/^[a-z]{1}\w+$/i')
 					),
 				))
@@ -69,7 +73,7 @@ class LoginForm extends AbstractForm
 				->setAttributes(array(
 					'id'        => 'username',
 					'accesskey' => 'u',
-					'maxlength' => '255',
+					'maxlength' => 255,
 					'tabindex'  => self::$tabindex++,
 					'required'  => 'required',
 					'pattern'   => '^[a-z]{1}\w+$',
@@ -84,14 +88,18 @@ class LoginForm extends AbstractForm
 						new Filter\StringTrim(),
 					),
 					'validators' => array(
-						new Validator\StringLength(8, 255, true),
+						new Validator\StringLength(array(
+							'min'      => 8,
+							'max'      => 255,
+							'encoding' => 'UTF-8'
+						)),
 					),
 				))
 				->setLabel('Password')
 				->setAttributes(array(
 					'id'        => 'password',
 					'accesskey' => 'p',
-					'maxlength' => '255',
+					'maxlength' => 255,
 					'tabindex'  => self::$tabindex++,
 					'required'  => 'required',
 					'pattern'   => '^\w+$'

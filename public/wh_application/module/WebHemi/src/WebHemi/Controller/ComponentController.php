@@ -51,14 +51,14 @@ class ComponentController extends AbstractActionController
 		$layout = $this->layout();
 
 		$headerBlock = new ViewModel();
-		$headerBlock->setTemplate('block/HeaderBlock');
+		$headerBlock->setTemplate('block/AdminHeaderBlock');
 
 		$menuBlock = new ViewModel();
-		$menuBlock->activeMenu = 'component';
-		$menuBlock->setTemplate('block/MenuBlock');
+		$menuBlock->activeMenu = 'application';
+		$menuBlock->setTemplate('block/AdminMenuBlock');
 
 		$footerBlock = new ViewModel();
-		$footerBlock->setTemplate('block/FooterBlock');
+		$footerBlock->setTemplate('block/AdminFooterBlock');
 
 		$layout->addChild($headerBlock, 'HeaderBlock')
 			->addChild($menuBlock, 'MenuBlock')

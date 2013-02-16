@@ -23,14 +23,16 @@
 namespace WebHemi\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-	Zend\ServiceManager\ServiceManager,
-	Zend\ServiceManager\ServiceManagerAwareInterface,
+	Zend\ServiceManager\ServiceLocatorInterface,
+	Zend\ServiceManager\ServiceLocatorAwareInterface,
 	Zend\Authentication\Result,
 	WebHemi\Application,
 	WebHemi\Auth\Auth as AuthService,
 	WebHemi\Auth\Adapter\Adapter as AuthAdapter,
 	WebHemi\Model\Table\User as UserTable,
 	WebHemi\Model\User as UserModel;
+
+use \Exception as Exp;
 
 /**
  * Controller plugin for Authentication
@@ -41,14 +43,14 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  * @copyright  Copyright (c) 2012, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
+class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
 	/** @var AuthAdapter */
 	protected $authAdapter;
 	/** @var AuthService */
 	protected $authService;
-	/** @var ServiceManager */
-	protected $serviceManager;
+	/** @var ServiceLocator */
+	protected $serviceLocator;
 
 	/**
 	 * Proxy convenience method
@@ -76,7 +78,7 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 			), "\0"));
 
 			// chech for the hash
-			$userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+			$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
 			$userModel = $userTable->getUserByHash($decryptedHash);
 
 			if ($userModel instanceof UserModel) {
@@ -123,7 +125,7 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	public function getAuthAdapter()
 	{
 		if (!isset($this->authAdapter)) {
-			$this->authAdapter = $this->getServiceManager()->get('authAdapter');
+			$this->authAdapter = $this->getServiceLocator()->get('authAdapter');
 		}
 		return $this->authAdapter;
 	}
@@ -148,7 +150,7 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	public function getAuthService()
 	{
 		if (!isset($this->authService)) {
-            $this->authService = $this->getServiceManager()->get('auth');
+            $this->authService = $this->getServiceLocator()->get('auth');
         }
 		return $this->authService;
 	}
@@ -166,24 +168,23 @@ class UserAuth extends AbstractPlugin implements ServiceManagerAwareInterface
 	}
 
 	/**
-	 * Retrieve ServiceManager instance
-	 *
-	 * @return ServiceManager
-	 */
-	public function getServiceManager()
+     * Retrieve ServiceLocator
+     *
+     * @return ServiceLocatorInterface
+     */
+    public function getServiceLocator()
 	{
-		return $this->serviceManager->getServiceLocator();
+		return $this->serviceLocator->getController()->getServiceLocator();
 	}
 
 	/**
-	 * Set ServiceManager instance
-	 *
-	 * @param ServiceManager $serviceManager
-	 * @return UserAuth
-	 */
-	public function setServiceManager(ServiceManager $serviceManager)
+     * Set ServiceLocator
+     *
+     * @param ServiceLocatorInterface $serviceLocator
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
 	{
-		$this->serviceManager = $serviceManager;
+		$this->serviceLocator = $serviceLocator;
 		return $this;
 	}
 

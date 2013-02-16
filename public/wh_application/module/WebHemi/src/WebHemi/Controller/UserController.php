@@ -22,7 +22,8 @@
 
 namespace WebHemi\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController,
+use WebHemi\Application,
+	Zend\Mvc\Controller\AbstractActionController,
 	Zend\Authentication\Result,
 	Zend\View\Model\ViewModel,
 	Zend\Mvc\MvcEvent;
@@ -50,19 +51,21 @@ class UserController extends AbstractActionController
 
 		$layout = $this->layout();
 
-		$headerBlock = new ViewModel();
-		$headerBlock->setTemplate('block/HeaderBlock');
+		if (Application::ADMIN_MODULE == APPLICATION_MODULE) {
+			$headerBlock = new ViewModel();
+			$headerBlock->setTemplate('block/AdminHeaderBlock');
 
-		$menuBlock = new ViewModel();
-		$menuBlock->activeMenu = 'user';
-		$menuBlock->setTemplate('block/MenuBlock');
+			$menuBlock = new ViewModel();
+			$menuBlock->activeMenu = 'application';
+			$menuBlock->setTemplate('block/AdminMenuBlock');
 
-		$footerBlock = new ViewModel();
-		$footerBlock->setTemplate('block/FooterBlock');
+			$footerBlock = new ViewModel();
+			$footerBlock->setTemplate('block/AdminFooterBlock');
 
-		$layout->addChild($headerBlock, 'HeaderBlock')
-			->addChild($menuBlock, 'MenuBlock')
-			->addChild($footerBlock, 'FooterBlock');
+			$layout->addChild($headerBlock, 'HeaderBlock')
+				->addChild($menuBlock, 'MenuBlock')
+				->addChild($footerBlock, 'FooterBlock');
+		}
 	}
 
 	/**

@@ -25,11 +25,11 @@ return array(
 			'authAdapterDb' => 'WebHemi\Auth\Adapter\Db',
 			'authStorageDb' => 'WebHemi\Auth\Storage\Db',
 			'authAdapter'   => 'WebHemi\Auth\Adapter\Adapter',
+			'formService'   => 'WebHemi\Form\FormService',
 		),
 		'factories' => array(
 			'acl'         => 'WebHemi\ServiceFactory\AclServiceFactory',
 			'auth'        => 'WebHemi\ServiceFactory\AuthServiceFactory',
-			'formService' => 'WebHemi\ServiceFactory\FormServiceFactory',
 			'translator'  => 'Zend\I18n\Translator\TranslatorServiceFactory',
 		),
 	),
