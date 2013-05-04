@@ -12,9 +12,12 @@ return array(
 	'template_map'               => array(
 		'layout/layout'          => __DIR__ . '/view/layout.phtml',
 		'layout/default'         => __DIR__ . '/view/layout.phtml',
-		'web-hemi/website/index' => __DIR__ . '/view/website/index.phtml',
-		'error/403'              => __DIR__ . '/view/error-403.phtml',
-		'error/404'              => __DIR__ . '/view/error-404.phtml',
-		'error/index'            => __DIR__ . '/view/error-500.phtml',
+		'web-hemi/website/index' => __DIR__ . '/view/index.phtml',
+		'web-hemi/website/view'  => __DIR__ . '/view/view.phtml',
+		'web-hemi/user/index'    => __DIR__ . '/view/user/index.phtml',
+		'web-hemi/user/login'    => __DIR__ . '/view/user/login.phtml',
+		'error/403'              => __DIR__ . '/view/error/403.phtml',
+		'error/404'              => __DIR__ . '/view/error/404.phtml',
+		'error/index'            => __DIR__ . '/view/error/500.phtml',
 	),
 );

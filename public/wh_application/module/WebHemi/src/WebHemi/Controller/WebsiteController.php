@@ -58,6 +58,7 @@ class WebsiteController extends AbstractActionController
 		$id       = $matches->getParam('id', false);
 		$format   = $matches->getParam('format', 'html');
 
+		// emulate 404
 		if ('nope' == $id) {
 			$this->response->setStatusCode(404);
 		}
