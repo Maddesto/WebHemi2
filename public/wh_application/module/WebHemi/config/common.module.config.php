@@ -50,12 +50,11 @@ return array(
 			'getForm'   => 'WebHemi\Controller\Plugin\GetForm',
 			'userAuth'  => 'WebHemi\Controller\Plugin\UserAuth',
 			'isAllowed' => 'WebHemi\Controller\Plugin\IsAllowed',
-			'debug'     => 'WebHemi\Controller\Plugin\Debug',
 		),
 	),
 	'view_helpers' => array(
 		'invokables' => array(
-			'debug'       => 'WebHemi\View\Helper\Factory\Debug',
+			'avatar'      => 'WebHemi\View\Helper\Avatar',
 		),
 		'factories' => array(
 			'isAllowed'   => 'WebHemi\View\Helper\Factory\IsAllowedFactory',

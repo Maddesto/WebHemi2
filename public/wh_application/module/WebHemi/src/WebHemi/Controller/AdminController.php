@@ -107,6 +107,67 @@ class AdminController extends UserController
 	}
 
 	/**
+	 * Add new User
+	 *
+	 * @return array
+	 */
+	public function adduserAction()
+	{
+		return array();
+	}
+
+	/**
+	 * View User info
+	 *
+	 * @return array
+	 */
+	public function viewuserAction()
+	{
+		return array();
+	}
+
+	/**
+	 * Edit User info
+	 *
+	 * @return array
+	 */
+	public function edituserAction()
+	{
+		return array();
+	}
+
+	/**
+	 * Disable User
+	 *
+	 * @return array
+	 */
+	public function disableuserAction()
+	{
+		return $this->redirect()->toRoute('edituser');
+	}
+
+	/**
+	 * Enable User
+	 *
+	 * @return array
+	 */
+	public function enableuserAction()
+	{
+		return $this->redirect()->toRoute('edituser');
+	}
+
+	/**
+	 * Delete User
+	 *
+	 * @return array
+	 */
+	public function deleteuserAction()
+	{
+		return array();
+	}
+
+
+	/**
 	 * WebHemi info page
 	 *
 	 * @return array

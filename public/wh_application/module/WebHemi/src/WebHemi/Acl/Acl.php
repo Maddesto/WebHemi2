@@ -78,9 +78,13 @@ class Acl
 			$options = ArrayUtils::iteratorToArray($options);
 		}
 		elseif (!is_array($options)) {
-			throw new Exception\InvalidArgumentException(sprintf(
-							'%s expects an array or Traversable object; received "%s"', __METHOD__, (is_object($options) ? get_class($options) : gettype($options))
-			));
+			throw new Exception\InvalidArgumentException(
+				sprintf(
+					'%s expects an array or Traversable object; received "%s"',
+					__METHOD__,
+					(is_object($options) ? get_class($options) : gettype($options))
+				)
+			);
 		}
 
 		$acl = new static($options, $serviceManager);
@@ -159,9 +163,13 @@ class Acl
 		foreach ($roles as $role) {
 			// if the role is a troll :)
 			if (!$role instanceof Role) {
-				throw new Exception\InvalidArgumentException(sprintf(
-								'%s expects an array of Role objects; received "%s"', __METHOD__, (is_object($role) ? get_class($role) : gettype($role))
-				));
+				throw new Exception\InvalidArgumentException(
+					sprintf(
+						'%s expects an array of Role objects; received "%s"',
+							__METHOD__,
+						(is_object($role) ? get_class($role) : gettype($role))
+					)
+				);
 			}
 
 			// if the role has already been set
@@ -221,10 +229,12 @@ class Acl
 			}
 
 			// allow access for invalid role or non-forced resource
-			if (!$this->acl->hasRole($role) || (!$this->acl->hasResource($resource)) && strpos($resource, '!') === false) {
+			if (
+				!$this->acl->hasRole($role)
+				|| (!$this->acl->hasResource($resource) && strpos($resource, '!') === false)
+			) {
 				return true;
 			}
-
 			return (bool)$this->acl->isAllowed($role, $resource);
 		}
 		// It is not necessary to terminate the script. Fair enough to return with a FALSE

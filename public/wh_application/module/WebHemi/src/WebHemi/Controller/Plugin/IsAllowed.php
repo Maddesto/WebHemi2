@@ -57,7 +57,10 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
     public function __invoke($resource, $privilege = null)
     {
         $acl                = $this->getAclService();
-		$controllerResource = 'Controller-' . ucfirst(strtolower($resource)) . '/*';
+		$controllerResource = 'Controller-' . ucfirst(strtolower($resource));
+		if (strpos($resource, '/') === false) {
+			$controllerResource .= '/*';
+		}
 		$routeResource      = 'Route-' . $resource;
 
 		return $acl->isAllowed($resource, $privilege)

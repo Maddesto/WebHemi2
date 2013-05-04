@@ -55,6 +55,8 @@ class User
 	protected $isActive;
 	/** @var bool     $isEnabled */
 	protected $isEnabled;
+	/** @var string   $avatar */
+	protected $avatar;
 	/** @var DateTime $timeLogin */
 	protected $timeLogin;
 	/** @var DateTime $timeRegister */
@@ -344,7 +346,7 @@ class User
 	}
 
 	/**
-	 * Get user enabled status
+	 * Retrieve user enabled status
 	 *
 	 * @return bool
 	 */
@@ -366,7 +368,29 @@ class User
 	}
 
 	/**
-	 * Exchange array values into object properties
+	 * Retrieve user avatar.
+	 *
+	 * @return string
+	 */
+	public function getAvatar()
+	{
+		return $this->avatar;
+	}
+
+	/**
+	 * Set user avatar.
+	 *
+	 * @param string $avatar
+	 * @return User
+	 */
+	public function setAvatar($avatar)
+	{
+		$this->avatar = $avatar;
+		return $this;
+	}
+
+	/**
+	 * Exchange array values into object properties.
 	 *
 	 * @param array $data
 	 */
@@ -375,7 +399,7 @@ class User
 		$this->userId       = (isset($data['user_id']))       ? (int) $data['user_id'] : null;
 		$this->username     = (isset($data['username']))      ? $data['username'] : null;
 		$this->email        = (isset($data['email']))         ? $data['email'] : null;
-		$this->displayname  = (isset($data['displayname']))   ? $data['displayname'] : null;
+		$this->displayName  = (isset($data['displayname']))   ? $data['displayname'] : null;
 		$this->password     = (isset($data['password']))      ? $data['password'] : null;
 		$this->hash         = (isset($data['hash']))          ? $data['hash'] : null;
 		$this->role         = (isset($data['role']))          ? $data['role'] : null;
@@ -383,6 +407,7 @@ class User
 		$this->registerIp   = (isset($data['register_ip']))   ? $data['register_ip'] : null;
 		$this->isActive     = (isset($data['is_active']))     ? (bool) $data['is_active'] : null;
 		$this->isEnabled    = (isset($data['is_enabled']))    ? (bool) $data['is_enabled'] : null;
+		$this->avatar       = (isset($data['avatar']))        ? $data['avatar'] : null;
 		$this->timeLogin    = (isset($data['time_login']))    ? new \DateTime($data['time_login']) : null;
 		$this->timeRegister = (isset($data['time_register'])) ? new \DateTime($data['time_register']) : null;
 	}
@@ -406,6 +431,7 @@ class User
 			'register_ip'   => $this->registerIp,
 			'is_active'     => $this->isActive ? 1 : 0,
 			'is_enabled'    => $this->isEnabled ? 1 : 0,
+			'avatar'        => $this->avatar,
 			'time_login'    => $this->timeLogin->format('Y-m-d H:i:s'),
 			'time_register' => $this->timeRegister->format('Y-m-d H:i:s')
 		);

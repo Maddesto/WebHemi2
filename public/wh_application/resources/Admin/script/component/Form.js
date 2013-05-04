@@ -27,18 +27,19 @@ var Form = {
 	 */
 	init : function()
 	{
-		this.initialized = true;
-		console.info('Form component loaded.');
-
+		// Overwrite the browser's default HTML5 validity check
 		$('input').on('change invalid input', function() {
 			var htmlInput = $(this).get(0);
 
 			htmlInput.setCustomValidity('');
 
 			if (!htmlInput.validity.valid) {
-				return false;
-//				htmlInput.setCustomValidity('empty');
+//				return false;
+				//htmlInput.setCustomValidity('empty');
 			}
 		});
+
+		this.initialized = true;
+		console.info('Form component loaded.');
 	}
 };

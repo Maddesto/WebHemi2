@@ -35,6 +35,7 @@ CREATE TABLE `webhemi_user` (
     `register_ip`   VARCHAR(15) NOT NULL,
     `is_active`     TINYINT(1) NOT NULL DEFAULT '0',
     `is_enabled`    TINYINT(1) NOT NULL DEFAULT '0',
+	`avatar`        LONGTEXT,
     `time_login`    DATETIME DEFAULT NULL,
     `time_register` DATETIME NOT NULL,
 	PRIMARY KEY (`user_id`),

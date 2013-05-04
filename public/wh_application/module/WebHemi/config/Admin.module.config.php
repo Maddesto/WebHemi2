@@ -60,16 +60,6 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes'  => array(
-                    'profile' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/profile',
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'profile',
-                            ),
-                        ),
-                    ),
 					'login' => array(
                         'type'    => 'Literal',
                         'options' => array(
@@ -87,6 +77,91 @@ return array(
                             'defaults' => array(
                                 'controller' => 'Admin',
                                 'action'     => 'logout',
+                            ),
+                        ),
+                    ),
+					'profile' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/profile',
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'profile',
+                            ),
+                        ),
+                    ),
+					'new' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/new',
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'adduser',
+                            ),
+                        ),
+                    ),
+					'edit' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/edit/[:userId]',
+							'constraints' => array(
+                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'edituser',
+                            ),
+                        ),
+                    ),
+					'view' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/view/[:userId]',
+							'constraints' => array(
+                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'viewuser',
+                            ),
+                        ),
+                    ),
+					'disable' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/disable/[:userId]',
+							'constraints' => array(
+                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'disableuser',
+                            ),
+                        ),
+                    ),
+					'enable' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/enable/[:userId]',
+							'constraints' => array(
+                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'enableuser',
+                            ),
+                        ),
+                    ),
+					'delete' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/delete/[:userId]',
+							'constraints' => array(
+                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'deleteuser',
                             ),
                         ),
                     ),
@@ -140,15 +215,27 @@ return array(
 	'access_control' => array(
 		'resources' => array(
 			'Controller-Admin/*',
+			'Controller-Admin/adduser',
+			'Controller-Admin/viewuser',
+			'Controller-Admin/edituser',
+			'Controller-Admin/deleteuser',
+			'Controller-Admin/enableuser',
+			'Controller-Admin/disableuser',
 			'!Controller-Admin/login',
 			'Controller-Application/*',
 			'Controller-Component/*',
 		),
 		'rules' => array(
-			'Controller-Admin/*'       => 'member',
-			'!Controller-Admin/login'  => 'guest',
-			'Controller-Application/*' => 'moderator',
-			'Controller-Component/*'   => 'admin',
+			'Controller-Admin/*'           => 'member',
+			'Controller-Admin/adduser'     => 'admin',
+			'Controller-Admin/viewuser'    => 'moderator',
+			'Controller-Admin/edituser'    => 'admin',
+			'Controller-Admin/deleteuser'  => 'admin',
+			'Controller-Admin/enableuser'  => 'admin',
+			'Controller-Admin/disableuser' => 'admin',
+			'!Controller-Admin/login'      => 'guest',
+			'Controller-Application/*'     => 'moderator',
+			'Controller-Component/*'       => 'admin',
 		),
 	),
 );

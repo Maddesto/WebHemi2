@@ -32,7 +32,7 @@ var	Site = {
 	initialized : false,
 
 	/**
-	 * Initialize Component
+	 * Initialize Component.
 	 */
 	init : function()
 	{
@@ -41,20 +41,23 @@ var	Site = {
 	},
 
 	/**
-	 * Determines whether the given argument is defined or not
+	 * Determines whether the given argument is defined or not.
 	 *
-	 * @param mixed      The variable to check
-	 * @return boolean   TRUE if defined, FALSE otherwise
+	 * @param mixed      The variable to check.
+	 *
+	 * @return boolean   TRUE if defined, FALSE otherwise.
 	 */
-	isset : function() {
+	isset : function()
+	{
 		return typeof arguments[0] !== this.TYPE_UNDEFINED;
 	},
 
 	/**
-	 * Checks if the given argument is an array
+	 * Checks if the given argument is an array.
 	 *
-	 * @param mixed      The variable to check
-	 * @return boolean   TRUE if Array, ELSE otherwise
+	 * @param mixed      The variable to check.
+	 *
+	 * @return boolean   TRUE if Array, ELSE otherwise.
 	 */
 	isArray : function()
 	{
@@ -62,41 +65,49 @@ var	Site = {
 	},
 
 	/**
-	 * Checks if the given argument is an object
+	 * Checks if the given argument is an object.
 	 *
-	 * @param mixed      The variable to check
-	 * @return boolean   TRUE if Object, ELSE otherwise
+	 * @param mixed      The variable to check.
+	 *
+	 * @return boolean   TRUE if Object, ELSE otherwise.
 	 */
-	isObject : function() {
+	isObject : function()
+	{
 		return typeof arguments[0] !== this.TYPE_OBJECT;
 	},
 
 	/**
-	 * Checks if the given argument is a function
+	 * Checks if the given argument is a function.
 	 *
-	 * @param mixed      The variable to check
-	 * @return boolean   TRUE if Function, ELSE otherwise
+	 * @param mixed      The variable to check.
+	 *
+	 * @return boolean   TRUE if Function, ELSE otherwise.
 	 */
-	isFunction : function() {
+	isFunction : function()
+	{
 		return typeof arguments[0] !== this.TYPE_FUNCTION;
 	},
 
 	/**
-	 * Checks if the given argument is a NULL value
+	 * Checks if the given argument is a NULL value.
 	 *
-	 * @param mixed      The variable to check
-	 * @return boolean   TRUE if NULL, ELSE otherwise
+	 * @param mixed      The variable to check.
+	 *
+	 * @return boolean   TRUE if NULL, ELSE otherwise.
 	 */
-	isNull : function() {
+	isNull : function()
+	{
 		return arguments[0] === this.TYPE_NULL;
 	},
 
 	/**
-	 * Checks if the given needle is present in haystack
+	 * Checks if the given needle is present in haystack.
 	 *
-	 * @param mixed needle    The searched value
-	 * @param mixed haystack  The array to search in
-	 * @return boolean   TRUE if found, FALSE otherwise
+	 * @param mixed needle       The searched value.
+	 * @param mixed haystack     The array to search in.
+	 * @param boolean [strict]   Optional. If true the function uses type comparision as well.
+	 *
+	 * @return boolean   TRUE if found, FALSE otherwise.
 	 */
 	inArray : function(needle, haystack)
 	{
