@@ -22,6 +22,8 @@
 
 namespace WebHemi\Model;
 
+use WebHemi\Model\UserMeta as UserMetaModel;
+
 /**
  * WebHemi User Model
  *
@@ -39,8 +41,6 @@ class User
 	protected $username;
 	/** @var string   $email */
 	protected $email;
-	/** @var string   $displayName */
-	protected $displayName;
 	/** @var string   $password */
 	protected $password;
 	/** @var string   $hash */
@@ -55,12 +55,80 @@ class User
 	protected $isActive;
 	/** @var bool     $isEnabled */
 	protected $isEnabled;
-	/** @var string   $avatar */
-	protected $avatar;
 	/** @var DateTime $timeLogin */
 	protected $timeLogin;
 	/** @var DateTime $timeRegister */
 	protected $timeRegister;
+	/** @var array $userMeta */
+	protected $userMeta;
+
+	/**
+	 * Set or Retrieve a user meta data
+	 *
+	 * @param string $name
+	 * @return mixed
+	 */
+	public function __call($name, $arguments)
+	{
+		$data = array();
+
+		// if getter or setter
+		if (preg_match('/^(?<method>(get|set))(?<key>.*)$/', $name, $data)) {
+			$key = lcfirst($data['key']);
+
+			// getting meta data
+			if ($data['method'] == 'get') {
+				$meta = null;
+
+				if (
+					isset($this->userMeta[$key])
+					&& $this->userMeta[$key] instanceof UserMetaModel
+				) {
+					$meta = $this->userMeta[$key]->getMeta();
+				}
+				return $meta;
+			}
+			// setting meta data
+			else {
+				$value = (string)current($arguments);
+
+				if (
+					!isset($this->userMeta[$key])
+					|| !$this->userMeta[$key] instanceof UserMetaModel
+				) {
+					$this->userMeta[$key] = new UserMeta();
+				}
+
+				$this->userMeta[$key]->setUserId($this->userId);
+				$this->userMeta[$key]->setMetaKey($key);
+				$this->userMeta[$key]->setMeta($value);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieve all user meta data.
+	 *
+	 * @return array
+	 */
+	public function getUserMetaData()
+	{
+		return $this->userMeta;
+	}
+
+	/**
+	 * Set user meta data.
+	 *
+	 * @param array $userMeta
+	 * @return User
+	 */
+	public function setUserMetaData(Array $userMeta)
+	{
+		$this->userMeta = $userMeta;
+
+		return $this;
+	}
 
 	/**
 	 * Retrieve user ID
@@ -135,28 +203,22 @@ class User
 	 */
 	public function getDisplayName()
 	{
-		if ($this->displayName !== null) {
-			return $this->displayName;
+		// if exists as meta data
+		if (
+			isset($this->userMeta['displayName'])
+			&& $this->userMeta['displayName'] instanceof UserMetaModel
+		) {
+			return $this->userMeta['displayName']->getMeta();
 		}
+		// otherwise username
 		elseif ($this->username !== null) {
 			return $this->username;
 		}
+		// otherwise email address
 		elseif ($this->email !== null) {
 			return $this->email;
 		}
 		return null;
-	}
-
-	/**
-	 * Set displayname
-	 *
-	 * @param string $displayName
-	 * @return User
-	 */
-	public function setDisplayName($displayName)
-	{
-		$this->displayName = $displayName;
-		return $this;
 	}
 
 	/**
@@ -368,28 +430,6 @@ class User
 	}
 
 	/**
-	 * Retrieve user avatar.
-	 *
-	 * @return string
-	 */
-	public function getAvatar()
-	{
-		return $this->avatar;
-	}
-
-	/**
-	 * Set user avatar.
-	 *
-	 * @param string $avatar
-	 * @return User
-	 */
-	public function setAvatar($avatar)
-	{
-		$this->avatar = $avatar;
-		return $this;
-	}
-
-	/**
 	 * Exchange array values into object properties.
 	 *
 	 * @param array $data
@@ -399,7 +439,6 @@ class User
 		$this->userId       = (isset($data['user_id']))       ? (int) $data['user_id'] : null;
 		$this->username     = (isset($data['username']))      ? $data['username'] : null;
 		$this->email        = (isset($data['email']))         ? $data['email'] : null;
-		$this->displayName  = (isset($data['displayname']))   ? $data['displayname'] : null;
 		$this->password     = (isset($data['password']))      ? $data['password'] : null;
 		$this->hash         = (isset($data['hash']))          ? $data['hash'] : null;
 		$this->role         = (isset($data['role']))          ? $data['role'] : null;
@@ -407,7 +446,6 @@ class User
 		$this->registerIp   = (isset($data['register_ip']))   ? $data['register_ip'] : null;
 		$this->isActive     = (isset($data['is_active']))     ? (bool) $data['is_active'] : null;
 		$this->isEnabled    = (isset($data['is_enabled']))    ? (bool) $data['is_enabled'] : null;
-		$this->avatar       = (isset($data['avatar']))        ? $data['avatar'] : null;
 		$this->timeLogin    = (isset($data['time_login']))    ? new \DateTime($data['time_login']) : null;
 		$this->timeRegister = (isset($data['time_register'])) ? new \DateTime($data['time_register']) : null;
 	}
@@ -423,7 +461,6 @@ class User
 			'user_id'       => $this->userId,
 			'username'      => $this->username,
 			'email'         => $this->email,
-			'displayname'   => $this->displayName,
 			'password'      => $this->password,
 			'hash'          => $this->hash,
 			'role'          => $this->role,
@@ -431,10 +468,8 @@ class User
 			'register_ip'   => $this->registerIp,
 			'is_active'     => $this->isActive ? 1 : 0,
 			'is_enabled'    => $this->isEnabled ? 1 : 0,
-			'avatar'        => $this->avatar,
 			'time_login'    => $this->timeLogin->format('Y-m-d H:i:s'),
 			'time_register' => $this->timeRegister->format('Y-m-d H:i:s')
 		);
 	}
-
 }

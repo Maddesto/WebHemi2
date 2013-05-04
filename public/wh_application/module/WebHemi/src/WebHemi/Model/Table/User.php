@@ -23,6 +23,8 @@
 namespace WebHemi\Model\Table;
 
 use WebHemi\Model\User as UserModel,
+	WebHemi\Model\UserMeta as UserMetaModel,
+	WebHemi\Model\Table\UserMeta as UserMetaTable,
 	Zend\Db\Exception,
 	Zend\Db\TableGateway\AbstractTableGateway,
 	Zend\Db\Adapter\Adapter,
@@ -65,6 +67,7 @@ class User extends AbstractTableGateway
 	{
 		$rowset    = $this->select(array('user_id' => (int)$userId));
 		$userModel = $rowset->current();
+		$this->loadUserMeta($userModel);
 
 		return $userModel;
 	}
@@ -79,6 +82,7 @@ class User extends AbstractTableGateway
 	{
 		$rowset    = $this->select(array('username' => $username));
 		$userModel = $rowset->current();
+		$this->loadUserMeta($userModel);
 
 		return $userModel;
 	}
@@ -93,6 +97,7 @@ class User extends AbstractTableGateway
 	{
 		$rowset    = $this->select(array('email' => $email));
 		$userModel = $rowset->current();
+		$this->loadUserMeta($userModel);
 
 		return $userModel;
 	}
@@ -105,12 +110,44 @@ class User extends AbstractTableGateway
 	 */
 	public function getUserByHash($hash)
 	{
-
-
 		$rowset    = $this->select(array('hash' => $hash));
 		$userModel = $rowset->current();
+		$this->loadUserMeta($userModel);
 
 		return $userModel;
+	}
+
+	/**
+	 *	Load user meta into user model.
+	 *
+	 * @param UserModel $userModel
+	 */
+	protected function loadUserMeta(UserModel &$userModel)
+	{
+		$userMetaTable  = new UserMetaTable($this->adapter);
+		$userMeta       = $userMetaTable->getUserMetaAll($userModel->getUserId());
+		$userModel->setUserMetaData($userMeta);
+	}
+
+	/**
+	 * Save all user meta data from the user model
+	 *
+	 * @param null $userMeta
+	 */
+	protected function saveUserMeta($userMeta, $userId)
+	{
+		if (is_array($userMeta)) {
+			foreach ($userMeta as $userMetaModel) {
+				if ($userMetaModel instanceof UserMetaModel) {
+					// If the User is inserted before this, then the user meta got no userId by this time
+					if (!$userMetaModel->getUserId()) {
+						$userMetaModel->setUserId($userId);
+					}
+					$metaTable = new UserMetaTable($this->adapter);
+					$metaTable->save($userMetaModel);
+				}
+			}
+		}
 	}
 
 	/**
@@ -127,12 +164,18 @@ class User extends AbstractTableGateway
 		}
 
 		$userId = $userModel->getUserId();
-		if (!empty($userId)
-				&& $this->getUserById($userId)
-		) {
+		if (!empty($userId) && $this->getUserById($userId)) {
 			throw new \Exception('Record already exists!');
 		}
-		return parent::insert($userModel->toArray());
+
+		$result = parent::insert($userModel->toArray());
+		if ($result) {
+			$userId      = $this->lastInsertValue;
+			$userMeta    = $userModel->getUserMetaData();
+			$this->saveUserMeta($userMeta, $userId);
+		}
+
+		return $result;
 	}
 
 	/**
@@ -148,7 +191,11 @@ class User extends AbstractTableGateway
 			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
 		}
 
-		return parent::update($userModel->toArray(), array('user_id' => $userModel->getUserId()));
+		$result = parent::update($userModel->toArray(), array('user_id' => $userModel->getUserId()));
+		if ($result) {
+			$userMeta = $userModel->getUserMetaData();
+			$this->saveUserMeta($userMeta, $userModel->getUserId());
+		}
+		return $result;
 	}
-
 }

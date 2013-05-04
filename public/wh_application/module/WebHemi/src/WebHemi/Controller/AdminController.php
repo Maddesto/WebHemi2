@@ -97,11 +97,21 @@ class AdminController extends UserController
 	}
 
 	/**
-	 * User info page
+	 * User index page
 	 *
 	 * @return array
 	 */
 	public function userAction()
+	{
+		return array();
+	}
+
+	/**
+	 * user profile action
+	 *
+	 * @return array
+	 */
+	public function profileAction()
 	{
 		return array();
 	}
@@ -112,26 +122,6 @@ class AdminController extends UserController
 	 * @return array
 	 */
 	public function adduserAction()
-	{
-		return array();
-	}
-
-	/**
-	 * View User info
-	 *
-	 * @return array
-	 */
-	public function viewuserAction()
-	{
-		return array();
-	}
-
-	/**
-	 * Edit User info
-	 *
-	 * @return array
-	 */
-	public function edituserAction()
 	{
 		return array();
 	}

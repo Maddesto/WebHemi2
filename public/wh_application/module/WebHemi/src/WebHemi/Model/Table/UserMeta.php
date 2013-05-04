@@ -55,7 +55,7 @@ class UserMeta extends AbstractTableGateway
 	}
 
 	/**
-	 * Get User meta data for a user
+	 * Get a specific meta data for a user
 	 *
 	 * @param string $userId
 	 * @param string $metaKey
@@ -69,4 +69,50 @@ class UserMeta extends AbstractTableGateway
 		return $userMetaModel;
 	}
 
+	/**
+	 * Get all meta data for a user
+	 *
+	 * @param string $userId
+
+	 * @return array
+	 */
+	public function getUserMetaAll($userId)
+	{
+		$rowset   = $this->select(array('user_id' => $userId));
+		$userMeta = array();
+		while ($metaModel = $rowset->current()) {
+			$userMeta[$metaModel->getMetaKey()] = $metaModel;
+		}
+
+		return $userMeta;
+	}
+
+	/**
+	 * Update user meta record
+	 *
+	 * @param UserMetaModel $userMetaModel
+	 *
+	 * @return int
+	 * @throws Exception\InvalidArgumentException
+	 */
+	public function save($userMetaModel)
+	{
+		if (!$userMetaModel instanceof UserMetaModel) {
+			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserMetaModel');
+		}
+
+		$rowSet = $this->getUserMeta($userMetaModel->getUserId(), $userMetaModel->getMetaKey());
+
+		if (!$rowSet instanceof UserMetaModel) {
+			return parent::insert($userMetaModel->toArray());
+		}
+		else {
+			return parent::update(
+				$userMetaModel->toArray(), array(
+					'user_id'  => $userMetaModel->getUserId(),
+					'meta_key' => $userMetaModel->getMetaKey()
+				)
+			);
+		}
+	}
 }

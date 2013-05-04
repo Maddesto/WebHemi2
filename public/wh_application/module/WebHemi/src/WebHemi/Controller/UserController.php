@@ -85,11 +85,21 @@ class UserController extends AbstractActionController
 	}
 
 	/**
-	 * Profile action
+	 * View User info
 	 *
 	 * @return array
 	 */
-	public function profileAction()
+	public function viewuserAction()
+	{
+		return array();
+	}
+
+	/**
+	 * Edit User info
+	 *
+	 * @return array
+	 */
+	public function edituserAction()
 	{
 		return array();
 	}

@@ -22,11 +22,6 @@
 
 namespace WebHemi\Model;
 
-use WebHemi\Model\User,
-	WebHemi\Model\Table\User as UserTable,
-	Zend\ServiceManager\ServiceManager,
-	Zend\ServiceManager\ServiceManagerAwareInterface;
-
 /**
  * WebHemi User Meta Model
  *
@@ -36,48 +31,34 @@ use WebHemi\Model\User,
  * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class UserMeta implements ServiceManagerAwareInterface
+class UserMeta
 {
-    /** @var User  $user */
-    protected $user;
+    /** @var int  $userId */
+    protected $userId;
     /** @var string $metaKey */
     protected $metaKey;
     /** @var string $meta */
     protected $meta;
-	/** @var ServiceManager $serviceManager */
-    protected $serviceManager;
 
     /**
-     * Set ServiceManager
-	 *
-	 * @param ServiceManager $serviceManager
-     * @return UserMeta
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-        return $this;
-    }
-
-    /**
-     * Retrieve User
+     * Retrieve UserId
      *
      * @return User
      */
-    public function getUser()
+    public function getUserId()
     {
-        return $this->user;
+        return $this->userId;
     }
 
     /**
-     * Set User
+     * Set UserId
      *
-     * @param User $user
+     * @param int $userId
      * @return UserMeta
      */
-    public function setUser(User $user)
+    public function setUserId($userId)
     {
-        $this->user = $user;
+        $this->userId = $userId;
         return $this;
     }
 
@@ -132,18 +113,9 @@ class UserMeta implements ServiceManagerAwareInterface
 	 */
 	public function exchangeArray(array $data)
 	{
-		$userId = (isset($data['user_id'])) ? (int) $data['user_id'] : null;
-
-		if ($userId) {
-			$userTable  = new UserTable($this->serviceManager->get('Zend\Db\Adapter\Adapter'));
-			$this->user = $userTable->getUserById($userId);
-		}
-		else {
-			$this->user = null;
-		}
-
+		$this->userId  = (isset($data['user_id']))  ? (int) $data['user_id'] : null;
 		$this->metaKey = (isset($data['meta_key'])) ? $data['meta_key'] : null;
-		$this->meta    = (isset($data['meta']))     ? unserialize($data['meta']) : null;
+		$this->meta    = (isset($data['meta']))     ? $data['meta'] : null;
 	}
 
 	/**
@@ -154,9 +126,9 @@ class UserMeta implements ServiceManagerAwareInterface
 	public function toArray()
 	{
 		return array(
-			'user_id'  => $this->user instanceof User ? $this->user->getUserId() : null,
+			'user_id'  => $this->userId,
 			'meta_key' => $this->metaKey,
-			'meta'     => serialize($this->meta),
+			'meta'     => $this->meta,
 		);
 	}
 }

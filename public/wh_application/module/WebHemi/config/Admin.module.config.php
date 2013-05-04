@@ -229,7 +229,7 @@ return array(
 			'Controller-Admin/*'           => 'member',
 			'Controller-Admin/adduser'     => 'admin',
 			'Controller-Admin/viewuser'    => 'moderator',
-			'Controller-Admin/edituser'    => 'admin',
+			'Controller-Admin/edituser'    => 'member',
 			'Controller-Admin/deleteuser'  => 'admin',
 			'Controller-Admin/enableuser'  => 'admin',
 			'Controller-Admin/disableuser' => 'admin',
