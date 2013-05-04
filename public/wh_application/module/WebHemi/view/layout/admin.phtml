@@ -1,5 +1,11 @@
-<?php echo $this->doctype(); ?>
+<?php
 
+if (empty($this->title)) {
+	$this->title = 'WebHemi Admin';
+}
+
+echo $this->doctype();
+?>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">

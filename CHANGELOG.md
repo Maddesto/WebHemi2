@@ -2,6 +2,14 @@ Change log
 ==========
 
 ----------------
+Version 2.0.0.17
+----------------
+- Minimum required ZF version is 2.1.5+
+- Implemented User Meta Model to make user data handling more flexible
+- Fixed some theme rendering issues
+- Fine tuned the privilege system
+
+----------------
 Version 2.0.0.16
 ----------------
 - Porting code base from ZF 2.0.6 to ZF 2.1.1
