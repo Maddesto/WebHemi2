@@ -1,4 +1,5 @@
-<h1>Profile</h1>
-<div style="float:left; padding-right:16px;"><?php echo $this->avatar($this->getIdentity()->getAvatar(), array(), array('style' => 'width:100px;')) ?></div>
-<h3>Hi, <?php echo $this->getIdentity()->getDisplayName() ?>!</h3>
-<div style="clear:both;"></div>
+<?php
+$userModel = $this->getIdentity();
+$myProfile = true;
+include('viewuser.phtml');
+?>

@@ -392,7 +392,7 @@ class User
 	 */
 	public function getActive()
 	{
-		return $this->isActive;
+		return (bool)$this->isActive;
 	}
 
 	/**
@@ -414,7 +414,7 @@ class User
 	 */
 	public function getEnabled()
 	{
-		return $this->isEnabled;
+		return (bool)$this->isEnabled;
 	}
 
 	/**

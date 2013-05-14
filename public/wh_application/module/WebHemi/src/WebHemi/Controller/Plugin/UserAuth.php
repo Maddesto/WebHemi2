@@ -32,8 +32,6 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
 	WebHemi\Model\Table\User as UserTable,
 	WebHemi\Model\User as UserModel;
 
-use \Exception as Exp;
-
 /**
  * Controller plugin for Authentication
  *
@@ -100,7 +98,7 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 	/**
 	 * Proxy convenience method
 	 *
-	 * @return mixed
+	 * @return UserModel
 	 */
 	public function getIdentity()
 	{
@@ -181,11 +179,11 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set ServiceLocator
      *
      * @param ServiceLocatorInterface $serviceLocator
+	 * @return UserAuth
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
 	{
 		$this->serviceLocator = $serviceLocator;
 		return $this;
 	}
-
 }

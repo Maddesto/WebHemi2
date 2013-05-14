@@ -76,7 +76,7 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
     public function getAclService()
     {
 		if (!isset($this->aclService)) {
-			$this->setAclService($this->serviceManager->getServiceLocator()->get('acl'));
+			$this->aclService = $this->getServiceLocator()->get('acl');
 		}
         return $this->aclService;
     }
@@ -93,17 +93,6 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
         return $this;
     }
 
-	/**
-     * Set ServiceLocatorInterface instance
-     *
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return void
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
     /**
      * Retrieve ServiceLocatorInterface instance
      *
@@ -111,6 +100,18 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
      */
     public function getServiceLocator()
     {
-        return $this->serviceLocator;
+        return $this->serviceLocator->getController()->getServiceLocator();
+    }
+
+	/**
+     * Set ServiceLocatorInterface instance
+     *
+     * @param  ServiceLocatorInterface $serviceLocator
+     * @return IsAllowed
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+		return $this;
     }
 }

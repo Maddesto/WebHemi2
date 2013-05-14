@@ -23,6 +23,7 @@
 namespace WebHemi\Controller;
 
 use WebHemi\Controller\UserController,
+	WebHemi\Model\Table\User as UserTable,
 	Zend\View\Model\ViewModel,
 	Zend\Mvc\MvcEvent;
 
@@ -103,17 +104,10 @@ class AdminController extends UserController
 	 */
 	public function userAction()
 	{
-		return array();
-	}
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userList = $userTable->getUserList();
 
-	/**
-	 * user profile action
-	 *
-	 * @return array
-	 */
-	public function profileAction()
-	{
-		return array();
+		return array('userList' => $userList);
 	}
 
 	/**
@@ -133,7 +127,18 @@ class AdminController extends UserController
 	 */
 	public function disableuserAction()
 	{
-		return $this->redirect()->toRoute('edituser');
+		$userName  = $this->params()->fromRoute('userName');
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel = $userTable->getUserByName($userName);
+
+		if ($userModel) {
+			// if it is NOT me, then allow the action
+			if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+				$userModel->setEnabled(false);
+				$userTable->update($userModel);
+			}
+		}
+		return $this->redirect()->toRoute('user/view', array('userName' => $userName));
 	}
 
 	/**
@@ -143,7 +148,39 @@ class AdminController extends UserController
 	 */
 	public function enableuserAction()
 	{
-		return $this->redirect()->toRoute('edituser');
+		$userName  = $this->params()->fromRoute('userName');
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel = $userTable->getUserByName($userName);
+
+		if ($userModel) {
+			// if it is NOT me, then allow the action
+			if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+				$userModel->setEnabled(true);
+				$userTable->update($userModel);
+			}
+		}
+		return $this->redirect()->toRoute('user/view', array('userName' => $userName));
+	}
+
+	/**
+	 * Activate User
+	 *
+	 * @return array
+	 */
+	public function activateuserAction()
+	{
+		$userName  = $this->params()->fromRoute('userName');
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel = $userTable->getUserByName($userName);
+
+		if ($userModel) {
+			// if it is NOT me, then allow the action
+			if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+				$userModel->setActive(true);
+				$userTable->update($userModel);
+			}
+		}
+		return $this->redirect()->toRoute('user/view', array('userName' => $userName));
 	}
 
 	/**
@@ -153,7 +190,18 @@ class AdminController extends UserController
 	 */
 	public function deleteuserAction()
 	{
-		return array();
+		$userName  = $this->params()->fromRoute('userName');
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel = $userTable->getUserByName($userName);
+
+		if ($userModel) {
+			// if it is NOT me, then allow the action
+			if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+				$userModel->setActive(true);
+				$userTable->delete(array('user_id' => $userModel->getUserId()));
+			}
+		}
+		return $this->redirect()->toRoute('user');
 	}
 
 

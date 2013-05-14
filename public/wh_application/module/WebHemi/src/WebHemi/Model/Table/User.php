@@ -67,7 +67,9 @@ class User extends AbstractTableGateway
 	{
 		$rowset    = $this->select(array('user_id' => (int)$userId));
 		$userModel = $rowset->current();
-		$this->loadUserMeta($userModel);
+		if ($userModel) {
+			$this->loadUserMeta($userModel);
+		}
 
 		return $userModel;
 	}
@@ -82,7 +84,9 @@ class User extends AbstractTableGateway
 	{
 		$rowset    = $this->select(array('username' => $username));
 		$userModel = $rowset->current();
-		$this->loadUserMeta($userModel);
+		if ($userModel) {
+			$this->loadUserMeta($userModel);
+		}
 
 		return $userModel;
 	}
@@ -97,7 +101,9 @@ class User extends AbstractTableGateway
 	{
 		$rowset    = $this->select(array('email' => $email));
 		$userModel = $rowset->current();
-		$this->loadUserMeta($userModel);
+		if ($userModel) {
+			$this->loadUserMeta($userModel);
+		}
 
 		return $userModel;
 	}
@@ -112,9 +118,42 @@ class User extends AbstractTableGateway
 	{
 		$rowset    = $this->select(array('hash' => $hash));
 		$userModel = $rowset->current();
-		$this->loadUserMeta($userModel);
+		if ($userModel) {
+			$this->loadUserMeta($userModel);
+		}
 
 		return $userModel;
+	}
+
+	/**
+	 * Retrieve the user list
+	 *
+	 * @param int $offset
+	 * @param int $limit
+	 *
+	 * @return array
+	 */
+	public function getUserList($offset = null, $limit = null)
+	{
+		$users = array();
+
+		$select = $this->sql->select();
+
+		if (!empty($offset) && !empty($limit)) {
+			$select->offset($offset)
+				->limit($limit);
+		}
+
+		$rowset = $this->selectWith($select);
+
+		while($userModel = $rowset->current()) {
+			$this->loadUserMeta($userModel);
+			$index = $userModel->getDisplayName();
+			$users[$index] = $userModel;
+			$rowset->next();
+		}
+		ksort($users);
+		return $users;
 	}
 
 	/**

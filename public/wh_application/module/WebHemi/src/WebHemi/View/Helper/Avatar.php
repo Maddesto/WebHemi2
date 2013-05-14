@@ -34,10 +34,16 @@ class Avatar extends Gravatar
      */
     public function __invoke($data = "", $options = array(), $attribs = array())
     {
-        if (empty($attribs)) {
-			$attribs = array(
-				'alt' => '',
-			);
+		$this->email   = null;
+		$this->attribs = array();
+		$this->src     = '';
+
+        if (!isset($attribs['alt'])) {
+			$attribs['alt'] = '';
+		}
+
+		if (!isset($attribs['class'])) {
+			$attribs['class'] = 'avatar';
 		}
 
         if (!empty($data)) {

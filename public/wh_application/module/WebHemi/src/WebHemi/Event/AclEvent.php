@@ -86,6 +86,7 @@ class AclEvent
 				$response = $e->getTarget()->getMvcEvent()->getResponse();
 				$response->getHeaders()->addHeaderLine('Location', '/user/login');
 				$response->setStatusCode(302);
+				$response->send();
 			}
 			// otherwise it's a 403 Frobidden error
 			else {

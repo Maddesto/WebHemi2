@@ -103,9 +103,9 @@ return array(
 					'edit' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/edit/[:userId]',
+                            'route'    => '/edit/[:userName]',
 							'constraints' => array(
-                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'Admin',
@@ -116,9 +116,9 @@ return array(
 					'view' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/view/[:userId]',
+                            'route'    => '/view/[:userName]',
 							'constraints' => array(
-                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'Admin',
@@ -129,9 +129,9 @@ return array(
 					'disable' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/disable/[:userId]',
+                            'route'    => '/disable/[:userName]',
 							'constraints' => array(
-                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'Admin',
@@ -142,22 +142,35 @@ return array(
 					'enable' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/enable/[:userId]',
+                            'route'    => '/enable/[:userName]',
 							'constraints' => array(
-                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'Admin',
-                                'action'     => 'enableuser',
+                                'action'     => 'enableUser',
+                            ),
+                        ),
+                    ),
+					'activate' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/activate/[:userName]',
+							'constraints' => array(
+                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action'     => 'activateuser',
                             ),
                         ),
                     ),
 					'delete' => array(
                         'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '/delete/[:userId]',
+                            'route'    => '/delete/[:userName]',
 							'constraints' => array(
-                                'userId' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
                                 'controller' => 'Admin',
@@ -221,21 +234,23 @@ return array(
 			'Controller-Admin/deleteuser',
 			'Controller-Admin/enableuser',
 			'Controller-Admin/disableuser',
+			'Controller-Admin/activateuser',
 			'!Controller-Admin/login',
 			'Controller-Application/*',
 			'Controller-Component/*',
 		),
 		'rules' => array(
-			'Controller-Admin/*'           => 'member',
-			'Controller-Admin/adduser'     => 'admin',
-			'Controller-Admin/viewuser'    => 'moderator',
-			'Controller-Admin/edituser'    => 'member',
-			'Controller-Admin/deleteuser'  => 'admin',
-			'Controller-Admin/enableuser'  => 'admin',
-			'Controller-Admin/disableuser' => 'admin',
-			'!Controller-Admin/login'      => 'guest',
-			'Controller-Application/*'     => 'moderator',
-			'Controller-Component/*'       => 'admin',
+			'Controller-Admin/*'            => 'member',
+			'Controller-Admin/adduser'      => 'admin',
+			'Controller-Admin/viewuser'     => 'moderator',
+			'Controller-Admin/edituser'     => 'member',
+			'Controller-Admin/deleteuser'   => 'admin',
+			'Controller-Admin/enableuser'   => 'admin',
+			'Controller-Admin/disableuser'  => 'admin',
+			'Controller-Admin/activateuser' => 'admin',
+			'!Controller-Admin/login'       => 'guest',
+			'Controller-Application/*'      => 'moderator',
+			'Controller-Component/*'        => 'admin',
 		),
 	),
 );

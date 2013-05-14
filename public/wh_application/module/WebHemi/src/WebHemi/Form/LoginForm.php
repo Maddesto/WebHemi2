@@ -53,9 +53,9 @@ class LoginForm extends AbstractForm
 		$fieldset = new Fieldset('loginInfo');
 		$fieldset->setLabel('Login information');
 
-		// the username input
-		$username = new Element\Text('username');
-		$username->setOptions(array(
+		// the identification input
+		$identification = new Element\Text('identification');
+		$identification->setOptions(array(
 					'required'   => true,
 					'filters'    => array(
 						new Filter\StringTrim(),
@@ -69,13 +69,13 @@ class LoginForm extends AbstractForm
 						new Validator\Regex('/^[a-z]{1}\w+$/i')
 					),
 				))
-				->setLabel('Username')
+				->setLabel('Identification')
 				->setAttributes(array(
-					'id'        => 'username',
+					'id'        => 'identification',
 					'accesskey' => 'u',
 					'maxlength' => 255,
 					'tabindex'  => self::$tabindex++,
-					'required'  => 'required',
+					//'required'  => 'required',
 					'pattern'   => '^[a-z]{1}\w+$',
 					'validity' => 'Hejjj'
 				));
@@ -101,19 +101,23 @@ class LoginForm extends AbstractForm
 					'accesskey' => 'p',
 					'maxlength' => 255,
 					'tabindex'  => self::$tabindex++,
-					'required'  => 'required',
+					//'required'  => 'required',
 					'pattern'   => '^\w+$'
 				));
 
-		$fieldset->add($username)
-				->add($password);
 
 		// in ADMIN module there's no way to remember the password or autocomplete the input fields
 		if (APPLICATION_MODULE == Application::ADMIN_MODULE) {
+			$identification->setAttribute('autocomplete', 'off');
+			$password->setAttribute('autocomplete', 'off');
 			$this->setAttribute('autocomplete', 'off');
 		}
-		// otherwise we supply "remember me" functionality
-		else {
+
+		$fieldset->add($identification)
+				->add($password);
+
+		// if NOT in ADMIN module, then we supply "remember me" functionality
+		if (!APPLICATION_MODULE == Application::ADMIN_MODULE) {
 			$remember = new Element\Checkbox('remember');
 			$remember->setLabel('Remember me')
 					->setOptions(array(

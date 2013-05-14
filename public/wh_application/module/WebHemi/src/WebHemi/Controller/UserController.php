@@ -23,6 +23,7 @@
 namespace WebHemi\Controller;
 
 use WebHemi\Application,
+	WebHemi\Model\Table\User as UserTable,
 	Zend\Mvc\Controller\AbstractActionController,
 	Zend\Authentication\Result,
 	Zend\View\Model\ViewModel,
@@ -85,13 +86,36 @@ class UserController extends AbstractActionController
 	}
 
 	/**
+	 * user profile action
+	 *
+	 * @return array
+	 */
+	public function profileAction()
+	{
+		return array();
+	}
+
+	/**
 	 * View User info
 	 *
 	 * @return array
 	 */
 	public function viewuserAction()
 	{
-		return array();
+		if (!$this->isAllowed('admin/viewuser')) {
+			$this->redirect()->toRoute('user');
+		}
+
+		$userName = $this->params()->fromRoute('userName');
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel = $userTable->getUserByName($userName);
+
+		// if it is me, then redirect to MyProfile
+		if ($this->userAuth()->getIdentity()->getUserId() == $userModel->getUserId()) {
+			$this->redirect()->toRoute('user/profile');
+		}
+
+		return array('userModel' => $userModel);
 	}
 
 	/**
@@ -101,7 +125,21 @@ class UserController extends AbstractActionController
 	 */
 	public function edituserAction()
 	{
-		return array();
+		$userName = $this->params()->fromRoute('userName');
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel = $userTable->getUserByName($userName);
+
+		if (
+			!$userModel
+			|| !(
+				$this->userAuth()->getIdentity()->getUserId() == $userModel->getUserId()
+				|| $this->userAuth()->getIdentity()->getRole() == 'admin'
+			)
+		) {
+			return $this->redirect()->toRoute('user/view', array('userName' => $userName));
+		}
+
+		return array('userModel' => $userModel);
 	}
 
 	/**
@@ -119,12 +157,12 @@ class UserController extends AbstractActionController
 			$error = false;
 			$form->setData($request->getPost());
 
-			$username = $form->get('username')->getValue();
+			$identification = $form->get('identification')->getValue();
 			$password = $form->get('password')->getValue();
 
-			// if no username present
-			if (empty($username)) {
-				$form->get('username')->setMessages(array('No username given.'));
+			// if no identification present
+			if (empty($identification)) {
+				$form->get('identification')->setMessages(array('No identification given.'));
 				$error = true;
 			}
 
@@ -137,7 +175,7 @@ class UserController extends AbstractActionController
 			// it everything seems to be valid
 			if (!$error && $form->isValid()) {
 				$authAdapter = $this->userAuth()->getAuthAdapter();
-				$authAdapter->setIdentity($username);
+				$authAdapter->setIdentity($identification);
 				$authAdapter->setCredential($password);
 
 				$authResult = $this->userAuth()->getAuthService()->authenticate($authAdapter);
@@ -187,7 +225,7 @@ class UserController extends AbstractActionController
 						break;
 					default:
 						// attach error message to the form
-						$form->get('username')->setMessages($authResult->getMessages());
+						$form->get('identification')->setMessages($authResult->getMessages());
 						break;
 				}
 			}

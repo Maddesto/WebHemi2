@@ -1,8 +1,5 @@
 <?php
 
-//$x = file_get_contents('dialog-warning.png');
-//die(base64_encode($x));
-
 /**
  * PHP version check
  */

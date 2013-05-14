@@ -28,13 +28,13 @@ var Form = {
 	init : function()
 	{
 		// Overwrite the browser's default HTML5 validity check
-		$('input').on('change invalid input', function() {
+		$('input').on('change invalid input hover', function() {
 			var htmlInput = $(this).get(0);
 
 			htmlInput.setCustomValidity('');
 
 			if (!htmlInput.validity.valid) {
-//				return false;
+				return false;
 				//htmlInput.setCustomValidity('empty');
 			}
 		});

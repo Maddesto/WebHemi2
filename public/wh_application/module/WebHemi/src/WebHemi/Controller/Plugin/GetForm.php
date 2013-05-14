@@ -53,23 +53,24 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
     }
 
 	/**
-     * Set ServiceLocatorInterface instance
-     *
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return void
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-    }
-
-    /**
      * Retrieve ServiceLocatorInterface instance
      *
      * @return ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
-        return $this->serviceLocator->getServiceLocator();
+        return $this->serviceLocator->getController()->getServiceLocator();
+    }
+
+	/**
+     * Set ServiceLocatorInterface instance
+     *
+     * @param  ServiceLocatorInterface $serviceLocator
+     * @return GetForm
+     */
+    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+    {
+        $this->serviceLocator = $serviceLocator;
+		return $this;
     }
 }

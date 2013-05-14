@@ -37,6 +37,7 @@ return array(
     'WebHemi\Form\LoginForm'                            => __DIR__ . '/src/WebHemi/Form/LoginForm.php',
     'WebHemi\View\Helper\IsAllowed'                     => __DIR__ . '/src/WebHemi/View/Helper/IsAllowed.php',
     'WebHemi\View\Helper\GetIdentity'                   => __DIR__ . '/src/WebHemi/View/Helper/GetIdentity.php',
+    'WebHemi\View\Helper\Avatar'                        => __DIR__ . '/src/WebHemi/View/Helper/Avatar.php',
     'WebHemi\View\Helper\Factory\GetIdentityFactory'    => __DIR__ . '/src/WebHemi/View/Helper/Factory/GetIdentityFactory.php',
     'WebHemi\View\Helper\Factory\IsAllowedFactory'      => __DIR__ . '/src/WebHemi/View/Helper/Factory/IsAllowedFactory.php',
     'WebHemi\ServiceFactory\AclServiceFactory'          => __DIR__ . '/src/WebHemi/ServiceFactory/AclServiceFactory.php',
