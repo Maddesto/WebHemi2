@@ -64,7 +64,7 @@ class LoginForm extends AbstractForm
 					'validators' => array(
 						new Validator\StringLength(
 							array(
-								'min' => 8,
+								'min' => 4,
 								'max' => 255,
 								'encoding' => 'UTF-8'
 							)
