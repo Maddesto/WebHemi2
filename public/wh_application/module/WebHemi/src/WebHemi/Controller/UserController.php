@@ -41,12 +41,12 @@ use WebHemi\Application,
 class UserController extends AbstractActionController
 {
 	/**
-     * Execute the request
-     *
-     * @param  MvcEvent $e
-     * @return mixed
-     */
-    public function onDispatch(MvcEvent $e)
+	 * Execute the request
+	 *
+	 * @param  MvcEvent $e
+	 * @return mixed
+	 */
+	public function onDispatch(MvcEvent $e)
 	{
 		parent::onDispatch($e);
 
@@ -125,9 +125,10 @@ class UserController extends AbstractActionController
 	 */
 	public function edituserAction()
 	{
-		$userName = $this->params()->fromRoute('userName');
+		$userName  = $this->params()->fromRoute('userName');
 		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
 		$userModel = $userTable->getUserByName($userName);
+		$request   = $this->getRequest();
 
 		if (
 			!$userModel
@@ -139,7 +140,28 @@ class UserController extends AbstractActionController
 			return $this->redirect()->toRoute('user/view', array('userName' => $userName));
 		}
 
-		return array('userModel' => $userModel);
+		/* @var $editForm \WebHemi\Form\AbstractForm */
+		$editForm = $this->getForm('UserForm');
+
+		if ($request->isPost()) {
+			$error = false;
+//			$editForm->setInputFilter($userModel->getInputFilter());
+			$editForm->setData($request->getPost());
+			if ($editForm->isValid()) {
+				// do something
+			}
+
+			dump($request->getPost(), 'Post');
+		}
+		else {
+			$editForm->bind($userModel);
+		}
+
+
+		return array(
+			'editForm'  => $editForm,
+			'userModel' => $userModel,
+		);
 	}
 
 	/**
@@ -173,7 +195,7 @@ class UserController extends AbstractActionController
 			}
 
 			// it everything seems to be valid
-			if (!$error && $form->isValid()) {
+			if (!$error && $form->isValid($request)) {
 				$authAdapter = $this->userAuth()->getAuthAdapter();
 				$authAdapter->setIdentity($identification);
 				$authAdapter->setCredential($password);

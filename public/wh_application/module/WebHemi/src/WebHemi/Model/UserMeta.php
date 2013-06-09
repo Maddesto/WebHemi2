@@ -33,78 +33,78 @@ namespace WebHemi\Model;
  */
 class UserMeta
 {
-    /** @var int  $userId */
-    protected $userId;
-    /** @var string $metaKey */
-    protected $metaKey;
-    /** @var string $meta */
-    protected $meta;
+	/** @var int  $userId */
+	protected $userId;
+	/** @var string $metaKey */
+	protected $metaKey;
+	/** @var string $meta */
+	protected $meta;
 
-    /**
-     * Retrieve UserId
-     *
-     * @return User
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
+	/**
+	 * Retrieve UserId
+	 *
+	 * @return User
+	 */
+	public function getUserId()
+	{
+		return $this->userId;
+	}
 
-    /**
-     * Set UserId
-     *
-     * @param int $userId
-     * @return UserMeta
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-        return $this;
-    }
+	/**
+	 * Set UserId
+	 *
+	 * @param int $userId
+	 * @return UserMeta
+	 */
+	public function setUserId($userId)
+	{
+		$this->userId = $userId;
+		return $this;
+	}
 
-    /**
-     * Retrieve meta key
-     *
-     * @return string
-     */
-    public function getMetaKey()
-    {
-        return $this->metaKey;
-    }
+	/**
+	 * Retrieve meta key
+	 *
+	 * @return string
+	 */
+	public function getMetaKey()
+	{
+		return $this->metaKey;
+	}
 
-    /**
-     * Set meta key
-     *
-     * @param string $metaKey
-     * @return UserMeta
-     */
-    public function setMetaKey($metaKey)
-    {
-        $this->metaKey = $metaKey;
-        return $this;
-    }
+	/**
+	 * Set meta key
+	 *
+	 * @param string $metaKey
+	 * @return UserMeta
+	 */
+	public function setMetaKey($metaKey)
+	{
+		$this->metaKey = $metaKey;
+		return $this;
+	}
 
-    /**
-     * Retrieve meta data
-     *
-     * @return mixed
-     */
-    public function getMeta()
-    {
-        return $this->meta;
-    }
+	/**
+	 * Retrieve meta data
+	 *
+	 * @return mixed
+	 */
+	public function getMeta()
+	{
+		return $this->meta;
+	}
 
-    /**
-     * Set meta data
-     *
-     * @param mixed $meta
-     * @return UserMeta
-     */
-    public function setMeta($meta)
-    {
-        $this->meta = $meta;
-        return $this;
-    }
+	/**
+	 * Set meta data
+	 *
+	 * @param mixed $meta
+	 * @return UserMeta
+	 */
+	public function setMeta($meta)
+	{
+		$this->meta = $meta;
+		return $this;
+	}
 
 	/**
 	 * Exchange array values into object properties

@@ -36,7 +36,7 @@ use Zend\View\Helper\AbstractHelper,
  */
 class IsAllowed extends AbstractHelper
 {
-    /** @var Acl $authService */
+	/** @var Acl $authService */
 	protected $aclService;
 
 	/**
@@ -46,9 +46,9 @@ class IsAllowed extends AbstractHelper
 	 * @param type $privilege
 	 * @return type
 	 */
-    public function __invoke($resource, $privilege = null)
-    {
-        $acl                = $this->getAclService();
+	public function __invoke($resource, $privilege = null)
+	{
+		$acl                = $this->getAclService();
 		$controllerResource = 'Controller-' . ucfirst(strtolower($resource));
 		if (strpos($resource, '/') === false) {
 			$controllerResource .= '/*';
@@ -58,17 +58,17 @@ class IsAllowed extends AbstractHelper
 		return $acl->isAllowed($resource, $privilege)
 				&& $acl->isAllowed($controllerResource, $privilege)
 				&& $acl->isAllowed($routeResource, $privilege);
-    }
+	}
 
 	/**
 	 * Retrieve ACL service object
 	 *
 	 * @return WebHemi\Acl\Acl
 	 */
-    public function getAclService()
-    {
-        return $this->aclService;
-    }
+	public function getAclService()
+	{
+		return $this->aclService;
+	}
 
 	/**
 	 * Set ACL service object
@@ -76,9 +76,9 @@ class IsAllowed extends AbstractHelper
 	 * @param WebHemi\Acl\Acl $aclService
 	 * @return IsAllowed
 	 */
-    public function setAclService(Acl $aclService)
-    {
-        $this->aclService = $aclService;
-        return $this;
-    }
+	public function setAclService(Acl $aclService)
+	{
+		$this->aclService = $aclService;
+		return $this;
+	}
 }

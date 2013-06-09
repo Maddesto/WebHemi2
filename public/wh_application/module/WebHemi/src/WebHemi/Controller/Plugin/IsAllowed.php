@@ -40,10 +40,10 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  */
 class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
-    /** @var Acl $aclService */
+	/** @var Acl $aclService */
 	protected $aclService;
-	/** @var ServiceManager */
-	protected $serviceManager;
+	/** @var ServiceLocatorInterface */
+	protected $serviceLocator;
 
 	/**
 	 * Return true if and only if the Role has access to the Resource.
@@ -54,32 +54,23 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
 	 * @param  Role|string        $role
 	 * @return boolean
 	 */
-    public function __invoke($resource, $privilege = null)
-    {
-        $acl                = $this->getAclService();
-		$controllerResource = 'Controller-' . ucfirst(strtolower($resource));
-		if (strpos($resource, '/') === false) {
-			$controllerResource .= '/*';
-		}
-		$routeResource      = 'Route-' . $resource;
-
-		return $acl->isAllowed($resource, $privilege)
-				&& $acl->isAllowed($controllerResource, $privilege)
-				&& $acl->isAllowed($routeResource, $privilege);
-    }
+	public function __invoke($resource, $role = null)
+	{
+		return $this->getAclService()->isAllowed($resource, $role);
+	}
 
 	/**
 	 * Retrieve ACL service object
 	 *
 	 * @return Acl
 	 */
-    public function getAclService()
-    {
+	public function getAclService()
+	{
 		if (!isset($this->aclService)) {
 			$this->aclService = $this->getServiceLocator()->get('acl');
 		}
-        return $this->aclService;
-    }
+		return $this->aclService;
+	}
 
 	/**
 	 * Set ACL service object
@@ -87,31 +78,31 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
 	 * @param Acl $aclService
 	 * @return IsAllowed
 	 */
-    public function setAclService(Acl $aclService)
-    {
-        $this->aclService = $aclService;
-        return $this;
-    }
-
-    /**
-     * Retrieve ServiceLocatorInterface instance
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator->getController()->getServiceLocator();
-    }
+	public function setAclService(Acl $aclService)
+	{
+		$this->aclService = $aclService;
+		return $this;
+	}
 
 	/**
-     * Set ServiceLocatorInterface instance
-     *
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return IsAllowed
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
+	 * Retrieve ServiceLocatorInterface instance
+	 *
+	 * @return ServiceLocatorInterface
+	 */
+	public function getServiceLocator()
+	{
+		return $this->serviceLocator->getController()->getServiceLocator();
+	}
+
+	/**
+	 * Set ServiceLocatorInterface instance
+	 *
+	 * @param  ServiceLocatorInterface $serviceLocator
+	 * @return IsAllowed
+	 */
+	public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+	{
+		$this->serviceLocator = $serviceLocator;
 		return $this;
-    }
+	}
 }

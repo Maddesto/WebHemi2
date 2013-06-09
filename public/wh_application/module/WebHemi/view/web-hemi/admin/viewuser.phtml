@@ -3,6 +3,9 @@ if (!isset($myProfile)) {
 	$myProfile = false;
 }
 
+/* @var $userModel \WebHemi\Model\User */
+
+
 // IF admin AND owner THEN allowe to edit profile
 if ($myProfile || $this->getIdentity()->getRole() == 'admin') :
 ?>

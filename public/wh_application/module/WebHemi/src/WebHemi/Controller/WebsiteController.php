@@ -36,10 +36,10 @@ use Zend\Mvc\Controller\AbstractActionController;
 class WebsiteController extends AbstractActionController
 {
 	/**
-     * Main page
-     *
-     * @return array
-     */
+	 * Main page
+	 *
+	 * @return array
+	 */
 	public function indexAction()
 	{
 		$this->userAuth()->hasIdentity();
@@ -47,10 +47,10 @@ class WebsiteController extends AbstractActionController
 	}
 
 	/**
-     * View content
-     *
-     * @return array
-     */
+	 * View content
+	 *
+	 * @return array
+	 */
 	public function viewAction()
 	{
 		$matches  = $this->getEvent()->getRouteMatch();

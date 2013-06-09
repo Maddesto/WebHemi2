@@ -42,45 +42,29 @@ class AclEvent
 	 * @param MvcEvent $e
 	 * @return void
 	 */
-    public static function onRoute(MvcEvent $e)
-    {
-        $serviceManager = $e->getTarget()->getServiceManager();
-        $eventManager   = $e->getTarget()->getEventManager();
+	public static function onRoute(MvcEvent $e)
+	{
+		$serviceManager = $e->getTarget()->getServiceManager();
+		$eventManager   = $e->getTarget()->getEventManager();
+		/* @var $acl \WebHemi\Acl\Acl */
 		$acl            = $serviceManager->get('acl');
+		/* @var $auth \WebHemi\Auth\Auth */
 		$auth           = $serviceManager->get('auth');
 		$routeMatch     = $e->getTarget()->getMvcEvent()->getRouteMatch();
 		$controllerName = $routeMatch->getParam('controller');
 		$actionName     = $routeMatch->getParam('action');
 
-		// define the possible resources
-		$controller     = array_pop(explode('\\', $controllerName));
-		$action         = preg_replace_callback(
-				'/-([a-z])/',
-				function($args)
-				{
-					return strtoupper($args[1]);
-				},
-				$actionName
-		);
-
-		// allow access to a full conntroller (be careful with it, wildcard for guests on your own risk)
-		$wildCardControllerResource = 'Controller-' . $controller . '/*';
-		// allow access to an action override the wildcard
-		$controllerActionForcedResource   = '!Controller-' . $controller . '/' . $action;
-		// allow access to an action
-		$controllerActionResource   = 'Controller-' . $controller . '/' . $action;
-		// allow access to an URL (be sure that the URL cannot be changed)
-		$routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
-
-		// isAllowed will return true for non-exist resources to not fail the expression for the valid parts
-        $allowed = ($acl->isAllowed($wildCardControllerResource) || $acl->isAllowed($controllerActionForcedResource))
-			&& $acl->isAllowed($controllerActionResource)
-			&& $acl->isAllowed($routeResource);
+		// define the the resource
+		$controller = array_pop(explode('\\', $controllerName));
+		$resource   = strtolower($controller . '/' . $actionName);
+		// @TODO: get default_role option somehow insetad of 'guest'
+		$role       = ($auth->hasIdentity()) ? $auth->getIdentity()->getRole() : 'guest';
+		$allowed    = $acl->isAllowed($resource, $role);
 
 		if (!$allowed) {
 			// in admin module if there's no authenticated user, the user should be redirected to the login page
 			if (APPLICATION_MODULE == Application::ADMIN_MODULE
-					&& 'login' != $action
+					&& 'login' != $actionName
 					&& !$auth->hasIdentity()
 			) {
 				$response = $e->getTarget()->getMvcEvent()->getResponse();
@@ -97,6 +81,6 @@ class AclEvent
 
 				$eventManager->trigger('dispatch.error', $e);
 			}
-        }
-    }
+		}
+	}
 }

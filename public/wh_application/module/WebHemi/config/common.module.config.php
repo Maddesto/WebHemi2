@@ -62,9 +62,9 @@ return array(
 		),
 	),
 	'access_control' => array(
-        'default_role' => 'guest',
+		'default_role' => 'guest',
 		'template'     => 'error/403',
-        'roles'        => array(
+		'roles'        => array(
 			'guest'     => array(
 				'parent'   => null,
 			),
@@ -84,7 +84,7 @@ return array(
 				'parent'   => 'publisher',
 			),
 		),
-        'resources' => array(
+		'resources' => array(
 			'view',
 			'comment',
 			'moderate',
@@ -95,7 +95,7 @@ return array(
 			'manage',
 		),
 		// only handles 'ALLOWED' rules
-        'rules' => array(
+		'rules' => array(
 			'view'              => 'guest',
 			'comment'           => 'member',
 			'moderate'          => 'moderator',
@@ -105,7 +105,7 @@ return array(
 			'delete'            => 'publisher',
 			'manage'            => 'admin',
 		),
-    ),
+	),
 	'translator' => array(
 		'locale'               => 'en_US',
 		'translation_patterns' => array(
@@ -117,8 +117,8 @@ return array(
 		),
 	),
 	'router' => array(
-        'routes' => array(
+		'routes' => array(
 
-        ),
-    ),
+		),
+	),
 );

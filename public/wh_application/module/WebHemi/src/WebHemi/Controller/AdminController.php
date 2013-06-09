@@ -39,12 +39,12 @@ use WebHemi\Controller\UserController,
 class AdminController extends UserController
 {
 	/**
-     * Execute the request
-     *
-     * @param  MvcEvent $e
-     * @return mixed
-     */
-    public function onDispatch(MvcEvent $e)
+	 * Execute the request
+	 *
+	 * @param  MvcEvent $e
+	 * @return mixed
+	 */
+	public function onDispatch(MvcEvent $e)
 	{
 		parent::onDispatch($e);
 
@@ -66,13 +66,13 @@ class AdminController extends UserController
 	}
 
 	/**
-     * Default action
-     *
-     * @return array
-     */
+	 * Default action
+	 *
+	 * @return array
+	 */
 	public function indexAction()
 	{
-        return array();
+	    return array();
 	}
 
 	/**

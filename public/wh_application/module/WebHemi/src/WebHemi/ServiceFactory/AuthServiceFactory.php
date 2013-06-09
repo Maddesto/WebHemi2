@@ -37,17 +37,17 @@ use Zend\ServiceManager\FactoryInterface,
  */
 class AuthServiceFactory implements FactoryInterface
 {
-    /**
+	/**
 	 * Factory method for WebHemi authentication service
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
 	 * @return Auth
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $storage = $serviceLocator->get('authStorageDb');
-        $adapter = $serviceLocator->get('authAdapter');
+	{
+		$storage = $serviceLocator->get('authStorageDb');
+		$adapter = $serviceLocator->get('authAdapter');
 
 		return new Auth($storage, $adapter);
-    }
+	}
 }

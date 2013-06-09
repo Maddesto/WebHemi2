@@ -60,40 +60,40 @@ return array(
 				'may_terminate' => true,
 			),
 			'user' => array(
-                'type'     => 'Literal',
-                'priority' => 1000,
-                'options'  => array(
-                    'route' => '/user',
-                    'defaults' => array(
+				'type'     => 'Literal',
+				'priority' => 1000,
+				'options'  => array(
+					'route' => '/user',
+					'defaults' => array(
 						'__NAMESPACE__' => 'WebHemi\Controller',
-                        'controller' => 'User',
-                        'action'     => 'index',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes'  => array(
-                    'login' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/login',
-                            'defaults' => array(
-                                'controller' => 'User',
-                                'action'     => 'login',
-                            ),
-                        ),
-                    ),
-                    'logout' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/logout',
-                            'defaults' => array(
-                                'controller' => 'User',
-                                'action'     => 'logout',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+						'controller' => 'User',
+						'action'     => 'index',
+					),
+				),
+				'may_terminate' => true,
+				'child_routes'  => array(
+					'login' => array(
+						'type'    => 'Literal',
+						'options' => array(
+							'route'    => '/login',
+							'defaults' => array(
+								'controller' => 'User',
+								'action'     => 'login',
+							),
+						),
+					),
+					'logout' => array(
+						'type'    => 'Literal',
+						'options' => array(
+							'route'    => '/logout',
+							'defaults' => array(
+								'controller' => 'User',
+								'action'     => 'logout',
+							),
+						),
+					),
+				),
+			),
 		),
 	),
 	'service_manager' => array(

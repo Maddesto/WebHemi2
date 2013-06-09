@@ -148,8 +148,8 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 	public function getAuthService()
 	{
 		if (!isset($this->authService)) {
-            $this->authService = $this->getServiceLocator()->get('auth');
-        }
+			$this->authService = $this->getServiceLocator()->get('auth');
+		}
 		return $this->authService;
 	}
 
@@ -166,22 +166,22 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 	}
 
 	/**
-     * Retrieve ServiceLocator
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
+	 * Retrieve ServiceLocator
+	 *
+	 * @return ServiceLocatorInterface
+	 */
+	public function getServiceLocator()
 	{
 		return $this->serviceLocator->getController()->getServiceLocator();
 	}
 
 	/**
-     * Set ServiceLocator
-     *
-     * @param ServiceLocatorInterface $serviceLocator
+	 * Set ServiceLocator
+	 *
+	 * @param ServiceLocatorInterface $serviceLocator
 	 * @return UserAuth
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+	 */
+	public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
 	{
 		$this->serviceLocator = $serviceLocator;
 		return $this;

@@ -35,151 +35,151 @@ return array(
 				),
 				'may_terminate' => true,
 				 'child_routes'  => array(
-                    'about' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => 'about',
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'about',
-                            ),
-                        ),
-                    ),
+					'about' => array(
+						'type'    => 'Literal',
+						'options' => array(
+							'route'    => 'about',
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'about',
+							),
+						),
+					),
 				),
 			),
 			'user' => array(
-                'type'     => 'Literal',
-                'priority' => 1000,
-                'options'  => array(
-                    'route' => '/user',
-                    'defaults' => array(
+				'type'     => 'Literal',
+				'priority' => 1000,
+				'options'  => array(
+					'route' => '/user',
+					'defaults' => array(
 						'__NAMESPACE__' => 'WebHemi\Controller',
-                        'controller' => 'Admin',
-                        'action'     => 'user',
-                    ),
-                ),
-                'may_terminate' => true,
-                'child_routes'  => array(
+						'controller' => 'Admin',
+						'action'     => 'user',
+					),
+				),
+				'may_terminate' => true,
+				'child_routes'  => array(
 					'login' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/login',
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'login',
-                            ),
-                        ),
-                    ),
-                    'logout' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/logout',
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'logout',
-                            ),
-                        ),
-                    ),
+						'type'    => 'Literal',
+						'options' => array(
+							'route'    => '/login',
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'login',
+							),
+						),
+					),
+					'logout' => array(
+						'type'    => 'Literal',
+						'options' => array(
+							'route'    => '/logout',
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'logout',
+							),
+						),
+					),
 					'profile' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/profile',
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'profile',
-                            ),
-                        ),
-                    ),
+						'type'    => 'Literal',
+						'options' => array(
+							'route'    => '/profile',
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'profile',
+							),
+						),
+					),
 					'new' => array(
-                        'type'    => 'Literal',
-                        'options' => array(
-                            'route'    => '/new',
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'adduser',
-                            ),
-                        ),
-                    ),
+						'type'    => 'Literal',
+						'options' => array(
+							'route'    => '/new',
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'adduser',
+							),
+						),
+					),
 					'edit' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/edit/[:userName]',
+						'type'    => 'Segment',
+						'options' => array(
+							'route'    => '/edit/[:userName]',
 							'constraints' => array(
-                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'edituser',
-                            ),
-                        ),
-                    ),
+								'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							),
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'edituser',
+							),
+						),
+					),
 					'view' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/view/[:userName]',
+						'type'    => 'Segment',
+						'options' => array(
+							'route'    => '/view/[:userName]',
 							'constraints' => array(
-                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'viewuser',
-                            ),
-                        ),
-                    ),
+								'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							),
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'viewuser',
+							),
+						),
+					),
 					'disable' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/disable/[:userName]',
+						'type'    => 'Segment',
+						'options' => array(
+							'route'    => '/disable/[:userName]',
 							'constraints' => array(
-                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'disableuser',
-                            ),
-                        ),
-                    ),
+								'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							),
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'disableuser',
+							),
+						),
+					),
 					'enable' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/enable/[:userName]',
+						'type'    => 'Segment',
+						'options' => array(
+							'route'    => '/enable/[:userName]',
 							'constraints' => array(
-                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'enableUser',
-                            ),
-                        ),
-                    ),
+								'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							),
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'enableUser',
+							),
+						),
+					),
 					'activate' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/activate/[:userName]',
+						'type'    => 'Segment',
+						'options' => array(
+							'route'    => '/activate/[:userName]',
 							'constraints' => array(
-                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'activateuser',
-                            ),
-                        ),
-                    ),
+								'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							),
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'activateuser',
+							),
+						),
+					),
 					'delete' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '/delete/[:userName]',
+						'type'    => 'Segment',
+						'options' => array(
+							'route'    => '/delete/[:userName]',
 							'constraints' => array(
-                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                                'controller' => 'Admin',
-                                'action'     => 'deleteuser',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
+								'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+							),
+							'defaults' => array(
+								'controller' => 'Admin',
+								'action'     => 'deleteuser',
+							),
+						),
+					),
+				),
+			),
 			'application' => array(
 				'type'    => 'Literal',
 				'options' => array(
@@ -215,8 +215,8 @@ return array(
 		),
 	),
 	'module_layouts' => array(
-        'WebHemi' => 'layout/admin',
-    ),
+		'WebHemi' => 'layout/admin',
+	),
 	'view_manager' => array(
 		'template_path_stack'      => array(
 			'admin' => __DIR__ . '/../view',

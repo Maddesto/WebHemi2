@@ -24,6 +24,7 @@ namespace WebHemi\Model;
 
 use WebHemi\Model\UserMeta as UserMetaModel;
 
+
 /**
  * WebHemi User Model
  *
@@ -59,8 +60,11 @@ class User
 	protected $timeLogin;
 	/** @var DateTime $timeRegister */
 	protected $timeRegister;
-	/** @var array $userMeta */
+	/** @var array    $userMeta */
 	protected $userMeta;
+
+	/** @var InputFilterInterface $inputFilter */
+	protected $inputFilter;
 
 	/**
 	 * Set or Retrieve a user meta data
@@ -471,5 +475,27 @@ class User
 			'time_login'    => $this->timeLogin->format('Y-m-d H:i:s'),
 			'time_register' => $this->timeRegister->format('Y-m-d H:i:s')
 		);
+	}
+
+	/**
+	 * Exchange object properties into array for the ArraySerializable Hydrator
+	 *
+	 * @return array
+	 */
+	public function getArrayCopy()
+	{
+		$formArray = array(
+			'accountInfo' => array(
+				'user_id'       => $this->userId,
+				'username'      => $this->username,
+				'email'         => $this->email,
+				'role'          => $this->role,
+			),
+			'personalInfo' => array(
+				'displayname'   => $this->getDisplayName(),
+				'displayemail'  => $this->getDisplayEmail(),
+			)
+		);
+		return $formArray;
 	}
 }

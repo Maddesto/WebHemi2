@@ -1,4 +1,11 @@
-<h1>Editke</h1>
 <?php
 
-dump($userModel);
+/* @var $form \WebHemi\Form\UserForm */
+$form = $this->editForm;
+/* @var $userModel \WebHemi\Model\User */
+$userModel = $this->userModel;
+
+?>
+
+<h1><?php echo $userModel->getDisplayName() ?></h1>
+<?php echo $form; ?>

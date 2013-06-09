@@ -37,16 +37,16 @@ use Zend\ServiceManager\FactoryInterface,
  */
 class AclServiceFactory implements FactoryInterface
 {
-    /**
+	/**
 	 * Factory method for WebHemi acl manager service
 	 *
 	 * @param  ServiceLocatorInterface $serviceLocator
 	 * @return Acl
 	 */
 	public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $config = $serviceLocator->get('Configuration');
-        $service = Acl::factory($config['access_control'], $serviceLocator);
-        return $service;
-    }
+	{
+		$config = $serviceLocator->get('Configuration');
+		$service = Acl::factory($config['access_control'], $serviceLocator);
+		return $service;
+	}
 }

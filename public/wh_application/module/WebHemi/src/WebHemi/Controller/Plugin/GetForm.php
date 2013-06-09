@@ -38,7 +38,7 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  */
 class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
-    /** @var ServiceLocatorInterface $serviceLocator */
+	/** @var ServiceLocatorInterface $serviceLocator */
 	protected $serviceLocator;
 
 	/**
@@ -47,30 +47,30 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
 	 * @param string $resource
 	 * @return AbstractForm
 	 */
-    public function __invoke($formName)
-    {
-        return $this->getServiceLocator()->get('formService')->$formName();
-    }
+	public function __invoke($formName)
+	{
+		return $this->getServiceLocator()->get('formService')->$formName();
+	}
 
 	/**
-     * Retrieve ServiceLocatorInterface instance
-     *
-     * @return ServiceLocatorInterface
-     */
-    public function getServiceLocator()
-    {
-        return $this->serviceLocator->getController()->getServiceLocator();
-    }
+	 * Retrieve ServiceLocatorInterface instance
+	 *
+	 * @return ServiceLocatorInterface
+	 */
+	public function getServiceLocator()
+	{
+		return $this->serviceLocator->getController()->getServiceLocator();
+	}
 
 	/**
-     * Set ServiceLocatorInterface instance
-     *
-     * @param  ServiceLocatorInterface $serviceLocator
-     * @return GetForm
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
+	 * Set ServiceLocatorInterface instance
+	 *
+	 * @param  ServiceLocatorInterface $serviceLocator
+	 * @return GetForm
+	 */
+	public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
+	{
+		$this->serviceLocator = $serviceLocator;
 		return $this;
-    }
+	}
 }

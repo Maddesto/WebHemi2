@@ -101,5 +101,4 @@ class Role implements RoleInterface
 		$this->parentRole = $parentRole;
 		return $this;
 	}
-
 }

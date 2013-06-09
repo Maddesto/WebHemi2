@@ -191,12 +191,12 @@ class User extends AbstractTableGateway
 
 	/**
 	 * Insert new user record
-     *
-     * @param  UserModel $userModel
+	 *
+	 * @param  UserModel $userModel
 	 * @return int
 	 * @throws Exception\InvalidArgumentException
-     */
-    public function insert($userModel)
+	 */
+	public function insert($userModel)
 	{
 		if (!$userModel instanceof UserModel) {
 			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');

@@ -38,13 +38,13 @@ use Zend\Mvc\Controller\AbstractActionController,
 class ComponentController extends AbstractActionController
 {
 	/**
-     * Execute the request
-     *
-     * @param  MvcEvent $e
-     * @return mixed
-     * @throws Exception\DomainException
-     */
-    public function onDispatch(MvcEvent $e)
+	 * Execute the request
+	 *
+	 * @param  MvcEvent $e
+	 * @return mixed
+	 * @throws Exception\DomainException
+	 */
+	public function onDispatch(MvcEvent $e)
 	{
 		parent::onDispatch($e);
 
@@ -66,12 +66,12 @@ class ComponentController extends AbstractActionController
 	}
 
 	/**
-     * Default action
-     *
-     * @return array
-     */
+	 * Default action
+	 *
+	 * @return array
+	 */
 	public function indexAction()
 	{
-        return array();
+	    return array();
 	}
 }

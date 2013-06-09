@@ -228,14 +228,53 @@ class Acl
 						: $this->options['default_role'];
 			}
 
-			// allow access for invalid role or non-forced resource
+			if (strpos($resource, '/') !== false) {
+				list($controller, $action) = explode('/', $resource);
+			}
+			else {
+				$controller = $resource;
+				$action     = '*';
+			}
+			$controller = ucfirst(strtolower($controller));
+
+			// allow access to a full conntroller (be careful with it, wildcard for guests on your own risk)
+			$wildCardControllerResource = 'Controller-' . $controller . '/*';
+			// allow access to an action
+			$controllerActionResource   = 'Controller-' . $controller . '/' . $action;
+			// allow access to an action override the wildcard
+			$controllerActionForcedResource   = $action == '*' ? false : '!Controller-' . $controller . '/' . $action;
+			// allow access to an URL (be sure that the URL cannot be changed)
+			$routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
+
+			// allow access for login page, invalid role or non-forced resources
 			if (
-				!$this->acl->hasRole($role)
-				|| (!$this->acl->hasResource($resource) && strpos($resource, '!') === false)
+				'logout' == $action
+				|| 'login' == $action
+				|| !$this->acl->hasRole($role)
 			) {
 				return true;
 			}
-			return (bool)$this->acl->isAllowed($role, $resource);
+
+			$allowed = (
+					(
+						!$this->acl->hasResource($wildCardControllerResource)
+						|| $this->acl->isAllowed($role, $wildCardControllerResource)
+					)
+					|| (
+						$this->acl->hasResource($controllerActionForcedResource)
+						|| $this->acl->isAllowed($role, $controllerActionForcedResource)
+					)
+				)
+				&& (
+					!$this->acl->hasResource($controllerActionResource)
+					|| $this->acl->isAllowed($role, $controllerActionResource)
+				)
+				&& (
+					!$this->acl->hasResource($routeResource)
+					|| $this->acl->isAllowed($role, $routeResource)
+				);
+
+			return $allowed;
 		}
 		// It is not necessary to terminate the script. Fair enough to return with a FALSE
 		catch (Exception\InvalidArgumentException $e) {

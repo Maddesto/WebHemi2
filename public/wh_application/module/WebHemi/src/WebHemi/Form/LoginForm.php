@@ -55,55 +55,65 @@ class LoginForm extends AbstractForm
 
 		// the identification input
 		$identification = new Element\Text('identification');
-		$identification->setOptions(array(
-					'required'   => true,
-					'filters'    => array(
+		$identification->setOptions(
+				array(
+					'required' => true,
+					'filters' => array(
 						new Filter\StringTrim(),
 					),
 					'validators' => array(
-						new Validator\StringLength(array(
-							'min'      => 8,
-							'max'      => 255,
-							'encoding' => 'UTF-8'
-						)),
+						new Validator\StringLength(
+							array(
+								'min' => 8,
+								'max' => 255,
+								'encoding' => 'UTF-8'
+							)
+						),
 						new Validator\Regex('/^[a-z]{1}\w+$/i')
 					),
-				))
-				->setLabel('Identification')
-				->setAttributes(array(
-					'id'        => 'identification',
+				)
+			)
+			->setLabel('Identification')
+			->setAttributes(
+				array(
+					'id' => 'identification',
 					'accesskey' => 'u',
 					'maxlength' => 255,
-					'tabindex'  => self::$tabindex++,
-					//'required'  => 'required',
-					'pattern'   => '^[a-z]{1}\w+$',
-					'validity' => 'Hejjj'
-				));
+					'tabindex' => self::$tabindex++,
+					'pattern' => '^[a-z]{1}\w+$',
+					//'validity' => 'Some alert'
+				)
+			);
 
 		// password input
 		$password = new Element\Password('password');
-		$password->setOptions(array(
-					'required'   => true,
-					'filters'    => array(
+		$password->setOptions(
+				array(
+					'required' => true,
+					'filters' => array(
 						new Filter\StringTrim(),
 					),
 					'validators' => array(
-						new Validator\StringLength(array(
-							'min'      => 8,
-							'max'      => 255,
-							'encoding' => 'UTF-8'
-						)),
+						new Validator\StringLength(
+							array(
+								'min' => 4,
+								'max' => 255,
+								'encoding' => 'UTF-8'
+							)
+						),
 					),
-				))
-				->setLabel('Password')
-				->setAttributes(array(
-					'id'        => 'password',
+				)
+			)
+			->setLabel('Password')
+			->setAttributes(
+				array(
+					'id' => 'password',
 					'accesskey' => 'p',
 					'maxlength' => 255,
-					'tabindex'  => self::$tabindex++,
-					//'required'  => 'required',
-					'pattern'   => '^\w+$'
-				));
+					'tabindex' => self::$tabindex++,
+					'pattern' => '^\w+$'
+				)
+			);
 
 
 		// in ADMIN module there's no way to remember the password or autocomplete the input fields
@@ -120,31 +130,36 @@ class LoginForm extends AbstractForm
 		if (!APPLICATION_MODULE == Application::ADMIN_MODULE) {
 			$remember = new Element\Checkbox('remember');
 			$remember->setLabel('Remember me')
-					->setOptions(array(
+				->setOptions(
+					array(
 						'use_hidden_element' => true,
-						'checked_value'      => '1',
-						'unchecked_value'    => '0'
-
-					))
-					->setAttributes(array(
+						'checked_value' => '1',
+						'unchecked_value' => '0'
+					)
+				)
+				->setAttributes(
+					array(
 						'accesskey' => 'r',
 						'id' => 'remember',
 						'tabindex' => self::$tabindex++
-					));
+					)
+				);
 
 			$fieldset->add($remember);
 		}
 
 		$submit = new Element\Button('submit');
 		$submit->setLabel('Login')
-				->setAttributes(array(
-						'accesskey' => 's',
-						'type' => 'submit',
-						'tabindex' => self::$tabindex++
-					));
+			->setAttributes(
+				array(
+					'accesskey' => 's',
+					'type' => 'submit',
+					'tabindex' => self::$tabindex++
+				)
+			);
 
 		$this->setAttribute('action', '/user/login')
-				->add($fieldset)
-				->add($submit);
+			->add($fieldset)
+			->add($submit);
 	}
 }

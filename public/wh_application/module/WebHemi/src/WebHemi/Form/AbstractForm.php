@@ -25,9 +25,11 @@ namespace WebHemi\Form;
 use Zend\Form\Form,
 	Zend\Form\Element,
 	Zend\Form\Fieldset,
+	Zend\Form\Exception,
 	Zend\View\Renderer\PhpRenderer,
 	Zend\ServiceManager\ServiceManagerAwareInterface,
-	Zend\ServiceManager\ServiceManager;
+	Zend\ServiceManager\ServiceManager,
+	WebHemi\Acl\Acl;
 
 /**
  * WebHemi Form Abstraction
@@ -43,7 +45,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	/** @var array $options */
 	protected $options;
 	/** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+	protected $serviceManager;
 
 	/** @staticvar int $tabindex */
 	protected static $tabindex = 1;
@@ -55,34 +57,114 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	 */
 	public function __construct($name = null)
 	{
-        parent::__construct($name);
+		parent::__construct($name);
 
 		$token = new Element\Csrf('token');
 		$this->add($token);
-    }
+	}
 
 	/**
-     * Retrieve a named element or fieldset
-     *
-     * @param  string $elementOrFieldset
-     * @return ElementInterface
-     */
-    public function get($elementOrFieldset)
-    {
-        if (!$this->has($elementOrFieldset)) {
+	 * Retrieve a named element or fieldset
+	 *
+	 * @param  string $elementOrFieldset
+	 * @return ElementInterface
+	 */
+	public function get($elementOrFieldset)
+	{
+		if (!$this->has($elementOrFieldset)) {
 			foreach ($this->fieldsets as $fieldset) {
 				$element = $fieldset->get($elementOrFieldset);
 				if (!is_null($element)) {
 					break;
 				}
 			}
-        }
-        else {
+		}
+		else {
 			$element = $this->byName[$elementOrFieldset];
 		}
 
 		return $element;
-    }
+	}
+
+	 /**
+	 * Validate the form
+	 *
+	 * Typically, will proxy to the composed input filter.
+	 *
+	 * @return bool
+	 * @throws Exception\DomainException
+	 */
+	public function isValid()
+	{
+		$result = parent::isValid();
+
+		// because ZF2 doesn't check everything
+		if ($result) {
+			$result = $this->validateFieldsets($this->fieldsets)
+				&& $this->validateElements($this->elements);
+		}
+		return $result;
+	}
+
+	/**
+	 * Validate form fieldsets
+	 *
+	 * @param array $fieldsets
+	 * @return boolean
+	 */
+	protected function validateFieldsets(array $fieldsets)
+	{
+		$result = true;
+
+		/* @var $fieldset Fieldset */
+		foreach ($fieldsets as $fieldset) {
+			$subFieldsets = $fieldset->getFieldsets();
+
+			// if there are sub fieldsets, we also validate them
+			if (!empty($subFieldsets)) {
+				$result = $this->validateFieldsets($subFieldsets) && $result;
+			}
+			// otherwise we validate the elements
+			else {
+				$result = $this->validateElements($fieldset->getElements()) && $result;
+			}
+		}
+
+		return $result;
+	}
+	/**
+	 * Validate form elements
+	 *
+	 * @param array $elements
+	 * @return boolean
+	 */
+	protected function validateElements(array $elements)
+	{
+		$result = true;
+
+		/* @var $element Element */
+		foreach ($elements as $element) {
+			$validators = $element->getOption('validators');
+			$value    = $element->getValue();
+			$messages = array();
+
+			if (!empty($validators)) {
+
+				/* @var $validator Validator */
+				foreach ($validators as $validator) {
+					if (!$validator->isValid($value)) {
+						$messages = array_merge($messages, $validator->getMessages());
+					}
+				}
+			}
+
+			if (!empty($messages)) {
+				$element->setMessages($messages);
+				$result = false;
+			}
+		}
+		return $result;
+	}
 
 	/**
 	 * Prints out form
@@ -140,7 +222,13 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			$type = 'button';
 		}
 
-		$openTag    = sprintf('<div class="element %s %s">', $type, $id);
+		if ($type == $id) {
+			$id = '';
+		}
+
+		$class = trim("element {$type} {$id}");
+
+		$openTag    = sprintf('<div class="%s">', $class);
 		$closeTag   = '</div>' . PHP_EOL;
 		$labelTag   =
 		$errorTag   =
@@ -242,23 +330,33 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	}
 
 	/**
-     * Retrieve service manager instance
-     *
-     * @return ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
-    }
+	 * Retrieve the ACL service instance
+	 *
+	 * @return Acl
+	 */
+	public function getAclService()
+	{
+		return $this->getServiceManager()->get('acl');
+	}
 
-    /**
-     * Set service manager instance
-     *
-     * @param ServiceManager $locator
-     * @return void
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-    }
+	/**
+	 * Retrieve service manager instance
+	 *
+	 * @return ServiceManager
+	 */
+	public function getServiceManager()
+	{
+		return $this->serviceManager;
+	}
+
+	/**
+	 * Set service manager instance
+	 *
+	 * @param ServiceManager $locator
+	 * @return void
+	 */
+	public function setServiceManager(ServiceManager $serviceManager)
+	{
+		$this->serviceManager = $serviceManager;
+	}
 }

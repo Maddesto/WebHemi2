@@ -20,6 +20,7 @@
 </a>
 <?php endif; ?>
 <?php
+/* @var $userModel \WebHemi\Model\User */
 foreach($userList as $id => $userModel):
 	if (
 		$userModel->getEnabled()
@@ -33,7 +34,6 @@ foreach($userList as $id => $userModel):
 		if (!$userModel->getEnabled()) {
 			$class[] = 'disabled';
 		}
-
 
 		if ($userModel->getUserId() == $this->getIdentity()->getuserId()) {
 			$class[] = 'self';

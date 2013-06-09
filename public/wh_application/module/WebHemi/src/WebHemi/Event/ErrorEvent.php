@@ -37,8 +37,8 @@ use WebHemi\Application,
 */
 class ErrorEvent
 {
-    /** @staticvar string $template */
-    static $template = array(
+	/** @staticvar string $template */
+	static $template = array(
 		403 => 'error/403',
 		404 => 'error/404'
 	);
@@ -49,33 +49,34 @@ class ErrorEvent
 	 * @param MvcEvent $e
 	 * @return void
 	 */
-    public function preDispatch(MvcEvent $e)
-    {
-        // Do nothing if the result is a response object
-        $result = $e->getResult();
-        if ($result instanceof Response) {
-            return;
-        }
+	public function preDispatch(MvcEvent $e)
+	{
+		// Do nothing if the result is a response object
+		$result = $e->getResult();
+		if ($result instanceof Response) {
+			return;
+		}
 
-        // Common view variables
-        $viewVariables = array(
-           'error'      => $e->getParam('error'),
-           'identity'   => $e->getParam('identity'),
-        );
+		// Common view variables
+		$viewVariables = array(
+			'error'      => $e->getParam('error'),
+			'identity'   => $e->getParam('identity'),
+		);
 
-        $error = $e->getError();
-        switch($error)
-        {
-            case 'error-unauthorized-controller':
-            case 'error-unauthorized-route':
+		$error = $e->getError();
+		switch($error)
+		{
+			case 'error-unauthorized-controller':
+			case 'error-unauthorized-route':
 				self::get403($e);
-                break;
-            default:
+				break;
+
+			default:
 				self::get404($e);
-        }
+		}
 
 
-    }
+	}
 
 	/**
 	 * Prepares the 403 error page
@@ -86,16 +87,16 @@ class ErrorEvent
 	protected static function get403(MvcEvent $e)
 	{
 		$error = $e->getError();
-        switch($error)
-        {
-            case 'error-unauthorized-controller':
-                $viewVariables['controller'] = $e->getParam('controller');
-                $viewVariables['action']     = $e->getParam('action');
-                break;
-            case 'error-unauthorized-route':
-                $viewVariables['route'] = $e->getParam('route');
-                break;
-        }
+		switch($error)
+		{
+			case 'error-unauthorized-controller':
+				$viewVariables['controller'] = $e->getParam('controller');
+				$viewVariables['action']     = $e->getParam('action');
+				break;
+			case 'error-unauthorized-route':
+				$viewVariables['route'] = $e->getParam('route');
+				break;
+		}
 
 		// add our error page to the view model
 		$layout = $e->getViewModel();
@@ -118,19 +119,19 @@ class ErrorEvent
 				->addChild($footerBlock, 'FooterBlock');
 		}
 
-        $model = new ViewModel($viewVariables);
-        $model->setTemplate(self::$template[403]);
+		$model = new ViewModel($viewVariables);
+		$model->setTemplate(self::$template[403]);
 		$model->error = $error;
-        $layout->addChild($model);
+		$layout->addChild($model);
 
-        $response = $e->getResponse();
+		$response = $e->getResponse();
 
 		// if no response object present, we create one
-        if (!$response) {
-            $response = new HttpResponse();
-            $e->setResponse($response);
-        }
-        $response->setStatusCode(403);
+		if (!$response) {
+			$response = new HttpResponse();
+			$e->setResponse($response);
+		}
+		$response->setStatusCode(403);
 	}
 
 	/**
@@ -162,18 +163,18 @@ class ErrorEvent
 				->addChild($footerBlock, 'FooterBlock');
 		}
 
-        $model = new ViewModel();
-        $model->setTemplate(self::$template[404]);
+		$model = new ViewModel();
+		$model->setTemplate(self::$template[404]);
 		$model->error = $e->getError();
-        $layout->addChild($model);
+		$layout->addChild($model);
 
-        $response = $e->getResponse();
+		$response = $e->getResponse();
 
 		// if no response object present, we create one
-        if (!$response) {
-            $response = new HttpResponse();
-            $e->setResponse($response);
-        }
-        $response->setStatusCode(404);
+		if (!$response) {
+			$response = new HttpResponse();
+			$e->setResponse($response);
+		}
+		$response->setStatusCode(404);
 	}
 }

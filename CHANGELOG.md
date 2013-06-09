@@ -2,6 +2,13 @@ Change log
 ==========
 
 ----------------
+Version 2.0.0.18
+----------------
+- Minimum required ZF version is 2.2.0+
+- Major improvements in ZF2's form validation
+- User settings module development
+- Fixed source code indentions to Tabs
+
 Version 2.0.0.17
 ----------------
 - Minimum required ZF version is 2.1.5+

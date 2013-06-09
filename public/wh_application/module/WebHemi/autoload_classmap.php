@@ -32,6 +32,7 @@ return array(
     'WebHemi\Theme\ThemeManager'                        => __DIR__ . '/src/WebHemi/Theme/ThemeManager.php',
     'WebHemi\Theme\Adapter\ConfigurationAdapter'        => __DIR__ . '/src/WebHemi/Theme/Adapter/ConfigurationAdapter.php',
     'WebHemi\Form\AbstractForm'                         => __DIR__ . '/src/WebHemi/Form/AbstractForm.php',
+    'WebHemi\Form\UserForm'                             => __DIR__ . '/src/WebHemi/Form/UserForm.php',
     'WebHemi\Form\FormService'                          => __DIR__ . '/src/WebHemi/Form/FormService.php',
     'WebHemi\Form\Filter\AbstractFilter'                => __DIR__ . '/src/WebHemi/Form/Filter/AbstractFilter.php',
     'WebHemi\Form\LoginForm'                            => __DIR__ . '/src/WebHemi/Form/LoginForm.php',

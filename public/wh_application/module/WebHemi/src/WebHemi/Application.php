@@ -34,9 +34,9 @@ namespace WebHemi;
 final class Application
 {
 	/** The WebHemi's version */
-	const WEBHEMI_VERSION        = '2.0.0.17';
+	const WEBHEMI_VERSION        = '2.0.0.18';
 	/** The required minimal version of the Zend Framework */
-	const MINIMUM_ZF_REQUIREMENT = '2.1.5';
+	const MINIMUM_ZF_REQUIREMENT = '2.2.0';
 	/** The name of the admin module */
 	const ADMIN_MODULE           = 'Admin';
 	/** The name of the default module */
@@ -292,8 +292,8 @@ final class Application
 		if (file_exists(ZF2_PATH . '/autoload_classmap.php')) {
 			require_once ZF2_PATH . '/Loader/ClassMapAutoloader.php';
 			$factoryConfig['Zend\Loader\ClassMapAutoloader'] = array(
-                ZF2_PATH . '/autoload_classmap.php',
-            );
+				ZF2_PATH . '/autoload_classmap.php',
+			);
 		}
 
 		$factoryConfig['Zend\Loader\StandardAutoloader'] = array(
@@ -344,9 +344,9 @@ final class Application
 	 * Dump data
 	 *
 	 * @param  mixed   $var   The variable to dump
-     * @param  string  $label OPTIONAL Label to prepend to output
-     * @param  bool    $echo  OPTIONAL Echo output if true
-     * @return string
+	 * @param  string  $label OPTIONAL Label to prepend to output
+	 * @param  bool    $echo  OPTIONAL Echo output if true
+	 * @return string
 	 */
 	function varDump($data, $label = null, $echo = true)
 	{

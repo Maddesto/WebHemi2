@@ -18,27 +18,27 @@ use Zend\View\Helper\Gravatar,
 class Avatar extends Gravatar
 {
 	 /**
-     * Image Source
-     *
-     * @var string
-     */
-    protected $src;
+	 * Image Source
+	 *
+	 * @var string
+	 */
+	protected $src;
 
 	/**
-     * Returns an avatar image.
+	 * Returns an avatar image.
 	 *
-     * @param  string|null $email Email address.
-     * @param  null|array $options Options
-     * @param  array $attribs Attributes for image tag (title, alt etc.)
-     * @return Gravatar
-     */
-    public function __invoke($data = "", $options = array(), $attribs = array())
-    {
+	 * @param  string|null $email Email address.
+	 * @param  null|array $options Options
+	 * @param  array $attribs Attributes for image tag (title, alt etc.)
+	 * @return Gravatar
+	 */
+	public function __invoke($data = "", $options = array(), $attribs = array())
+	{
 		$this->email   = null;
 		$this->attribs = array();
 		$this->src     = '';
 
-        if (!isset($attribs['alt'])) {
+		if (!isset($attribs['alt'])) {
 			$attribs['alt'] = '';
 		}
 
@@ -46,58 +46,58 @@ class Avatar extends Gravatar
 			$attribs['class'] = 'avatar';
 		}
 
-        if (!empty($data)) {
+		if (!empty($data)) {
 			$validator = new EmailValidator();
 			if ($validator->isValid($data)) {
-			    $this->setEmail($data);
+				$this->setEmail($data);
 			} else {
 				$this->setSrc($data);
 			}
-        }
+		}
 
-        if (!empty($options)) {
-            $this->setOptions($options);
-        }
+		if (!empty($options)) {
+		    $this->setOptions($options);
+		}
 
-        $this->setAttribs($attribs);
-        return $this;
-    }
-
-	/**
-     * Set image source.
-     *
-     * @param string $src
-     * @return Gravatar
-     */
-    public function setSrc($src)
-    {
-        $this->src = $src;
-        return $this;
-    }
-
-    /**
-     * Retrieve image source.
-     *
-     * @return string
-     */
-    public function getSrc()
-    {
-        return $this->src;
-    }
+		$this->setAttribs($attribs);
+		return $this;
+	}
 
 	/**
-     * Set src attrib for image.
-     *
-     * You shouldn't set a own url value!
-     * It sets value, uses protected method getAvatarUrl.
-     *
-     * If already exists, it will be overwritten.
-     *
-     * @return void
-     */
-    protected function setSrcAttribForImg()
-    {
-        $attribs = $this->getAttribs();
+	 * Set image source.
+	 *
+	 * @param string $src
+	 * @return Gravatar
+	 */
+	public function setSrc($src)
+	{
+		$this->src = $src;
+		return $this;
+	}
+
+	/**
+	 * Retrieve image source.
+	 *
+	 * @return string
+	 */
+	public function getSrc()
+	{
+		return $this->src;
+	}
+
+	/**
+	 * Set src attrib for image.
+	 *
+	 * You shouldn't set a own url value!
+	 * It sets value, uses protected method getAvatarUrl.
+	 *
+	 * If already exists, it will be overwritten.
+	 *
+	 * @return void
+	 */
+	protected function setSrcAttribForImg()
+	{
+		$attribs = $this->getAttribs();
 		$src     = $this->getSrc();
 
 		if (empty($src)) {
@@ -107,6 +107,6 @@ class Avatar extends Gravatar
 			$attribs['src'] = $src;
 		}
 
-        $this->setAttribs($attribs);
-    }
+		$this->setAttribs($attribs);
+	}
 }

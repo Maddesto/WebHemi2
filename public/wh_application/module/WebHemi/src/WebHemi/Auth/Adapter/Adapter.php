@@ -249,5 +249,4 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 		$this->serviceManager = $serviceManager;
 		return $this;
 	}
-
 }

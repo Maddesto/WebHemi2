@@ -70,5 +70,4 @@ class Resource implements ResourceInterface
 		$this->resourceId = $resourceId;
 		return $this;
 	}
-
 }

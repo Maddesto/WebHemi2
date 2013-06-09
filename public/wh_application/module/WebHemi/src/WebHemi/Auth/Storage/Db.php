@@ -39,142 +39,142 @@ use Zend\Authentication\Storage\Session,
  */
 class Db implements StorageInterface, ServiceManagerAwareInterface
 {
-    /** @var StorageInterface $storage */
-    protected $storage;
-    /** @var UserTable $userTable */
-    protected $userTable;
-    /** @var mixed $resolvedIdentity */
-    protected $resolvedIdentity;
-    /** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+	/** @var StorageInterface $storage */
+	protected $storage;
+	/** @var UserTable $userTable */
+	protected $userTable;
+	/** @var mixed $resolvedIdentity */
+	protected $resolvedIdentity;
+	/** @var ServiceManager $serviceManager */
+	protected $serviceManager;
 
-    /**
-     * Check whether the storage is empty
-     *
-     * @return boolean
-     */
-    public function isEmpty()
-    {
-        return $this->getStorage()->isEmpty();
-    }
+	/**
+	 * Check whether the storage is empty
+	 *
+	 * @return boolean
+	 */
+	public function isEmpty()
+	{
+		return $this->getStorage()->isEmpty();
+	}
 
-    /**
-     * Retrieve the contents of storage
-     *
-     * @return mixed
-     */
-    public function read()
-    {
-        if (null !== $this->resolvedIdentity) {
-            return $this->resolvedIdentity;
-        }
+	/**
+	 * Retrieve the contents of storage
+	 *
+	 * @return mixed
+	 */
+	public function read()
+	{
+		if (null !== $this->resolvedIdentity) {
+			return $this->resolvedIdentity;
+		}
 
-        $identity = $this->getStorage()->read();
+		$identity = $this->getStorage()->read();
 
-        if (is_int($identity) || is_scalar($identity)) {
-            $identity = $this->getTable()->getUserById($identity);
-        }
+		if (is_int($identity) || is_scalar($identity)) {
+			$identity = $this->getTable()->getUserById($identity);
+		}
 
-        if ($identity) {
-            $this->resolvedIdentity = $identity;
-        } else {
-            $this->resolvedIdentity = null;
-        }
+		if ($identity) {
+			$this->resolvedIdentity = $identity;
+		} else {
+			$this->resolvedIdentity = null;
+		}
 
-        return $this->resolvedIdentity;
-    }
+		return $this->resolvedIdentity;
+	}
 
-    /**
-     * Write contents to storage
-     *
-     * @param  mixed $contents
-     * @return void
-     */
-    public function write($contents)
-    {
-        $this->resolvedIdentity = null;
-        $this->getStorage()->write($contents);
-    }
+	/**
+	 * Write contents to storage
+	 *
+	 * @param  mixed $contents
+	 * @return void
+	 */
+	public function write($contents)
+	{
+		$this->resolvedIdentity = null;
+		$this->getStorage()->write($contents);
+	}
 
-    /**
-     * Clear contents from storage
-     *
-     * @return void
-     */
-    public function clear()
-    {
-        $this->resolvedIdentity = null;
-        $this->getStorage()->clear();
-    }
+	/**
+	 * Clear contents from storage
+	 *
+	 * @return void
+	 */
+	public function clear()
+	{
+		$this->resolvedIdentity = null;
+		$this->getStorage()->clear();
+	}
 
-    /**
-     * Retrieve storage
-     *
-     * @return StorageInterface
-     */
-    public function getStorage()
-    {
-        if (null === $this->storage) {
-            $this->setStorage(new Session());
-        }
-        return $this->storage;
-    }
+	/**
+	 * Retrieve storage
+	 *
+	 * @return StorageInterface
+	 */
+	public function getStorage()
+	{
+		if (null === $this->storage) {
+			$this->setStorage(new Session());
+		}
+		return $this->storage;
+	}
 
-    /**
-     * Set storage
-     *
-     * @param StorageInterface $storage
-     * @return Db
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-        return $this;
-    }
+	/**
+	 * Set storage
+	 *
+	 * @param StorageInterface $storage
+	 * @return Db
+	 */
+	public function setStorage(StorageInterface $storage)
+	{
+		$this->storage = $storage;
+		return $this;
+	}
 
-    /**
-     * Retrieve User Table instance
-     *
-     * @return UserTable
-     */
-    public function getTable()
-    {
-        if (!isset($this->userTable)) {
-            $this->userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
-        }
-        return $this->userTable;
-    }
+	/**
+	 * Retrieve User Table instance
+	 *
+	 * @return UserTable
+	 */
+	public function getTable()
+	{
+		if (!isset($this->userTable)) {
+			$this->userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+		}
+		return $this->userTable;
+	}
 
-    /**
-     * Set User Table instance
-     *
-     * @param UserTable $userTable
-     * @return Db
-     */
-    public function setTable(UserTable $userTable)
-    {
-        $this->userTable = $userTable;
-        return $this;
-    }
+	/**
+	 * Set User Table instance
+	 *
+	 * @param UserTable $userTable
+	 * @return Db
+	 */
+	public function setTable(UserTable $userTable)
+	{
+		$this->userTable = $userTable;
+		return $this;
+	}
 
-    /**
-     * Retrieve service manager instance
-     *
-     * @return ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
-    }
+	/**
+	 * Retrieve service manager instance
+	 *
+	 * @return ServiceManager
+	 */
+	public function getServiceManager()
+	{
+		return $this->serviceManager;
+	}
 
-    /**
-     * Set service manager instance
-     *
-     * @param ServiceManager $locator
-     * @return void
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-    }
+	/**
+	 * Set service manager instance
+	 *
+	 * @param ServiceManager $locator
+	 * @return void
+	 */
+	public function setServiceManager(ServiceManager $serviceManager)
+	{
+		$this->serviceManager = $serviceManager;
+	}
 }
