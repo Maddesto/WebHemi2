@@ -127,7 +127,7 @@ class LoginForm extends AbstractForm
 				->add($password);
 
 		// if NOT in ADMIN module, then we supply "remember me" functionality
-		if (!APPLICATION_MODULE == Application::ADMIN_MODULE) {
+		if (APPLICATION_MODULE != Application::ADMIN_MODULE) {
 			$remember = new Element\Checkbox('remember');
 			$remember->setLabel('Remember me')
 				->setOptions(

@@ -125,6 +125,8 @@ class UserController extends AbstractActionController
 	 */
 	public function edituserAction()
 	{
+		/* @var $userAuth \WebHemi\Controller\Plugin\UserAuth */
+		$userAuth  = $this->userAuth();
 		$userName  = $this->params()->fromRoute('userName');
 		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
 		$userModel = $userTable->getUserByName($userName);
@@ -133,8 +135,8 @@ class UserController extends AbstractActionController
 		if (
 			!$userModel
 			|| !(
-				$this->userAuth()->getIdentity()->getUserId() == $userModel->getUserId()
-				|| $this->userAuth()->getIdentity()->getRole() == 'admin'
+				$userAuth->getIdentity()->getUserId() == $userModel->getUserId()
+				|| $userAuth->getIdentity()->getRole() == 'admin'
 			)
 		) {
 			return $this->redirect()->toRoute('user/view', array('userName' => $userName));
@@ -171,6 +173,9 @@ class UserController extends AbstractActionController
 	 */
 	public function loginAction()
 	{
+		/* @var $userAuth \WebHemi\Controller\Plugin\UserAuth */
+		$userAuth  = $this->userAuth();
+		/* @var $form \WebHemi\Form\UserForm */
 		$form = $this->getForm('LoginForm');
 		$request = $this->getRequest();
 
@@ -196,55 +201,58 @@ class UserController extends AbstractActionController
 
 			// it everything seems to be valid
 			if (!$error && $form->isValid($request)) {
-				$authAdapter = $this->userAuth()->getAuthAdapter();
+				$authAdapter = $userAuth->getAuthAdapter();
 				$authAdapter->setIdentity($identification);
 				$authAdapter->setCredential($password);
 
-				$authResult = $this->userAuth()->getAuthService()->authenticate($authAdapter);
+				$authResult = $userAuth->getAuthService()->authenticate($authAdapter);
 
 				switch($authResult->getCode()) {
 					// if user is authenticated
 					case Result::SUCCESS:
-						$rememberMe = $form->get('remember');
+						if ($form->has('remember', true)) {
+							$rememberMe = $form->get('remember');
+							if ($rememberMe) {
+								// if there's such element and checked we save the flag into cookie
+								if ($rememberMe->isChecked()) {
+									/* @var $userModel \WebHemi\Model\User */
+									$userModel = $authResult->getIdentity();
+									$hash = $userModel->getHash();
 
-						if ($rememberMe) {
-							// if there's such element and checked we save the flag into cookie
-							if ($rememberMe->isChecked()) {
-								$userModel = $authResult->getIdentity();
-								$hash = $userModel->getHash();
+									// if no hash has been set yet
+									if (empty($hash)) {
+										$userTable = $userAuth->getAuthAdapter()->getUserTable();
+										$hash      = md5($userModel->getUsername() . '-' . $userModel->getEmail());
 
-								// if no hash has been set yet
-								if (empty($hash)) {
-									$userTable = $this->userAuth()->getAuthAdapter()->getUserTable();
-									$hash      = md5($userModel->getUsername() . '-' . $userModel->getEmail());
+										$userModel->setHash($hash);
+										$userTable->update($userModel);
+									}
 
-									$userModel->setHash($hash);
-									$userTable->update($userModel);
+									// encrypting the hash for this module
+									$encryptedHash = base64_encode(mcrypt_encrypt(
+											MCRYPT_RIJNDAEL_256,
+											md5(APPLICATION_MODULE),
+											$hash,
+											MCRYPT_MODE_CBC,
+											md5(md5(APPLICATION_MODULE))
+									));
+
+									// set cookie for this module
+									setcookie('atln-' . bin2hex(APPLICATION_MODULE), $encryptedHash, time() + (60 * 60 * 24 * 14), '/', $_SERVER['SERVER_NAME'], false, true);
 								}
-
-								// encrypting the hash for this module
-								$encryptedHash = base64_encode(mcrypt_encrypt(
-										MCRYPT_RIJNDAEL_256,
-										md5(APPLICATION_MODULE),
-										$hash,
-										MCRYPT_MODE_CBC,
-										md5(md5(APPLICATION_MODULE))
-								));
-
-								// set cookie for this module
-								setcookie('atln-' . bin2hex(APPLICATION_MODULE), $encryptedHash, time() + (60 * 60 * 24 * 14), '/', $_SERVER['SERVER_NAME'], false, true);
 							}
 						}
 
 						// redirect to main page
 						// @TODO: implement redirect to referer if needed
 						return $this->redirect()->toRoute('index');
+						break;
 
-						//break;
 					case Result::FAILURE_CREDENTIAL_INVALID:
 						// attach error message to the form
 						$form->get('password')->setMessages($authResult->getMessages());
 						break;
+
 					default:
 						// attach error message to the form
 						$form->get('identification')->setMessages($authResult->getMessages());

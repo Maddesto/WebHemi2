@@ -64,6 +64,33 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	}
 
 	/**
+	 * Does the fieldset have an element/fieldset by the given name?
+	 *
+	 * @param string  $elementOrFieldset   The name of the element
+	 * @param boolean $searchInFieldsets   Also search in fieldsets.
+	 * @return bool
+	 */
+	public function has($elementOrFieldset, $searchInFieldsets = false)
+	{
+		if (array_key_exists($elementOrFieldset, $this->byName)) {
+			return true;
+		}
+		elseif ($searchInFieldsets) {
+			foreach ($this->fieldsets as $fieldset) {
+				try {
+					$element = $fieldset->get($elementOrFieldset);
+					return true;
+				}
+				catch (Exception\InvalidElementException $e) {
+					// there's no such element here, so we go on.
+				}
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Retrieve a named element or fieldset
 	 *
 	 * @param  string $elementOrFieldset
@@ -73,17 +100,25 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	{
 		if (!$this->has($elementOrFieldset)) {
 			foreach ($this->fieldsets as $fieldset) {
-				$element = $fieldset->get($elementOrFieldset);
-				if (!is_null($element)) {
-					break;
+				try {
+					$element = $fieldset->get($elementOrFieldset);
+					return $element;
+				}
+				catch (Exception\InvalidElementException $e) {
+					// there's no such element here, so we go on.
 				}
 			}
 		}
 		else {
-			$element = $this->byName[$elementOrFieldset];
+			return $this->byName[$elementOrFieldset];
 		}
 
-		return $element;
+		throw new Exception\InvalidElementException(
+			sprintf(
+				"No element by the name of [%s] found in form",
+				$elementOrFieldset
+			)
+		);
 	}
 
 	 /**
