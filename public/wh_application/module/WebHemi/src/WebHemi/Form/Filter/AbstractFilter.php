@@ -22,8 +22,11 @@
 
 namespace WebHemi\Form\Filter;
 
-use Zend\InputFilter\InputFilter,
-	Zend\InputFilter\Exception;
+use Zend\Filter\AbstractFilter as ZendAbstractFilter,
+	Zend\Filter\FilterInterface,
+	Zend\Filter\Exception,
+	Zend\ServiceManager\ServiceManager,
+	Zend\ServiceManager\ServiceManagerAwareInterface;
 
 /**
  * WebHemi Form Filtrer Abstraction
@@ -34,8 +37,54 @@ use Zend\InputFilter\InputFilter,
  * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-abstract class AbstractFilter extends InputFilter
+abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManagerAwareInterface, FilterInterface
 {
-	/** @var array $options */
-	protected $options;
+	/** @var ServiceManager $serviceManager */
+	protected $serviceManager;
+	
+	/**
+	 * Class constructor.
+	 * 
+	 * @param array $options
+	 */
+	public function __construct($optionArray = array())
+	{
+		$filterOptions = array();
+		
+		foreach ($optionArray as $key => $option) {
+			if ($option instanceof ServiceManagerAwareInterface) {
+				$this->setServiceManager($option);
+			}
+			else {
+				$filterOptions[] = $option;
+			}
+		}
+		
+		$this->setOptions($filterOptions);
+	}
+	
+	/**
+	 * Retrieve ServiceManager instance
+	 *
+	 * @return ServiceManager
+	 */
+	public function getServiceManager()
+	{
+		if (!isset($this->serviceManager)) {
+			throw new Exception\RuntimeException('Service manager is not provided!');
+		}
+		return $this->serviceManager;
+	}
+
+	/**
+	 * Set ServiceManager instance
+	 *
+	 * @param ServiceManager $serviceManager
+	 * @return UserAuth
+	 */
+	public function setServiceManager(ServiceManager $serviceManager)
+	{
+		$this->serviceManager = $serviceManager;
+		return $this;
+	}
 }

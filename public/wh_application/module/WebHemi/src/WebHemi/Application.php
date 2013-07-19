@@ -72,6 +72,10 @@ final class Application
 				get_include_path() . PATH_SEPARATOR .
 				APPLICATION_PATH . '/vendor' . PATH_SEPARATOR
 		);
+		
+		if (!defined('HTMLPURIFIER_PREFIX')) {
+			define('HTMLPURIFIER_PREFIX', realpath(__DIR__ . '/../../../../vendor/HTMLPurifier/library'));
+		}
 
 		// define Zend Framework path
 		if (!getenv('ZF2_PATH')) {

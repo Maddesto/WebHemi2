@@ -493,7 +493,9 @@ class User
 			),
 			'personalInfo' => array(
 				'displayname'   => $this->getDisplayName(),
+				'headline'      => $this->getHeadLine(),
 				'displayemail'  => $this->getDisplayEmail(),
+				'details'       => $this->getDetails(),
 			)
 		);
 		return $formArray;

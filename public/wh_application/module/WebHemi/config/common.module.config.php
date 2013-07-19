@@ -30,6 +30,7 @@ return array(
 		'factories' => array(
 			'acl'         => 'WebHemi\ServiceFactory\AclServiceFactory',
 			'auth'        => 'WebHemi\ServiceFactory\AuthServiceFactory',
+			'purifier'    => 'WebHemi\ServiceFactory\PurifierServiceFactory',
 			'translator'  => 'Zend\I18n\Translator\TranslatorServiceFactory',
 		),
 	),
@@ -59,6 +60,7 @@ return array(
 		'factories' => array(
 			'isAllowed'   => 'WebHemi\View\Helper\Factory\IsAllowedFactory',
 			'getIdentity' => 'WebHemi\View\Helper\Factory\GetIdentityFactory',
+			'Purify'      => 'WebHemi\View\Helper\Factory\PurifierFactory',
 		),
 	),
 	'access_control' => array(
@@ -118,7 +120,23 @@ return array(
 	),
 	'router' => array(
 		'routes' => array(
-
+		),
+	),
+	'purifier' => array(
+		'config' => array(
+			'AutoFormat.AutoParagraph'                => true,
+			'AutoFormat.Linkify'                      => true,
+			'AutoFormat.RemoveEmpty'                  => true,
+			'AutoFormat.RemoveSpansWithoutAttributes' => true,
+			'AutoFormat.RemoveEmpty.RemoveNbsp'       => true,
+			'Core.RemoveInvalidImg'                   => false,
+			'HTML.Nofollow'                           => true,
+			'HTML.TargetBlank'                        => true,
+			'HTML.Allowed'                            => (
+				'div[class|id],p,h1,h2,h3,h4,h5,br,hr,a[class|href],img[alt|class|src],span[class],ul[id|class],ol[id|class],li'
+			),
+			'HTML.Doctype'                            => 'HTML 4.01 Strict',
+			'Output.Newline'                          => PHP_EOL,
 		),
 	),
 );

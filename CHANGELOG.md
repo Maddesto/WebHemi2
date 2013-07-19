@@ -2,6 +2,13 @@ Change log
 ==========
 
 ----------------
+Version 2.0.0.19
+----------------
+- Compatibilty fixes for Zend Framework version 2.2.1
+- Fixes and improvements in WebHemi\Form
+- Added form element filtering prior to validation
+- Implementing [ezyang](https://github.com/ezyang/htmlpurifier)'s HTML Purifier library
+
 Version 2.0.0.18
 ----------------
 - Minimum required ZF version is 2.2.0+

@@ -23,10 +23,11 @@
 namespace WebHemi\Form;
 
 use WebHemi\Form\AbstractForm,
+	WebHemi\Form\Filter,
 	Zend\Form\Fieldset,
 	Zend\Form\Element,
 	Zend\Validator,
-	Zend\Filter;
+	Zend\Filter as ZendFilter;
 
 /**
  * User Form
@@ -59,15 +60,15 @@ class UserForm extends AbstractForm
 		$userName = new Element\Text('username');
 		$userName->setOptions(
 				array(
-					'required' => true,
-					'filters' => array(
-						new Filter\StringTrim(),
+					'required'   => true,
+					'filters'    => array(
+						new ZendFilter\StringTrim(),
 					),
 					'validators' => array(
 						new Validator\StringLength(
 							array(
-							'min' => 4,
-							'max' => 255,
+							'min'      => '4',
+							'max'      => '255',
 							'encoding' => 'UTF-8'
 							)
 						),
@@ -80,9 +81,9 @@ class UserForm extends AbstractForm
 				array(
 					'id' => 'username',
 					'accesskey' => 'u',
-					'maxlength' => 255,
-					'tabindex' => self::$tabindex++,
-					'pattern' => '^[a-zA-Z]{1}[a-zA-Z0-9\.\-\_]{3,254}$',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'pattern'   => '^[a-zA-Z]{1}[a-zA-Z0-9\.\-\_]{3,254}$',
 				)
 			);
 
@@ -90,23 +91,23 @@ class UserForm extends AbstractForm
 		$email = new Element\Email('email');
 		$email->setOptions(
 				array(
-					'required' => true,
-					'filters' => array(
-						new Filter\StringTrim(),
+					'required'   => true,
+					'filters'    => array(
+						new ZendFilter\StringTrim(),
 					),
 					'validators' => array(
 						new Validator\EmailAddress(
 							array(
 								'allow' => Validator\Hostname::ALLOW_DNS,
 								'useDomainCheck' => true,
-								'useMxCheck' => true,
+								'useMxCheck'     => true,
 								'useDeepMxCheck' => true
 							)
 						),
 						new Validator\StringLength(
 							array(
-								'min' => 6,
-								'max' => 255,
+								'min'      => '6',
+								'max'      => '255',
 								'encoding' => 'UTF-8'
 							)
 						),
@@ -117,11 +118,11 @@ class UserForm extends AbstractForm
 			->setLabel('Email')
 			->setAttributes(
 				array(
-					'id' => 'email',
+					'id'        => 'email',
 					'accesskey' => 'e',
-					'maxlength' => 255,
-					'tabindex' => self::$tabindex++,
-					'pattern' => '^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'pattern'   => '^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$',
 				)
 			);
 
@@ -129,8 +130,8 @@ class UserForm extends AbstractForm
 		$role = new Element\Select('role');
 		$role->setOptions(
 				array(
-					'required'     => true,
-					'value_options'=> array(
+					'required'      => true,
+					'value_options' => array(
 						'member'    => 'Member',
 						'moderator' => 'Moderator',
 						'editor'    => 'Editor',
@@ -142,7 +143,7 @@ class UserForm extends AbstractForm
 			->setLabel('General privilege')
 			->setAttributes(
 				array(
-					'id' => 'role',
+					'id'        => 'role',
 					'accesskey' => 'r',
 					'tabindex'  => self::$tabindex++,
 				)
@@ -162,14 +163,15 @@ class UserForm extends AbstractForm
 		$password->setOptions(
 				array(
 					'allow_empty' => true,
-					'filters' => array(
-						new Filter\StringTrim(),
+					'required'    => true,
+					'filters'     => array(
+						new ZendFilter\StringTrim(),
 					),
-					'validators' => array(
+					'validators'  => array(
 						new Validator\StringLength(
 							array(
-								'min' => 8,
-								'max' => 255,
+								'min'      => '8',
+								'max'      => '255',
 								'encoding' => 'UTF-8'
 							)
 						),
@@ -179,11 +181,11 @@ class UserForm extends AbstractForm
 			->setLabel('Change password')
 			->setAttributes(
 				array(
-					'id' => 'password',
+					'id'        => 'password',
 					'accesskey' => 'p',
-					'maxlength' => 255,
-					'tabindex' => self::$tabindex++,
-					'pattern' => '^.*{8-255}$',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'pattern'   => '^.*{8,255}$',
 				)
 			);
 
@@ -192,14 +194,15 @@ class UserForm extends AbstractForm
 		$confirmation->setOptions(
 				array(
 					'allow_empty' => true,
-					'filters' => array(
-						new Filter\StringTrim(),
+					'required'    => true,
+					'filters'     => array(
+						new ZendFilter\StringTrim(),
 					),
-					'validators' => array(
+					'validators'  => array(
 						new Validator\StringLength(
 							array(
-								'min' => 8,
-								'max' => 255,
+								'min'      => '8',
+								'max'      => '255',
 								'encoding' => 'UTF-8'
 							)
 						),
@@ -214,11 +217,11 @@ class UserForm extends AbstractForm
 			->setLabel('Confirm password')
 			->setAttributes(
 				array(
-					'id' => 'password',
+					'id'        => 'password',
 					'accesskey' => 'c',
-					'maxlength' => 255,
-					'tabindex' => self::$tabindex++,
-					'pattern' => '^.*{8-255}$',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'pattern'   => '^.*{8,255}$',
 				)
 			);
 
@@ -234,13 +237,13 @@ class UserForm extends AbstractForm
 		$displayName = new Element\Text('displayname');
 		$displayName->setOptions(
 				array(
-					'filters' => array(
-						new Filter\StringTrim(),
+					'filters'    => array(
+						new ZendFilter\StringTrim(),
 					),
 					'validators' => array(
 						new Validator\StringLength(
 							array(
-								'max' => 255,
+								'max'      => '255',
 								'encoding' => 'UTF-8'
 							)
 						),
@@ -250,10 +253,37 @@ class UserForm extends AbstractForm
 			->setLabel('Display Name')
 			->setAttributes(
 				array(
-					'id' => 'displayname',
+					'id'        => 'displayname',
 					'accesskey' => 'n',
-					'maxlength' => 255,
-					'tabindex' => self::$tabindex++,
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+
+		// the headline input
+		$headLine = new Element\Text('headline');
+		$headLine->setOptions(
+				array(
+					'filters'    => array(
+						new ZendFilter\StringTrim(),
+					),
+					'validators' => array(
+						new Validator\StringLength(
+							array(
+								'max'      => '255',
+								'encoding' => 'UTF-8'
+							)
+						),
+					),
+				)
+			)
+			->setLabel('Headline')
+			->setAttributes(
+				array(
+					'id'        => 'headline',
+					'accesskey' => 'h',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
 				)
 			);
 
@@ -263,21 +293,42 @@ class UserForm extends AbstractForm
 			->setOptions(
 				array(
 					'use_hidden_element' => true,
-					'checked_value' => '1',
-					'unchecked_value' => '0'
+					'checked_value'      => '1',
+					'unchecked_value'    => '0'
 				)
 			)
 			->setAttributes(
 				array(
-					'id' => 'displayemail',
+					'id'        => 'displayemail',
 					'accesskey' => 'd',
-					'maxlength' => 255,
-					'tabindex' => self::$tabindex++,
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+		
+		// the displayname input
+		$details = new Element\Textarea('details');
+		$details->setOptions(
+				array(
+					'filters'    => array(
+						new ZendFilter\StringTrim(),
+						new Filter\PurifierFilter(),
+					),
+				)
+			)
+			->setLabel('Details')
+			->setAttributes(
+				array(
+					'id'        => 'details',
+					'accesskey' => 't',
+					'tabindex'  => self::$tabindex++,
 				)
 			);
 
 		$personalInfoFieldset->add($displayName)
-				->add($displayEmail);
+				->add($headLine)
+				->add($displayEmail)
+				->add($details);
 
 		// --- rest of the form ----------------------------------------------------------------------------------------
 
@@ -286,8 +337,8 @@ class UserForm extends AbstractForm
 			->setAttributes(
 				array(
 					'accesskey' => 's',
-					'type' => 'submit',
-					'tabindex' => self::$tabindex++
+					'type'      => 'submit',
+					'tabindex'  => self::$tabindex++
 				)
 			);
 
@@ -316,8 +367,8 @@ class UserForm extends AbstractForm
 				if (!$acl->isAllowed('admin/adduser')) {
 					$element->setOptions(
 						array(
-							'required' => false,
-							'filters' => array(),
+							'required'   => false,
+							'filters'    => array(),
 							'validators' => array()
 						)
 					);
@@ -327,5 +378,38 @@ class UserForm extends AbstractForm
 		}
 
 		return parent::renderElement($element);
+	}
+
+	
+	/**
+	 * Validate the form
+	 *
+	 * Typically, will proxy to the composed input filter.
+	 *
+	 * @return bool
+	 * @throws Exception\DomainException
+	 */
+	public function isValid()
+	{
+		/* @var $securityFieldset \Zend\Form\Fieldset */
+		$securityFieldset = $this->get('securityInfo');
+		/* @var $passwordElement \Zend\Form\Element\Password */
+		$passwordElement = $securityFieldset->get('password');
+		/* @var $confirmElement \Zend\Form\Element\Password */
+		$confirmElement = $securityFieldset->get('confirmation');
+		// If there were no password change attempt, than we remove the required flag.
+		if ('' == $passwordElement->getValue()) {
+			$passwordElement->setOptions(
+				array(
+					'required'    => false,
+				)
+			);
+			$confirmElement->setOptions(
+				array(
+					'required'    => false,
+				)
+			);
+		}
+		return  parent::isValid();
 	}
 }

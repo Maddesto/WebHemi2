@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.18 Created by Gixx.
+Version 2.0.0.19 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -42,6 +42,8 @@ Credits
 - WebHemi Theme solution is based on [ZendExperts/ZeTheme](https://github.com/ZendExperts/ZeTheme).
 - WebHemi ACL solution is based on [ZF-Commons/ZfcAcl](https://github.com/ZF-Commons/ZfcAcl).
 - WebHemi Authentication solution is based on [Polo's blog](http://p0l0.binware.org/index.php/2012/02/18/zend-framework-2-authentication-acl-using-eventmanager/),[EvanDotPro/EdpUser](https://github.com/EvanDotPro/EdpUser) and [ZF-Commons/ZfcUser](https://github.com/ZF-Commons/ZfcUser).
+- The HTML Purifier's Zend Framework 2 implementation is based on [Soflomo/Purifier](https://github.com/Soflomo/Purifier)'s solution.
+- The HTML Purifier library is created by [ezyang](https://github.com/ezyang/htmlpurifier).
 
 Installation
 ------------

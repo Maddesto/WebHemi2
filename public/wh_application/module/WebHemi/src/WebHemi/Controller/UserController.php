@@ -142,23 +142,29 @@ class UserController extends AbstractActionController
 			return $this->redirect()->toRoute('user/view', array('userName' => $userName));
 		}
 
-		/* @var $editForm \WebHemi\Form\AbstractForm */
+		/* @var $editForm \WebHemi\Form\UserForm */
 		$editForm = $this->getForm('UserForm');
 
 		if ($request->isPost()) {
 			$error = false;
-//			$editForm->setInputFilter($userModel->getInputFilter());
+
 			$editForm->setData($request->getPost());
 			if ($editForm->isValid()) {
-				// do something
+				dump($editForm->isValid(), 'Is Valid?');
+			}
+			else {
+				dump($editForm->getMessages(), 'Error Messages');
 			}
 
 			dump($request->getPost(), 'Post');
+			/* @var $details Zend\Form\Element */
+			$details = $editForm->get('personalInfo')->get('details');
+			
+			echo '<pre>' . htmlspecialchars($details->getValue()) . '</pre>';
 		}
 		else {
 			$editForm->bind($userModel);
 		}
-
 
 		return array(
 			'editForm'  => $editForm,

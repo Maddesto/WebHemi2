@@ -78,7 +78,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 		elseif ($searchInFieldsets) {
 			foreach ($this->fieldsets as $fieldset) {
 				try {
-					$element = $fieldset->get($elementOrFieldset);
+					$fieldset->get($elementOrFieldset);
 					return true;
 				}
 				catch (Exception\InvalidElementException $e) {
@@ -121,7 +121,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 		);
 	}
 
-	 /**
+	/**
 	 * Validate the form
 	 *
 	 * Typically, will proxy to the composed input filter.
@@ -168,7 +168,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 		return $result;
 	}
 	/**
-	 * Validate form elements
+	 * Apply filters and validate form elements.
 	 *
 	 * @param array $elements
 	 * @return boolean
@@ -180,12 +180,28 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 		/* @var $element Element */
 		foreach ($elements as $element) {
 			$validators = $element->getOption('validators');
+			$filters    = $element->getOption('filters');
+			
 			$value    = $element->getValue();
 			$messages = array();
+			
+			// Apply all the filter on the value.
+			if (!empty($filters)) {
+				foreach ($filters as $filter) {
+					if ($filter instanceof \WebHemi\Form\Filter\PurifierFilter) {
+						/* @var $filter WebHemi\Form\Filter\PurifierFilter */
+						$filter->setServiceManager($this->getServiceManager());
+					}
+					$value = $filter->filter($value);
+				}
+				
+				// Save changes in data
+				$element->setValue($value);
+			}
+			
 
 			if (!empty($validators)) {
-
-				/* @var $validator Validator */
+				/* @var $validator Zend\Validator\AbstractValidator */
 				foreach ($validators as $validator) {
 					if (!$validator->isValid($value)) {
 						$messages = array_merge($messages, $validator->getMessages());
@@ -206,23 +222,29 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	 */
 	public function __toString()
 	{
-		$this->prepare();
+		try {
+			$this->prepare();
 
-		$form = $this->getViewRenderer()->form()->openTag($this);
+			$form = $this->getViewRenderer()->form()->openTag($this);
 
-		foreach ($this->fieldsets as $fieldset) {
-			if ($fieldset instanceof Fieldset) {
-				$form .= $this->renderFieldset($fieldset);
+			foreach ($this->fieldsets as $fieldset) {
+				if ($fieldset instanceof Fieldset) {
+					$form .= $this->renderFieldset($fieldset);
+				}
 			}
-		}
 
-		foreach ($this->elements as $element) {
-			if ($element instanceof Element) {
-				$form .= $this->renderElement($element);
+			foreach ($this->elements as $element) {
+				if ($element instanceof Element) {
+					$form .= $this->renderElement($element);
+				}
 			}
-		}
 
-		$form .= $this->getViewRenderer()->form()->closeTag($this);
+			$form .= $this->getViewRenderer()->form()->closeTag($this);
+		} 
+		catch (\Exception $ex) {
+			dump($ex->__toString());
+			$form = '';
+		}
 
 		return $form;
 	}

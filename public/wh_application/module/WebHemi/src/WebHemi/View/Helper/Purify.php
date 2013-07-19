@@ -1,5 +1,4 @@
 <?php
-
 /**
  * WebHemi
  *
@@ -23,10 +22,10 @@
 namespace WebHemi\View\Helper;
 
 use Zend\View\Helper\AbstractHelper,
-	WebHemi\Acl\Acl;
+	HTMLPurifier;
 
 /**
- * View helper for ACL
+ * View helper for HTML Purufier
  *
  * @category   WebHemi
  * @package    WebHemi_View_Helper
@@ -34,51 +33,43 @@ use Zend\View\Helper\AbstractHelper,
  * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class IsAllowed extends AbstractHelper
+class Purify extends AbstractHelper
 {
-	/** @var Acl $authService */
-	protected $aclService;
+	/** @var HTMLPurifier $purifier */
+	protected $purifier;
 
 	/**
-	 * Check privilege
-	 *
-	 * @param string $resource
-	 * @param string $privilege
-	 * @return boolean
+	 * Class constructor.
+	 * 
+	 * @param HTMLPurifier $purifier
 	 */
-	public function __invoke($resource, $privilege = null)
+	public function __construct(HTMLPurifier $purifier)
 	{
-		$acl                = $this->getAclService();
-		$controllerResource = 'Controller-' . ucfirst(strtolower($resource));
-		if (strpos($resource, '/') === false) {
-			$controllerResource .= '/*';
+		$this->purifier = $purifier;
+	}
+
+	/**
+	 * Retrieves the HTML Purifier object
+	 * 
+	 * @return HTMLPurifier
+	 */
+	protected function getPurifier()
+	{
+		return $this->purifier;
+	}
+
+	/**
+	 * Purify HTML content
+	 * 
+	 * @param string $html
+	 * @return string
+	 */
+	public function __invoke($html = null)
+	{
+		if (empty($html)) {
+			return '';
 		}
-		$routeResource      = 'Route-' . $resource;
 
-		return $acl->isAllowed($resource, $privilege)
-				&& $acl->isAllowed($controllerResource, $privilege)
-				&& $acl->isAllowed($routeResource, $privilege);
-	}
-
-	/**
-	 * Retrieve ACL service object
-	 *
-	 * @return WebHemi\Acl\Acl
-	 */
-	public function getAclService()
-	{
-		return $this->aclService;
-	}
-
-	/**
-	 * Set ACL service object
-	 *
-	 * @param WebHemi\Acl\Acl $aclService
-	 * @return IsAllowed
-	 */
-	public function setAclService(Acl $aclService)
-	{
-		$this->aclService = $aclService;
-		return $this;
+		return $this->getPurifier()->purify($html);
 	}
 }
