@@ -29,6 +29,7 @@ use WebHemi\Form\AbstractForm,
 	Zend\Form\Fieldset,
 	Zend\Form\Element,
 	Zend\Validator,
+	Zend\I18n\Validator as I18nValidator,
 	Zend\Filter as Filter;
 
 /**
@@ -125,6 +126,7 @@ class UserForm extends AbstractForm
 			->setAttributes(
 				array(
 					'id'        => 'email',
+					'type'      => 'email',
 					'accesskey' => 'e',
 					'maxlength' => '255',
 					'tabindex'  => self::$tabindex++,
@@ -334,8 +336,10 @@ class UserForm extends AbstractForm
 		$avatarSubFieldset = new Fieldset('avatarInfo');
 		$avatarSubFieldset->setLabel('Avatar');
 		
+		// the exact value of the avatar property
 		$avatar = new Element\Hidden('avatar');
 		
+		// the image represented by the avatar
 		$avatarImage = new PlainText('avatarimage');
 		$avatarImage->setValue('')
 			->setAttributes(
@@ -344,6 +348,7 @@ class UserForm extends AbstractForm
 				)
 			);
 		
+		// the type of the avatar
 		$avatarType = new Element\Radio('avatartype');
 		$avatarType->setOptions(
 				array(
@@ -376,28 +381,33 @@ class UserForm extends AbstractForm
 				)
 			);
 		
+		// GRavatar ID
 		$avatarGrId = new Element\Text('avatargrid');
 		$avatarGrId->setLabel('GR Avatar ID')
 			->setAttributes(
 				array(
 					'id'        => 'avatargrid',
+					'type'      => 'email',
 					'accesskey' => 'a',
 					'maxlength' => '255',
 					'tabindex'  => self::$tabindex++,
 				)
 			);
 		
+		// external image location
 		$avatarUrl = new Element\Text('avatarurl');
 		$avatarUrl->setLabel('Image Internet location')
 			->setAttributes(
 				array(
 					'id'        => 'avatarurl',
+					'type'      => 'url',
 					'accesskey' => 'w',
 					'maxlength' => '255',
 					'tabindex'  => self::$tabindex++,
 				)
 			);
 		
+		// file upload
 		$avatarFile = new Element\File('avatarfile');
 		$avatarFile->setLabel('Upload your avatar')
 			->setAttributes(
@@ -427,8 +437,79 @@ class UserForm extends AbstractForm
 				->add($details);
 		
 		// --- contact fieldset ----------------------------------------------------------------------------------------
-		$contactFieldset = new Fieldset('contact');
+		$contactFieldset = new Fieldset('contactInfo');
 		$contactFieldset->setLabel('Contact Information');
+		
+		// the displayname input
+		$phoneNumber = new Element\Text('phonenumber');
+		$phoneNumber->setOptions(
+				array(
+					'filters'    => array(
+						new Filter\StringTrim(),
+					),
+					'validators' => array(
+						new Validator\StringLength(
+							array(
+								'max'      => '255',
+								'encoding' => 'UTF-8'
+							)
+						),
+					),
+				)
+			)
+			->setLabel('Phone number')
+			->setAttributes(
+				array(
+					'type'      => 'tel',
+					'id'        => 'phonenumber',
+					'accesskey' => 'n',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'placeholder' => 'e.g.: 33 2 123 4567',
+					'pattern'   => '^[\d\s]+$',
+				)
+			);
+		
+		// the socialnetworks input
+		$socialNetworks = new Element\Textarea('socialnetworks');
+		$socialNetworks->setOptions(
+				array(
+					'filters'    => array(
+						new Filter\StringTrim(),
+					),
+				)
+			)
+			->setLabel('Social Networks')
+			->setAttributes(
+				array(
+					'id'        => 'socialnetworks',
+					'accesskey' => 'n',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+		
+		// the websites input
+		$websites = new Element\Textarea('websites');
+		$websites->setOptions(
+				array(
+					'filters'    => array(
+						new PurifierFilter(),
+						new Filter\StringTrim(),
+					),
+				)
+			)
+			->setLabel('Websites')
+			->setAttributes(
+				array(
+					'id'        => 'websites',
+					'accesskey' => 'w',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+		
+		$contactFieldset->add($phoneNumber)
+			->add($socialNetworks)
+			->add($websites);
 
 		// --- rest of the form ----------------------------------------------------------------------------------------
 
@@ -662,6 +743,46 @@ class UserForm extends AbstractForm
 							),
 						)
 					);
+			}
+			
+			// validating phone number if possible
+			$phoneNumberElement = $this->get('contactInfo')->get('phonenumber');
+			$phoneNumber = preg_replace('/[^\d]/', '', $phoneNumberElement->getValue());
+			if (!empty($phoneNumber)) {
+				// this database contains only the mutually unambiguous mappings between phone codes and country codes
+				$phoneCodeData = include_once APPLICATION_PATH . '/data/phoneCodeToCountryCode.php';
+				
+				// if the beginning of the code is in the database then we search for it (no success garantee)
+				if (isset($phoneCodeData[$phoneNumber[0]])) {
+					$prefix = $phoneNumber[0];
+					$countryCode = '';
+					for ($i = 0; $i <= 3; $i++) {
+						if (isset($phoneCodeData[$phoneNumber[0]][$prefix])) {
+							$countryCode = $phoneCodeData[$phoneNumber[0]][$prefix];
+							$phoneNumberElement->setOptions(
+									array(
+										'required'    => true,
+										'allow_empty' => false,
+										'validators'  => array(
+											new I18nValidator\PhoneNumber(
+												array(
+													'country' => $countryCode,
+													'allowed_types' => array('general','mobile')
+												)
+											)
+										),
+									)
+								)
+								->setValue($phoneNumber);
+							break;
+						}
+						
+						if (!isset($phoneNumber[strlen($prefix)])) {
+							break;
+						}
+						$prefix .= $phoneNumber[strlen($prefix)];
+					}
+				}
 			}
 		}
 		return  parent::isValid($formElement);

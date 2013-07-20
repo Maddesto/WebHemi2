@@ -554,6 +554,11 @@ class User
 							: ''
 					),
 				),
+			),
+			'contactInfo' => array(
+				'phonenumber'    => $this->getPhoneNumber(),
+				'socialnetworks' => $this->getSocialNetworks(),
+				'websites'       => $this->getWebsites(),
 			)
 		);
 		return $formArray;
