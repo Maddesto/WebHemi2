@@ -356,9 +356,15 @@ final class Application
 	{
 		require_once ZF2_PATH . '/Debug/Debug.php';
 		$output = \Zend\Debug\Debug::dump($data, null, false);
-
-		$output = highlight_string('<' . '?php ' . strip_tags($output), true);
-		$output = '<strong>' . $label . '</strong><br />' . str_replace('&lt;?php', '', $output) . '<br />';
+		$output = str_replace(array('<pre>', '</pre>'), '', $output);
+		$output = highlight_string('<' . '?php ' . $output, true);
+		$output = '<div style="border:1px solid gray;margin: 10px;padding:5px;background:white;word-wrap:break-word;">'
+			.(
+				!empty($label) 
+				? '<strong style="display:block;font:bold big sans-serif;margin-bottom:10px">' . $label . '</strong>' 
+				: ''
+			) 
+			. str_replace('&lt;?php', '', $output) . '</div>';
 
 		if ($echo) {
 			echo $output;

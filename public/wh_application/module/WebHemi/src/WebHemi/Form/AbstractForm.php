@@ -49,6 +49,8 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 
 	/** @staticvar int $tabindex */
 	protected static $tabindex = 1;
+	/** @staticvar array $validatedElements */
+	protected static $validatedForms = array();
 
 	/**
 	 * Class constructor
@@ -131,14 +133,19 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	 */
 	public function isValid()
 	{
-		$result = parent::isValid();
+		// @TODO: find out why is this method called twice.
+		if (!isset(self::$validatedForms[$this->getName()])) {
+			$result = parent::isValid();
 
-		// because ZF2 doesn't check everything
-		if ($result) {
-			$result = $this->validateFieldsets($this->fieldsets)
-				&& $this->validateElements($this->elements);
+			// because ZF2 doesn't check everything
+			if ($result) {
+				$result = $this->validateFieldsets($this->fieldsets)
+					&& $this->validateElements($this->elements);
+			}
+			self::$validatedForms[$this->getName()] = $result;
 		}
-		return $result;
+		
+		return self::$validatedForms[$this->getName()];
 	}
 
 	/**
@@ -176,7 +183,6 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	protected function validateElements(array $elements)
 	{
 		$result = true;
-
 		/* @var $element Element */
 		foreach ($elements as $element) {
 			$validators = $element->getOption('validators');
@@ -185,24 +191,21 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			$value    = $element->getValue();
 			$messages = array();
 			
-			// Apply all the filter on the value.
 			if (!empty($filters)) {
+				// apply all the filter on the value
 				foreach ($filters as $filter) {
+					/* @var $filter WebHemi\Form\Filter\PurifierFilter */
 					if ($filter instanceof \WebHemi\Form\Filter\PurifierFilter) {
-						/* @var $filter WebHemi\Form\Filter\PurifierFilter */
 						$filter->setServiceManager($this->getServiceManager());
 					}
 					$value = $filter->filter($value);
 				}
-				
-				// Save changes in data
-				$element->setValue($value);
 			}
-			
 
 			if (!empty($validators)) {
-				/* @var $validator Zend\Validator\AbstractValidator */
+				// apply all the validators on the value
 				foreach ($validators as $validator) {
+					/* @var $validator Zend\Validator\AbstractValidator */
 					if (!$validator->isValid($value)) {
 						$messages = array_merge($messages, $validator->getMessages());
 					}
@@ -212,6 +215,10 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			if (!empty($messages)) {
 				$element->setMessages($messages);
 				$result = false;
+			}
+			else {
+				// Save changes in value
+				$element->setValue($value);
 			}
 		}
 		return $result;

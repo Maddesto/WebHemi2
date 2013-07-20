@@ -159,8 +159,7 @@ class UserController extends AbstractActionController
 			dump($request->getPost(), 'Post');
 			/* @var $details Zend\Form\Element */
 			$details = $editForm->get('personalInfo')->get('details');
-			
-			echo '<pre>' . htmlspecialchars($details->getValue()) . '</pre>';
+			dump($details->getValue());
 		}
 		else {
 			$editForm->bind($userModel);
