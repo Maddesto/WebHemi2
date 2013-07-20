@@ -124,7 +124,6 @@ return array(
 	),
 	'purifier' => array(
 		'config' => array(
-			'AutoFormat.AutoParagraph'                => true,
 			'AutoFormat.Linkify'                      => true,
 			'AutoFormat.RemoveEmpty'                  => true,
 			'AutoFormat.RemoveSpansWithoutAttributes' => true,
@@ -133,9 +132,22 @@ return array(
 			'HTML.Nofollow'                           => true,
 			'HTML.TargetBlank'                        => true,
 			'HTML.Allowed'                            => (
-				'div[class|id],p,h1,h2,h3,h4,h5,br,hr,a[class|href],img[alt|class|src],span[class],ul[id|class],ol[id|class],li'
+				'a[class|href|title],abbr,address,article,'
+				. 'blockquote,br'
+				. 'caption,cite,code,col,colgroup,'
+				. 'del,div[class|id|lang],details,'
+				. 'em,'
+				. 'h1,h2,h3,h4,h5,h6,hr,'
+				. 'img[alt|class|src|crossorigin|longdesc|title],ins,'
+				. 'li,'
+				. 'ol[id|class],'
+				. 'p[class|lang],'
+				. 'q,'
+				. 's,section,span[class|style],strong,sub,sup,summary,'
+				. 'table[class],tbody,thead,tfoot,tr[class],th[rowspan|colspan|class],td[rowspan|colspan|class],time,'
+				. 'ul[id|class],u'
 			),
-			'HTML.Doctype'                            => 'HTML 4.01 Strict',
+//			'HTML.Doctype'                            => 'HTML 4.01 Strict',
 			'Output.Newline'                          => PHP_EOL,
 		),
 	),

@@ -26,6 +26,7 @@ use Zend\Form\Form,
 	Zend\Form\Element,
 	Zend\Form\Fieldset,
 	Zend\Form\Exception,
+	Zend\Form\FormInterface,
 	Zend\View\Renderer\PhpRenderer,
 	Zend\ServiceManager\ServiceManagerAwareInterface,
 	Zend\ServiceManager\ServiceManager,
@@ -85,6 +86,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 				}
 				catch (Exception\InvalidElementException $e) {
 					// there's no such element here, so we go on.
+					unset($e);
 				}
 			}
 		}
@@ -108,6 +110,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 				}
 				catch (Exception\InvalidElementException $e) {
 					// there's no such element here, so we go on.
+					unset($e);
 				}
 			}
 		}
@@ -128,100 +131,126 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	 *
 	 * Typically, will proxy to the composed input filter.
 	 *
+	 * @param Element $formElement
 	 * @return bool
 	 * @throws Exception\DomainException
 	 */
-	public function isValid()
+	public function isValid(Element $formElement = null)
 	{
-		// @TODO: find out why is this method called twice.
+		// @TODO: find out why is this method called twice (isValid)
 		if (!isset(self::$validatedForms[$this->getName()])) {
-			$result = parent::isValid();
+			if (empty($formElement)) {
+				$result = parent::isValid();
+				
+				// because ZF2 doesn't check everything
+				if ($result) {
+					foreach ($this->getFieldsets() as $fieldset) {
+						/* @var $fieldset \Zend\Form\Fieldset */
+						$result = $this->isValid($fieldset) && $result;
+					}
 
-			// because ZF2 doesn't check everything
-			if ($result) {
-				$result = $this->validateFieldsets($this->fieldsets)
-					&& $this->validateElements($this->elements);
+					foreach ($this->getElements() as $element) {
+						/* @var $element \Zend\Form\Element */
+						$result = $this->isValid($element) && $result;
+					}
+				}
+				self::$validatedForms[$this->getName()] = $result;
 			}
-			self::$validatedForms[$this->getName()] = $result;
+			elseif ($formElement instanceof Fieldset) {
+				$fieldsetResult = true;
+				foreach ($formElement->getElements() as $element) {
+					/* @var $element \Zend\Form\Element */
+					$fieldsetResult = $this->isValid($element) && $fieldsetResult;
+				}
+				return $fieldsetResult;
+			}
+			else {
+				$elementResult = true;
+				
+				$validators = $formElement->getOption('validators');
+				$filters    = $formElement->getOption('filters');
+				$value      = $formElement->getValue();
+				$messages   = array();
+
+				if (!empty($filters)) {
+					// apply all the filter on the value
+					foreach ($filters as $filter) {
+						/* @var $filter WebHemi\Form\Filter\PurifierFilter */
+						if ($filter instanceof \WebHemi\Form\Filter\PurifierFilter) {
+							$filter->setServiceManager($this->getServiceManager());
+						}
+						$value = $filter->filter($value);
+					}
+				}
+
+				if (!empty($validators)) {
+					// apply all the validators on the value
+					foreach ($validators as $validator) {
+						/* @var $validator Zend\Validator\AbstractValidator */
+						if (!$validator->isValid($value)) {
+							$messages = array_merge($messages, $validator->getMessages());
+						}
+					}
+				}
+
+				if (!empty($messages)) {
+					$formElement->setMessages($messages);
+					$elementResult = false;
+				}
+				else {
+					// Save changes in value
+					$formElement->setValue($value);
+				}
+				
+				return $elementResult;
+			}
 		}
 		
 		return self::$validatedForms[$this->getName()];
 	}
 
+	
 	/**
-	 * Validate form fieldsets
+	 * Retrieve the validated and filtered data
 	 *
-	 * @param array $fieldsets
-	 * @return boolean
+	 * @param int $flag
+	 * @param Element $element
+	 * @return array
+	 * @throws Exception\DomainException
 	 */
-	protected function validateFieldsets(array $fieldsets)
+	public function getData($flag = FormInterface::VALUES_NORMALIZED, Element $formElement = null)
 	{
-		$result = true;
-
-		/* @var $fieldset Fieldset */
-		foreach ($fieldsets as $fieldset) {
-			$subFieldsets = $fieldset->getFieldsets();
-
-			// if there are sub fieldsets, we also validate them
-			if (!empty($subFieldsets)) {
-				$result = $this->validateFieldsets($subFieldsets) && $result;
+		if (!isset(self::$validatedForms[$this->getName()])) {
+			throw new Exception\DomainException(sprintf(
+				'%s cannot return data as validation has not yet occurred',
+				__METHOD__
+			));
+		}
+		
+		if (empty($formElement)) {
+			$data = array();
+			foreach ($this->getFieldsets() as $fieldset) {
+				/* @var $fieldset \Zend\Form\Fieldset */
+				$data[$fieldset->getName()] = $this->getData($flag, $fieldset);
 			}
-			// otherwise we validate the elements
-			else {
-				$result = $this->validateElements($fieldset->getElements()) && $result;
+			
+			foreach ($this->getElements() as $element) {
+				/* @var $element \Zend\Form\Element */
+				$data[$element->getName()] = $this->getData($flag, $element);
 			}
 		}
-
-		return $result;
-	}
-	/**
-	 * Apply filters and validate form elements.
-	 *
-	 * @param array $elements
-	 * @return boolean
-	 */
-	protected function validateElements(array $elements)
-	{
-		$result = true;
-		/* @var $element Element */
-		foreach ($elements as $element) {
-			$validators = $element->getOption('validators');
-			$filters    = $element->getOption('filters');
-			
-			$value    = $element->getValue();
-			$messages = array();
-			
-			if (!empty($filters)) {
-				// apply all the filter on the value
-				foreach ($filters as $filter) {
-					/* @var $filter WebHemi\Form\Filter\PurifierFilter */
-					if ($filter instanceof \WebHemi\Form\Filter\PurifierFilter) {
-						$filter->setServiceManager($this->getServiceManager());
-					}
-					$value = $filter->filter($value);
-				}
-			}
-
-			if (!empty($validators)) {
-				// apply all the validators on the value
-				foreach ($validators as $validator) {
-					/* @var $validator Zend\Validator\AbstractValidator */
-					if (!$validator->isValid($value)) {
-						$messages = array_merge($messages, $validator->getMessages());
-					}
-				}
-			}
-
-			if (!empty($messages)) {
-				$element->setMessages($messages);
-				$result = false;
-			}
-			else {
-				// Save changes in value
-				$element->setValue($value);
+		elseif ($formElement instanceof Fieldset) {
+			$data = array();
+			foreach ($formElement->getElements() as $element) {
+				/* @var $element \Zend\Form\Element */
+				$data[$element->getName()] = $this->getData($flag, $element);
 			}
 		}
-		return $result;
+		else {
+			return $formElement->getValue();
+		}
+
+		return $data;
 	}
 
 	/**

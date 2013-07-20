@@ -354,10 +354,25 @@ final class Application
 	 */
 	function varDump($data, $label = null, $echo = true)
 	{
+		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		$file      = '&lt;unknown&gt';
+		$line      = '&lt;unknown&gt';
+
+		foreach ($backtrace as $traceInfo) {
+			if (in_array($traceInfo['function'], array('varDump', 'dump'))) {
+				$file  = str_replace(APPLICATION_PATH, '', $traceInfo['file']);
+				$line  = $traceInfo['line'];
+			} 
+			else {
+				break;
+			}
+		}
+		
 		require_once ZF2_PATH . '/Debug/Debug.php';
 		$output = \Zend\Debug\Debug::dump($data, null, false);
 		$output = str_replace(array('<pre>', '</pre>'), '', $output);
-		$output = highlight_string('<' . '?php ' . $output, true);
+		$output = '<' . '?php ' . PHP_EOL . '// File: ' . $file . ', line: ' . $line . PHP_EOL . PHP_EOL . $output;
+		$output = highlight_string($output, true);
 		$output = '<div style="border:1px solid gray;margin: 10px;padding:5px;background:white;word-wrap:break-word;">'
 			.(
 				!empty($label) 

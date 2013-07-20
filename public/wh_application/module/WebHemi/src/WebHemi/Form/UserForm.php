@@ -311,8 +311,8 @@ class UserForm extends AbstractForm
 		$details->setOptions(
 				array(
 					'filters'    => array(
-						new ZendFilter\StringTrim(),
 						new Filter\PurifierFilter(),
+						new ZendFilter\StringTrim(),
 					),
 				)
 			)
@@ -329,6 +329,10 @@ class UserForm extends AbstractForm
 				->add($headLine)
 				->add($displayEmail)
 				->add($details);
+		
+		// --- contact fieldset ----------------------------------------------------------------------------------------
+		$contactFieldset = new Fieldset('contact');
+		$contactFieldset->setLabel('Contact Information');
 
 		// --- rest of the form ----------------------------------------------------------------------------------------
 
@@ -345,6 +349,7 @@ class UserForm extends AbstractForm
 		$this->add($accountInfoFieldset)
 			->add($securityInfoFieldset)
 			->add($personalInfoFieldset)
+			->add($contactFieldset)
 			->add($submit);
 	}
 
@@ -386,10 +391,11 @@ class UserForm extends AbstractForm
 	 *
 	 * Typically, will proxy to the composed input filter.
 	 *
+	 * @param Element $formElement
 	 * @return bool
 	 * @throws Exception\DomainException
 	 */
-	public function isValid()
+	public function isValid(Element $formElement = null)
 	{
 		/* @var $securityFieldset \Zend\Form\Fieldset */
 		$securityFieldset = $this->get('securityInfo');
@@ -410,6 +416,6 @@ class UserForm extends AbstractForm
 				)
 			);
 		}
-		return  parent::isValid();
+		return  parent::isValid($formElement);
 	}
 }

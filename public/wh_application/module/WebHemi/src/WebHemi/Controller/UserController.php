@@ -149,17 +149,16 @@ class UserController extends AbstractActionController
 			$error = false;
 
 			$editForm->setData($request->getPost());
+			dump($request->getPost(), 'Post');
+			dump($editForm->isValid(), 'Is Valid?');
 			if ($editForm->isValid()) {
-				dump($editForm->isValid(), 'Is Valid?');
+				dump($editForm->getData(), 'Data');
 			}
 			else {
 				dump($editForm->getMessages(), 'Error Messages');
 			}
 
-			dump($request->getPost(), 'Post');
 			/* @var $details Zend\Form\Element */
-			$details = $editForm->get('personalInfo')->get('details');
-			dump($details->getValue());
 		}
 		else {
 			$editForm->bind($userModel);
@@ -205,7 +204,7 @@ class UserController extends AbstractActionController
 			}
 
 			// it everything seems to be valid
-			if (!$error && $form->isValid($request)) {
+			if (!$error && $form->isValid()) {
 				$authAdapter = $userAuth->getAuthAdapter();
 				$authAdapter->setIdentity($identification);
 				$authAdapter->setCredential($password);
