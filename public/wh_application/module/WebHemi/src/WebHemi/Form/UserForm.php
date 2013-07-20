@@ -45,7 +45,8 @@ class UserForm extends AbstractForm
 {
 	/** @var array $allowedAvatarMime */
 	protected $allowedAvatarMime = array('image/gif','image/jpeg','image/pjpeg','image/png','image/x-png');
-
+	/** @var string $defaultFormId */
+	protected $defaultFormId = 'edituser';
 
 	/**
 	 * Class constructor
@@ -54,7 +55,11 @@ class UserForm extends AbstractForm
 	 */
 	public function __construct($name = null)
 	{
-		parent::__construct('user');
+		if (empty($name)) {
+			$name = $this->defaultFormId;
+		}
+		
+		parent::__construct($name);
 
 		// --- account info filedset -----------------------------------------------------------------------------------
 		$accountInfoFieldset = new Fieldset('accountInfo');
@@ -170,7 +175,7 @@ class UserForm extends AbstractForm
 		$password = new Element\Password('password');
 		$password->setOptions(
 				array(
-					'allow_empty' => true,
+					'allow_empty' => false,
 					'required'    => true,
 					'filters'     => array(
 						new Filter\StringTrim(),
@@ -201,7 +206,7 @@ class UserForm extends AbstractForm
 		$confirmation = new Element\Password('confirmation');
 		$confirmation->setOptions(
 				array(
-					'allow_empty' => true,
+					'allow_empty' => false,
 					'required'    => true,
 					'filters'     => array(
 						new Filter\StringTrim(),
@@ -382,7 +387,8 @@ class UserForm extends AbstractForm
 						),
 					)
 				)
-			);
+			)
+			->setValue(User::USER_AVATAR_TYPE_GRAVATAR);
 		
 		// GRavatar ID
 		$avatarGrId = new Element\Text('avatargrid');
@@ -571,8 +577,12 @@ class UserForm extends AbstractForm
 					&& in_array($fileType, $this->allowedAvatarMime)
 				) {
 					$avatarValue = 'data:' . $fileType . ';base64,' . base64_encode(file_get_contents($fileName));
-					break;
 				}
+				// if there were no fileupload but the previus avatar is an uploaded one, we use it
+				elseif (strpos($avatarInfo['avatar'], 'data:image') !== false) {
+					$avatarValue = $avatarInfo['avatar'];
+				}
+				break;
 		}
 		
 		parent::setData($data);
@@ -580,6 +590,11 @@ class UserForm extends AbstractForm
 		$this->get('personalInfo')
 			->get('avatarInfo')
 			->get('avatarimage')
+			->setValue($avatarValue);
+		
+		$this->get('personalInfo')
+			->get('avatarInfo')
+			->get('avatar')
 			->setValue($avatarValue);
 
 		return $this;
@@ -648,49 +663,60 @@ class UserForm extends AbstractForm
 			/* @var $confirmElement \Zend\Form\Element\Password */
 			$confirmElement = $securityFieldset->get('confirmation');
 			// If there were no password change attempt, than we remove the required flag.
-			if ('' == $passwordElement->getValue()) {
+			if (
+				$this->defaultFormId == $this->getName() 
+				&& '' == $passwordElement->getValue()
+			) {
 				$passwordElement->setOptions(
 					array(
 						'required'    => false,
+						'allow_empty' => true,
 					)
 				);
 				$confirmElement->setOptions(
 					array(
 						'required'    => false,
+						'allow_empty' => true,
 					)
 				);
 			}
 
 			// Adding filters and validators for the Avatar section
 			$avatarType = $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->getValue();
+			$avatar     = $this->get('personalInfo')->get('avatarInfo')->get('avatar')->getValue();
 			
 			switch ($avatarType) {
 				case User::USER_AVATAR_TYPE_BASE64:
 					$fileData = $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->getValue();
-					// ZF2 show up a PHP warning if no file present in the POST, 
-					// so we set the avatar type back to GR Avatar.
-					if(empty($fileData['tmp_name'])) {
-						$this->get('personalInfo')->get('avatarInfo')->get('avatartype')->setValue(
-							User::USER_AVATAR_TYPE_GRAVATAR
-						);
-						break;
+
+					// if the current avatar is not an uploaded one
+					if (strpos($avatar, 'data:image') === false) {
+						// if no file present, we prevent PHP errors by changing the type
+						if(empty($fileData['tmp_name'])) {
+							$this->get('personalInfo')->get('avatarInfo')->get('avatartype')->setValue(
+								User::USER_AVATAR_TYPE_GRAVATAR
+							);
+						}
 					}
 					
-					$this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
-						array(
-							'required'    => true,
-							'allow_empty' => false,
-							'validators' => array(
-//								new Validator\File\FilesSize(array('max' => (102400))),
-								new Validator\File\UploadFile(),
-								new Validator\File\IsImage(),
-								new Validator\File\MimeType(
-									array('mimeType' => implode(',', $this->allowedAvatarMime))
-								),
-								new Validator\File\ImageSize(array('maxWidth' => 200, 'maxHeight' => 200))
+					// if there's an uploaded file then we set up the validators
+					if(!empty($fileData['tmp_name'])) {
+						$this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
+							array(
+								'required'    => true,
+								'allow_empty' => false,
+								'validators' => array(
+									new Validator\File\UploadFile(),
+									new Validator\File\IsImage(),
+									new Validator\File\MimeType(
+										array('mimeType' => implode(',', $this->allowedAvatarMime))
+									),
+									new Validator\File\ImageSize(array('maxWidth' => 200, 'maxHeight' => 200))
+								)
 							)
-						)
-					);
+						);
+					}
+					
 					break;
 				
 				case User::USER_AVATAR_TYPE_URL:

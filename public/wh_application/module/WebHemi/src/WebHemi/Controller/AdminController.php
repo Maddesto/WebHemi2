@@ -117,7 +117,36 @@ class AdminController extends UserController
 	 */
 	public function adduserAction()
 	{
-		return array();
+		/* @var $userAuth \WebHemi\Controller\Plugin\UserAuth */
+		$userAuth  = $this->userAuth();
+		$userName  = $this->params()->fromRoute('userName');
+		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel = $userTable->getUserByName($userName);
+		$request   = $this->getRequest();
+		
+		/* @var $editForm \WebHemi\Form\UserForm */
+		$editForm = $this->getForm('UserForm', 'adduser');
+		
+		if ($request->isPost()) {
+			$postData = array_merge_recursive(
+				$request->getPost()->toArray(),
+				$request->getFiles()->toArray()
+			);
+			
+			$editForm->setData($postData);
+dump($postData, 'Post');
+dump($editForm->isValid(), 'Is Valid?');
+			if ($editForm->isValid()) {
+dump($editForm->getData(), 'Data');
+			}
+			else {
+dump($editForm->getMessages(), 'Error Messages');
+			}
+		}
+		
+		return array(
+			'editForm'  => $editForm,
+		);
 	}
 
 	/**

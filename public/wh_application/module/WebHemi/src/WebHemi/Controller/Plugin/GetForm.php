@@ -44,12 +44,13 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
 	/**
 	 * Retrieve specific WebHemi Form
 	 *
-	 * @param string $resource
+	 * @param string $formName
+	 * @param string $name
 	 * @return AbstractForm
 	 */
-	public function __invoke($formName)
+	public function __invoke($formName, $name = null)
 	{
-		return $this->getServiceLocator()->get('formService')->$formName();
+		return $this->getServiceLocator()->get('formService')->$formName($name);
 	}
 
 	/**

@@ -61,23 +61,17 @@ class FormService implements ServiceManagerAwareInterface
 	public function __call($name, $arguments)
 	{
 		$formName   = preg_replace('/^get/i', '', $name);
-		$filterName = preg_replace('/Form$/i', 'Filter', $formName);
-
 		$formName = '\\WebHemi\\Form\\' . $formName;
-		$filterName = '\\WebHemi\\Form\\Filter\\' . $filterName;
+		
+		$formId = isset($arguments[0]) ? $arguments[0] : null;
 
-		// if the form is valid
 		if (!class_exists($formName)) {
 			throw new Exception\InvalidArgumentException(sprintf('%s doesn\'t seem to be a valid class.', $formName));
 		}
+		
 		if (!isset(self::$form[$formName])) {
-
-			$form = new $formName();
+			$form = new $formName($formId);
 			$form->setServiceManager($this->serviceManager);
-
-			if (class_exists($filterName)) {
-				$form->setInputFilter(new $filterName());
-			}
 			self::$form[$formName] = $form;
 		}
 
