@@ -337,7 +337,7 @@ class UserForm extends AbstractForm
 					'id'          => 'details',
 					'accesskey'   => 't',
 					'tabindex'    => self::$tabindex++,
-					'placeholder' => 'e.g.: I love racing cars.',
+					'placeholder' => 'e.g.: I love car racings.',
 				)
 			);
 		
@@ -406,7 +406,7 @@ class UserForm extends AbstractForm
 		
 		// external image location
 		$avatarUrl = new Element\Text('avatarurl');
-		$avatarUrl->setLabel('Image Internet location')
+		$avatarUrl->setLabel('Image location')
 			->setAttributes(
 				array(
 					'id'          => 'avatarurl',
