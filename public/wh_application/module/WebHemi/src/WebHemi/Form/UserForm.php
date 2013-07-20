@@ -397,24 +397,26 @@ class UserForm extends AbstractForm
 	 */
 	public function isValid(Element $formElement = null)
 	{
-		/* @var $securityFieldset \Zend\Form\Fieldset */
-		$securityFieldset = $this->get('securityInfo');
-		/* @var $passwordElement \Zend\Form\Element\Password */
-		$passwordElement = $securityFieldset->get('password');
-		/* @var $confirmElement \Zend\Form\Element\Password */
-		$confirmElement = $securityFieldset->get('confirmation');
-		// If there were no password change attempt, than we remove the required flag.
-		if ('' == $passwordElement->getValue()) {
-			$passwordElement->setOptions(
-				array(
-					'required'    => false,
-				)
-			);
-			$confirmElement->setOptions(
-				array(
-					'required'    => false,
-				)
-			);
+		if (empty($formElement)) {
+			/* @var $securityFieldset \Zend\Form\Fieldset */
+			$securityFieldset = $this->get('securityInfo');
+			/* @var $passwordElement \Zend\Form\Element\Password */
+			$passwordElement = $securityFieldset->get('password');
+			/* @var $confirmElement \Zend\Form\Element\Password */
+			$confirmElement = $securityFieldset->get('confirmation');
+			// If there were no password change attempt, than we remove the required flag.
+			if ('' == $passwordElement->getValue()) {
+				$passwordElement->setOptions(
+					array(
+						'required'    => false,
+					)
+				);
+				$confirmElement->setOptions(
+					array(
+						'required'    => false,
+					)
+				);
+			}
 		}
 		return  parent::isValid($formElement);
 	}
