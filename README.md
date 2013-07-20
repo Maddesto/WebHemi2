@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.19 Created by Gixx.
+Version 2.0.0.20 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -27,8 +27,9 @@ Features / Goals
 - Privilege system with IP blacklist [DONE]
 - Secure authentication [DONE]
 - Secure Form solution [DONE]
+- Form enhancements [IN PROGRESS]
 - Easy-to-use 'Admin' application [IN PROGRESS]
-- 'Virtual folder structure'-like content management [IN PROGRESS]
+- 'Virtual folder structure'-like content management [PLANNING]
 - Support for 3rd-party plugins [PLANNING]
 - Language support [PLANNING]
 - User friendly design for 'Admin' application [PLANNING]

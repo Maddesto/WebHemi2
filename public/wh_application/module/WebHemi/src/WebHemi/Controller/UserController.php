@@ -146,16 +146,19 @@ class UserController extends AbstractActionController
 		$editForm = $this->getForm('UserForm');
 
 		if ($request->isPost()) {
-			$error = false;
+			$postData = array_merge_recursive(
+				$request->getPost()->toArray(),
+				$request->getFiles()->toArray()
+			);
 
-			$editForm->setData($request->getPost());
-			dump($request->getPost(), 'Post');
-			dump($editForm->isValid(), 'Is Valid?');
+			$editForm->setData($postData);
+dump($postData, 'Post');
+dump($editForm->isValid(), 'Is Valid?');
 			if ($editForm->isValid()) {
-				dump($editForm->getData(), 'Data');
+dump($editForm->getData(), 'Data');
 			}
 			else {
-				dump($editForm->getMessages(), 'Error Messages');
+dump($editForm->getMessages(), 'Error Messages');
 			}
 
 			/* @var $details Zend\Form\Element */

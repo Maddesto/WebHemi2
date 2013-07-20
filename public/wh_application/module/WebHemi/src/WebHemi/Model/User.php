@@ -36,6 +36,13 @@ use WebHemi\Model\UserMeta as UserMetaModel;
  */
 class User
 {
+	/* User avatar type: GR Avatar */
+	const USER_AVATAR_TYPE_GRAVATAR = 1;
+	/* User avatar type: base64 encoded image file content */
+	const USER_AVATAR_TYPE_BASE64 = 2
+	/* User avatar type: link */;
+	const USER_AVATAR_TYPE_URL = 4;
+	
 	/** @var int      $userId */
 	protected $userId;
 	/** @var string   $username */
@@ -62,9 +69,6 @@ class User
 	protected $timeRegister;
 	/** @var array    $userMeta */
 	protected $userMeta;
-
-	/** @var InputFilterInterface $inputFilter */
-	protected $inputFilter;
 
 	/**
 	 * Set or Retrieve a user meta data
@@ -223,6 +227,45 @@ class User
 			return $this->email;
 		}
 		return null;
+	}
+
+	/**
+	 * Retrieves the type of the user avatar
+	 * 
+	 * @return int
+	 */
+	public function getAvatarType()
+	{
+		$avatar = $this->getAvatar();
+		$content = null;
+		
+		if (strpos($avatar, 'data:image') === 0) {	
+			$matches = array();
+			if (preg_match('/^data\:image\/(?:jpeg|gif|png);base64,(?P<content>.*)$/', $avatar, $matches)) {
+				$content = @base64_decode($matches['content']);
+
+				if ($content) {
+					$content = @imagecreatefromstring($content);
+					
+					if ($content) {
+						imagedestroy($content);
+						unset($content);
+						return self::USER_AVATAR_TYPE_BASE64;
+					}
+				}
+			}
+		}
+		// if the avatar is an URL, then we check if it's an image.'
+		elseif (strpos($avatar, 'http:') === 0) {
+			$content = @getimagesize($avatar);
+			if ($content && in_array($content[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+				unset($content);
+				return self::USER_AVATAR_TYPE_URL;
+			}
+		}
+		
+		unset($content);
+		return self::USER_AVATAR_TYPE_GRAVATAR;
 	}
 
 	/**
@@ -496,6 +539,21 @@ class User
 				'headline'      => $this->getHeadLine(),
 				'displayemail'  => $this->getDisplayEmail(),
 				'details'       => $this->getDetails(),
+				'avatarInfo'    => array(
+					'avatarimage'   => $this->getAvatar(),
+					'avatar'        => $this->getAvatar(),
+					'avatartype'    => $this->getAvatarType(),
+					'avatargrid'    => (
+						self::USER_AVATAR_TYPE_GRAVATAR == $this->getAvatarType()
+							? $this->getAvatar()
+							: ''
+					),
+					'avatarurl'     => (
+						self::USER_AVATAR_TYPE_URL == $this->getAvatarType()
+							? $this->getAvatar()
+							: ''
+					),
+				),
 			)
 		);
 		return $formArray;

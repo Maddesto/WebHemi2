@@ -2,6 +2,13 @@ Change log
 ==========
 
 ----------------
+Version 2.0.0.20
+----------------
+- Form enhancements: extended methods - getData(), setData(), isValid()
+- Implementing PlainText form element
+- Setting avatar is several different ways: GR Avatar ID, Internet URI to an image file, uploading image. Each has its own validation process.
+
+
 Version 2.0.0.19
 ----------------
 - Compatibilty fixes for Zend Framework version 2.2.1

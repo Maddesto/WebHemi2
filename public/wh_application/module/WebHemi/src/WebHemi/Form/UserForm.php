@@ -23,11 +23,13 @@
 namespace WebHemi\Form;
 
 use WebHemi\Form\AbstractForm,
-	WebHemi\Form\Filter,
+	WebHemi\Form\Filter\PurifierFilter,
+	WebHemi\Form\Element\PlainText,
+	WebHemi\Model\User,
 	Zend\Form\Fieldset,
 	Zend\Form\Element,
 	Zend\Validator,
-	Zend\Filter as ZendFilter;
+	Zend\Filter as Filter;
 
 /**
  * User Form
@@ -40,6 +42,10 @@ use WebHemi\Form\AbstractForm,
  */
 class UserForm extends AbstractForm
 {
+	/** @var array $allowedAvatarMime */
+	protected $allowedAvatarMime = array('image/gif','image/jpeg','image/pjpeg','image/png','image/x-png');
+
+
 	/**
 	 * Class constructor
 	 *
@@ -62,7 +68,7 @@ class UserForm extends AbstractForm
 				array(
 					'required'   => true,
 					'filters'    => array(
-						new ZendFilter\StringTrim(),
+						new Filter\StringTrim(),
 					),
 					'validators' => array(
 						new Validator\StringLength(
@@ -93,7 +99,7 @@ class UserForm extends AbstractForm
 				array(
 					'required'   => true,
 					'filters'    => array(
-						new ZendFilter\StringTrim(),
+						new Filter\StringTrim(),
 					),
 					'validators' => array(
 						new Validator\EmailAddress(
@@ -165,7 +171,7 @@ class UserForm extends AbstractForm
 					'allow_empty' => true,
 					'required'    => true,
 					'filters'     => array(
-						new ZendFilter\StringTrim(),
+						new Filter\StringTrim(),
 					),
 					'validators'  => array(
 						new Validator\StringLength(
@@ -196,7 +202,7 @@ class UserForm extends AbstractForm
 					'allow_empty' => true,
 					'required'    => true,
 					'filters'     => array(
-						new ZendFilter\StringTrim(),
+						new Filter\StringTrim(),
 					),
 					'validators'  => array(
 						new Validator\StringLength(
@@ -238,7 +244,7 @@ class UserForm extends AbstractForm
 		$displayName->setOptions(
 				array(
 					'filters'    => array(
-						new ZendFilter\StringTrim(),
+						new Filter\StringTrim(),
 					),
 					'validators' => array(
 						new Validator\StringLength(
@@ -265,7 +271,7 @@ class UserForm extends AbstractForm
 		$headLine->setOptions(
 				array(
 					'filters'    => array(
-						new ZendFilter\StringTrim(),
+						new Filter\StringTrim(),
 					),
 					'validators' => array(
 						new Validator\StringLength(
@@ -311,8 +317,8 @@ class UserForm extends AbstractForm
 		$details->setOptions(
 				array(
 					'filters'    => array(
-						new Filter\PurifierFilter(),
-						new ZendFilter\StringTrim(),
+						new PurifierFilter(),
+						new Filter\StringTrim(),
 					),
 				)
 			)
@@ -324,8 +330,98 @@ class UserForm extends AbstractForm
 					'tabindex'  => self::$tabindex++,
 				)
 			);
+		
+		$avatarSubFieldset = new Fieldset('avatarInfo');
+		$avatarSubFieldset->setLabel('Avatar');
+		
+		$avatar = new Element\Hidden('avatar');
+		
+		$avatarImage = new PlainText('avatarimage');
+		$avatarImage->setValue('')
+			->setAttributes(
+				array(
+					'id' => 'avatarimage',
+				)
+			);
+		
+		$avatarType = new Element\Radio('avatartype');
+		$avatarType->setOptions(
+				array(
+					'value_options' => array(
+						array(
+							'label' => 'GR Avatar', 
+							'value' => User::USER_AVATAR_TYPE_GRAVATAR,
+							'attributes' => array(
+								'accesskey' => 'g',
+								'tabindex'  => self::$tabindex++,
+							)
+						),
+						array(
+							'label' => 'File', 
+							'value' => User::USER_AVATAR_TYPE_BASE64,
+							'attributes' => array(
+								'accesskey' => 'f',
+								'tabindex'  => self::$tabindex++,
+							)
+						),
+						array(
+							'label' => 'URL', 
+							'value' => User::USER_AVATAR_TYPE_URL,
+							'attributes' => array(
+								'accesskey' => 'l',
+								'tabindex'  => self::$tabindex++,
+							)
+						),
+					)
+				)
+			);
+		
+		$avatarGrId = new Element\Text('avatargrid');
+		$avatarGrId->setLabel('GR Avatar ID')
+			->setAttributes(
+				array(
+					'id'        => 'avatargrid',
+					'accesskey' => 'a',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+		
+		$avatarUrl = new Element\Text('avatarurl');
+		$avatarUrl->setLabel('Image Internet location')
+			->setAttributes(
+				array(
+					'id'        => 'avatarurl',
+					'accesskey' => 'w',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+		
+		$avatarFile = new Element\File('avatarfile');
+		$avatarFile->setLabel('Upload your avatar')
+			->setAttributes(
+				array(
+					'id'        => 'avatarfile',
+					'accesskey' => 'i',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+		
+		// allow to upload file of size at most 100KB
+		$avatarFileUpload = new Element\Hidden('MAX_FILE_SIZE');
+		$avatarFileUpload->setValue(102400);
+		
+		$avatarSubFieldset->add($avatar)
+			->add($avatarFileUpload)
+			->add($avatarImage)
+			->add($avatarType)
+			->add($avatarGrId)
+			->add($avatarUrl)
+			->add($avatarFile);
 
-		$personalInfoFieldset->add($displayName)
+		$personalInfoFieldset->add($avatarSubFieldset)
+				->add($displayName)
 				->add($headLine)
 				->add($displayEmail)
 				->add($details);
@@ -352,6 +448,56 @@ class UserForm extends AbstractForm
 			->add($contactFieldset)
 			->add($submit);
 	}
+	
+	/**
+	 * Set data to validate and/or populate elements
+	 *
+	 * Typically, also passes data on to the composed input filter.
+	 *
+	 * @param  array|\ArrayAccess|Traversable $data
+	 * @return Form|FormInterface
+	 * @throws Exception\InvalidArgumentException
+	 */
+	public function setData($data)
+	{
+		/* @var $data \Zend\Stdlib\Parameters */
+		$avatarInfo  = $data['personalInfo']['avatarInfo'];
+		$avatarValue = '';
+		$fileName    = $avatarInfo['avatarfile']['tmp_name'];
+		$fileType    = $avatarInfo['avatarfile']['type'];
+		
+		// this is good for displaying the avatar based on the chosen type whether it is valid (type and size) or not.
+		switch ($avatarInfo['avatartype']) {
+			case User::USER_AVATAR_TYPE_GRAVATAR:
+				$avatarValue = $avatarInfo['avatargrid'];
+				$data['personalInfo']['avatarInfo']['avatarurl'] = '';
+				break;
+			
+			case User::USER_AVATAR_TYPE_URL:
+				$avatarValue = $avatarInfo['avatarurl'];
+				$data['personalInfo']['avatarInfo']['avatargrid'] = '';
+				break;
+			
+			case User::USER_AVATAR_TYPE_BASE64:
+				// only if the uploaded file is valid for type
+				if (
+					!empty($fileName) && file_exists($fileName) && is_readable($fileName)
+					&& in_array($fileType, $this->allowedAvatarMime)
+				) {
+					$avatarValue = 'data:' . $fileType . ';base64,' . base64_encode(file_get_contents($fileName));
+					break;
+				}
+		}
+		
+		parent::setData($data);
+		
+		$this->get('personalInfo')
+			->get('avatarInfo')
+			->get('avatarimage')
+			->setValue($avatarValue);
+
+		return $this;
+	}
 
 	/**
 	 * Creates element output for __toString() method
@@ -366,6 +512,16 @@ class UserForm extends AbstractForm
 		$acl = $this->getAclService();
 
 		switch ($id) {
+			case 'avatarimage':
+				$element->setValue(
+					$this->getViewRenderer()->avatar(
+						$element->getValue(), 
+						array(), 
+						array('style' => 'width: 100px; float: left; padding-right: 16px;')
+					)
+				);
+				break;
+			
 			case 'username':
 			case 'email':
 			case 'role':
@@ -398,6 +554,7 @@ class UserForm extends AbstractForm
 	public function isValid(Element $formElement = null)
 	{
 		if (empty($formElement)) {
+			// no need to validate password fields, if not given (no change attempt)
 			/* @var $securityFieldset \Zend\Form\Fieldset */
 			$securityFieldset = $this->get('securityInfo');
 			/* @var $passwordElement \Zend\Form\Element\Password */
@@ -416,6 +573,95 @@ class UserForm extends AbstractForm
 						'required'    => false,
 					)
 				);
+			}
+
+			// Adding filters and validators for the Avatar section
+			$avatarType = $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->getValue();
+			
+			switch ($avatarType) {
+				case User::USER_AVATAR_TYPE_BASE64:
+					$fileData = $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->getValue();
+					// ZF2 show up a PHP warning if no file present in the POST, 
+					// so we set the avatar type back to GR Avatar.
+					if(empty($fileData['tmp_name'])) {
+						$this->get('personalInfo')->get('avatarInfo')->get('avatartype')->setValue(
+							User::USER_AVATAR_TYPE_GRAVATAR
+						);
+						break;
+					}
+					
+					$this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
+						array(
+							'required'    => true,
+							'allow_empty' => false,
+							'validators' => array(
+//								new Validator\File\FilesSize(array('max' => (102400))),
+								new Validator\File\UploadFile(),
+								new Validator\File\IsImage(),
+								new Validator\File\MimeType(
+									array('mimeType' => implode(',', $this->allowedAvatarMime))
+								),
+								new Validator\File\ImageSize(array('maxWidth' => 200, 'maxHeight' => 200))
+							)
+						)
+					);
+					break;
+				
+				case User::USER_AVATAR_TYPE_URL:
+					$this->get('personalInfo')->get('avatarInfo')->get('avatarurl')->setOptions(
+						array(
+							'required'    => true,
+							'allow_empty' => false,
+							'filters'    => array(
+								new Filter\StringTrim(),
+							),
+							'validators'  => array(
+								new Validator\Uri(
+									array(
+										'allowRelative' => false,
+										'allowAbsolute' => true,
+									)
+								),
+								new Validator\StringLength(
+									array(
+										'min'      => '11',
+										'max'      => '255',
+										'encoding' => 'UTF-8'
+									)
+								),
+							),
+						)
+					);
+					break;
+				
+				case User::USER_AVATAR_TYPE_GRAVATAR:
+				default:
+					$this->get('personalInfo')->get('avatarInfo')->get('avatargrid')->setOptions(
+						array(
+							'required'    => true,
+							'allow_empty' => false,
+							'filters'    => array(
+								new Filter\StringTrim(),
+							),
+							'validators'  => array(
+								new Validator\EmailAddress(
+									array(
+										'allow' => Validator\Hostname::ALLOW_DNS,
+										'useDomainCheck' => true,
+										'useMxCheck'     => true,
+										'useDeepMxCheck' => true
+									)
+								),
+								new Validator\StringLength(
+									array(
+										'min'      => '6',
+										'max'      => '255',
+										'encoding' => 'UTF-8'
+									)
+								),
+							),
+						)
+					);
 			}
 		}
 		return  parent::isValid($formElement);

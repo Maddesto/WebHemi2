@@ -20,6 +20,7 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 return array(
+	// Configuration keys: \Zend\Mvc\Service\ModuleManagerFactory
 	'service_manager' => array(
 		'invokables' => array(
 			'authAdapterDb' => 'WebHemi\Auth\Adapter\Db',
@@ -55,7 +56,9 @@ return array(
 	),
 	'view_helpers' => array(
 		'invokables' => array(
-			'avatar'      => 'WebHemi\View\Helper\Avatar',
+			'avatar'        => 'WebHemi\View\Helper\Avatar',
+			'formelement'   => 'WebHemi\Form\View\Helper\FormElement',
+			'formPlainText' => 'WebHemi\Form\View\Helper\FormPlainText'
 		),
 		'factories' => array(
 			'isAllowed'   => 'WebHemi\View\Helper\Factory\IsAllowedFactory',
