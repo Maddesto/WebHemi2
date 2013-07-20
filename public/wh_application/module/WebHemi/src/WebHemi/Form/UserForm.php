@@ -261,10 +261,11 @@ class UserForm extends AbstractForm
 			->setLabel('Display Name')
 			->setAttributes(
 				array(
-					'id'        => 'displayname',
-					'accesskey' => 'n',
-					'maxlength' => '255',
-					'tabindex'  => self::$tabindex++,
+					'id'          => 'displayname',
+					'accesskey'   => 'n',
+					'maxlength'   => '255',
+					'tabindex'    => self::$tabindex++,
+					'placeholder' => 'e.g.: Banana Joe',
 				)
 			);
 
@@ -288,10 +289,11 @@ class UserForm extends AbstractForm
 			->setLabel('Headline')
 			->setAttributes(
 				array(
-					'id'        => 'headline',
-					'accesskey' => 'h',
-					'maxlength' => '255',
-					'tabindex'  => self::$tabindex++,
+					'id'          => 'headline',
+					'accesskey'   => 'h',
+					'maxlength'   => '255',
+					'tabindex'    => self::$tabindex++,
+					'placeholder' => 'e.g.: Billionaire genius',
 				)
 			);
 
@@ -327,9 +329,10 @@ class UserForm extends AbstractForm
 			->setLabel('Details')
 			->setAttributes(
 				array(
-					'id'        => 'details',
-					'accesskey' => 't',
-					'tabindex'  => self::$tabindex++,
+					'id'          => 'details',
+					'accesskey'   => 't',
+					'tabindex'    => self::$tabindex++,
+					'placeholder' => 'e.g.: I love racing cars.',
 				)
 			);
 		
@@ -386,11 +389,12 @@ class UserForm extends AbstractForm
 		$avatarGrId->setLabel('GR Avatar ID')
 			->setAttributes(
 				array(
-					'id'        => 'avatargrid',
-					'type'      => 'email',
-					'accesskey' => 'a',
-					'maxlength' => '255',
-					'tabindex'  => self::$tabindex++,
+					'id'          => 'avatargrid',
+					'type'        => 'email',
+					'accesskey'   => 'a',
+					'maxlength'   => '255',
+					'tabindex'    => self::$tabindex++,
+					'placeholder' => 'e.g.: mike@foo.org',
 				)
 			);
 		
@@ -399,11 +403,12 @@ class UserForm extends AbstractForm
 		$avatarUrl->setLabel('Image Internet location')
 			->setAttributes(
 				array(
-					'id'        => 'avatarurl',
-					'type'      => 'url',
-					'accesskey' => 'w',
-					'maxlength' => '255',
-					'tabindex'  => self::$tabindex++,
+					'id'          => 'avatarurl',
+					'type'        => 'url',
+					'accesskey'   => 'w',
+					'maxlength'   => '255',
+					'tabindex'    => self::$tabindex++,
+					'placeholder' => 'e.g.: http://foo.org/avatar.jpg',
 				)
 			);
 		
@@ -761,8 +766,6 @@ class UserForm extends AbstractForm
 							$countryCode = $phoneCodeData[$phoneNumber[0]][$prefix];
 							$phoneNumberElement->setOptions(
 									array(
-										'required'    => true,
-										'allow_empty' => false,
 										'validators'  => array(
 											new I18nValidator\PhoneNumber(
 												array(
