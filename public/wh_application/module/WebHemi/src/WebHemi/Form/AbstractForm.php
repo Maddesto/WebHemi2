@@ -139,6 +139,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 	{
 		// @TODO: find out why is this method called twice (isValid)
 		if (!isset(self::$validatedForms[$this->getName()])) {
+			// if no element specified to validate we go through the entire form
 			if (empty($formElement)) {
 				$result = parent::isValid();
 				
@@ -156,14 +157,21 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 				}
 				self::$validatedForms[$this->getName()] = $result;
 			}
+			// the fieldsets may contain other fieldsets and elements
 			elseif ($formElement instanceof Fieldset) {
 				$fieldsetResult = true;
+				foreach ($formElement->getFieldsets() as $fieldset) {
+					/* @var $fieldset \Zend\Form\Fieldset */
+					$fieldsetResult = $this->isValid($fieldset) && $fieldsetResult;
+				}
+
 				foreach ($formElement->getElements() as $element) {
 					/* @var $element \Zend\Form\Element */
 					$fieldsetResult = $this->isValid($element) && $fieldsetResult;
 				}
 				return $fieldsetResult;
 			}
+			// validate the elements only
 			else {
 				$elementResult = true;
 				
@@ -227,8 +235,9 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			));
 		}
 		
+		$data = array();
+		
 		if (empty($formElement)) {
-			$data = array();
 			foreach ($this->getFieldsets() as $fieldset) {
 				/* @var $fieldset \Zend\Form\Fieldset */
 				$data[$fieldset->getName()] = $this->getData($flag, $fieldset);
@@ -240,7 +249,11 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			}
 		}
 		elseif ($formElement instanceof Fieldset) {
-			$data = array();
+			foreach ($formElement->getFieldsets() as $fieldset) {
+				/* @var $fieldset \Zend\Form\Fieldset */
+				$data[$fieldset->getName()] = $this->getData($flag, $fieldset);
+			}
+			
 			foreach ($formElement->getElements() as $element) {
 				/* @var $element \Zend\Form\Element */
 				$data[$element->getName()] = $this->getData($flag, $element);
