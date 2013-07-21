@@ -14,7 +14,7 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi
- * @package    WebHemi_View_Helper
+ * @package    WebHemi_Form_Filter
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
@@ -23,10 +23,10 @@
 namespace WebHemi\Form\Filter;
 
 /**
- * View helper for HTML Purufier
+ * Form filter for HTML Purufier
  *
  * @category   WebHemi
- * @package    WebHemi_View_Helper
+ * @package    WebHemi_Form_Filter
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License

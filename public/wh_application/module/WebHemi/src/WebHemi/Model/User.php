@@ -558,10 +558,11 @@ class User
 				),
 			),
 			'contactInfo' => array(
-				'phonenumber'    => $this->getPhoneNumber(),
-				'location'       => $this->getLocation(),
-				'socialnetworks' => $this->getSocialNetworks(),
-				'websites'       => $this->getWebsites(),
+				'phonenumber'       => $this->getPhoneNumber(),
+				'location'          => $this->getLocation(),
+				'instantmessengers' => $this->getInstantMessengers(),
+				'socialnetworks'    => $this->getSocialNetworks(),
+				'websites'          => $this->getWebsites(),
 			)
 		);
 		return $formArray;

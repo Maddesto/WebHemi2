@@ -205,30 +205,7 @@ class UserForm extends AbstractForm
 
 		// the password confirmation input
 		$confirmation = new Element\Password('confirmation');
-		$confirmation->setOptions(
-				array(
-					'allow_empty' => false,
-					'required'    => true,
-					'filters'     => array(
-						new Filter\StringTrim(),
-					),
-					'validators'  => array(
-						new Validator\StringLength(
-							array(
-								'min'      => '8',
-								'max'      => '255',
-								'encoding' => 'UTF-8'
-							)
-						),
-						new Validator\Identical(
-							array(
-								'token' => 'password'
-							)
-						),
-					),
-				)
-			)
-			->setLabel('Confirm password')
+		$confirmation->setLabel('Confirm password')
 			->setAttributes(
 				array(
 					'id'        => 'password',
@@ -518,6 +495,24 @@ class UserForm extends AbstractForm
 				)
 			);
 
+		// the instantmessengers input
+		$instantMessengers = new Element\Textarea('instantmessengers');
+		$instantMessengers->setOptions(
+				array(
+					'filters'    => array(
+						new Filter\StringTrim(),
+					),
+				)
+			)
+			->setLabel('Instant Messengers')
+			->setAttributes(
+				array(
+					'id'        => 'instantmessengers',
+					'accesskey' => 'n',
+					'tabindex'  => self::$tabindex++,
+				)
+			);
+
 		// the socialnetworks input
 		$socialNetworks = new Element\Textarea('socialnetworks');
 		$socialNetworks->setOptions(
@@ -557,6 +552,7 @@ class UserForm extends AbstractForm
 
 		$contactFieldset->add($phoneNumber)
 			->add($location)
+			->add($instantMessengers)
 			->add($socialNetworks)
 			->add($websites);
 
@@ -770,6 +766,24 @@ class UserForm extends AbstractForm
 				array(
 					'required'    => false,
 					'allow_empty' => true,
+				)
+			);
+		}
+		else {
+			$confirmElement->setOptions(
+				array(
+					'allow_empty' => false,
+					'required'    => true,
+					'filters'     => array(
+						new Filter\StringTrim(),
+					),
+					'validators'  => array(
+						new Validator\Identical(
+							array(
+								'token' => $passwordElement->getValue()
+							)
+						),
+					),
 				)
 			);
 		}

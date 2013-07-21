@@ -24,10 +24,12 @@ namespace WebHemi\Controller;
 
 use WebHemi\Application,
 	WebHemi\Model\Table\User as UserTable,
+	WebHemi\Auth\Adapter\Adapter as AuthAdapter,
+	Zend\Mvc\MvcEvent,
 	Zend\Mvc\Controller\AbstractActionController,
+	Zend\Crypt\Password\Bcrypt,
 	Zend\Authentication\Result,
-	Zend\View\Model\ViewModel,
-	Zend\Mvc\MvcEvent;
+	Zend\View\Model\ViewModel;
 
 /**
  * WebHemi User Controller
@@ -152,16 +154,69 @@ class UserController extends AbstractActionController
 			);
 
 			$editForm->setData($postData);
-dump($postData, 'Post');
-dump($editForm->isValid(), 'Is Valid?');
+
 			if ($editForm->isValid()) {
-dump($editForm->getData(), 'Data');
+				$userData = $editForm->getData();
+				// only the admin can edit some data
+				if ($userAuth->getIdentity()->getRole() == 'admin') {
+					if (!empty($userData['accountInfo']['username'])) {
+						$userModel->setUsername($userData['accountInfo']['username']);
+					}
+
+					if (!empty($userData['accountInfo']['email'])) {
+						$userModel->setEmail($userData['accountInfo']['email']);
+					}
+
+					// renew the hash (for autologin)
+					$hash = md5($userModel->getUsername() . '-' . $userModel->getEmail());
+					$userModel->setHash($hash);
+
+					// it is not allowed for an admin to change his/her own privilege
+					// imagine what will happen if no more admin left...
+					if ($userAuth->getIdentity()->getUserId() != $userModel->getUserId()) {
+						if (!empty($userData['accountInfo']['role'])) {
+							$userModel->setRole($userData['accountInfo']['role']);
+						}
+					}
+				}
+
+				// encrypt the password
+				if (!empty($userData['securityInfo']['password'])) {
+					$bcrypt = new Bcrypt();
+					$bcrypt->setCost(AuthAdapter::PASSWORD_COST);
+					$userModel->setPassword($bcrypt->create($userData['securityInfo']['password']));
+				}
+
+				// user meta data
+				$userModel->setAvatar($userData['personalInfo']['avatarInfo']['avatar']);
+				$userModel->setDisplayName($userData['personalInfo']['displayname']);
+				$userModel->setHeadLine($userData['personalInfo']['headline']);
+				$userModel->setDisplayEmail($userData['personalInfo']['displayemail']);
+				$userModel->setDetails($userData['personalInfo']['details']);
+				$userModel->setPhoneNumber($userData['contactInfo']['phonenumber']);
+				$userModel->setLocation($userData['contactInfo']['location']);
+				$userModel->setInstantMessengers($userData['contactInfo']['instantmessengers']);
+				$userModel->setSocialNetworks($userData['contactInfo']['socialnetworks']);
+				$userModel->setWebsites($userData['contactInfo']['websites']);
+
+				try {
+					$userTable->update($userModel);
+					return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
+				}
+				catch (\Exception $e) {
+					dump($e->__toString());
+					exit;
+					$editForm->setMessages(
+						array(
+							'submit' => $e->getMessage()
+						)
+					);
+				}
 			}
 			else {
-dump($editForm->getMessages(), 'Error Messages');
+				dump($postData, 'POST');
+				dump($editForm->getData(), 'User Data');
 			}
-
-			/* @var $details Zend\Form\Element */
 		}
 		else {
 			$editForm->bind($userModel);
@@ -213,7 +268,7 @@ dump($editForm->getMessages(), 'Error Messages');
 				$authAdapter->setCredential($password);
 
 				$authResult = $userAuth->getAuthService()->authenticate($authAdapter);
-				
+
 				switch($authResult->getCode()) {
 					// if user is authenticated
 					case Result::SUCCESS:
