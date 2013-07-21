@@ -22,7 +22,7 @@
 
 namespace WebHemi\Form\Element;
 
-use Zend\Form\Element as ZendElement;
+use Zend\Form\Element\Text;
 
 /**
  * WebHemi Form Plain Text element
@@ -33,10 +33,10 @@ use Zend\Form\Element as ZendElement;
  * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class PlainText extends ZendElement
+class Location extends Text
 {
 	/** @var array $attributes */
 	protected $attributes = array(
-		'type' => 'plaintext',
+		'type' => 'location',
 	);
 }

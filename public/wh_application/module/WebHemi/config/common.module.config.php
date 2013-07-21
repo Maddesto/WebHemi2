@@ -57,8 +57,9 @@ return array(
 	'view_helpers' => array(
 		'invokables' => array(
 			'avatar'        => 'WebHemi\View\Helper\Avatar',
-			'formelement'   => 'WebHemi\Form\View\Helper\FormElement',
-			'formPlainText' => 'WebHemi\Form\View\Helper\FormPlainText'
+			'formElement'   => 'WebHemi\Form\View\Helper\FormElement',
+			'formPlainText' => 'WebHemi\Form\View\Helper\FormPlainText',
+			'formLocation'  => 'WebHemi\Form\View\Helper\FormLocation',
 		),
 		'factories' => array(
 			'isAllowed'   => 'WebHemi\View\Helper\Factory\IsAllowedFactory',

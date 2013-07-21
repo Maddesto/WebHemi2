@@ -22,6 +22,7 @@
 namespace WebHemi\Form\View\Helper;
 
 use WebHemi\Form\Element\PlainText,
+	WebHemi\Form\Element\Location,
 	Zend\Form\View\Helper\FormElement as OriginalFormElement,
 	Zend\Form\ElementInterface;
 
@@ -34,7 +35,7 @@ use WebHemi\Form\Element\PlainText,
  * @copyright  Copyright (c) 2013, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class FormElement extends OriginalFormElement 
+class FormElement extends OriginalFormElement
 {
 	/**
 	 * Render an element
@@ -52,12 +53,17 @@ class FormElement extends OriginalFormElement
 		if (!method_exists($renderer, 'plugin')) {
 			return '';
 		}
-		
+
 		if ($element instanceof PlainText) {
 			$helper = $renderer->plugin('form_plain_text');
 			return $helper($element);
 		}
-		
+
+		if ($element instanceof Location) {
+			$helper = $renderer->plugin('form_location');
+			return $helper($element);
+		}
+
 		return parent::render($element);
 	}
 }

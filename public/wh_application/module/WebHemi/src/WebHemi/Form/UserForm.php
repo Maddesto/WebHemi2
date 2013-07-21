@@ -25,6 +25,7 @@ namespace WebHemi\Form;
 use WebHemi\Form\AbstractForm,
 	WebHemi\Form\Filter\PurifierFilter,
 	WebHemi\Form\Element\PlainText,
+	WebHemi\Form\Element\Location,
 	WebHemi\Model\User,
 	Zend\Form\Fieldset,
 	Zend\Form\Element,
@@ -489,6 +490,34 @@ class UserForm extends AbstractForm
 				)
 			);
 
+		// the displayname input
+		$location = new Location('location');
+		$location->setOptions(
+				array(
+					'filters'    => array(
+						new Filter\StringTrim(),
+					),
+					'validators' => array(
+						new Validator\StringLength(
+							array(
+								'max'      => '255',
+								'encoding' => 'UTF-8'
+							)
+						),
+					),
+				)
+			)
+			->setLabel('Location')
+			->setAttributes(
+				array(
+					'id'        => 'location',
+					'accesskey' => 'n',
+					'maxlength' => '255',
+					'tabindex'  => self::$tabindex++,
+					'placeholder' => 'e.g.: London, England',
+				)
+			);
+
 		// the socialnetworks input
 		$socialNetworks = new Element\Textarea('socialnetworks');
 		$socialNetworks->setOptions(
@@ -527,6 +556,7 @@ class UserForm extends AbstractForm
 			);
 
 		$contactFieldset->add($phoneNumber)
+			->add($location)
 			->add($socialNetworks)
 			->add($websites);
 

@@ -44,7 +44,7 @@ class User
 	const USER_AVATAR_TYPE_BASE64 = 2
 	/* User avatar type: link */;
 	const USER_AVATAR_TYPE_URL = 4;
-	
+
 	/** @var int      $userId */
 	protected $userId;
 	/** @var string   $username */
@@ -233,22 +233,22 @@ class User
 
 	/**
 	 * Retrieves the type of the user avatar
-	 * 
+	 *
 	 * @return int
 	 */
 	public function getAvatarType()
 	{
 		$avatar = $this->getAvatar();
 		$content = null;
-		
-		if (strpos($avatar, 'data:image') === 0) {	
+
+		if (strpos($avatar, 'data:image') === 0) {
 			$matches = array();
 			if (preg_match('/^data\:image\/(?:jpeg|gif|png);base64,(?P<content>.*)$/', $avatar, $matches)) {
 				$content = @base64_decode($matches['content']);
 
 				if ($content) {
 					$content = @imagecreatefromstring($content);
-					
+
 					if ($content) {
 						imagedestroy($content);
 						unset($content);
@@ -265,7 +265,7 @@ class User
 				return self::USER_AVATAR_TYPE_URL;
 			}
 		}
-		
+
 		unset($content);
 		return self::USER_AVATAR_TYPE_NONE;
 	}
@@ -559,6 +559,7 @@ class User
 			),
 			'contactInfo' => array(
 				'phonenumber'    => $this->getPhoneNumber(),
+				'location'       => $this->getLocation(),
 				'socialnetworks' => $this->getSocialNetworks(),
 				'websites'       => $this->getWebsites(),
 			)
