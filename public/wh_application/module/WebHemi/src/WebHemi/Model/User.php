@@ -36,6 +36,8 @@ use WebHemi\Model\UserMeta as UserMetaModel;
  */
 class User
 {
+	/* User avatar type: No avatar */
+	const USER_AVATAR_TYPE_NONE = 0;
 	/* User avatar type: GR Avatar */
 	const USER_AVATAR_TYPE_GRAVATAR = 1;
 	/* User avatar type: base64 encoded image file content */
@@ -265,7 +267,7 @@ class User
 		}
 		
 		unset($content);
-		return self::USER_AVATAR_TYPE_GRAVATAR;
+		return self::USER_AVATAR_TYPE_NONE;
 	}
 
 	/**
@@ -515,8 +517,8 @@ class User
 			'register_ip'   => $this->registerIp,
 			'is_active'     => $this->isActive ? 1 : 0,
 			'is_enabled'    => $this->isEnabled ? 1 : 0,
-			'time_login'    => $this->timeLogin->format('Y-m-d H:i:s'),
-			'time_register' => $this->timeRegister->format('Y-m-d H:i:s')
+			'time_login'    => $this->timeLogin ? $this->timeLogin->format('Y-m-d H:i:s') : null,
+			'time_register' => $this->timeRegister ? $this->timeRegister->format('Y-m-d H:i:s') : null
 		);
 	}
 

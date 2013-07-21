@@ -213,7 +213,7 @@ dump($editForm->getMessages(), 'Error Messages');
 				$authAdapter->setCredential($password);
 
 				$authResult = $userAuth->getAuthService()->authenticate($authAdapter);
-
+				
 				switch($authResult->getCode()) {
 					// if user is authenticated
 					case Result::SUCCESS:

@@ -27,6 +27,7 @@ use WebHemi\Model\User as UserModel,
 	WebHemi\Model\Table\UserMeta as UserMetaTable,
 	Zend\Db\Exception,
 	Zend\Db\TableGateway\AbstractTableGateway,
+	Zend\Db\Adapter\Driver\Pdo\Connection as PdoConnection,
 	Zend\Db\Adapter\Adapter,
 	Zend\Db\ResultSet\ResultSet;
 
@@ -171,22 +172,36 @@ class User extends AbstractTableGateway
 	/**
 	 * Save all user meta data from the user model
 	 *
-	 * @param null $userMeta
+	 * @param array $userMeta
+	 * @param int   $userId
+	 * @throws Exception\InvalidArgumentException
+	 * @return bool|int
 	 */
-	protected function saveUserMeta($userMeta, $userId)
+	protected function saveUserMeta(array $userMeta, $userId)
 	{
-		if (is_array($userMeta)) {
-			foreach ($userMeta as $userMetaModel) {
-				if ($userMetaModel instanceof UserMetaModel) {
-					// If the User is inserted before this, then the user meta got no userId by this time
-					if (!$userMetaModel->getUserId()) {
-						$userMetaModel->setUserId($userId);
-					}
-					$metaTable = new UserMetaTable($this->adapter);
-					$metaTable->save($userMetaModel);
-				}
+		$result = true;
+		$affectedRows = 0;
+		
+		foreach ($userMeta as $userMetaModel) {
+			if (!$userMetaModel instanceof UserMetaModel) {
+				throw new Exception\InvalidArgumentException('Given parameter is not a valid UserMetaModel');
+			}
+
+			// If the User is inserted before this, then the user meta got no userId by this time
+			if (!$userMetaModel->getUserId()) {
+				$userMetaModel->setUserId($userId);
+			}
+			$metaTable = new UserMetaTable($this->adapter);
+			$metaResult = $metaTable->save($userMetaModel);
+			if ($metaResult === false) {
+				$result = false;
+			}
+			else {
+				$affectedRows += $metaResult;
 			}
 		}
+		
+		return !$result ? false : $affectedRows;
 	}
 
 	/**
@@ -195,6 +210,7 @@ class User extends AbstractTableGateway
 	 * @param  UserModel $userModel
 	 * @return int
 	 * @throws Exception\InvalidArgumentException
+	 * @throws Exception\UnexpectedValueException
 	 */
 	public function insert($userModel)
 	{
@@ -204,14 +220,35 @@ class User extends AbstractTableGateway
 
 		$userId = $userModel->getUserId();
 		if (!empty($userId) && $this->getUserById($userId)) {
-			throw new \Exception('Record already exists!');
+			throw new Exception\UnexpectedValueException('Record already exists!');
 		}
 
+		// the DB connection
+		/* @var $connection PdoConnection */
+		$connection = $this->getAdapter()->getDriver()->getConnection();
+		
+		// start the transaction
+		$connection->beginTransaction();
+		
 		$result = parent::insert($userModel->toArray());
+		
+		// if insertion was succesful, we may go on
 		if ($result) {
 			$userId      = $this->lastInsertValue;
 			$userMeta    = $userModel->getUserMetaData();
-			$this->saveUserMeta($userMeta, $userId);
+			try {
+				$metaResult = $this->saveUserMeta($userMeta, $userId);
+				if ($metaResult === false) {
+					throw new Exception\UnexpectedValueException('Cannot save User Meta in ' . __METHOD__);
+				}
+				// if everything is correct, we apply the changes
+				$connection->commit();
+			} 
+			catch (Exception $ex) {
+				// on failure, we rollback the whole transaction
+				$connection->rollback();
+				$result = false;
+			}
 		}
 
 		return $result;
@@ -229,11 +266,32 @@ class User extends AbstractTableGateway
 		if (!$userModel instanceof UserModel) {
 			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
 		}
+		
+		// the DB connection
+		/* @var $connection PdoConnection */
+		$connection = $this->getAdapter()->getDriver()->getConnection();
+		
+		// start the transaction
+		$connection->beginTransaction();
 
 		$result = parent::update($userModel->toArray(), array('user_id' => $userModel->getUserId()));
+		
+		// if the update was successful, we may go on
 		if ($result) {
 			$userMeta = $userModel->getUserMetaData();
-			$this->saveUserMeta($userMeta, $userModel->getUserId());
+			try {
+				$metaResult = $this->saveUserMeta($userMeta, $userModel->getUserId());
+				if ($metaResult === false) {
+					throw new Exception\UnexpectedValueException('Cannot save User Meta in ' . __METHOD__);
+				}
+				// if everything is correct, we apply the changes
+				$connection->commit();
+			}
+			catch (Exception $ex) {
+				// on failure, we rollback the whole transaction
+				$connection->rollback();
+				$result = false;
+			}
 		}
 		return $result;
 	}

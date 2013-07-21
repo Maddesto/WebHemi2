@@ -362,6 +362,14 @@ class UserForm extends AbstractForm
 				array(
 					'value_options' => array(
 						array(
+							'label' => 'Default', 
+							'value' => User::USER_AVATAR_TYPE_NONE,
+							'attributes' => array(
+								'accesskey' => 'y',
+								'tabindex'  => self::$tabindex++,
+							)
+						),
+						array(
 							'label' => 'GR Avatar', 
 							'value' => User::USER_AVATAR_TYPE_GRAVATAR,
 							'attributes' => array(
@@ -388,7 +396,7 @@ class UserForm extends AbstractForm
 					)
 				)
 			)
-			->setValue(User::USER_AVATAR_TYPE_GRAVATAR);
+			->setValue(User::USER_AVATAR_TYPE_NONE);
 		
 		// GRavatar ID
 		$avatarGrId = new Element\Text('avatargrid');
@@ -560,6 +568,11 @@ class UserForm extends AbstractForm
 		
 		// this is good for displaying the avatar based on the chosen type whether it is valid (type and size) or not.
 		switch ($avatarInfo['avatartype']) {
+			case User::USER_AVATAR_TYPE_NONE:
+				$data['personalInfo']['avatarInfo']['avatarurl'] = '';
+				$data['personalInfo']['avatarInfo']['avatargrid'] = '';
+				break;
+			
 			case User::USER_AVATAR_TYPE_GRAVATAR:
 				$avatarValue = $avatarInfo['avatargrid'];
 				$data['personalInfo']['avatarInfo']['avatarurl'] = '';
@@ -655,165 +668,227 @@ class UserForm extends AbstractForm
 	public function isValid(Element $formElement = null)
 	{
 		if (empty($formElement)) {
+			// no need to validate username and email when no rights to change them
+			$this->prepareAccountInfoFieldset();
 			// no need to validate password fields, if not given (no change attempt)
-			/* @var $securityFieldset \Zend\Form\Fieldset */
-			$securityFieldset = $this->get('securityInfo');
-			/* @var $passwordElement \Zend\Form\Element\Password */
-			$passwordElement = $securityFieldset->get('password');
-			/* @var $confirmElement \Zend\Form\Element\Password */
-			$confirmElement = $securityFieldset->get('confirmation');
-			// If there were no password change attempt, than we remove the required flag.
-			if (
-				$this->defaultFormId == $this->getName() 
-				&& '' == $passwordElement->getValue()
-			) {
-				$passwordElement->setOptions(
-					array(
-						'required'    => false,
-						'allow_empty' => true,
-					)
-				);
-				$confirmElement->setOptions(
-					array(
-						'required'    => false,
-						'allow_empty' => true,
-					)
-				);
-			}
+			$this->prepareSecurityInfoFieldset();
+			// set up avatar accourding to the given type
+			$this->prepareAvatar();
+			// determine country code and apply validator
+			$this->preparePhoneNumber();
+		}
+		return parent::isValid($formElement);
+	}
+	
+	/**
+	 * Prepare user data for validation
+	 */
+	protected function prepareAccountInfoFieldset()
+	{
+		/* @var $acl \WebHemi\Acl\Acl */
+		$acl = $this->getAclService();
+		
+		// if no rights to change, no need to validate
+		if (!$acl->isAllowed('admin/adduser')) {
+			$this->get('accountInfo')->get('username')->setOptions(
+				array(
+					'required'   => false,
+					'filters'    => array(),
+					'validators' => array()
+				)
+			);
+			$this->get('accountInfo')->get('email')->setOptions(
+				array(
+					'required'   => false,
+					'filters'    => array(),
+					'validators' => array()
+				)
+			);
+			$this->get('accountInfo')->get('role')->setOptions(
+				array(
+					'required'   => false,
+					'filters'    => array(),
+					'validators' => array()
+				)
+			);
+		}
+	}
 
-			// Adding filters and validators for the Avatar section
-			$avatarType = $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->getValue();
-			$avatar     = $this->get('personalInfo')->get('avatarInfo')->get('avatar')->getValue();
-			
-			switch ($avatarType) {
-				case User::USER_AVATAR_TYPE_BASE64:
-					$fileData = $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->getValue();
 
-					// if the current avatar is not an uploaded one
-					if (strpos($avatar, 'data:image') === false) {
-						// if no file present, we prevent PHP errors by changing the type
-						if(empty($fileData['tmp_name'])) {
-							$this->get('personalInfo')->get('avatarInfo')->get('avatartype')->setValue(
-								User::USER_AVATAR_TYPE_GRAVATAR
-							);
-						}
-					}
-					
-					// if there's an uploaded file then we set up the validators
-					if(!empty($fileData['tmp_name'])) {
-						$this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
-							array(
-								'required'    => true,
-								'allow_empty' => false,
-								'validators' => array(
-									new Validator\File\UploadFile(),
-									new Validator\File\IsImage(),
-									new Validator\File\MimeType(
-										array('mimeType' => implode(',', $this->allowedAvatarMime))
-									),
-									new Validator\File\ImageSize(array('maxWidth' => 200, 'maxHeight' => 200))
-								)
-							)
+	/**
+	 * Prepare password form elements for validation
+	 */
+	protected function prepareSecurityInfoFieldset() {
+		/* @var $securityFieldset \Zend\Form\Fieldset */
+		$securityFieldset = $this->get('securityInfo');
+		/* @var $passwordElement \Zend\Form\Element\Password */
+		$passwordElement = $securityFieldset->get('password');
+		/* @var $confirmElement \Zend\Form\Element\Password */
+		$confirmElement = $securityFieldset->get('confirmation');
+		// If there were no password change attempt, than we remove the required flag.
+		if (
+			$this->defaultFormId == $this->getName() 
+			&& '' == $passwordElement->getValue()
+		) {
+			$passwordElement->setOptions(
+				array(
+					'required'    => false,
+					'allow_empty' => true,
+				)
+			);
+			$confirmElement->setOptions(
+				array(
+					'required'    => false,
+					'allow_empty' => true,
+				)
+			);
+		}
+	}
+	
+	/**
+	 * Prepare avatar for validation
+	 */
+	protected function prepareAvatar()
+	{
+		// Adding filters and validators for the Avatar section
+		$avatarType = $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->getValue();
+		$avatar     = $this->get('personalInfo')->get('avatarInfo')->get('avatar')->getValue();
+
+		switch ($avatarType) {
+			case User::USER_AVATAR_TYPE_BASE64:
+				$fileData = $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->getValue();
+
+				// if the current avatar is not an uploaded one
+				if (strpos($avatar, 'data:image') === false) {
+					// if no file present, we prevent PHP errors by changing the type
+					if(empty($fileData['tmp_name'])) {
+						$this->get('personalInfo')->get('avatarInfo')->get('avatartype')->setValue(
+							User::USER_AVATAR_TYPE_NONE
 						);
 					}
-					
-					break;
-				
-				case User::USER_AVATAR_TYPE_URL:
-					$this->get('personalInfo')->get('avatarInfo')->get('avatarurl')->setOptions(
+				}
+
+				// if there's an uploaded file then we set up the validators
+				if(!empty($fileData['tmp_name'])) {
+					$this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
 						array(
 							'required'    => true,
 							'allow_empty' => false,
-							'filters'    => array(
-								new Filter\StringTrim(),
-							),
-							'validators'  => array(
-								new Validator\Uri(
-									array(
-										'allowRelative' => false,
-										'allowAbsolute' => true,
-									)
+							'validators' => array(
+								new Validator\File\UploadFile(),
+								new Validator\File\IsImage(),
+								new Validator\File\MimeType(
+									array('mimeType' => implode(',', $this->allowedAvatarMime))
 								),
-								new Validator\StringLength(
-									array(
-										'min'      => '11',
-										'max'      => '255',
-										'encoding' => 'UTF-8'
-									)
-								),
-							),
+								new Validator\File\ImageSize(array('maxWidth' => 200, 'maxHeight' => 200))
+							)
 						)
 					);
-					break;
-				
-				case User::USER_AVATAR_TYPE_GRAVATAR:
-				default:
-					$this->get('personalInfo')->get('avatarInfo')->get('avatargrid')->setOptions(
-						array(
-							'required'    => true,
-							'allow_empty' => false,
-							'filters'    => array(
-								new Filter\StringTrim(),
-							),
-							'validators'  => array(
-								new Validator\EmailAddress(
-									array(
-										'allow' => Validator\Hostname::ALLOW_DNS,
-										'useDomainCheck' => true,
-										'useMxCheck'     => true,
-										'useDeepMxCheck' => true
-									)
-								),
-								new Validator\StringLength(
-									array(
-										'min'      => '6',
-										'max'      => '255',
-										'encoding' => 'UTF-8'
-									)
-								),
-							),
-						)
-					);
-			}
-			
-			// validating phone number if possible
-			$phoneNumberElement = $this->get('contactInfo')->get('phonenumber');
-			$phoneNumber = preg_replace('/[^\d]/', '', $phoneNumberElement->getValue());
-			if (!empty($phoneNumber)) {
-				// this database contains only the mutually unambiguous mappings between phone codes and country codes
-				$phoneCodeData = include_once APPLICATION_PATH . '/data/phoneCodeToCountryCode.php';
-				
-				// if the beginning of the code is in the database then we search for it (no success garantee)
-				if (isset($phoneCodeData[$phoneNumber[0]])) {
-					$prefix = $phoneNumber[0];
-					$countryCode = '';
-					for ($i = 0; $i <= 3; $i++) {
-						if (isset($phoneCodeData[$phoneNumber[0]][$prefix])) {
-							$countryCode = $phoneCodeData[$phoneNumber[0]][$prefix];
-							$phoneNumberElement->setOptions(
-									array(
-										'validators'  => array(
-											new I18nValidator\PhoneNumber(
-												array(
-													'country' => $countryCode,
-													'allowed_types' => array('general','mobile')
-												)
-											)
-										),
-									)
+				}
+
+				break;
+
+			case User::USER_AVATAR_TYPE_URL:
+				$this->get('personalInfo')->get('avatarInfo')->get('avatarurl')->setOptions(
+					array(
+						'required'    => true,
+						'allow_empty' => false,
+						'filters'    => array(
+							new Filter\StringTrim(),
+						),
+						'validators'  => array(
+							new Validator\Uri(
+								array(
+									'allowRelative' => false,
+									'allowAbsolute' => true,
 								)
-								->setValue($phoneNumber);
-							break;
-						}
-						
-						if (!isset($phoneNumber[strlen($prefix)])) {
-							break;
-						}
-						$prefix .= $phoneNumber[strlen($prefix)];
+							),
+							new Validator\StringLength(
+								array(
+									'min'      => '11',
+									'max'      => '255',
+									'encoding' => 'UTF-8'
+								)
+							),
+						),
+					)
+				);
+				break;
+
+			case User::USER_AVATAR_TYPE_GRAVATAR:
+				$this->get('personalInfo')->get('avatarInfo')->get('avatargrid')->setOptions(
+					array(
+						'allow_empty' => true,
+						'filters'    => array(
+							new Filter\StringTrim(),
+						),
+						'validators'  => array(
+							new Validator\EmailAddress(
+								array(
+									'allow' => Validator\Hostname::ALLOW_DNS,
+									'useDomainCheck' => true,
+									'useMxCheck'     => true,
+									'useDeepMxCheck' => true
+								)
+							),
+							new Validator\StringLength(
+								array(
+									'max'      => '255',
+									'encoding' => 'UTF-8'
+								)
+							),
+						),
+					)
+				);
+				break;
+			
+			case User::USER_AVATAR_TYPE_NONE:
+			default:
+				break;
+		}
+	}
+	
+	/**
+	 * Prepare phone number for validation
+	 */
+	protected function preparePhoneNumber()
+	{
+		// validating phone number if possible
+		$phoneNumberElement = $this->get('contactInfo')->get('phonenumber');
+		$phoneNumber = preg_replace('/[^\d]/', '', $phoneNumberElement->getValue());
+		if (!empty($phoneNumber)) {
+			// this database contains only the mutually unambiguous mappings between phone codes and country codes
+			$phoneCodeData = include_once APPLICATION_PATH . '/data/phoneCodeToCountryCode.php';
+
+			// if the beginning of the code is in the database then we search for it (no success garantee)
+			if (isset($phoneCodeData[$phoneNumber[0]])) {
+				$prefix = $phoneNumber[0];
+				$countryCode = '';
+				for ($i = 0; $i <= 3; $i++) {
+					if (isset($phoneCodeData[$phoneNumber[0]][$prefix])) {
+						$countryCode = $phoneCodeData[$phoneNumber[0]][$prefix];
+						$phoneNumberElement->setOptions(
+								array(
+									'validators'  => array(
+										new I18nValidator\PhoneNumber(
+											array(
+												'country' => $countryCode,
+												'allowed_types' => array('general','mobile')
+											)
+										)
+									),
+								)
+							)
+							->setValue($phoneNumber);
+						break;
 					}
+
+					if (!isset($phoneNumber[strlen($prefix)])) {
+						break;
+					}
+					$prefix .= $phoneNumber[strlen($prefix)];
 				}
 			}
 		}
-		return  parent::isValid($formElement);
 	}
 }

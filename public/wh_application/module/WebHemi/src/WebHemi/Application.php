@@ -347,24 +347,28 @@ final class Application
 	/**
 	 * Dump data
 	 *
-	 * @param  mixed   $var   The variable to dump
-	 * @param  string  $label OPTIONAL Label to prepend to output
-	 * @param  bool    $echo  OPTIONAL Echo output if true
+	 * @param  mixed   $var         The variable to dump
+	 * @param  string  $label       OPTIONAL Label to prepend to output
+	 * @param  bool    $echo        OPTIONAL Echo output if true
+	 * @param  bool    $backtrace   OPTIONAL Use bactrace to identify dump origin
 	 * @return string
 	 */
-	function varDump($data, $label = null, $echo = true)
+	function varDump($data, $label = null, $echo = true, $backtrace = true)
 	{
-		$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		$file      = '&lt;unknown&gt';
 		$line      = '&lt;unknown&gt';
+		
+		if ($backtrace) {
+			$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
-		foreach ($backtrace as $traceInfo) {
-			if (in_array($traceInfo['function'], array('varDump', 'dump'))) {
-				$file  = str_replace(APPLICATION_PATH, '', $traceInfo['file']);
-				$line  = $traceInfo['line'];
-			} 
-			else {
-				break;
+			foreach ($backtrace as $traceInfo) {
+				if (in_array($traceInfo['function'], array('varDump', 'dump'))) {
+					$file  = str_replace(APPLICATION_PATH, '', $traceInfo['file']);
+					$line  = $traceInfo['line'];
+				} 
+				else {
+					break;
+				}
 			}
 		}
 		
