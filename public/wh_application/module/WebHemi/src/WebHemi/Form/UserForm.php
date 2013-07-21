@@ -58,7 +58,7 @@ class UserForm extends AbstractForm
 		if (empty($name)) {
 			$name = $this->defaultFormId;
 		}
-		
+
 		parent::__construct($name);
 
 		// --- account info filedset -----------------------------------------------------------------------------------
@@ -320,7 +320,7 @@ class UserForm extends AbstractForm
 					'tabindex'  => self::$tabindex++,
 				)
 			);
-		
+
 		// the displayname input
 		$details = new Element\Textarea('details');
 		$details->setOptions(
@@ -340,13 +340,13 @@ class UserForm extends AbstractForm
 					'placeholder' => 'e.g.: I love car racings.',
 				)
 			);
-		
+
 		$avatarSubFieldset = new Fieldset('avatarInfo');
 		$avatarSubFieldset->setLabel('Avatar');
-		
+
 		// the exact value of the avatar property
 		$avatar = new Element\Hidden('avatar');
-		
+
 		// the image represented by the avatar
 		$avatarImage = new PlainText('avatarimage');
 		$avatarImage->setValue('')
@@ -355,14 +355,14 @@ class UserForm extends AbstractForm
 					'id' => 'avatarimage',
 				)
 			);
-		
+
 		// the type of the avatar
 		$avatarType = new Element\Radio('avatartype');
 		$avatarType->setOptions(
 				array(
 					'value_options' => array(
 						array(
-							'label' => 'Default', 
+							'label' => 'Default',
 							'value' => User::USER_AVATAR_TYPE_NONE,
 							'attributes' => array(
 								'accesskey' => 'y',
@@ -370,7 +370,7 @@ class UserForm extends AbstractForm
 							)
 						),
 						array(
-							'label' => 'GR Avatar', 
+							'label' => 'GR Avatar',
 							'value' => User::USER_AVATAR_TYPE_GRAVATAR,
 							'attributes' => array(
 								'accesskey' => 'g',
@@ -378,7 +378,7 @@ class UserForm extends AbstractForm
 							)
 						),
 						array(
-							'label' => 'File', 
+							'label' => 'File',
 							'value' => User::USER_AVATAR_TYPE_BASE64,
 							'attributes' => array(
 								'accesskey' => 'f',
@@ -386,7 +386,7 @@ class UserForm extends AbstractForm
 							)
 						),
 						array(
-							'label' => 'URL', 
+							'label' => 'URL',
 							'value' => User::USER_AVATAR_TYPE_URL,
 							'attributes' => array(
 								'accesskey' => 'l',
@@ -397,7 +397,7 @@ class UserForm extends AbstractForm
 				)
 			)
 			->setValue(User::USER_AVATAR_TYPE_NONE);
-		
+
 		// GRavatar ID
 		$avatarGrId = new Element\Text('avatargrid');
 		$avatarGrId->setLabel('GR Avatar ID')
@@ -411,7 +411,7 @@ class UserForm extends AbstractForm
 					'placeholder' => 'e.g.: mike@foo.org',
 				)
 			);
-		
+
 		// external image location
 		$avatarUrl = new Element\Text('avatarurl');
 		$avatarUrl->setLabel('Image location')
@@ -425,7 +425,7 @@ class UserForm extends AbstractForm
 					'placeholder' => 'e.g.: http://foo.org/avatar.jpg',
 				)
 			);
-		
+
 		// file upload
 		$avatarFile = new Element\File('avatarfile');
 		$avatarFile->setLabel('Upload your avatar')
@@ -436,11 +436,11 @@ class UserForm extends AbstractForm
 					'tabindex'  => self::$tabindex++,
 				)
 			);
-		
+
 		// allow to upload file of size at most 100KB
 		$avatarFileUpload = new Element\Hidden('MAX_FILE_SIZE');
 		$avatarFileUpload->setValue(102400);
-		
+
 		$avatarSubFieldset->add($avatar)
 			->add($avatarFileUpload)
 			->add($avatarImage)
@@ -454,11 +454,11 @@ class UserForm extends AbstractForm
 				->add($headLine)
 				->add($displayEmail)
 				->add($details);
-		
+
 		// --- contact fieldset ----------------------------------------------------------------------------------------
 		$contactFieldset = new Fieldset('contactInfo');
 		$contactFieldset->setLabel('Contact Information');
-		
+
 		// the displayname input
 		$phoneNumber = new Element\Text('phonenumber');
 		$phoneNumber->setOptions(
@@ -488,7 +488,7 @@ class UserForm extends AbstractForm
 					'pattern'   => '^[\d\s]+$',
 				)
 			);
-		
+
 		// the socialnetworks input
 		$socialNetworks = new Element\Textarea('socialnetworks');
 		$socialNetworks->setOptions(
@@ -506,7 +506,7 @@ class UserForm extends AbstractForm
 					'tabindex'  => self::$tabindex++,
 				)
 			);
-		
+
 		// the websites input
 		$websites = new Element\Textarea('websites');
 		$websites->setOptions(
@@ -525,7 +525,7 @@ class UserForm extends AbstractForm
 					'tabindex'  => self::$tabindex++,
 				)
 			);
-		
+
 		$contactFieldset->add($phoneNumber)
 			->add($socialNetworks)
 			->add($websites);
@@ -548,7 +548,7 @@ class UserForm extends AbstractForm
 			->add($contactFieldset)
 			->add($submit);
 	}
-	
+
 	/**
 	 * Set data to validate and/or populate elements
 	 *
@@ -565,24 +565,24 @@ class UserForm extends AbstractForm
 		$avatarValue = '';
 		$fileName    = $avatarInfo['avatarfile']['tmp_name'];
 		$fileType    = $avatarInfo['avatarfile']['type'];
-		
+
 		// this is good for displaying the avatar based on the chosen type whether it is valid (type and size) or not.
 		switch ($avatarInfo['avatartype']) {
 			case User::USER_AVATAR_TYPE_NONE:
 				$data['personalInfo']['avatarInfo']['avatarurl'] = '';
 				$data['personalInfo']['avatarInfo']['avatargrid'] = '';
 				break;
-			
+
 			case User::USER_AVATAR_TYPE_GRAVATAR:
 				$avatarValue = $avatarInfo['avatargrid'];
 				$data['personalInfo']['avatarInfo']['avatarurl'] = '';
 				break;
-			
+
 			case User::USER_AVATAR_TYPE_URL:
 				$avatarValue = $avatarInfo['avatarurl'];
 				$data['personalInfo']['avatarInfo']['avatargrid'] = '';
 				break;
-			
+
 			case User::USER_AVATAR_TYPE_BASE64:
 				// only if the uploaded file is valid for type
 				if (
@@ -597,14 +597,14 @@ class UserForm extends AbstractForm
 				}
 				break;
 		}
-		
+
 		parent::setData($data);
-		
+
 		$this->get('personalInfo')
 			->get('avatarInfo')
 			->get('avatarimage')
 			->setValue($avatarValue);
-		
+
 		$this->get('personalInfo')
 			->get('avatarInfo')
 			->get('avatar')
@@ -629,13 +629,13 @@ class UserForm extends AbstractForm
 			case 'avatarimage':
 				$element->setValue(
 					$this->getViewRenderer()->avatar(
-						$element->getValue(), 
-						array(), 
+						$element->getValue(),
+						array(),
 						array('style' => 'width: 100px; float: left; padding-right: 16px;')
 					)
 				);
 				break;
-			
+
 			case 'username':
 			case 'email':
 			case 'role':
@@ -655,7 +655,7 @@ class UserForm extends AbstractForm
 		return parent::renderElement($element);
 	}
 
-	
+
 	/**
 	 * Validate the form
 	 *
@@ -679,7 +679,7 @@ class UserForm extends AbstractForm
 		}
 		return parent::isValid($formElement);
 	}
-	
+
 	/**
 	 * Prepare user data for validation
 	 */
@@ -687,7 +687,7 @@ class UserForm extends AbstractForm
 	{
 		/* @var $acl \WebHemi\Acl\Acl */
 		$acl = $this->getAclService();
-		
+
 		// if no rights to change, no need to validate
 		if (!$acl->isAllowed('admin/adduser')) {
 			$this->get('accountInfo')->get('username')->setOptions(
@@ -727,7 +727,7 @@ class UserForm extends AbstractForm
 		$confirmElement = $securityFieldset->get('confirmation');
 		// If there were no password change attempt, than we remove the required flag.
 		if (
-			$this->defaultFormId == $this->getName() 
+			$this->defaultFormId == $this->getName()
 			&& '' == $passwordElement->getValue()
 		) {
 			$passwordElement->setOptions(
@@ -744,7 +744,7 @@ class UserForm extends AbstractForm
 			);
 		}
 	}
-	
+
 	/**
 	 * Prepare avatar for validation
 	 */
@@ -841,13 +841,13 @@ class UserForm extends AbstractForm
 					)
 				);
 				break;
-			
+
 			case User::USER_AVATAR_TYPE_NONE:
 			default:
 				break;
 		}
 	}
-	
+
 	/**
 	 * Prepare phone number for validation
 	 */
