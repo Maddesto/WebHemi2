@@ -47,7 +47,7 @@ defined('APPLICATION_MODULE')
  * @param  bool    $backtrace   OPTIONAL Use bactrace to identify dump origin
  * @return string
  */
-function dump($data, $label = null, $echo = true, $backtrace = true)
+function dump($data, $label = null, $echo = true, $backtrace = false)
 {
 	\WebHemi\Application::getInstance()->varDump($data, $label, $echo, $backtrace);
 }

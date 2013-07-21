@@ -112,7 +112,7 @@ class UserController extends AbstractActionController
 		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
 		$userModel = $userTable->getUserByName($userName);
 
-		// if it is me, then redirect to MyProfile
+		// redirect to MyProfile when view own
 		if ($this->userAuth()->getIdentity()->getUserId() == $userModel->getUserId()) {
 			$this->redirect()->toRoute('user/profile');
 		}
@@ -128,18 +128,16 @@ class UserController extends AbstractActionController
 	public function edituserAction()
 	{
 		/* @var $userAuth \WebHemi\Controller\Plugin\UserAuth */
-		$userAuth  = $this->userAuth();
-		$userName  = $this->params()->fromRoute('userName');
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
-		$userModel = $userTable->getUserByName($userName);
-		$request   = $this->getRequest();
+		$userAuth     = $this->userAuth();
+		$userName     = $this->params()->fromRoute('userName');
+		$userTable    = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userModel    = $userTable->getUserByName($userName);
+		$request      = $this->getRequest();
+		$isOwnProfile = $userAuth->getIdentity()->getUserId() == $userModel->getUserId();
 
 		if (
 			!$userModel
-			|| !(
-				$userAuth->getIdentity()->getUserId() == $userModel->getUserId()
-				|| $userAuth->getIdentity()->getRole() == 'admin'
-			)
+			|| !($isOwnProfile || $userAuth->getIdentity()->getRole() == 'admin')
 		) {
 			return $this->redirect()->toRoute('user/view', array('userName' => $userName));
 		}
@@ -173,7 +171,7 @@ class UserController extends AbstractActionController
 
 					// it is not allowed for an admin to change his/her own privilege
 					// imagine what will happen if no more admin left...
-					if ($userAuth->getIdentity()->getUserId() != $userModel->getUserId()) {
+					if (!$isOwnProfile) {
 						if (!empty($userData['accountInfo']['role'])) {
 							$userModel->setRole($userData['accountInfo']['role']);
 						}
@@ -199,13 +197,18 @@ class UserController extends AbstractActionController
 				$userModel->setSocialNetworks($userData['contactInfo']['socialnetworks']);
 				$userModel->setWebsites($userData['contactInfo']['websites']);
 
+				unset($userData);
+
 				try {
-					$userTable->update($userModel);
+					$result = $userTable->update($userModel);
+
+					// if save was success and own data hase been changed, then update the session
+					if ($result !== false && $isOwnProfile) {
+						$userAuth->updateIdentity($userModel);
+					}
 					return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
 				}
 				catch (\Exception $e) {
-					dump($e->__toString());
-					exit;
 					$editForm->setMessages(
 						array(
 							'submit' => $e->getMessage()

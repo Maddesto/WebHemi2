@@ -181,7 +181,7 @@ class User extends AbstractTableGateway
 	{
 		$result = true;
 		$affectedRows = 0;
-		
+
 		foreach ($userMeta as $userMetaModel) {
 			if (!$userMetaModel instanceof UserMetaModel) {
 				throw new Exception\InvalidArgumentException('Given parameter is not a valid UserMetaModel');
@@ -200,7 +200,7 @@ class User extends AbstractTableGateway
 				$affectedRows += $metaResult;
 			}
 		}
-		
+
 		return !$result ? false : $affectedRows;
 	}
 
@@ -226,14 +226,14 @@ class User extends AbstractTableGateway
 		// the DB connection
 		/* @var $connection PdoConnection */
 		$connection = $this->getAdapter()->getDriver()->getConnection();
-		
+
 		// start the transaction
 		$connection->beginTransaction();
-		
+
 		$result = parent::insert($userModel->toArray());
-		
+
 		// if insertion was succesful, we may go on
-		if ($result) {
+		if ($result !== false) {
 			$userId      = $this->lastInsertValue;
 			$userMeta    = $userModel->getUserMetaData();
 			try {
@@ -243,12 +243,15 @@ class User extends AbstractTableGateway
 				}
 				// if everything is correct, we apply the changes
 				$connection->commit();
-			} 
+			}
 			catch (Exception $ex) {
 				// on failure, we rollback the whole transaction
 				$connection->rollback();
 				$result = false;
 			}
+		}
+		else {
+			$connection->rollback();
 		}
 
 		return $result;
@@ -266,18 +269,16 @@ class User extends AbstractTableGateway
 		if (!$userModel instanceof UserModel) {
 			throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
 		}
-		
+
 		// the DB connection
 		/* @var $connection PdoConnection */
 		$connection = $this->getAdapter()->getDriver()->getConnection();
-		
+
 		// start the transaction
 		$connection->beginTransaction();
-
 		$result = parent::update($userModel->toArray(), array('user_id' => $userModel->getUserId()));
-		
 		// if the update was successful, we may go on
-		if ($result) {
+		if ($result !== false) {
 			$userMeta = $userModel->getUserMetaData();
 			try {
 				$metaResult = $this->saveUserMeta($userMeta, $userModel->getUserId());
@@ -292,6 +293,9 @@ class User extends AbstractTableGateway
 				$connection->rollback();
 				$result = false;
 			}
+		}
+		else {
+			$connection->rollback();
 		}
 		return $result;
 	}

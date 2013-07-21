@@ -265,6 +265,9 @@ class User
 				return self::USER_AVATAR_TYPE_URL;
 			}
 		}
+		elseif (!empty($avatar)) {
+			return self::USER_AVATAR_TYPE_GRAVATAR;
+		}
 
 		unset($content);
 		return self::USER_AVATAR_TYPE_NONE;

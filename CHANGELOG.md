@@ -2,12 +2,18 @@ Change log
 ==========
 
 ----------------
+Version 2.0.0.21
+----------------
+- Finished the development of user settings module 
+- Fixed auth data refresh bug after editing own profile
+- Fixed user model transaction problem
+- Minor bugfixes
+
 Version 2.0.0.20
 ----------------
 - Form enhancements: extended methods - getData(), setData(), isValid()
 - Implementing PlainText form element
 - Setting avatar is several different ways: GR Avatar ID, Internet URI to an image file, uploading image. Each has its own validation process.
-
 
 Version 2.0.0.19
 ----------------

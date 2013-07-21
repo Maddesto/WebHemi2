@@ -72,7 +72,7 @@ final class Application
 				get_include_path() . PATH_SEPARATOR .
 				APPLICATION_PATH . '/vendor' . PATH_SEPARATOR
 		);
-		
+
 		if (!defined('HTMLPURIFIER_PREFIX')) {
 			define('HTMLPURIFIER_PREFIX', realpath(__DIR__ . '/../../../../vendor/HTMLPurifier/library'));
 		}
@@ -353,11 +353,15 @@ final class Application
 	 * @param  bool    $backtrace   OPTIONAL Use bactrace to identify dump origin
 	 * @return string
 	 */
-	function varDump($data, $label = null, $echo = true, $backtrace = true)
+	function varDump($data, $label = null, $echo = true, $backtrace = false)
 	{
+		// @todo remove this code
+		if ('production' != APPLICATION_ENV) {
+			$backtrace = true;
+		}
+
 		$file      = '&lt;unknown&gt';
 		$line      = '&lt;unknown&gt';
-		
 		if ($backtrace) {
 			$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
@@ -365,30 +369,37 @@ final class Application
 				if (in_array($traceInfo['function'], array('varDump', 'dump'))) {
 					$file  = str_replace(APPLICATION_PATH, '', $traceInfo['file']);
 					$line  = $traceInfo['line'];
-				} 
+				}
 				else {
 					break;
 				}
 			}
 		}
-		
+
 		require_once ZF2_PATH . '/Debug/Debug.php';
-		$output = \Zend\Debug\Debug::dump($data, null, false);
-		$output = str_replace(array('<pre>', '</pre>'), '', $output);
-		$output = '<' . '?php ' . PHP_EOL . '// File: ' . $file . ', line: ' . $line . PHP_EOL . PHP_EOL . $output;
-		$output = highlight_string($output, true);
-		$output = '<div style="border:1px solid gray;margin: 10px;padding:5px;background:white;word-wrap:break-word;">'
+		$dumpData = \Zend\Debug\Debug::dump($data, null, false);
+		$dumpData = str_replace(array('<pre>', '</pre>'), '', $dumpData);
+
+		$content = '<' . '?php ' . PHP_EOL;
+		if ($backtrace) {
+			$content .= '// File: ' . $file . ', line: ' . $line . PHP_EOL . PHP_EOL;
+		}
+		$content .= $dumpData;
+		unset($dumpData);
+
+		$content = highlight_string($content, true);
+		$content = '<div style="border:1px solid gray;margin: 10px;padding:5px;background:white;word-wrap:break-word;">'
 			.(
-				!empty($label) 
-				? '<strong style="display:block;font:bold big sans-serif;margin-bottom:10px">' . $label . '</strong>' 
+				!empty($label)
+				? '<strong style="display:block;font:bold big sans-serif;margin-bottom:10px">' . $label . '</strong>'
 				: ''
-			) 
-			. str_replace('&lt;?php', '', $output) . '</div>';
+			)
+			. str_replace('&lt;?php', '', $content) . '</div>';
 
 		if ($echo) {
-			echo $output;
+			echo $content;
 		}
-		return $output;
+		return $content;
 	}
 
 }

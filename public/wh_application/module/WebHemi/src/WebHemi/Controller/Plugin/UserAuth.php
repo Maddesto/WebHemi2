@@ -96,6 +96,17 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 	}
 
 	/**
+	 * Updates changes in current session
+	 *
+	 * @param UserModel $userModel
+	 */
+	public function updateIdentity(UserModel $userModel)
+	{
+		$this->getAuthService()->clearIdentity();
+		$this->getAuthService()->getStorage()->write($userModel);
+	}
+
+	/**
 	 * Proxy convenience method
 	 *
 	 * @return UserModel

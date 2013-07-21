@@ -50,13 +50,14 @@ class Avatar extends Gravatar
 			$validator = new EmailValidator();
 			if ($validator->isValid($data)) {
 				$this->setEmail($data);
-			} else {
+			}
+			else {
 				$this->setSrc($data);
 			}
 		}
 
 		if (!empty($options)) {
-		    $this->setOptions($options);
+			$this->setOptions($options);
 		}
 
 		$this->setAttribs($attribs);
@@ -101,7 +102,7 @@ class Avatar extends Gravatar
 		$src     = $this->getSrc();
 
 		if (empty($src)) {
-			$attribs['src'] = $this->getAvatarUrl();
+			$attribs['src'] = $this->getAvatarUrl() . '&rnd=' . rand(1000, 9999);
 		}
 		else {
 			$attribs['src'] = $src;
