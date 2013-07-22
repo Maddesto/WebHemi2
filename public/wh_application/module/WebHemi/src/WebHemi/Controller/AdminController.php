@@ -22,10 +22,16 @@
 
 namespace WebHemi\Controller;
 
-use WebHemi\Controller\UserController,
+use WebHemi\Application,
+	WebHemi\Controller\UserController,
 	WebHemi\Model\Table\User as UserTable,
-	Zend\View\Model\ViewModel,
-	Zend\Mvc\MvcEvent;
+	WebHemi\Model\User as UserModel,
+	WebHemi\Auth\Adapter\Adapter as AuthAdapter,
+	Zend\Mvc\Controller\AbstractActionController,
+	Zend\Mvc\MvcEvent,
+	Zend\Crypt\Password\Bcrypt,
+	Zend\Authentication\Result,
+	Zend\View\Model\ViewModel;
 
 /**
  * WebHemi Admin Controller
@@ -104,7 +110,7 @@ class AdminController extends UserController
 	 */
 	public function userAction()
 	{
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userTable = new UserTable($this->getServiceLocator()->get('database'));
 		$userList = $userTable->getUserList();
 
 		return array('userList' => $userList);
@@ -120,30 +126,73 @@ class AdminController extends UserController
 		/* @var $userAuth \WebHemi\Controller\Plugin\UserAuth */
 		$userAuth  = $this->userAuth();
 		$userName  = $this->params()->fromRoute('userName');
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
-		$userModel = $userTable->getUserByName($userName);
+		$userTable = new UserTable($this->getServiceLocator()->get('database'));
+		$userModel = new UserModel();
 		$request   = $this->getRequest();
-		
+
 		/* @var $editForm \WebHemi\Form\UserForm */
 		$editForm = $this->getForm('UserForm', 'adduser');
-		
+
 		if ($request->isPost()) {
 			$postData = array_merge_recursive(
 				$request->getPost()->toArray(),
 				$request->getFiles()->toArray()
 			);
-			
+
 			$editForm->setData($postData);
-dump($postData, 'Post');
-dump($editForm->isValid(), 'Is Valid?');
+
 			if ($editForm->isValid()) {
-dump($editForm->getData(), 'Data');
-			}
-			else {
-dump($editForm->getMessages(), 'Error Messages');
+				$userData = $editForm->getData();
+
+				// user data
+				$userModel->setUsername($userData['accountInfo']['username']);
+				$userModel->setEmail($userData['accountInfo']['email']);
+				$userModel->setRole($userData['accountInfo']['role']);
+
+				$hash = md5($userModel->getUsername() . '-' . $userModel->getEmail());
+				$userModel->setHash($hash);
+
+				$bcrypt = new Bcrypt();
+				$bcrypt->setCost(AuthAdapter::PASSWORD_COST);
+				$userModel->setPassword($bcrypt->create($userData['securityInfo']['password']));
+
+				$userModel->setRegisterIp($_SERVER['REMOTE_ADDR']);
+				$userModel->setTimeRegister(new \DateTime(gmdate('Y-m-d H:i:s')));
+				$userModel->setActive(false);
+				$userModel->setEnabled(false);
+				$userModel->setUserId(null);
+
+				// user meta data
+				$userModel->setAvatar($userData['personalInfo']['avatarInfo']['avatar']);
+				$userModel->setDisplayName($userData['personalInfo']['displayname']);
+				$userModel->setHeadLine($userData['personalInfo']['headline']);
+				$userModel->setDisplayEmail($userData['personalInfo']['displayemail']);
+				$userModel->setDetails($userData['personalInfo']['details']);
+				$userModel->setPhoneNumber($userData['contactInfo']['phonenumber']);
+				$userModel->setLocation($userData['contactInfo']['location']);
+				$userModel->setInstantMessengers($userData['contactInfo']['instantmessengers']);
+				$userModel->setSocialNetworks($userData['contactInfo']['socialnetworks']);
+				$userModel->setWebsites($userData['contactInfo']['websites']);
+
+				unset($userData);
+
+				try {
+					$result = $userTable->insert($userModel);
+
+					if ($result !== false) {
+						return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
+					}
+				}
+				catch (\Exception $e) {
+					$editForm->setMessages(
+						array(
+							'submit' => $e->getMessage()
+						)
+					);
+				}
 			}
 		}
-		
+
 		return array(
 			'editForm'  => $editForm,
 		);
@@ -157,7 +206,7 @@ dump($editForm->getMessages(), 'Error Messages');
 	public function disableuserAction()
 	{
 		$userName  = $this->params()->fromRoute('userName');
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userTable = new UserTable($this->getServiceLocator()->get('database'));
 		$userModel = $userTable->getUserByName($userName);
 
 		if ($userModel) {
@@ -178,7 +227,7 @@ dump($editForm->getMessages(), 'Error Messages');
 	public function enableuserAction()
 	{
 		$userName  = $this->params()->fromRoute('userName');
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userTable = new UserTable($this->getServiceLocator()->get('database'));
 		$userModel = $userTable->getUserByName($userName);
 
 		if ($userModel) {
@@ -199,7 +248,7 @@ dump($editForm->getMessages(), 'Error Messages');
 	public function activateuserAction()
 	{
 		$userName  = $this->params()->fromRoute('userName');
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userTable = new UserTable($this->getServiceLocator()->get('database'));
 		$userModel = $userTable->getUserByName($userName);
 
 		if ($userModel) {
@@ -220,7 +269,7 @@ dump($editForm->getMessages(), 'Error Messages');
 	public function deleteuserAction()
 	{
 		$userName  = $this->params()->fromRoute('userName');
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userTable = new UserTable($this->getServiceLocator()->get('database'));
 		$userModel = $userTable->getUserByName($userName);
 
 		if ($userModel) {

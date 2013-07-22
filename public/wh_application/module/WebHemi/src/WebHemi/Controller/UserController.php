@@ -109,7 +109,7 @@ class UserController extends AbstractActionController
 		}
 
 		$userName = $this->params()->fromRoute('userName');
-		$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userTable = new UserTable($this->getServiceLocator()->get('database'));
 		$userModel = $userTable->getUserByName($userName);
 
 		// redirect to MyProfile when view own
@@ -130,7 +130,7 @@ class UserController extends AbstractActionController
 		/* @var $userAuth \WebHemi\Controller\Plugin\UserAuth */
 		$userAuth     = $this->userAuth();
 		$userName     = $this->params()->fromRoute('userName');
-		$userTable    = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+		$userTable    = new UserTable($this->getServiceLocator()->get('database'));
 		$userModel    = $userTable->getUserByName($userName);
 		$request      = $this->getRequest();
 		$isOwnProfile = $userAuth->getIdentity()->getUserId() == $userModel->getUserId();
@@ -202,11 +202,13 @@ class UserController extends AbstractActionController
 				try {
 					$result = $userTable->update($userModel);
 
-					// if save was success and own data hase been changed, then update the session
-					if ($result !== false && $isOwnProfile) {
-						$userAuth->updateIdentity($userModel);
+					if ($result !== false) {
+						// if save was success and own data hase been changed, then update the session
+						if($isOwnProfile) {
+							$userAuth->updateIdentity($userModel);
+						}
+						return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
 					}
-					return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
 				}
 				catch (\Exception $e) {
 					$editForm->setMessages(
@@ -215,10 +217,6 @@ class UserController extends AbstractActionController
 						)
 					);
 				}
-			}
-			else {
-				dump($postData, 'POST');
-				dump($editForm->getData(), 'User Data');
 			}
 		}
 		else {

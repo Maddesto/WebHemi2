@@ -206,15 +206,15 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 					// Save changes in value
 					$formElement->setValue($value);
 				}
-				
+
 				return $elementResult;
 			}
 		}
-		
+
 		return self::$validatedForms[$this->getName()];
 	}
 
-	
+
 	/**
 	 * Retrieve the validated and filtered data
 	 *
@@ -231,15 +231,15 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 				__METHOD__
 			));
 		}
-		
+
 		$data = array();
-		
+
 		if (empty($formElement)) {
 			foreach ($this->getFieldsets() as $fieldset) {
 				/* @var $fieldset \Zend\Form\Fieldset */
 				$data[$fieldset->getName()] = $this->getData($flag, $fieldset);
 			}
-			
+
 			foreach ($this->getElements() as $element) {
 				/* @var $element \Zend\Form\Element */
 				$data[$element->getName()] = $this->getData($flag, $element);
@@ -250,7 +250,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 				/* @var $fieldset \Zend\Form\Fieldset */
 				$data[$fieldset->getName()] = $this->getData($flag, $fieldset);
 			}
-			
+
 			foreach ($formElement->getElements() as $element) {
 				/* @var $element \Zend\Form\Element */
 				$data[$element->getName()] = $this->getData($flag, $element);
@@ -286,9 +286,8 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 			}
 
 			$form .= $this->getViewRenderer()->form()->closeTag($this);
-		} 
-		catch (\Exception $ex) {
-			dump($ex->__toString());
+		}
+		catch (\Exception $e) {
 			$form = '';
 		}
 

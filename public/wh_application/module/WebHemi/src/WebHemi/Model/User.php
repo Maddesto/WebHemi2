@@ -510,7 +510,7 @@ class User
 	public function toArray()
 	{
 		return array(
-			'user_id'       => $this->userId,
+			'user_id'       => !empty($this->userId) ? $this->userId : null,
 			'username'      => $this->username,
 			'email'         => $this->email,
 			'password'      => $this->password,

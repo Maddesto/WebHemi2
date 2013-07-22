@@ -140,7 +140,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
 	public function getTable()
 	{
 		if (!isset($this->userTable)) {
-			$this->userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+			$this->userTable = new UserTable($this->getServiceManager()->get('database'));
 		}
 		return $this->userTable;
 	}

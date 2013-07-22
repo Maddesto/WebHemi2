@@ -69,7 +69,7 @@ class CleanIPAssertion implements AssertionInterface
 	 */
 	public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
 	{
-		$lockTable = new UserLockTable($this->serviceManager->get('Zend\Db\Adapter\Adapter'));
+		$lockTable = new UserLockTable($this->serviceManager->get('database'));
 
 		// determine the current timestamp according to the UTC time
 		$currentTime      = new DateTime(gmdate('Y-m-d H:i:s'));

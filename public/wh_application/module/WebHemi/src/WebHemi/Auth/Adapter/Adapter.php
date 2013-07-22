@@ -186,7 +186,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	public function getUserTable()
 	{
 		if (!isset($this->userTable)) {
-			$this->userTable = new UserTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+			$this->userTable = new UserTable($this->getServiceManager()->get('database'));
 		}
 		return $this->userTable;
 	}
@@ -211,7 +211,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 	public function getUserLockTable()
 	{
 		if (!isset($this->userLockTable)) {
-			$this->userLockTable = new UserLockTable($this->getServiceManager()->get('Zend\Db\Adapter\Adapter'));
+			$this->userLockTable = new UserLockTable($this->getServiceManager()->get('database'));
 		}
 		return $this->userLockTable;
 	}

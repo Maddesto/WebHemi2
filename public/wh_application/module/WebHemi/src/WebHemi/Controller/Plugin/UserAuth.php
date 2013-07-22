@@ -76,7 +76,7 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 			), "\0"));
 
 			// chech for the hash
-			$userTable = new UserTable($this->getServiceLocator()->get('Zend\Db\Adapter\Adapter'));
+			$userTable = new UserTable($this->getServiceLocator()->get('database'));
 			$userModel = $userTable->getUserByHash($decryptedHash);
 
 			if ($userModel instanceof UserModel) {
