@@ -13,9 +13,9 @@ A Zend Framework 2 based full value module that provides a complete CMS and webs
 Requirements
 ------------
 
-- PHP 5.4+
+- PHP 5.3+
 - MySQL 5.1+
-- Apache 2.2 with 'mod_rewrite' enabled
+- Apache 2.2+ with 'mod_rewrite' enabled
 - [Zend Framework 2](https://github.com/zendframework/zf2)
 
 Features / Goals
