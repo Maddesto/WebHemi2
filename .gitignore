@@ -1,3 +1,6 @@
 /docs/
 /public/wh_application/module/WebHemi/config/AdminWiki.module.config
 /public/wh_application/module/WebHemi/config/AdminWiki.module.config.php
+/.buildpath
+/.project
+/.settings
