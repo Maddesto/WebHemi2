@@ -82,6 +82,7 @@ class UserMeta extends AbstractTableGateway
 		$userMeta = array();
 		while ($metaModel = $rowset->current()) {
 			$userMeta[$metaModel->getMetaKey()] = $metaModel;
+			$rowset->next();
 		}
 
 		return $userMeta;

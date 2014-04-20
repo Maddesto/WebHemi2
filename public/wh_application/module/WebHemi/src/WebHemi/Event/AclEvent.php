@@ -55,7 +55,8 @@ class AclEvent
 		$actionName     = $routeMatch->getParam('action');
 
 		// define the the resource
-		$controller = array_pop(explode('\\', $controllerName));
+		$controllerArray = explode('\\', $controllerName);
+		$controller = array_pop($controllerArray);
 		$resource   = strtolower($controller . '/' . $actionName);
 		// @TODO: get default_role option somehow insetad of 'guest'
 		$role       = ($auth->hasIdentity()) ? $auth->getIdentity()->getRole() : 'guest';

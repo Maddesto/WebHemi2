@@ -74,7 +74,7 @@ final class Application
 		);
 
 		if (!defined('HTMLPURIFIER_PREFIX')) {
-			define('HTMLPURIFIER_PREFIX', realpath(__DIR__ . '/../../../../vendor/HTMLPurifier/library'));
+			define('HTMLPURIFIER_PREFIX', realpath(__DIR__ . '/../../../../vendor/HTMLPurifier'));
 		}
 
 		// define Zend Framework path
@@ -343,63 +343,4 @@ final class Application
 
 		return self::$instance;
 	}
-
-	/**
-	 * Dump data
-	 *
-	 * @param  mixed   $var         The variable to dump
-	 * @param  string  $label       OPTIONAL Label to prepend to output
-	 * @param  bool    $echo        OPTIONAL Echo output if true
-	 * @param  bool    $backtrace   OPTIONAL Use bactrace to identify dump origin
-	 * @return string
-	 */
-	function varDump($data, $label = null, $echo = true, $backtrace = false)
-	{
-		// @todo remove this code
-		if ('production' != APPLICATION_ENV) {
-			$backtrace = true;
-		}
-
-		$file      = '&lt;unknown&gt';
-		$line      = '&lt;unknown&gt';
-		if ($backtrace) {
-			$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-
-			foreach ($backtrace as $traceInfo) {
-				if (in_array($traceInfo['function'], array('varDump', 'dump'))) {
-					$file  = str_replace(APPLICATION_PATH, '', $traceInfo['file']);
-					$line  = $traceInfo['line'];
-				}
-				else {
-					break;
-				}
-			}
-		}
-
-		require_once ZF2_PATH . '/Debug/Debug.php';
-		$dumpData = \Zend\Debug\Debug::dump($data, null, false);
-		$dumpData = str_replace(array('<pre>', '</pre>'), '', $dumpData);
-
-		$content = '<' . '?php ' . PHP_EOL;
-		if ($backtrace) {
-			$content .= '// File: ' . $file . ', line: ' . $line . PHP_EOL . PHP_EOL;
-		}
-		$content .= $dumpData;
-		unset($dumpData);
-
-		$content = highlight_string($content, true);
-		$content = '<div style="border:1px solid gray;margin: 10px;padding:5px;background:white;word-wrap:break-word;">'
-			.(
-				!empty($label)
-				? '<strong style="display:block;font:bold big sans-serif;margin-bottom:10px">' . $label . '</strong>'
-				: ''
-			)
-			. str_replace('&lt;?php', '', $content) . '</div>';
-
-		if ($echo) {
-			echo $content;
-		}
-		return $content;
-	}
-
 }

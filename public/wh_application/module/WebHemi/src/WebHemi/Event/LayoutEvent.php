@@ -41,7 +41,7 @@ class LayoutEvent
 	 * @param MvcEvent $e
 	 * @return void
 	 */
-	public function preDispatch(MvcEvent $e)
+	public static function preDispatch(MvcEvent $e)
 	{
 		$controller      = $e->getTarget();
 		$controllerClass = get_class($controller);
