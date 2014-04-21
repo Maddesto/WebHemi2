@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.0.21 Created by Gixx.
+Version 2.0.1.0 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -13,10 +13,10 @@ A Zend Framework 2 based full value module that provides a complete CMS and webs
 Requirements
 ------------
 
-- PHP 5.3+
-- MySQL 5.1+
-- Apache 2.2+ with 'mod_rewrite' enabled
-- [Zend Framework 2](https://github.com/zendframework/zf2)
+- PHP 5.5+
+- MySQL 5.5+
+- Apache 2.4+ with 'mod_rewrite' enabled
+- [Zend Framework 2.3+](https://github.com/zendframework/zf2)
 
 Features / Goals
 ----------------

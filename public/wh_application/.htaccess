@@ -1,3 +1,0 @@
-<Files ~ "\.(php|phtml|csv|txt|xml|ini|log|sqlite)$">
-	Deny From All
-</Files>
