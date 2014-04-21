@@ -1,0 +1,10 @@
+<?php
+
+/* @var $form \WebHemi2\Form\UserForm */
+$form = $this->editForm;
+/* @var $userModel \WebHemi2\Model\User */
+$userModel = $this->userModel;
+
+?>
+<h1><?php echo $userModel->getDisplayName() ?></h1>
+<?php echo $form; ?>

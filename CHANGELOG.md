@@ -1,7 +1,15 @@
 Change log
 ==========
 
-----------------
+---------------
+Version 2.0.1.0
+---------------
+- Minimum required ZF version is 2.3.1
+- Full application refactoring: no more hacking with Zend Framework Bootstrap
+- Provide a valid Zend Framework 2 module
+- Started to change code style to PSR-2
+- Major bugfixes: eliminate every PHP STRICT errors
+
 Version 2.0.0.21
 ----------------
 - Finished the development of user settings module 
