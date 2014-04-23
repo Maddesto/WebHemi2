@@ -4,6 +4,10 @@ Change log
 ---------------
 Version 2.0.1.0
 ---------------
+- Minor bug fixes
+
+Version 2.0.1.0
+---------------
 - Minimum required ZF version is 2.3.1
 - Full application refactoring: no more hacking with Zend Framework Bootstrap
 - Provide a valid Zend Framework 2 module
