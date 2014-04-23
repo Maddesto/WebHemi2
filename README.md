@@ -53,6 +53,7 @@ Since the project is in a very early phase, it is not recommended to use it in l
 2. Modify, the *ZF2 project*/config/application.config.php file and add the `WebHemi2` to the `modules` array.
 3. Import the `module/WebHemi2/schema/dump.sql` into your database.
 4. Create a folder named `resources` into your public webroot and create symbolik links as follows:
+
 - mobule/WebHemi2/resources/common/static > public/resources/common
 - mobule/WebHemi2/resources/default/static > public/resources/default
 
