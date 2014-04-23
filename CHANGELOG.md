@@ -9,6 +9,7 @@ Version 2.0.1.0
 - Provide a valid Zend Framework 2 module
 - Started to change code style to PSR-2
 - Major bugfixes: eliminate every PHP STRICT errors
+- New git branch worklows: feature/tickets, release
 
 Version 2.0.0.21
 ----------------
