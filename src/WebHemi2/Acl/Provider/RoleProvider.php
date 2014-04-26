@@ -79,5 +79,4 @@ class RoleProvider
     {
         return $this->roles;
     }
-
 }

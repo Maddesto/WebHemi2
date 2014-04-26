@@ -22,15 +22,15 @@
 
 namespace WebHemi2\Controller;
 
-use WebHemi2\Controller\UserController,
-    WebHemi2\Model\Table\User as UserTable,
-    WebHemi2\Model\User as UserModel,
-    WebHemi2\Auth\Adapter\Adapter as AuthAdapter,
-    Zend\Mvc\Controller\AbstractActionController,
-    Zend\Mvc\MvcEvent,
-    Zend\Crypt\Password\Bcrypt,
-    Zend\Authentication\Result,
-    Zend\View\Model\ViewModel;
+use WebHemi2\Controller\UserController;
+use WebHemi2\Model\Table\User as UserTable;
+use WebHemi2\Model\User as UserModel;
+use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\MvcEvent;
+use Zend\Crypt\Password\Bcrypt;
+use Zend\Authentication\Result;
+use Zend\View\Model\ViewModel;
 
 /**
  * WebHemi2 Admin Controller
@@ -184,8 +184,7 @@ class AdminController extends UserController
                     if ($result !== false) {
                         return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
                     }
-                }
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
                     $editForm->setMessages(
                         array(
                             'submit' => $e->getMessage()

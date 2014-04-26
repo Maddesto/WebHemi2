@@ -22,11 +22,11 @@
 
 namespace WebHemi2\Form;
 
-use WebHemi2\Form\AbstractForm,
-    Zend\Form\Fieldset,
-    Zend\Form\Element,
-    Zend\Validator,
-    Zend\Filter;
+use WebHemi2\Form\AbstractForm;
+use Zend\Form\Fieldset;
+use Zend\Form\Element;
+use Zend\Validator;
+use Zend\Filter;
 
 /**
  * Login Form
@@ -55,64 +55,64 @@ class LoginForm extends AbstractForm
         // the identification input
         $identification = new Element\Text('identification');
         $identification->setOptions(
-                array(
-                    'required' => true,
-                    'filters' => array(
-                        new Filter\StringTrim(),
+            array(
+                'required' => true,
+                'filters' => array(
+                    new Filter\StringTrim(),
+                ),
+                'validators' => array(
+                    new Validator\StringLength(
+                        array(
+                            'min' => 4,
+                            'max' => 255,
+                            'encoding' => 'UTF-8'
+                        )
                     ),
-                    'validators' => array(
-                        new Validator\StringLength(
-                            array(
-                                'min' => 4,
-                                'max' => 255,
-                                'encoding' => 'UTF-8'
-                            )
-                        ),
-                        new Validator\Regex('/^[a-z]{1}\w+$/i')
-                    ),
-                )
+                    new Validator\Regex('/^[a-z]{1}\w+$/i')
+                ),
             )
-            ->setLabel('Identification')
-            ->setAttributes(
-                array(
-                    'id' => 'identification',
-                    'accesskey' => 'u',
-                    'maxlength' => 255,
-                    'tabindex' => self::$tabindex++,
-                    'pattern' => '^[a-z]{1}\w+$',
-                    //'validity' => 'Some alert'
-                )
-            );
+        )
+        ->setLabel('Identification')
+        ->setAttributes(
+            array(
+                'id' => 'identification',
+                'accesskey' => 'u',
+                'maxlength' => 255,
+                'tabindex' => self::$tabindex++,
+                'pattern' => '^[a-z]{1}\w+$',
+                //'validity' => 'Some alert'
+            )
+        );
 
         // password input
         $password = new Element\Password('password');
         $password->setOptions(
-                array(
-                    'required' => true,
-                    'filters' => array(
-                        new Filter\StringTrim(),
+            array(
+                'required' => true,
+                'filters' => array(
+                    new Filter\StringTrim(),
+                ),
+                'validators' => array(
+                    new Validator\StringLength(
+                        array(
+                            'min' => 4,
+                            'max' => 255,
+                            'encoding' => 'UTF-8'
+                        )
                     ),
-                    'validators' => array(
-                        new Validator\StringLength(
-                            array(
-                                'min' => 4,
-                                'max' => 255,
-                                'encoding' => 'UTF-8'
-                            )
-                        ),
-                    ),
-                )
+                ),
             )
-            ->setLabel('Password')
-            ->setAttributes(
-                array(
-                    'id' => 'password',
-                    'accesskey' => 'p',
-                    'maxlength' => 255,
-                    'tabindex' => self::$tabindex++,
-                    'pattern' => '^\w+$'
-                )
-            );
+        )
+        ->setLabel('Password')
+        ->setAttributes(
+            array(
+                'id' => 'password',
+                'accesskey' => 'p',
+                'maxlength' => 255,
+                'tabindex' => self::$tabindex++,
+                'pattern' => '^\w+$'
+            )
+        );
 
 
         // in ADMIN module there's no way to remember the password or autocomplete the input fields

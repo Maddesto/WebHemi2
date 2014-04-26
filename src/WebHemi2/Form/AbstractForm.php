@@ -22,15 +22,15 @@
 
 namespace WebHemi2\Form;
 
-use Zend\Form\Form,
-    Zend\Form\Element,
-    Zend\Form\Fieldset,
-    Zend\Form\Exception,
-    Zend\Form\FormInterface,
-    Zend\View\Renderer\PhpRenderer,
-    Zend\ServiceManager\ServiceManagerAwareInterface,
-    Zend\ServiceManager\ServiceManager,
-    WebHemi2\Acl\Acl;
+use Zend\Form\Form;
+use  Zend\Form\Element;
+use  Zend\Form\Fieldset;
+use  Zend\Form\Exception;
+use  Zend\Form\FormInterface;
+use  Zend\View\Renderer\PhpRenderer;
+use  Zend\ServiceManager\ServiceManagerAwareInterface;
+use  Zend\ServiceManager\ServiceManager;
+use  WebHemi2\Acl\Acl;
 
 /**
  * WebHemi2 Form Abstraction
@@ -77,14 +77,12 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
     {
         if (array_key_exists($elementOrFieldset, $this->byName)) {
             return true;
-        }
-        elseif ($searchInFieldsets) {
+        } elseif ($searchInFieldsets) {
             foreach ($this->fieldsets as $fieldset) {
                 try {
                     $fieldset->get($elementOrFieldset);
                     return true;
-                }
-                catch (Exception\InvalidElementException $e) {
+                } catch (Exception\InvalidElementException $e) {
                     // there's no such element here, so we go on.
                     unset($e);
                 }
@@ -107,14 +105,12 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                 try {
                     $element = $fieldset->get($elementOrFieldset);
                     return $element;
-                }
-                catch (Exception\InvalidElementException $e) {
+                } catch (Exception\InvalidElementException $e) {
                     // there's no such element here, so we go on.
                     unset($e);
                 }
             }
-        }
-        else {
+        } else {
             return $this->byName[$elementOrFieldset];
         }
 
@@ -154,9 +150,8 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                 }
 //                $result = parent::isValid() && $result;
                 self::$validatedForms[$this->getName()] = $result;
-            }
-            // the fieldsets may contain other fieldsets and elements
-            elseif ($formElement instanceof Fieldset) {
+            } elseif ($formElement instanceof Fieldset) {
+                // the fieldsets may contain other fieldsets and elements
                 $fieldsetResult = true;
                 foreach ($formElement->getFieldsets() as $fieldset) {
                     /* @var $fieldset \Zend\Form\Fieldset */
@@ -168,9 +163,8 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                     $fieldsetResult = $this->isValid($element) && $fieldsetResult;
                 }
                 return $fieldsetResult;
-            }
-            // validate the elements only
-            else {
+            } else {
+                // validate the elements only
                 $elementResult = true;
                 $validators    = $formElement->getOption('validators');
                 $filters       = $formElement->getOption('filters');
@@ -197,8 +191,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                 if (!empty($messages)) {
                     $formElement->setMessages($messages);
                     $elementResult = false;
-                }
-                else {
+                } else {
                     // Save changes in value
                     $formElement->setValue($value);
                 }
@@ -240,8 +233,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                 /* @var $element \Zend\Form\Element */
                 $data[$element->getName()] = $this->getData($flag, $element);
             }
-        }
-        elseif ($formElement instanceof Fieldset) {
+        } elseif ($formElement instanceof Fieldset) {
             foreach ($formElement->getFieldsets() as $fieldset) {
                 /* @var $fieldset \Zend\Form\Fieldset */
                 $data[$fieldset->getName()] = $this->getData($flag, $fieldset);
@@ -251,8 +243,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                 /* @var $element \Zend\Form\Element */
                 $data[$element->getName()] = $this->getData($flag, $element);
             }
-        }
-        else {
+        } else {
             return $formElement->getValue();
         }
 
@@ -282,8 +273,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
             }
 
             $form .= $this->getViewRenderer()->form()->closeTag($this);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             $form = '';
         }
 
@@ -392,7 +382,8 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
         $label        = $fieldset->getLabel();
 
         // open tag
-        $tag .= sprintf('<fieldset %s>', $this->getViewRenderer()->form()->createAttributesString($attributes)) . PHP_EOL;
+        $tag .= sprintf('<fieldset %s>', $this->getViewRenderer()->form()->createAttributesString($attributes));
+        $tag .= PHP_EOL;
 
         // if there is label, we render it as legend
         if (!empty($label)) {

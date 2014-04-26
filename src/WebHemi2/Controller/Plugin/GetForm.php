@@ -22,10 +22,10 @@
 
 namespace WebHemi2\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    Zend\ServiceManager\ServiceLocatorAwareInterface,
-    WebHemi2\Form\AbstractForm;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use WebHemi2\Form\AbstractForm;
 
 /**
  * Controller plugin for WebHemi2 Form

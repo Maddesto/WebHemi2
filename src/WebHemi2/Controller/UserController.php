@@ -22,12 +22,12 @@
 
 namespace WebHemi2\Controller;
 
-use WebHemi2\Model\Table\User as UserTable,
-    WebHemi2\Auth\Adapter\Adapter as AuthAdapter,
-    Zend\Mvc\MvcEvent,
-    Zend\Crypt\Password\Bcrypt,
-    Zend\Authentication\Result,
-    Zend\View\Model\ViewModel;
+use WebHemi2\Model\Table\User as UserTable;
+use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
+use Zend\Mvc\MvcEvent;
+use Zend\Crypt\Password\Bcrypt;
+use Zend\Authentication\Result;
+use Zend\View\Model\ViewModel;
 
 /**
  * WebHemi2 User Controller
@@ -131,8 +131,7 @@ class UserController extends AbstractController
         $request      = $this->getRequest();
         $isOwnProfile = $userAuth->getIdentity()->getUserId() == $userModel->getUserId();
 
-        if (
-            !$userModel
+        if (!$userModel
             || !($isOwnProfile || $userAuth->getIdentity()->getRole() == 'admin')
         ) {
             return $this->redirect()->toRoute('user/view', array('userName' => $userName));
@@ -200,13 +199,12 @@ class UserController extends AbstractController
 
                     if ($result !== false) {
                         // if save was success and own data hase been changed, then update the session
-                        if($isOwnProfile) {
+                        if ($isOwnProfile) {
                             $userAuth->updateIdentity($userModel);
                         }
                         return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
                     }
-                }
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
                     $editForm->setMessages(
                         array(
                             'submit' => $e->getMessage()
@@ -214,8 +212,7 @@ class UserController extends AbstractController
                     );
                 }
             }
-        }
-        else {
+        } else {
             $editForm->bind($userModel);
         }
 
@@ -288,16 +285,26 @@ class UserController extends AbstractController
                                     }
 
                                     // encrypting the hash for this module
-                                    $encryptedHash = base64_encode(mcrypt_encrypt(
+                                    $encryptedHash = base64_encode(
+                                        mcrypt_encrypt(
                                             MCRYPT_RIJNDAEL_256,
                                             md5(APPLICATION_MODULE),
                                             $hash,
                                             MCRYPT_MODE_CBC,
                                             md5(md5(APPLICATION_MODULE))
-                                    ));
+                                        )
+                                    );
 
                                     // set cookie for this module
-                                    setcookie('atln-' . bin2hex(APPLICATION_MODULE), $encryptedHash, time() + (60 * 60 * 24 * 14), '/', $_SERVER['SERVER_NAME'], false, true);
+                                    setcookie(
+                                        'atln-' . bin2hex(APPLICATION_MODULE),
+                                        $encryptedHash,
+                                        time() + (60 * 60 * 24 * 14),
+                                        '/',
+                                        $_SERVER['SERVER_NAME'],
+                                        false,
+                                        true
+                                    );
                                 }
                             }
                         }
@@ -331,7 +338,15 @@ class UserController extends AbstractController
         $this->userAuth()->clearIdentity();
         // if there was autologin cookie, we remove it
         if (isset($_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)])) {
-            setcookie('atln-' . bin2hex(APPLICATION_MODULE), 'exit', time() - 1, '/', $_SERVER['SERVER_NAME'], false, true);
+            setcookie(
+                'atln-' . bin2hex(APPLICATION_MODULE),
+                'exit',
+                time() - 1,
+                '/',
+                $_SERVER['SERVER_NAME'],
+                false,
+                true
+            );
         }
 
         return $this->redirect()->toRoute('index');

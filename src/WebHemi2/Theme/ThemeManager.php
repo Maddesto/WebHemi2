@@ -22,13 +22,13 @@
 
 namespace WebHemi2\Theme;
 
-use Zend\Stdlib\PriorityQueue,
-    Zend\ServiceManager\ServiceManager,
-    Zend\ServiceManager\Exception,
-    Zend\View\Resolver\AggregateResolver,
-    Zend\View\Resolver\TemplateMapResolver,
-    Zend\View\Resolver\TemplatePathStack,
-    WebHemi2\Theme\Adapter\ConfigurationAdapter;
+use Zend\Stdlib\PriorityQueue;
+use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager\Exception;
+use Zend\View\Resolver\AggregateResolver;
+use Zend\View\Resolver\TemplateMapResolver;
+use Zend\View\Resolver\TemplatePathStack;
+use WebHemi2\Theme\Adapter\ConfigurationAdapter;
 
 /**
  * WebHemi2 theme manager
@@ -67,11 +67,14 @@ class ThemeManager
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        }
-        elseif (!is_array($options)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                            '%s expects an array or Traversable object; received "%s"', __METHOD__, (is_object($options) ? get_class($options) : gettype($options))
-            ));
+        } elseif (!is_array($options)) {
+            throw new Exception\InvalidArgumentException(
+                sprintf(
+                    '%s expects an array or Traversable object; received "%s"',
+                    __METHOD__,
+                    (is_object($options) ? get_class($options) : gettype($options))
+                )
+            );
         }
 
         $themeManager = new static($options, $serviceManager);
@@ -86,7 +89,7 @@ class ThemeManager
      * @param array|Traversable $options
      * @param ServiceManager    $serviceManager
      */
-    protected function __construct($options = array(), ServiceManager $serviceManager)
+    protected function __construct($options, ServiceManager $serviceManager)
     {
         // set the options
         $this->options        = $options;
@@ -140,9 +143,7 @@ class ThemeManager
         }
 
         if (isset($config['template_path_stack'])) {
-            $pathResolver = new TemplatePathStack(
-                            $config['template_path_stack']
-            );
+            $pathResolver = new TemplatePathStack($config['template_path_stack']);
             $defaultPathStack = $this->serviceManager->get('ViewTemplatePathStack');
             $pathResolver->setDefaultSuffix($defaultPathStack->getDefaultSuffix());
             $themeResolver->attach($pathResolver);
@@ -231,5 +232,4 @@ class ThemeManager
         }
         return $this->currentTheme;
     }
-
 }

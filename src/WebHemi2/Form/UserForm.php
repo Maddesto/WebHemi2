@@ -22,15 +22,15 @@
 
 namespace WebHemi2\Form;
 
-use WebHemi2\Form\AbstractForm,
-    WebHemi2\Form\Element\PlainText,
-    WebHemi2\Form\Element\Location,
-    WebHemi2\Model\User,
-    Zend\Form\Fieldset,
-    Zend\Form\Element,
-    Zend\Validator,
-    Zend\I18n\Validator as I18nValidator,
-    Zend\Filter as Filter;
+use WebHemi2\Form\AbstractForm;
+use WebHemi2\Form\Element\PlainText;
+use WebHemi2\Form\Element\Location;
+use WebHemi2\Model\User;
+use Zend\Form\Fieldset;
+use Zend\Form\Element;
+use Zend\Validator;
+use Zend\I18n\Validator as I18nValidator;
+use Zend\Filter as Filter;
 
 /**
  * User Form
@@ -63,14 +63,16 @@ class UserForm extends AbstractForm
 
         // --- account info filedset -----------------------------------------------------------------------------------
         $accountInfoFieldset = new Fieldset('accountInfo');
-        $accountInfoFieldset->setLabel('Account information');
+        $accountInfoFieldset
+            ->setLabel('Account information');
 
         // the userId
         $userId = new Element\Hidden('user_id');
 
         // the username input
         $userName = new Element\Text('username');
-        $userName->setOptions(
+        $userName
+            ->setOptions(
                 array(
                     'required'   => true,
                     'filters'    => array(
@@ -101,7 +103,8 @@ class UserForm extends AbstractForm
 
         // the email input
         $email = new Element\Email('email');
-        $email->setOptions(
+        $email
+            ->setOptions(
                 array(
                     'required'   => true,
                     'filters'    => array(
@@ -141,7 +144,8 @@ class UserForm extends AbstractForm
 
         // the role select box
         $role = new Element\Select('role');
-        $role->setOptions(
+        $role
+            ->setOptions(
                 array(
                     'required'      => true,
                     'value_options' => array(
@@ -162,7 +166,8 @@ class UserForm extends AbstractForm
                 )
             );
 
-        $accountInfoFieldset->add($userId)
+        $accountInfoFieldset
+            ->add($userId)
             ->add($userName)
             ->add($email)
             ->add($role);
@@ -173,7 +178,8 @@ class UserForm extends AbstractForm
 
         // the password input
         $password = new Element\Password('password');
-        $password->setOptions(
+        $password
+            ->setOptions(
                 array(
                     'allow_empty' => false,
                     'required'    => true,
@@ -204,7 +210,8 @@ class UserForm extends AbstractForm
 
         // the password confirmation input
         $confirmation = new Element\Password('confirmation');
-        $confirmation->setLabel('Confirm password')
+        $confirmation
+            ->setLabel('Confirm password')
             ->setAttributes(
                 array(
                     'id'        => 'password',
@@ -216,8 +223,9 @@ class UserForm extends AbstractForm
             );
 
 
-        $securityInfoFieldset->add($password)
-                ->add($confirmation);
+        $securityInfoFieldset
+            ->add($password)
+            ->add($confirmation);
 
         // --- perosnal info fieldset ----------------------------------------------------------------------------------
         $personalInfoFieldset = new Fieldset('personalInfo');
@@ -225,7 +233,8 @@ class UserForm extends AbstractForm
 
         // the displayname input
         $displayName = new Element\Text('displayname');
-        $displayName->setOptions(
+        $displayName
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -253,7 +262,8 @@ class UserForm extends AbstractForm
 
         // the headline input
         $headLine = new Element\Text('headline');
-        $headLine->setOptions(
+        $headLine
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -281,7 +291,8 @@ class UserForm extends AbstractForm
 
         // the email input
         $displayEmail = new Element\Checkbox('displayemail');
-        $displayEmail->setLabel('Show your email address for others?')
+        $displayEmail
+            ->setLabel('Show your email address for others?')
             ->setOptions(
                 array(
                     'use_hidden_element' => true,
@@ -300,7 +311,8 @@ class UserForm extends AbstractForm
 
         // the displayname input
         $details = new Element\Textarea('details');
-        $details->setOptions(
+        $details
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -325,7 +337,8 @@ class UserForm extends AbstractForm
 
         // the image represented by the avatar
         $avatarImage = new PlainText('avatarimage');
-        $avatarImage->setValue('')
+        $avatarImage
+            ->setValue('')
             ->setAttributes(
                 array(
                     'id' => 'avatarimage',
@@ -334,7 +347,8 @@ class UserForm extends AbstractForm
 
         // the type of the avatar
         $avatarType = new Element\Radio('avatartype');
-        $avatarType->setOptions(
+        $avatarType
+            ->setOptions(
                 array(
                     'value_options' => array(
                         array(
@@ -376,7 +390,8 @@ class UserForm extends AbstractForm
 
         // GRavatar ID
         $avatarGrId = new Element\Text('avatargrid');
-        $avatarGrId->setLabel('GR Avatar ID')
+        $avatarGrId
+            ->setLabel('GR Avatar ID')
             ->setAttributes(
                 array(
                     'id'          => 'avatargrid',
@@ -390,7 +405,8 @@ class UserForm extends AbstractForm
 
         // external image location
         $avatarUrl = new Element\Text('avatarurl');
-        $avatarUrl->setLabel('Image location')
+        $avatarUrl
+            ->setLabel('Image location')
             ->setAttributes(
                 array(
                     'id'          => 'avatarurl',
@@ -404,7 +420,8 @@ class UserForm extends AbstractForm
 
         // file upload
         $avatarFile = new Element\File('avatarfile');
-        $avatarFile->setLabel('Upload your avatar')
+        $avatarFile
+            ->setLabel('Upload your avatar')
             ->setAttributes(
                 array(
                     'id'        => 'avatarfile',
@@ -415,9 +432,11 @@ class UserForm extends AbstractForm
 
         // allow to upload file of size at most 100KB
         $avatarFileUpload = new Element\Hidden('MAX_FILE_SIZE');
-        $avatarFileUpload->setValue(102400);
+        $avatarFileUpload
+            ->setValue(102400);
 
-        $avatarSubFieldset->add($avatar)
+        $avatarSubFieldset
+            ->add($avatar)
             ->add($avatarFileUpload)
             ->add($avatarImage)
             ->add($avatarType)
@@ -425,19 +444,22 @@ class UserForm extends AbstractForm
             ->add($avatarUrl)
             ->add($avatarFile);
 
-        $personalInfoFieldset->add($avatarSubFieldset)
-                ->add($displayName)
-                ->add($headLine)
-                ->add($displayEmail)
-                ->add($details);
+        $personalInfoFieldset
+            ->add($avatarSubFieldset)
+            ->add($displayName)
+            ->add($headLine)
+            ->add($displayEmail)
+            ->add($details);
 
         // --- contact fieldset ----------------------------------------------------------------------------------------
         $contactFieldset = new Fieldset('contactInfo');
-        $contactFieldset->setLabel('Contact Information');
+        $contactFieldset
+            ->setLabel('Contact Information');
 
         // the displayname input
         $phoneNumber = new Element\Text('phonenumber');
-        $phoneNumber->setOptions(
+        $phoneNumber
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -467,7 +489,8 @@ class UserForm extends AbstractForm
 
         // the displayname input
         $location = new Location('location');
-        $location->setOptions(
+        $location
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -495,7 +518,8 @@ class UserForm extends AbstractForm
 
         // the instantmessengers input
         $instantMessengers = new Element\Textarea('instantmessengers');
-        $instantMessengers->setOptions(
+        $instantMessengers
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -513,7 +537,8 @@ class UserForm extends AbstractForm
 
         // the socialnetworks input
         $socialNetworks = new Element\Textarea('socialnetworks');
-        $socialNetworks->setOptions(
+        $socialNetworks
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -531,7 +556,8 @@ class UserForm extends AbstractForm
 
         // the websites input
         $websites = new Element\Textarea('websites');
-        $websites->setOptions(
+        $websites
+            ->setOptions(
                 array(
                     'filters'    => array(
                         new Filter\StringTrim(),
@@ -547,7 +573,8 @@ class UserForm extends AbstractForm
                 )
             );
 
-        $contactFieldset->add($phoneNumber)
+        $contactFieldset
+            ->add($phoneNumber)
             ->add($location)
             ->add($instantMessengers)
             ->add($socialNetworks)
@@ -556,7 +583,8 @@ class UserForm extends AbstractForm
         // --- rest of the form ----------------------------------------------------------------------------------------
 
         $submit = new Element\Button('submit');
-        $submit->setLabel('Save')
+        $submit
+            ->setLabel('Save')
             ->setAttributes(
                 array(
                     'accesskey' => 's',
@@ -565,7 +593,8 @@ class UserForm extends AbstractForm
                 )
             );
 
-        $this->add($accountInfoFieldset)
+        $this
+            ->add($accountInfoFieldset)
             ->add($securityInfoFieldset)
             ->add($personalInfoFieldset)
             ->add($contactFieldset)
@@ -608,14 +637,12 @@ class UserForm extends AbstractForm
 
             case User::USER_AVATAR_TYPE_BASE64:
                 // only if the uploaded file is valid for type
-                if (
-                    !empty($fileName) && file_exists($fileName) && is_readable($fileName)
+                if (!empty($fileName) && file_exists($fileName) && is_readable($fileName)
                     && in_array($fileType, $this->allowedAvatarMime)
                 ) {
                     $avatarValue = 'data:' . $fileType . ';base64,' . base64_encode(file_get_contents($fileName));
-                }
-                // if there were no fileupload but the previus avatar is an uploaded one, we use it
-                elseif (strpos($avatarInfo['avatar'], 'data:image') !== false) {
+                } elseif (strpos($avatarInfo['avatar'], 'data:image') !== false) {
+                    // if there were no fileupload but the previus avatar is an uploaded one, we use it
                     $avatarValue = $avatarInfo['avatar'];
                 }
                 break;
@@ -623,12 +650,14 @@ class UserForm extends AbstractForm
 
         parent::setData($data);
 
-        $this->get('personalInfo')
+        $this
+            ->get('personalInfo')
             ->get('avatarInfo')
             ->get('avatarimage')
             ->setValue($avatarValue);
 
-        $this->get('personalInfo')
+        $this
+            ->get('personalInfo')
             ->get('avatarInfo')
             ->get('avatar')
             ->setValue($avatarValue);
@@ -741,7 +770,8 @@ class UserForm extends AbstractForm
     /**
      * Prepare password form elements for validation
      */
-    protected function prepareSecurityInfoFieldset() {
+    protected function prepareSecurityInfoFieldset()
+    {
         /* @var $securityFieldset \Zend\Form\Fieldset */
         $securityFieldset = $this->get('securityInfo');
         /* @var $passwordElement \Zend\Form\Element\Password */
@@ -749,8 +779,7 @@ class UserForm extends AbstractForm
         /* @var $confirmElement \Zend\Form\Element\Password */
         $confirmElement = $securityFieldset->get('confirmation');
         // If there were no password change attempt, than we remove the required flag.
-        if (
-            $this->defaultFormId == $this->getName()
+        if ($this->defaultFormId == $this->getName()
             && '' == $passwordElement->getValue()
         ) {
             $passwordElement->setOptions(
@@ -765,8 +794,7 @@ class UserForm extends AbstractForm
                     'allow_empty' => true,
                 )
             );
-        }
-        else {
+        } else {
             $confirmElement->setOptions(
                 array(
                     'allow_empty' => false,
@@ -802,7 +830,7 @@ class UserForm extends AbstractForm
                 // if the current avatar is not an uploaded one
                 if (strpos($avatar, 'data:image') === false) {
                     // if no file present, we prevent PHP errors by changing the type
-                    if(empty($fileData['tmp_name'])) {
+                    if (empty($fileData['tmp_name'])) {
                         $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->setValue(
                             User::USER_AVATAR_TYPE_NONE
                         );
@@ -810,7 +838,7 @@ class UserForm extends AbstractForm
                 }
 
                 // if there's an uploaded file then we set up the validators
-                if(!empty($fileData['tmp_name'])) {
+                if (!empty($fileData['tmp_name'])) {
                     $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
                         array(
                             'required'    => true,
@@ -899,7 +927,7 @@ class UserForm extends AbstractForm
         $phoneNumber = preg_replace('/[^\d]/', '', $phoneNumberElement->getValue());
         if (!empty($phoneNumber)) {
             // this database contains only the mutually unambiguous mappings between phone codes and country codes
-            $phoneCodeData = include_once APPLICATION_PATH . '/resources/phoneCodeToCountryCode.php';
+            $phoneCodeData = include_once APPLICATION_PATH . '/resources/phonecode_to_countrycode.php';
 
             // if the beginning of the code is in the database then we search for it (no success garantee)
             if (isset($phoneCodeData[$phoneNumber[0]])) {
@@ -909,18 +937,18 @@ class UserForm extends AbstractForm
                     if (isset($phoneCodeData[$phoneNumber[0]][$prefix])) {
                         $countryCode = $phoneCodeData[$phoneNumber[0]][$prefix];
                         $phoneNumberElement->setOptions(
-                                array(
-                                    'validators'  => array(
-                                        new I18nValidator\PhoneNumber(
-                                            array(
-                                                'country' => $countryCode,
-                                                'allowed_types' => array('general','mobile')
-                                            )
+                            array(
+                                'validators'  => array(
+                                    new I18nValidator\PhoneNumber(
+                                        array(
+                                            'country' => $countryCode,
+                                            'allowed_types' => array('general','mobile')
                                         )
-                                    ),
-                                )
+                                    )
+                                ),
                             )
-                            ->setValue($phoneNumber);
+                        )
+                        ->setValue($phoneNumber);
                         break;
                     }
 

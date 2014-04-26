@@ -22,12 +22,12 @@
 
 namespace WebHemi2\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    Zend\ServiceManager\ServiceLocatorAwareInterface,
-    WebHemi2\Acl\Role,
-    WebHemi2\Acl\Resource,
-    WebHemi2\Acl\Acl;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use WebHemi2\Acl\Role;
+use WebHemi2\Acl\Resource;
+use WebHemi2\Acl\Acl;
 
 /**
  * Controller plugin for ACL

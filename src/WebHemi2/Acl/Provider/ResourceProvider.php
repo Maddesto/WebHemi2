@@ -63,5 +63,4 @@ class ResourceProvider
     {
         return $this->resources;
     }
-
 }

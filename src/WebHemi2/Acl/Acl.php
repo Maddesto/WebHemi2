@@ -22,18 +22,18 @@
 
 namespace WebHemi2\Acl;
 
-use Zend\ServiceManager\ServiceManager,
-    Zend\Permissions\Acl\Acl as ZendAcl,
-    Zend\Permissions\Acl\Exception,
-    Zend\Permissions\Acl\Resource\GenericResource,
-    Zend\Authentication\AuthenticationService,
-    WebHemi2\Acl\Provider\RoleProvider,
-    WebHemi2\Acl\Provider\ResourceProvider,
-    WebHemi2\Acl\Provider\RuleProvider,
-    WebHemi2\Acl\Role,
-    WebHemi2\Acl\Resource,
-    WebHemi2\Acl\Assert\CleanIPAssertion,
-    WebHemi2\Model\User as UserModel;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Permissions\Acl\Acl as ZendAcl;
+use Zend\Permissions\Acl\Exception;
+use Zend\Permissions\Acl\Resource\GenericResource;
+use Zend\Authentication\AuthenticationService;
+use WebHemi2\Acl\Provider\RoleProvider;
+use WebHemi2\Acl\Provider\ResourceProvider;
+use WebHemi2\Acl\Provider\RuleProvider;
+use WebHemi2\Acl\Role;
+use WebHemi2\Acl\Resource;
+use WebHemi2\Acl\Assert\CleanIPAssertion;
+use WebHemi2\Model\User as UserModel;
 
 /**
  * WebHemi2 Access Control
@@ -76,8 +76,7 @@ class Acl
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        }
-        elseif (!is_array($options)) {
+        } elseif (!is_array($options)) {
             throw new Exception\InvalidArgumentException(
                 sprintf(
                     '%s expects an array or Traversable object; received "%s"',
@@ -99,7 +98,7 @@ class Acl
      * @param array|Traversable $options
      * @param ServiceManager    $serviceManager
      */
-    protected function __construct($options = array(), ServiceManager $serviceManager)
+    protected function __construct($options, ServiceManager $serviceManager)
     {
         // set the options
         $this->options = $options;
@@ -123,9 +122,9 @@ class Acl
             $this->template = $this->options['template'];
         }
 
-        $this->roleProvider     = new RoleProvider($this->options['roles'],         $this->serviceManager);
+        $this->roleProvider     = new RoleProvider($this->options['roles'], $this->serviceManager);
         $this->resourceProvider = new ResourceProvider($this->options['resources'], $this->serviceManager);
-        $this->ruleProvider     = new RuleProvider($this->options['rules'],         $this->serviceManager);
+        $this->ruleProvider     = new RuleProvider($this->options['rules'], $this->serviceManager);
 
         // build role tree in ACL
         $this->buildRoleTree($this->roleProvider->getRoles());
@@ -166,7 +165,7 @@ class Acl
                 throw new Exception\InvalidArgumentException(
                     sprintf(
                         '%s expects an array of Role objects; received "%s"',
-                            __METHOD__,
+                        __METHOD__,
                         (is_object($role) ? get_class($role) : gettype($role))
                     )
                 );
@@ -183,8 +182,7 @@ class Acl
             if ($parentRole !== null) {
                 $this->buildRoleTree($parentRole);
                 $this->acl->addRole($role, $parentRole);
-            }
-            else {
+            } else {
                 $this->acl->addRole($role);
             }
         }
@@ -230,8 +228,7 @@ class Acl
 
             if (strpos($resource, '/') !== false) {
                 list($controller, $action) = explode('/', $resource);
-            }
-            else {
+            } else {
                 $controller = $resource;
                 $action     = '*';
             }
@@ -247,8 +244,7 @@ class Acl
             $routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
 
             // allow access for login page, invalid role or non-forced resources
-            if (
-                'logout' == $action
+            if ('logout' == $action
                 || 'login' == $action
                 || !$this->acl->hasRole($role)
             ) {
@@ -275,9 +271,8 @@ class Acl
                 );
 
             return $allowed;
-        }
-        // It is not necessary to terminate the script. Fair enough to return with a FALSE
-        catch (Exception\InvalidArgumentException $e) {
+        } catch (Exception\InvalidArgumentException $e) {
+            // It is not necessary to terminate the script. Fair enough to return with a FALSE
             return false;
         }
     }

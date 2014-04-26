@@ -22,15 +22,14 @@
 
 namespace WebHemi2;
 
-require_once __DIR__ . '/resources/application_constants.php';
 
-use Zend\Mvc\MvcEvent,
-    Zend\Mvc\ModuleRouteListener,
-    Zend\EventManager\EventInterface,
-    Zend\ModuleManager\Feature\ConfigProviderInterface,
-    Zend\ModuleManager\Feature\ServiceProviderInterface,
-    Zend\ModuleManager\Feature\BootstrapListenerInterface,
-    Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\Mvc\MvcEvent;
+use Zend\Mvc\ModuleRouteListener;
+use Zend\EventManager\EventInterface;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 
 /**
  * WebHemi2 module bootstrap
@@ -70,8 +69,8 @@ class Module implements
 
         // attach events to the event manager
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array('WebHemi2\Event\ErrorEvent',  'preDispatch'), -500);
-        $eventManager->attach(MvcEvent::EVENT_ROUTE,          array('WebHemi2\Event\AclEvent',    'onRoute'),     -100);
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH,       array('WebHemi2\Event\LayoutEvent', 'preDispatch'),   10);
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, array('WebHemi2\Event\AclEvent',    'onRoute'), -100);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, array('WebHemi2\Event\LayoutEvent', 'preDispatch'), 10);
 
         // link the event manager to the modoule route listener
         $moduleRouteListener = new ModuleRouteListener();
@@ -96,6 +95,8 @@ class Module implements
      */
     public function getConfig()
     {
+        require_once __DIR__ . '/resources/application_constants.php';
+
         // for the first call, we set the Config
         if (!isset(self::$configs['Module'])) {
             // There's only tho physical modules (Admin and Website) the others are virtual modules and inherit
@@ -131,11 +132,10 @@ class Module implements
             $config = include $filename;
 
             // if segment is given
-            if (!empty($segment) ) {
+            if (!empty($segment)) {
                 if (isset($config[$segment])) {
                     $config = $config[$segment];
-                }
-                else {
+                } else {
                     throw new \Exception('Unknown segment (' . $segment . ') in the config.');
                 }
             }
@@ -145,16 +145,13 @@ class Module implements
                 // set or replace
                 if ($overwrite || !isset(self::$configs[$name])) {
                     self::$configs[$name] = $config;
-                }
-                else {
+                } else {
                     self::$configs[$name] = $this->mergeConfig(self::$configs[$name], $config);
                 }
-            }
-            else {
+            } else {
                 throw new \Exception('The given path does not contain any configurations');
             }
-        }
-        else {
+        } else {
             throw new \Exception('File not exists or not readable: ' . $filename);
         }
     }
@@ -191,12 +188,10 @@ class Module implements
                 if (is_string($key)) {
                     if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
                         $merged[$key] = self::mergeConfig($merged[$key], $value);
-                    }
-                    else {
+                    } else {
                         $merged[$key] = $value;
                     }
-                }
-                else {
+                } else {
                     $merged[] = $value;
                 }
             }

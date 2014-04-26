@@ -65,5 +65,4 @@ class WebsiteController extends AbstractController
         dump($format, '$format');
         return array();
     }
-
 }

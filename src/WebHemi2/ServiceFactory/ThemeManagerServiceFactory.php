@@ -22,9 +22,9 @@
 
 namespace WebHemi2\ServiceFactory;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    WebHemi2\Theme\ThemeManager;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use WebHemi2\Theme\ThemeManager;
 
 /**
  * WebHemi2 theme manager factory

@@ -22,8 +22,8 @@
 
 namespace WebHemi2\Event;
 
-use Zend\Mvc\MvcEvent,
-    Zend\View\Model\ViewModel;
+use Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
 
 /**
  * Frobidden error handler event
@@ -37,7 +37,7 @@ use Zend\Mvc\MvcEvent,
 class ErrorEvent
 {
     /** @staticvar string $template */
-    static $template = array(
+    public static $template = array(
         403 => 'error/403',
         404 => 'error/404'
     );

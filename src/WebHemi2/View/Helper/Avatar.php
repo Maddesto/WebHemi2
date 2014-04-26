@@ -9,8 +9,8 @@
 
 namespace WebHemi2\View\Helper;
 
-use Zend\View\Helper\Gravatar,
-    Zend\Validator\EmailAddress as EmailValidator;
+use Zend\View\Helper\Gravatar;
+use Zend\Validator\EmailAddress as EmailValidator;
 
 /**
  * Helper for retrieving avatars from gravatar.com
@@ -50,8 +50,7 @@ class Avatar extends Gravatar
             $validator = new EmailValidator();
             if ($validator->isValid($data)) {
                 $this->setEmail($data);
-            }
-            else {
+            } else {
                 $this->setSrc($data);
             }
         }
@@ -103,8 +102,7 @@ class Avatar extends Gravatar
 
         if (empty($src)) {
             $attribs['src'] = $this->getAvatarUrl() . '&rnd=' . rand(1000, 9999);
-        }
-        else {
+        } else {
             $attribs['src'] = $src;
         }
 

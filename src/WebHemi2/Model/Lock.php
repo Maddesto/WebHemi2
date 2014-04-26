@@ -129,8 +129,7 @@ class Lock
     {
         if (is_null($timeLock) || $timeLock instanceof DateTime) {
             $this->timeLock = $timeLock;
-        }
-        else {
+        } else {
             $this->timeLock = new DateTime($timeLock);
         }
         return $this;

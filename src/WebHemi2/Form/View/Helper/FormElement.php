@@ -21,10 +21,10 @@
  */
 namespace WebHemi2\Form\View\Helper;
 
-use WebHemi2\Form\Element\PlainText,
-    WebHemi2\Form\Element\Location,
-    Zend\Form\View\Helper\FormElement as OriginalFormElement,
-    Zend\Form\ElementInterface;
+use WebHemi2\Form\Element\PlainText;
+use WebHemi2\Form\Element\Location;
+use Zend\Form\View\Helper\FormElement as OriginalFormElement;
+use Zend\Form\ElementInterface;
 
 /**
  * WebHemi2 Form view helper for the basic element

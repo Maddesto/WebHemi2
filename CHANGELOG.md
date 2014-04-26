@@ -2,8 +2,9 @@ Change log
 ==========
 
 ---------------
-Version 2.0.1.0
+Version 2.0.1.1
 ---------------
+- Finished to change code style to validate against PSR-1 and PSR-2
 - Minor bug fixes
 
 Version 2.0.1.0
@@ -26,7 +27,7 @@ Version 2.0.0.20
 ----------------
 - Form enhancements: extended methods - getData(), setData(), isValid()
 - Implementing PlainText form element
-- Setting avatar is several different ways: GR Avatar ID, Internet URI to an image file, uploading image. Each has its own validation process.
+- Setting avatar in several different ways: GR Avatar ID, Internet URI to an image file, uploading image. Each has its own validation process.
 
 Version 2.0.0.19
 ----------------

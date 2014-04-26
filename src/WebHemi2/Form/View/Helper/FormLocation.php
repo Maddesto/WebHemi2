@@ -21,8 +21,8 @@
  */
 namespace WebHemi2\Form\View\Helper;
 
-use Zend\Form\View\Helper\FormText,
-    Zend\Form\ElementInterface;
+use Zend\Form\View\Helper\FormText;
+use Zend\Form\ElementInterface;
 
 /**
  * WebHemi2 Form view helper for the Location element
@@ -71,7 +71,9 @@ class FormLocation extends FormText
                     window.onload = function()
                     {
                         if(navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(handleGetCurrentPosition, handleGetCurrentPositionError);
+                            navigator.geolocation.getCurrentPosition(
+                                handleGetCurrentPosition, handleGetCurrentPositionError
+                            );
                         }
                     }
 
@@ -104,7 +106,8 @@ class FormLocation extends FormText
                                                 }
 
                                                 if ('' != city && '' != country) {
-                                                    document.getElementById('{$element->getAttribute('id')}').value = city + ', ' + country;
+                                                    document.getElementById('{$element->getAttribute('id')}').value
+                                                        = city + ', ' + country;
                                                     break;
                                                 }
                                             }

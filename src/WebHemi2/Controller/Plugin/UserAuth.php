@@ -22,14 +22,14 @@
 
 namespace WebHemi2\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    Zend\ServiceManager\ServiceLocatorAwareInterface,
-    Zend\Authentication\Result,
-    WebHemi2\Auth\Auth as AuthService,
-    WebHemi2\Auth\Adapter\Adapter as AuthAdapter,
-    WebHemi2\Model\Table\User as UserTable,
-    WebHemi2\Model\User as UserModel;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\Authentication\Result;
+use WebHemi2\Auth\Auth as AuthService;
+use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
+use WebHemi2\Model\Table\User as UserTable;
+use WebHemi2\Model\User as UserModel;
 
 /**
  * Controller plugin for Authentication
@@ -66,13 +66,18 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
             $encryptedHash = $_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)];
 
             // decrypting the hash for this module
-            $decryptedHash = trim(rtrim(mcrypt_decrypt(
-                    MCRYPT_RIJNDAEL_256,
-                    md5(APPLICATION_MODULE),
-                    base64_decode($encryptedHash),
-                    MCRYPT_MODE_CBC,
-                    md5(md5(APPLICATION_MODULE))
-            ), "\0"));
+            $decryptedHash = trim(
+                rtrim(
+                    mcrypt_decrypt(
+                        MCRYPT_RIJNDAEL_256,
+                        md5(APPLICATION_MODULE),
+                        base64_decode($encryptedHash),
+                        MCRYPT_MODE_CBC,
+                        md5(md5(APPLICATION_MODULE))
+                    ),
+                    "\0"
+                )
+            );
 
             // chech for the hash
             $userTable = new UserTable($this->getServiceLocator()->get('database'));

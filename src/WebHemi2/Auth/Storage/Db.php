@@ -22,11 +22,11 @@
 
 namespace WebHemi2\Auth\Storage;
 
-use Zend\Authentication\Storage\Session,
-    Zend\Authentication\Storage\StorageInterface,
-    Zend\ServiceManager\ServiceManagerAwareInterface,
-    Zend\ServiceManager\ServiceManager,
-    WebHemi2\Model\Table\User as UserTable;
+use Zend\Authentication\Storage\Session;
+use Zend\Authentication\Storage\StorageInterface;
+use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceManager;
+use WebHemi2\Model\Table\User as UserTable;
 
 /**
  * WebHemi2 Authentication Database Storage
