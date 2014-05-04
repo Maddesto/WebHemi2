@@ -5,6 +5,9 @@ Change log
 Version 2.0.1.1
 ---------------
 - Finished to change code style to validate against PSR-1 and PSR-2
+- Added theme support for the 'Admin' login page
+- Added new Compoment: `Cipher` for encoding (even if there is no mcrypt library) 
+- Added new Compoment: `Image` for simplify the work with images
 - Minor bug fixes
 
 Version 2.0.1.0
@@ -14,7 +17,7 @@ Version 2.0.1.0
 - Provide a valid Zend Framework 2 module
 - Started to change code style to PSR-2
 - Major bugfixes: eliminate every PHP STRICT errors
-- New git branch worklows: feature/tickets, release
+- New git branch worklows: feature/tickets/ and release/
 
 Version 2.0.0.21
 ----------------

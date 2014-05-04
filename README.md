@@ -22,7 +22,7 @@ Features / Goals
 ----------------
 
 - Logical separation of 'Admin' and 'Website' applications [DONE]
-- Support for custom themes in 'Website' application [DONE]
+- Support for custom themes in 'Website' application and for 'Admin' login page [DONE]
 - Subdomain support for applications except 'Website' which is always on 'www' [DONE]
 - Privilege system with IP blacklist [DONE]
 - Secure authentication [DONE]
