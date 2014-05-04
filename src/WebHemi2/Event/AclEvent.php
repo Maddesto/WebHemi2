@@ -64,16 +64,15 @@ class AclEvent
         if (!$allowed) {
             // in admin module if there's no authenticated user, the user should be redirected to the login page
             if (APPLICATION_MODULE == ADMIN_MODULE
-                    && 'login' != $actionName
-                    && !$auth->hasIdentity()
+                && 'login' != $actionName
+                && !$auth->hasIdentity()
             ) {
                 $response = $e->getTarget()->getMvcEvent()->getResponse();
                 $response->getHeaders()->addHeaderLine('Location', '/user/login');
                 $response->setStatusCode(302);
                 $response->send();
-            }
-            // otherwise it's a 403 Frobidden error
-            else {
+            } else {
+                // otherwise it's a 403 Frobidden error
                 $e->setError('error-unauthorized-controller')
                     ->setParam('identity', $acl->getIdentity())
                     ->setParam('controller', $controllerName)

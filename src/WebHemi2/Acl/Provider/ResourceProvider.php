@@ -22,7 +22,7 @@
 
 namespace WebHemi2\Acl\Provider;
 
-use \WebHemi2\Acl\Resource;
+use WebHemi2\Acl\Resource;
 
 /**
  * WebHemi2 Resource Container and Provider
@@ -35,7 +35,9 @@ use \WebHemi2\Acl\Resource;
  */
 class ResourceProvider
 {
-    /** @var array $resources */
+    /**
+     * @var array $resources
+     */
     protected $resources = array();
 
     /**
@@ -63,5 +65,4 @@ class ResourceProvider
     {
         return $this->resources;
     }
-
 }

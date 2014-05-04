@@ -22,10 +22,10 @@
 
 namespace WebHemi2\Model\Table;
 
-use WebHemi2\Model\UserMeta as UserMetaModel,
-    Zend\Db\TableGateway\AbstractTableGateway,
-    Zend\Db\Adapter\Adapter,
-    Zend\Db\ResultSet\ResultSet;
+use WebHemi2\Model\UserMeta as UserMetaModel;
+use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\ResultSet;
 
 /**
  * WebHemi2 User Meta Table
@@ -106,10 +106,10 @@ class UserMeta extends AbstractTableGateway
 
         if (!$rowSet instanceof UserMetaModel) {
             return parent::insert($userMetaModel->toArray());
-        }
-        else {
+        } else {
             return parent::update(
-                $userMetaModel->toArray(), array(
+                $userMetaModel->toArray(),
+                array(
                     'user_id'  => $userMetaModel->getUserId(),
                     'meta_key' => $userMetaModel->getMetaKey()
                 )

@@ -22,13 +22,13 @@
 
 namespace WebHemi2\Acl\Assert;
 
-use DateTime,
-    WebHemi2\Model\Table\Lock as UserLockTable,
-    Zend\ServiceManager\ServiceManager,
-    Zend\Permissions\Acl\Acl,
-    Zend\Permissions\Acl\Resource\ResourceInterface,
-    Zend\Permissions\Acl\Role\RoleInterface,
-    Zend\Permissions\Acl\Assertion\AssertionInterface;
+use DateTime;
+use WebHemi2\Model\Table\Lock as UserLockTable;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Resource\ResourceInterface;
+use Zend\Permissions\Acl\Role\RoleInterface;
+use Zend\Permissions\Acl\Assertion\AssertionInterface;
 
 /**
  * WebHemi2 ACL Assertion
@@ -41,7 +41,9 @@ use DateTime,
  */
 class CleanIPAssertion implements AssertionInterface
 {
-    /** @var ServiceManager $serviceManager */
+    /**
+     * @var ServiceManager $serviceManager
+     */
     protected $serviceManager;
 
     /**
@@ -65,6 +67,7 @@ class CleanIPAssertion implements AssertionInterface
      * @param  RoleInterface       $role
      * @param  ResourceInterface   $resource
      * @param  string              $privilege
+     *
      * @return boolean
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)

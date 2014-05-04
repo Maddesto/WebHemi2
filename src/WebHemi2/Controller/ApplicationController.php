@@ -22,8 +22,8 @@
 
 namespace WebHemi2\Controller;
 
-use Zend\View\Model\ViewModel,
-    Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
+use Zend\Mvc\MvcEvent;
 
 /**
  * WebHemi2 Application Controller
@@ -40,7 +40,6 @@ class ApplicationController extends AbstractController
      * Execute the request
      *
      * @param  MvcEvent $e
-     * @return mixed
      */
     public function onDispatch(MvcEvent $e)
     {

@@ -47,7 +47,8 @@ return array(
             'view' => array(
                 'type'    => 'Regex',
                 'options' => array(
-                    'regex'    => '(?:/(?<category>[a-zA-Z0-9_-]+))?/(?<id>[\/a-zA-Z0-9_-]+)(\.(?<format>(json|html|rss)))?',
+                    'regex'    =>
+                        '(?:/(?<category>[a-zA-Z0-9_-]+))?/(?<id>[\/a-zA-Z0-9_-]+)(\.(?<format>(json|html|rss)))?',
                     'defaults' => array(
                         '__NAMESPACE__' => 'WebHemi2\Controller',
                         'controller'    => 'Website',

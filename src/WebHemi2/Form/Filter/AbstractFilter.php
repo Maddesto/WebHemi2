@@ -22,11 +22,11 @@
 
 namespace WebHemi2\Form\Filter;
 
-use Zend\Filter\AbstractFilter as ZendAbstractFilter,
-    Zend\Filter\FilterInterface,
-    Zend\Filter\Exception,
-    Zend\ServiceManager\ServiceManager,
-    Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\Filter\AbstractFilter as ZendAbstractFilter;
+use Zend\Filter\FilterInterface;
+use Zend\Filter\Exception;
+use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager\ServiceManagerAwareInterface;
 
 /**
  * WebHemi2 Form Filtrer Abstraction
@@ -41,28 +41,27 @@ abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManag
 {
     /** @var ServiceManager $serviceManager */
     protected $serviceManager;
-    
+
     /**
      * Class constructor.
-     * 
+     *
      * @param array $options
      */
     public function __construct($optionArray = array())
     {
         $filterOptions = array();
-        
+
         foreach ($optionArray as $key => $option) {
             if ($option instanceof ServiceManagerAwareInterface) {
                 $this->setServiceManager($option);
-            }
-            else {
+            } else {
                 $filterOptions[] = $option;
             }
         }
-        
+
         $this->setOptions($filterOptions);
     }
-    
+
     /**
      * Retrieve ServiceManager instance
      *

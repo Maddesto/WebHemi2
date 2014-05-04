@@ -22,9 +22,9 @@
 
 namespace WebHemi2\ServiceFactory;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    WebHemi2\Auth\Auth;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use WebHemi2\Auth\Auth;
 
 /**
  * WebHemi2 authentication service factory

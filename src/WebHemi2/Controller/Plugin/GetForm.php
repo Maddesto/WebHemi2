@@ -22,10 +22,10 @@
 
 namespace WebHemi2\Controller\Plugin;
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    Zend\ServiceManager\ServiceLocatorAwareInterface,
-    WebHemi2\Form\AbstractForm;
+use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use WebHemi2\Form\AbstractForm;
 
 /**
  * Controller plugin for WebHemi2 Form
@@ -38,7 +38,9 @@ use Zend\Mvc\Controller\Plugin\AbstractPlugin,
  */
 class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
-    /** @var ServiceLocatorInterface $serviceLocator */
+    /**
+     * @var ServiceLocatorInterface $serviceLocator
+     */
     protected $serviceLocator;
 
     /**
@@ -46,6 +48,7 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
      *
      * @param string $formName
      * @param string $name
+     *
      * @return AbstractForm
      */
     public function __invoke($formName, $name = null)
@@ -67,11 +70,13 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set ServiceLocatorInterface instance
      *
      * @param  ServiceLocatorInterface $serviceLocator
+     *
      * @return GetForm
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
         return $this;
     }
 }

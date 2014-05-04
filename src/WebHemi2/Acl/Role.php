@@ -35,9 +35,13 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  */
 class Role implements RoleInterface
 {
-    /** @var string $roleId */
+    /**
+     * @var string $roleId
+     */
     protected $roleId;
-    /** @var RoleInterface $parentRole */
+    /**
+     * @var RoleInterface $parentRole
+     */
     protected $parentRole;
 
     /**
@@ -72,6 +76,7 @@ class Role implements RoleInterface
      * Set roleId
      *
      * @param string $roleId
+     *
      * @return Role
      */
     public function setRoleId($roleId)
@@ -94,6 +99,7 @@ class Role implements RoleInterface
      * Set parentRole
      *
      * @param RoleInterface $parentRole
+     *
      * @return Role
      */
     public function setParentRole(RoleInterface $parentRole)

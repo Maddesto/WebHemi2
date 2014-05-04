@@ -22,8 +22,8 @@
 
 namespace WebHemi2\Controller;
 
-use Zend\View\Model\ViewModel,
-    Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
+use Zend\Mvc\MvcEvent;
 
 /**
  * WebHemi2 Component Controller
@@ -40,8 +40,6 @@ class ComponentController extends AbstractController
      * Execute the request
      *
      * @param  MvcEvent $e
-     * @return mixed
-     * @throws Exception\DomainException
      */
     public function onDispatch(MvcEvent $e)
     {

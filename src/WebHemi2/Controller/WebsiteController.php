@@ -40,7 +40,7 @@ class WebsiteController extends AbstractController
      */
     public function indexAction()
     {
-        $this->userAuth()->hasIdentity();
+        $this->getUserAuth()->hasIdentity();
         return array();
     }
 
@@ -60,10 +60,9 @@ class WebsiteController extends AbstractController
         if ('nope' == $id) {
             $this->response->setStatusCode(404);
         }
-        dump($category, '$category');
-        dump($id, '$id');
-        dump($format, '$format');
+        dump($category);
+        dump($id);
+        dump($format);
         return array();
     }
-
 }

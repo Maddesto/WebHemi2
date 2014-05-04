@@ -21,8 +21,8 @@
  */
 namespace WebHemi2\Form\View\Helper;
 
-use Zend\Form\View\Helper\AbstractHelper,
-    Zend\Form\ElementInterface;
+use Zend\Form\View\Helper\AbstractHelper;
+use Zend\Form\ElementInterface;
 
 /**
  * WebHemi2 Form view helper for the Plain Text element
@@ -33,15 +33,16 @@ use Zend\Form\View\Helper\AbstractHelper,
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class FormPlainText extends AbstractHelper 
+class FormPlainText extends AbstractHelper
 {
     /**
      * Retrieves the plain text element data.
-     * 
+     *
      * @param \Zend\Form\ElementInterface $element
      * @return string
      */
-    public function __invoke(ElementInterface $element = null) {
+    public function __invoke(ElementInterface $element = null)
+    {
         return $element->getValue();
     }
 }

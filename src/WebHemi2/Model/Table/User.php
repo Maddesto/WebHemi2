@@ -22,14 +22,14 @@
 
 namespace WebHemi2\Model\Table;
 
-use WebHemi2\Model\User as UserModel,
-    WebHemi2\Model\UserMeta as UserMetaModel,
-    WebHemi2\Model\Table\UserMeta as UserMetaTable,
-    Zend\Db\Exception,
-    Zend\Db\TableGateway\AbstractTableGateway,
-    Zend\Db\Adapter\Driver\Pdo\Connection as PdoConnection,
-    Zend\Db\Adapter\Adapter,
-    Zend\Db\ResultSet\ResultSet;
+use WebHemi2\Model\User as UserModel;
+use WebHemi2\Model\UserMeta as UserMetaModel;
+use WebHemi2\Model\Table\UserMeta as UserMetaTable;
+use Zend\Db\Exception;
+use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\Db\Adapter\Driver\Pdo\Connection as PdoConnection;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\ResultSet;
 
 /**
  * WebHemi2 User Table
@@ -147,7 +147,7 @@ class User extends AbstractTableGateway
 
         $rowset = $this->selectWith($select);
 
-        while($userModel = $rowset->current()) {
+        while ($userModel = $rowset->current()) {
             $this->loadUserMeta($userModel);
             $index = $userModel->getDisplayName();
             $users[$index] = $userModel;
@@ -195,8 +195,7 @@ class User extends AbstractTableGateway
             $metaResult = $metaTable->save($userMetaModel);
             if ($metaResult === false) {
                 $result = false;
-            }
-            else {
+            } else {
                 $affectedRows += $metaResult;
             }
         }
@@ -243,14 +242,12 @@ class User extends AbstractTableGateway
                 }
                 // if everything is correct, we apply the changes
                 $connection->commit();
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
                 // on failure, we rollback the whole transaction
                 $connection->rollback();
                 $result = false;
             }
-        }
-        else {
+        } else {
             $connection->rollback();
         }
 
@@ -280,6 +277,7 @@ class User extends AbstractTableGateway
         // if the update was successful, we may go on
         if ($result !== false) {
             $userMeta = $userModel->getUserMetaData();
+
             try {
                 $metaResult = $this->saveUserMeta($userMeta, $userModel->getUserId());
                 if ($metaResult === false) {
@@ -287,14 +285,12 @@ class User extends AbstractTableGateway
                 }
                 // if everything is correct, we apply the changes
                 $connection->commit();
-            }
-            catch (Exception $ex) {
+            } catch (Exception $ex) {
                 // on failure, we rollback the whole transaction
                 $connection->rollback();
                 $result = false;
             }
-        }
-        else {
+        } else {
             $connection->rollback();
         }
         return $result;

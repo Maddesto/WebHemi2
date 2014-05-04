@@ -22,9 +22,9 @@
 
 namespace WebHemi2\Form;
 
-use Zend\ServiceManager\ServiceManager,
-    Zend\ServiceManager\Exception,
-    Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager\Exception;
+use Zend\ServiceManager\ServiceManagerAwareInterface;
 
 /**
  * WebHemi2 Form Service
@@ -62,13 +62,13 @@ class FormService implements ServiceManagerAwareInterface
     {
         $formName   = preg_replace('/^get/i', '', $name);
         $formName = '\\WebHemi2\\Form\\' . $formName;
-        
+
         $formId = isset($arguments[0]) ? $arguments[0] : null;
 
         if (!class_exists($formName)) {
             throw new Exception\InvalidArgumentException(sprintf('%s doesn\'t seem to be a valid class.', $formName));
         }
-        
+
         if (!isset(self::$form[$formName])) {
             $form = new $formName($formId);
             $form->setServiceManager($this->serviceManager);

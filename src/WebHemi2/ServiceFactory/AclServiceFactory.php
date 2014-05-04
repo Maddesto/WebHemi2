@@ -22,9 +22,9 @@
 
 namespace WebHemi2\ServiceFactory;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    WebHemi2\Acl\Acl;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use WebHemi2\Acl\Acl;
 
 /**
  * WebHemi2 acl manager factory

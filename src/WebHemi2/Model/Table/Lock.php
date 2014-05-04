@@ -22,10 +22,10 @@
 
 namespace WebHemi2\Model\Table;
 
-use WebHemi2\Model\Lock as LockModel,
-    Zend\Db\TableGateway\AbstractTableGateway,
-    Zend\Db\Adapter\Adapter,
-    Zend\Db\ResultSet\ResultSet;
+use WebHemi2\Model\Lock as LockModel;
+use Zend\Db\TableGateway\AbstractTableGateway;
+use Zend\Db\Adapter\Adapter;
+use Zend\Db\ResultSet\ResultSet;
 
 /**
  * WebHemi2 Lock Table
@@ -44,7 +44,7 @@ class Lock extends AbstractTableGateway
     const LOCKTIME = 15;
 
     /** @staticvar LockModel|boolean $lockModel */
-    static $lockModel;
+    public static $lockModel;
 
     /** @var string $table   The name of the database table */
     protected $table = 'webhemi_lock';
@@ -133,5 +133,4 @@ class Lock extends AbstractTableGateway
         // on error
         return 0;
     }
-
 }

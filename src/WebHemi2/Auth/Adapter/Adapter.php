@@ -22,14 +22,14 @@
 
 namespace WebHemi2\Auth\Adapter;
 
-use Zend\Authentication\Adapter\AdapterInterface,
-    Zend\Authentication\Result,
-    Zend\ServiceManager\ServiceManagerAwareInterface,
-    Zend\ServiceManager\ServiceManager,
-    Zend\Crypt\Password\Bcrypt,
-    WebHemi2\Model\User as UserModel,
-    WebHemi2\Model\Table\User as UserTable,
-    WebHemi2\Model\Table\Lock as UserLockTable;
+use Zend\Authentication\Adapter\AdapterInterface;
+use Zend\Authentication\Result;
+use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Crypt\Password\Bcrypt;
+use WebHemi2\Model\User as UserModel;
+use WebHemi2\Model\Table\User as UserTable;
+use WebHemi2\Model\Table\Lock as UserLockTable;
 
 /**
  * WebHemi2 User Authentication Adapter
@@ -42,18 +42,28 @@ use Zend\Authentication\Adapter\AdapterInterface,
  */
 class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 {
-    /** @var Default bcrypt password cost */
+    /** Default bcrypt password cost */
     const PASSWORD_COST = 14;
 
-    /** @var string $identity */
+    /**
+     * @var string $identity
+     */
     public $identity = null;
-    /** @var string $credential */
+    /**
+     * @var string $credential
+     */
     protected $credential = null;
-    /** @var UserTable $userTable */
+    /**
+     * @var UserTable $userTable
+     */
     protected $userTable;
-    /** @var UserLockTable $userLockTable */
+    /**
+     * @var UserLockTable $userLockTable
+     */
     protected $userLockTable;
-    /** @var boolean $verifiedUser */
+    /**
+     * @var boolean $verifiedUser
+     */
     protected $verifiedUser = null;
 
     /**
@@ -68,9 +78,8 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
             // identified by email
             if (strpos($this->identity, '@') !== false) {
                 $userModel = $this->getUserTable()->getUserByEmail($this->identity);
-            }
-            // identified by username
-            else {
+            } else {
+                // identified by username
                 $userModel = $this->getUserTable()->getUserByName($this->identity);
             }
 
@@ -80,29 +89,26 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
             // if identity not found
             if (!$userModel) {
                 $authResult = new Result(
-                                Result::FAILURE_IDENTITY_NOT_FOUND,
-                                $this->identity,
-                                array('A record with the supplied identity could not be found.')
+                    Result::FAILURE_IDENTITY_NOT_FOUND,
+                    $this->identity,
+                    array('A record with the supplied identity could not be found.')
                 );
-            }
-            // else if the identity exists but not activated or disabled
-            else if (!$userModel->getActive() || !$userModel->getEnabled()) {
+            } elseif (!$userModel->getActive() || !$userModel->getEnabled()) {
+                // else if the identity exists but not activated or disabled
                 $authResult = new Result(
-                                Result::FAILURE_UNCATEGORIZED,
-                                $this->identity,
-                                array('A record with the supplied identity is not avaliable.')
+                    Result::FAILURE_UNCATEGORIZED,
+                    $this->identity,
+                    array('A record with the supplied identity is not avaliable.')
                 );
-            }
-            // else if the supplied cretendtial is not valid
-            else if (!$bcrypt->verify($this->credential, $userModel->getPassword())) {
+            } elseif (!$bcrypt->verify($this->credential, $userModel->getPassword())) {
+                // else if the supplied cretendtial is not valid
                 $authResult = new Result(
-                                Result::FAILURE_CREDENTIAL_INVALID,
-                                $this->identity,
-                                array('Supplied credential is invalid.')
+                    Result::FAILURE_CREDENTIAL_INVALID,
+                    $this->identity,
+                    array('Supplied credential is invalid.')
                 );
             }
-        }
-        else {
+        } else {
             $userModel = $this->verifiedUser;
         }
 
@@ -123,9 +129,9 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 
             // result success
             $authResult = new Result(
-                            Result::SUCCESS,
-                            $userModel,
-                            array('Authentication successful.')
+                Result::SUCCESS,
+                $userModel,
+                array('Authentication successful.')
             );
 
             // avoid auth process in the same runtime
@@ -133,8 +139,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 
             // reset the counter
             $this->getUserLockTable()->releaseLock();
-        }
-        else {
+        } else {
             // increment the counter so the ACL's IP assert can ban for a specific time (LockTable::LOCKTIME)
             $this->getUserLockTable()->setLock();
         }
@@ -146,6 +151,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set a pre-verified user for auto login
      *
      * @param UserModel $verifiedUser
+     *
      * @return Adapter
      */
     public function setVerifiedUser(UserModel $verifiedUser)
@@ -158,6 +164,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set the value to be used as the identity
      *
      * @param  string $value
+     *
      * @return Adapter
      */
     public function setIdentity($identity)
@@ -170,6 +177,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set the credential value to be used
      *
      * @param  string $credential
+     *
      * @return Adapter
      */
     public function setCredential($credential)
@@ -195,6 +203,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set User Table instance
      *
      * @param UserTable $userTable
+     *
      * @return Adapter
      */
     public function setUserTable(UserTable $userTable)
@@ -220,6 +229,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set User Lock Table instance
      *
      * @param UserTable $userLockTable
+     *
      * @return Adapter
      */
     public function setUserLockTable(UserLockTable $userLockTable)
@@ -242,6 +252,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set service manager instance
      *
      * @param ServiceManager $locator
+     *
      * @return Adapter
      */
     public function setServiceManager(ServiceManager $serviceManager)

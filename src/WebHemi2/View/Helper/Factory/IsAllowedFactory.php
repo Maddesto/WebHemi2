@@ -22,9 +22,9 @@
 
 namespace WebHemi2\View\Helper\Factory;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    WebHemi2\View\Helper\IsAllowed;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use WebHemi2\View\Helper\IsAllowed;
 
 /**
  * WebHemi2 isAllowed view helper factory

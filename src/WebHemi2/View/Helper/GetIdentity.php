@@ -22,9 +22,9 @@
 
 namespace WebHemi2\View\Helper;
 
-use Zend\View\Helper\AbstractHelper,
-    Zend\Authentication\AuthenticationService,
-    WebHemi2\Model\User;
+use Zend\View\Helper\AbstractHelper;
+use Zend\Authentication\AuthenticationService;
+use WebHemi2\Model\User;
 
 /**
  * View helper for User Auhtentication
@@ -49,8 +49,7 @@ class GetIdentity extends AbstractHelper
     {
         if ($this->getAuthService()->hasIdentity()) {
             return $this->getAuthService()->getIdentity();
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -75,5 +74,4 @@ class GetIdentity extends AbstractHelper
         $this->authService = $authService;
         return $this;
     }
-
 }

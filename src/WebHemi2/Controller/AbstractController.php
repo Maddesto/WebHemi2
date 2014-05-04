@@ -23,6 +23,7 @@
 namespace WebHemi2\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use WebHemi2\Controller\Plugin\UserAuth;
 
 /**
  * WebHemi2 Application Controller
@@ -35,5 +36,13 @@ use Zend\Mvc\Controller\AbstractActionController;
  */
 abstract class AbstractController extends AbstractActionController
 {
-    // for further plans...
+    /**
+     * Retrieve UserAuth controller plugin
+     *
+     * @return UserAuth
+     */
+    protected function getUserAuth()
+    {
+        return $this->UserAuth();
+    }
 }

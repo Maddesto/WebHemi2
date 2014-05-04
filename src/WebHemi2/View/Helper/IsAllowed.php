@@ -22,8 +22,8 @@
 
 namespace WebHemi2\View\Helper;
 
-use Zend\View\Helper\AbstractHelper,
-    WebHemi2\Acl\Acl;
+use Zend\View\Helper\AbstractHelper;
+use WebHemi2\Acl\Acl;
 
 /**
  * View helper for ACL

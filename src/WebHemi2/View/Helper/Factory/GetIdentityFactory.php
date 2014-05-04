@@ -22,9 +22,9 @@
 
 namespace WebHemi2\View\Helper\Factory;
 
-use Zend\ServiceManager\FactoryInterface,
-    Zend\ServiceManager\ServiceLocatorInterface,
-    WebHemi2\View\Helper\GetIdentity;
+use Zend\ServiceManager\FactoryInterface;
+use Zend\ServiceManager\ServiceLocatorInterface;
+use WebHemi2\View\Helper\GetIdentity;
 
 /**
  * WebHemi2 getIdentity view helper factory

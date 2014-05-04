@@ -24,7 +24,6 @@ namespace WebHemi2\Model;
 
 use WebHemi2\Model\UserMeta as UserMetaModel;
 
-
 /**
  * WebHemi2 User Model
  *
@@ -90,20 +89,17 @@ class User
             if ($data['method'] == 'get') {
                 $meta = null;
 
-                if (
-                    isset($this->userMeta[$key])
+                if (isset($this->userMeta[$key])
                     && $this->userMeta[$key] instanceof UserMetaModel
                 ) {
                     $meta = $this->userMeta[$key]->getMeta();
                 }
                 return $meta;
-            }
-            // setting meta data
-            else {
+            } else {
+                // setting meta data
                 $value = (string)current($arguments);
 
-                if (
-                    !isset($this->userMeta[$key])
+                if (!isset($this->userMeta[$key])
                     || !$this->userMeta[$key] instanceof UserMetaModel
                 ) {
                     $this->userMeta[$key] = new UserMeta();
@@ -214,21 +210,28 @@ class User
     public function getDisplayName()
     {
         // if exists as meta data
-        if (
-            isset($this->userMeta['displayName'])
+        if (isset($this->userMeta['displayName'])
             && $this->userMeta['displayName'] instanceof UserMetaModel
         ) {
-            return $this->userMeta['displayName']->getMeta();
+            $displayName = $this->userMeta['displayName']->getMeta();
+
+            if (!empty($displayName)) {
+                return $displayName;
+            }
         }
+
         // otherwise username
-        elseif ($this->username !== null) {
+        if (!empty($this->username)) {
             return $this->username;
         }
+
         // otherwise email address
-        elseif ($this->email !== null) {
+        if (!empty($this->email)) {
             return $this->email;
         }
-        return null;
+
+        // otherwise no name
+        return 'Noname';
     }
 
     /**
@@ -256,16 +259,14 @@ class User
                     }
                 }
             }
-        }
-        // if the avatar is an URL, then we check if it's an image.'
-        elseif (strpos($avatar, 'http:') === 0) {
+        } elseif (strpos($avatar, 'http:') === 0) {
+            // if the avatar is an URL, then we check if it's an image.'
             $content = @getimagesize($avatar);
             if ($content && in_array($content[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
                 unset($content);
                 return self::USER_AVATAR_TYPE_URL;
             }
-        }
-        elseif (!empty($avatar)) {
+        } elseif (!empty($avatar)) {
             return self::USER_AVATAR_TYPE_GRAVATAR;
         }
 
@@ -359,8 +360,7 @@ class User
     {
         if ($timeLogin instanceof \DateTime) {
             $this->timeLogin = $timeLogin;
-        }
-        else {
+        } else {
             $this->timeLogin = new \DateTime($timeLogin);
         }
         return $this;
@@ -408,8 +408,7 @@ class User
     {
         if ($timeRegister instanceof \DateTime) {
             $this->timeRegister = $timeRegister;
-        }
-        else {
+        } else {
             $this->timeRegister = new \DateTime($timeRegister);
         }
         return $this;

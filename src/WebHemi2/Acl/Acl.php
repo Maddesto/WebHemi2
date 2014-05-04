@@ -22,18 +22,19 @@
 
 namespace WebHemi2\Acl;
 
-use Zend\ServiceManager\ServiceManager,
-    Zend\Permissions\Acl\Acl as ZendAcl,
-    Zend\Permissions\Acl\Exception,
-    Zend\Permissions\Acl\Resource\GenericResource,
-    Zend\Authentication\AuthenticationService,
-    WebHemi2\Acl\Provider\RoleProvider,
-    WebHemi2\Acl\Provider\ResourceProvider,
-    WebHemi2\Acl\Provider\RuleProvider,
-    WebHemi2\Acl\Role,
-    WebHemi2\Acl\Resource,
-    WebHemi2\Acl\Assert\CleanIPAssertion,
-    WebHemi2\Model\User as UserModel;
+use Traversable;
+use Zend\ServiceManager\ServiceManager;
+use Zend\Permissions\Acl\Acl as ZendAcl;
+use Zend\Permissions\Acl\Exception;
+use Zend\Permissions\Acl\Resource\GenericResource;
+use Zend\Authentication\AuthenticationService;
+use WebHemi2\Acl\Provider\RoleProvider;
+use WebHemi2\Acl\Provider\ResourceProvider;
+use WebHemi2\Acl\Provider\RuleProvider;
+use WebHemi2\Acl\Role;
+use WebHemi2\Acl\Resource;
+use WebHemi2\Acl\Assert\CleanIPAssertion;
+use WebHemi2\Model\User as UserModel;
 
 /**
  * WebHemi2 Access Control
@@ -46,38 +47,54 @@ use Zend\ServiceManager\ServiceManager,
  */
 class Acl
 {
-    /** @var array $opions */
+    /**
+     * @var array $options
+     */
     protected $options;
-    /** @var Zend\ServiceManager\ServiceManager $serviceManager */
+    /**
+     * @var ServiceManager $serviceManager
+     */
     protected $serviceManager;
-    /** @var Zend\Permissions\Acl\Acl $acl */
+    /**
+     * @var ZendAcl $acl
+     */
     protected $acl;
-    /** @var Zend\Authentication\AuthenticationService $auth */
+    /**
+     * @var AuthenticationService $auth
+     */
     protected $auth;
-    /** @var string $template */
+    /**
+     * @var string $template
+     */
     protected $template = 'error/403';
-    /** @var RoleProvider $roleProvider */
+    /**
+     * @var RoleProvider $roleProvider
+     */
     protected $roleProvider;
-    /** @var ResourceProvider $resourceProvider */
+    /**
+     * @var ResourceProvider $resourceProvider
+     */
     protected $resourceProvider;
-    /** @var RuleProvider $ruleProvider */
+    /**
+     * @var RuleProvider $ruleProvider
+     */
     protected $ruleProvider;
 
     /**
      * Instantiate the Access Control
      *
-     * @param  array|Traversable $options
-     * @param ServiceManager     $serviceManager
+     * @param array|Traversable $options
+     * @param ServiceManager    $serviceManager
+     *
+     * @throws Exception\InvalidArgumentException
      *
      * @return Acl
-     * @throws Exception\InvalidArgumentException
      */
     public static function factory($options, ServiceManager $serviceManager)
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
-        }
-        elseif (!is_array($options)) {
+        } elseif (!is_array($options)) {
             throw new Exception\InvalidArgumentException(
                 sprintf(
                     '%s expects an array or Traversable object; received "%s"',
@@ -99,7 +116,7 @@ class Acl
      * @param array|Traversable $options
      * @param ServiceManager    $serviceManager
      */
-    protected function __construct($options = array(), ServiceManager $serviceManager)
+    protected function __construct($options, ServiceManager $serviceManager)
     {
         // set the options
         $this->options = $options;
@@ -123,9 +140,9 @@ class Acl
             $this->template = $this->options['template'];
         }
 
-        $this->roleProvider     = new RoleProvider($this->options['roles'],         $this->serviceManager);
+        $this->roleProvider     = new RoleProvider($this->options['roles'], $this->serviceManager);
         $this->resourceProvider = new ResourceProvider($this->options['resources'], $this->serviceManager);
-        $this->ruleProvider     = new RuleProvider($this->options['rules'],         $this->serviceManager);
+        $this->ruleProvider     = new RuleProvider($this->options['rules'], $this->serviceManager);
 
         // build role tree in ACL
         $this->buildRoleTree($this->roleProvider->getRoles());
@@ -152,6 +169,7 @@ class Acl
      * Add roles to the ACL
      *
      * @param string|array $roles
+     *
      * @throws Exception\InvalidArgumentException
      */
     protected function buildRoleTree($roles)
@@ -166,7 +184,7 @@ class Acl
                 throw new Exception\InvalidArgumentException(
                     sprintf(
                         '%s expects an array of Role objects; received "%s"',
-                            __METHOD__,
+                        __METHOD__,
                         (is_object($role) ? get_class($role) : gettype($role))
                     )
                 );
@@ -183,8 +201,7 @@ class Acl
             if ($parentRole !== null) {
                 $this->buildRoleTree($parentRole);
                 $this->acl->addRole($role, $parentRole);
-            }
-            else {
+            } else {
                 $this->acl->addRole($role);
             }
         }
@@ -215,8 +232,9 @@ class Acl
      * If a valid role is not coupled with a valid resource it will result FALSE.
      * If the role or the resourse is not valid it will result TRUE.
      *
-     * @param  Resource|string    $resource
-     * @param  Role|string        $role
+     * @param  Resource|string $resource
+     * @param  Role|string     $role
+     *
      * @return boolean
      */
     public function isAllowed($resource, $role = null)
@@ -230,8 +248,7 @@ class Acl
 
             if (strpos($resource, '/') !== false) {
                 list($controller, $action) = explode('/', $resource);
-            }
-            else {
+            } else {
                 $controller = $resource;
                 $action     = '*';
             }
@@ -247,8 +264,7 @@ class Acl
             $routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
 
             // allow access for login page, invalid role or non-forced resources
-            if (
-                'logout' == $action
+            if ('logout' == $action
                 || 'login' == $action
                 || !$this->acl->hasRole($role)
             ) {
@@ -275,9 +291,8 @@ class Acl
                 );
 
             return $allowed;
-        }
-        // It is not necessary to terminate the script. Fair enough to return with a FALSE
-        catch (Exception\InvalidArgumentException $e) {
+        } catch (Exception\InvalidArgumentException $e) {
+            // It is not necessary to terminate the script. Fair enough to return with a FALSE
             return false;
         }
     }
@@ -313,7 +328,8 @@ class Acl
     /**
      * Check whether a resource exists
      *
-     * @param  Resource|string    $resource
+     * @param  Resource|string $resource
+     *
      * @return boolean
      */
     public function hasResource($resource)
@@ -324,7 +340,8 @@ class Acl
     /**
      * Check whether a role exists
      *
-     * @param  Role|string   $role
+     * @param  Role|string $role
+     *
      * @return boolean
      */
     public function hasRole($role)

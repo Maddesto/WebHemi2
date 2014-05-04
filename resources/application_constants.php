@@ -1,4 +1,5 @@
 <?php
+
 /**
  * WebHemi2
  *
@@ -18,13 +19,21 @@
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-defined('WEBHEMI_VERSION') || define('WEBHEMI_VERSION', '2.0.1.0');
 
-defined('APPLICATION_PATH') || define('APPLICATION_PATH', dirname(__DIR__));
+define('WEBHEMI_VERSION', '2.0.1.0');
 
-defined('ADMIN_MODULE') || define('ADMIN_MODULE', 'Admin');
-defined('WEBSITE_MODULE') || define('WEBSITE_MODULE', 'Website');
-defined('APPLICATION_MODULE') || define('APPLICATION_MODULE', call_user_func(function()
+define('APPLICATION_PATH', dirname(__DIR__));
+
+define('ADMIN_MODULE', 'Admin');
+define('WEBSITE_MODULE', 'Website');
+define('APPLICATION_MODULE', getApplicationModule());
+
+/**
+ * Read the WebHemi2 config to determine from the URL which module is the active one.
+ *
+ * @return string
+ */
+function getApplicationModule()
 {
     $modules   = require_once APPLICATION_PATH . '/config/application.config.php';
     $module    = WEBSITE_MODULE;
@@ -33,14 +42,17 @@ defined('APPLICATION_MODULE') || define('APPLICATION_MODULE', call_user_func(fun
     // if no URL is present, then the current URL will be used
     if (empty($url)) {
         $url  = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 's' : '') . '://';
-        $url .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING'];;
+        $url .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING'];
     }
 
     // parse the URL into
     $urlParts    = parse_url($url);
 
     // if the host is not an IP address, then we can check the subdomain-based module names too
-    if (!preg_match('/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/', $urlParts['host'])) {
+    if (!preg_match(
+        '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/',
+        $urlParts['host']
+    )) {
         $domainParts = explode('.', $urlParts['host']);
         $tld         = array_pop($domainParts);
         $domain      = array_pop($domainParts) . '.' . $tld;
@@ -66,9 +78,8 @@ defined('APPLICATION_MODULE') || define('APPLICATION_MODULE', call_user_func(fun
                 $module = $moduleName;
                 break;
             }
-        }
-        // subdomain-based modules
-        else {
+        } else {
+            // subdomain-based modules
             if ($moduleData['type'] == 'subdomain'
                 && $moduleData['path'] == $subDomain
             ) {
@@ -79,4 +90,4 @@ defined('APPLICATION_MODULE') || define('APPLICATION_MODULE', call_user_func(fun
     }
 
     return $module;
-}));
+}
