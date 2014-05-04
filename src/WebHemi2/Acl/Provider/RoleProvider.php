@@ -35,7 +35,9 @@ use WebHemi2\Acl\Role;
  */
 class RoleProvider
 {
-    /** @var array $roles */
+    /**
+     * @var array $roles
+     */
     protected $roles = array();
 
     /**

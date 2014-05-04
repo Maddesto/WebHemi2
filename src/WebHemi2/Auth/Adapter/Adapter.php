@@ -42,18 +42,28 @@ use WebHemi2\Model\Table\Lock as UserLockTable;
  */
 class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 {
-    /** @var Default bcrypt password cost */
+    /** Default bcrypt password cost */
     const PASSWORD_COST = 14;
 
-    /** @var string $identity */
+    /**
+     * @var string $identity
+     */
     public $identity = null;
-    /** @var string $credential */
+    /**
+     * @var string $credential
+     */
     protected $credential = null;
-    /** @var UserTable $userTable */
+    /**
+     * @var UserTable $userTable
+     */
     protected $userTable;
-    /** @var UserLockTable $userLockTable */
+    /**
+     * @var UserLockTable $userLockTable
+     */
     protected $userLockTable;
-    /** @var boolean $verifiedUser */
+    /**
+     * @var boolean $verifiedUser
+     */
     protected $verifiedUser = null;
 
     /**
@@ -141,6 +151,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set a pre-verified user for auto login
      *
      * @param UserModel $verifiedUser
+     *
      * @return Adapter
      */
     public function setVerifiedUser(UserModel $verifiedUser)
@@ -153,6 +164,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set the value to be used as the identity
      *
      * @param  string $value
+     *
      * @return Adapter
      */
     public function setIdentity($identity)
@@ -165,6 +177,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set the credential value to be used
      *
      * @param  string $credential
+     *
      * @return Adapter
      */
     public function setCredential($credential)
@@ -190,6 +203,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set User Table instance
      *
      * @param UserTable $userTable
+     *
      * @return Adapter
      */
     public function setUserTable(UserTable $userTable)
@@ -215,6 +229,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set User Lock Table instance
      *
      * @param UserTable $userLockTable
+     *
      * @return Adapter
      */
     public function setUserLockTable(UserLockTable $userLockTable)
@@ -237,6 +252,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      * Set service manager instance
      *
      * @param ServiceManager $locator
+     *
      * @return Adapter
      */
     public function setServiceManager(ServiceManager $serviceManager)

@@ -22,6 +22,7 @@
 
 namespace WebHemi2\Acl;
 
+use Traversable;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Exception;
@@ -46,31 +47,48 @@ use WebHemi2\Model\User as UserModel;
  */
 class Acl
 {
-    /** @var array $opions */
+    /**
+     * @var array $options
+     */
     protected $options;
-    /** @var Zend\ServiceManager\ServiceManager $serviceManager */
+    /**
+     * @var ServiceManager $serviceManager
+     */
     protected $serviceManager;
-    /** @var Zend\Permissions\Acl\Acl $acl */
+    /**
+     * @var ZendAcl $acl
+     */
     protected $acl;
-    /** @var Zend\Authentication\AuthenticationService $auth */
+    /**
+     * @var AuthenticationService $auth
+     */
     protected $auth;
-    /** @var string $template */
+    /**
+     * @var string $template
+     */
     protected $template = 'error/403';
-    /** @var RoleProvider $roleProvider */
+    /**
+     * @var RoleProvider $roleProvider
+     */
     protected $roleProvider;
-    /** @var ResourceProvider $resourceProvider */
+    /**
+     * @var ResourceProvider $resourceProvider
+     */
     protected $resourceProvider;
-    /** @var RuleProvider $ruleProvider */
+    /**
+     * @var RuleProvider $ruleProvider
+     */
     protected $ruleProvider;
 
     /**
      * Instantiate the Access Control
      *
-     * @param  array|Traversable $options
-     * @param ServiceManager     $serviceManager
+     * @param array|Traversable $options
+     * @param ServiceManager    $serviceManager
+     *
+     * @throws Exception\InvalidArgumentException
      *
      * @return Acl
-     * @throws Exception\InvalidArgumentException
      */
     public static function factory($options, ServiceManager $serviceManager)
     {
@@ -151,6 +169,7 @@ class Acl
      * Add roles to the ACL
      *
      * @param string|array $roles
+     *
      * @throws Exception\InvalidArgumentException
      */
     protected function buildRoleTree($roles)
@@ -213,8 +232,9 @@ class Acl
      * If a valid role is not coupled with a valid resource it will result FALSE.
      * If the role or the resourse is not valid it will result TRUE.
      *
-     * @param  Resource|string    $resource
-     * @param  Role|string        $role
+     * @param  Resource|string $resource
+     * @param  Role|string     $role
+     *
      * @return boolean
      */
     public function isAllowed($resource, $role = null)
@@ -308,7 +328,8 @@ class Acl
     /**
      * Check whether a resource exists
      *
-     * @param  Resource|string    $resource
+     * @param  Resource|string $resource
+     *
      * @return boolean
      */
     public function hasResource($resource)
@@ -319,7 +340,8 @@ class Acl
     /**
      * Check whether a role exists
      *
-     * @param  Role|string   $role
+     * @param  Role|string $role
+     *
      * @return boolean
      */
     public function hasRole($role)

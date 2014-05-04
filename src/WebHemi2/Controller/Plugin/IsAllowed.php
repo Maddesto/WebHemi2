@@ -40,9 +40,13 @@ use WebHemi2\Acl\Acl;
  */
 class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
-    /** @var Acl $aclService */
+    /**
+     * @var Acl $aclService
+     */
     protected $aclService;
-    /** @var ServiceLocatorInterface */
+    /**
+     * @var ServiceLocatorInterface $serviceLocator
+     */
     protected $serviceLocator;
 
     /**
@@ -52,6 +56,7 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
      *
      * @param  Resource|string    $resource
      * @param  Role|string        $role
+     *
      * @return boolean
      */
     public function __invoke($resource, $role = null)
@@ -76,11 +81,13 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set ACL service object
      *
      * @param Acl $aclService
+     *
      * @return IsAllowed
      */
     public function setAclService(Acl $aclService)
     {
         $this->aclService = $aclService;
+
         return $this;
     }
 
@@ -98,11 +105,13 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set ServiceLocatorInterface instance
      *
      * @param  ServiceLocatorInterface $serviceLocator
+     *
      * @return IsAllowed
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
         return $this;
     }
 }

@@ -40,8 +40,6 @@ class ComponentController extends AbstractController
      * Execute the request
      *
      * @param  MvcEvent $e
-     * @return mixed
-     * @throws Exception\DomainException
      */
     public function onDispatch(MvcEvent $e)
     {

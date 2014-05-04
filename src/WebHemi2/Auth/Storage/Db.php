@@ -39,13 +39,21 @@ use WebHemi2\Model\Table\User as UserTable;
  */
 class Db implements StorageInterface, ServiceManagerAwareInterface
 {
-    /** @var StorageInterface $storage */
+    /**
+     * @var StorageInterface $storage
+     */
     protected $storage;
-    /** @var UserTable $userTable */
+    /**
+     * @var UserTable $userTable
+     */
     protected $userTable;
-    /** @var mixed $resolvedIdentity */
+    /**
+     * @var mixed $resolvedIdentity
+     */
     protected $resolvedIdentity;
-    /** @var ServiceManager $serviceManager */
+    /**
+     * @var ServiceManager $serviceManager
+     */
     protected $serviceManager;
 
     /**
@@ -88,7 +96,6 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
      * Write contents to storage
      *
      * @param  mixed $contents
-     * @return void
      */
     public function write($contents)
     {
@@ -98,8 +105,6 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
 
     /**
      * Clear contents from storage
-     *
-     * @return void
      */
     public function clear()
     {
@@ -124,11 +129,13 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
      * Set storage
      *
      * @param StorageInterface $storage
+     *
      * @return Db
      */
     public function setStorage(StorageInterface $storage)
     {
         $this->storage = $storage;
+
         return $this;
     }
 
@@ -149,6 +156,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
      * Set User Table instance
      *
      * @param UserTable $userTable
+     *
      * @return Db
      */
     public function setTable(UserTable $userTable)
@@ -171,7 +179,6 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
      * Set service manager instance
      *
      * @param ServiceManager $locator
-     * @return void
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {

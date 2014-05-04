@@ -22,6 +22,7 @@
 
 namespace WebHemi2\Controller;
 
+use Exception;
 use WebHemi2\Controller\UserController;
 use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Model\User as UserModel;
@@ -47,7 +48,6 @@ class AdminController extends UserController
      * Execute the request
      *
      * @param  MvcEvent $e
-     * @return mixed
      */
     public function onDispatch(MvcEvent $e)
     {
@@ -80,6 +80,8 @@ class AdminController extends UserController
 
     /**
      * Login page
+     *
+     * @return ViewModel
      */
     public function loginAction()
     {
@@ -125,8 +127,7 @@ class AdminController extends UserController
      */
     public function adduserAction()
     {
-        /* @var $userAuth \WebHemi2\Controller\Plugin\UserAuth */
-        $userAuth  = $this->userAuth();
+        //$userAuth  = $this->userAuth();
         $userName  = $this->params()->fromRoute('userName');
         $userTable = new UserTable($this->getServiceLocator()->get('database'));
         $userModel = new UserModel();
@@ -184,7 +185,7 @@ class AdminController extends UserController
                     if ($result !== false) {
                         return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
                     }
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $editForm->setMessages(
                         array(
                             'submit' => $e->getMessage()
@@ -212,7 +213,7 @@ class AdminController extends UserController
 
         if ($userModel) {
             // if it is NOT me, then allow the action
-            if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+            if ($this->getUserAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
                 $userModel->setEnabled(false);
                 $userTable->update($userModel);
             }
@@ -233,7 +234,7 @@ class AdminController extends UserController
 
         if ($userModel) {
             // if it is NOT me, then allow the action
-            if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+            if ($this->getUserAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
                 $userModel->setEnabled(true);
                 $userTable->update($userModel);
             }
@@ -254,7 +255,7 @@ class AdminController extends UserController
 
         if ($userModel) {
             // if it is NOT me, then allow the action
-            if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+            if ($this->getUserAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
                 $userModel->setActive(true);
                 $userTable->update($userModel);
             }
@@ -275,8 +276,7 @@ class AdminController extends UserController
 
         if ($userModel) {
             // if it is NOT me, then allow the action
-            if ($this->userAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
-                $userModel->setActive(true);
+            if ($this->getUserAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
                 $userTable->delete(array('user_id' => $userModel->getUserId()));
             }
         }

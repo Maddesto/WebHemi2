@@ -30,6 +30,7 @@ use WebHemi2\Auth\Auth as AuthService;
 use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
 use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Model\User as UserModel;
+use WebHemi2\Component\Cipher\Cipher;
 
 /**
  * Controller plugin for Authentication
@@ -42,11 +43,17 @@ use WebHemi2\Model\User as UserModel;
  */
 class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
-    /** @var AuthAdapter */
+    /**
+     * @var AuthAdapter $authAdapter
+     */
     protected $authAdapter;
-    /** @var AuthService */
+    /**
+     * @var AuthService $authService
+     */
     protected $authService;
-    /** @var ServiceLocator */
+    /**
+     * @var ServiceLocatorInterface $serviceLocator
+     */
     protected $serviceLocator;
 
     /**
@@ -60,23 +67,16 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 
         // if not already logged in and has autologin cookie for the module which is not the ADMIN module
         if (!$identity
-                && isset($_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)])
-                && APPLICATION_MODULE !== ADMIN_MODULE
+            && isset($_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)])
+            && APPLICATION_MODULE !== ADMIN_MODULE
         ) {
             $encryptedHash = $_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)];
 
             // decrypting the hash for this module
-            $decryptedHash = trim(
-                rtrim(
-                    mcrypt_decrypt(
-                        MCRYPT_RIJNDAEL_256,
-                        md5(APPLICATION_MODULE),
-                        base64_decode($encryptedHash),
-                        MCRYPT_MODE_CBC,
-                        md5(md5(APPLICATION_MODULE))
-                    ),
-                    "\0"
-                )
+            $decryptedHash = Cipher::decode(
+                md5(APPLICATION_MODULE),
+                base64_decode($encryptedHash),
+                md5(md5(APPLICATION_MODULE))
             );
 
             // chech for the hash
@@ -123,11 +123,13 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
     /**
      * Proxy convenience method
      *
-     * @return mixed
+     * @return UserAuth
      */
     public function clearIdentity()
     {
-        return $this->getAuthService()->clearIdentity();
+        $this->getAuthService()->clearIdentity();
+
+        return $this;
     }
 
     /**
@@ -140,6 +142,7 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
         if (!isset($this->authAdapter)) {
             $this->authAdapter = $this->getServiceLocator()->get('authAdapter');
         }
+
         return $this->authAdapter;
     }
 
@@ -147,11 +150,13 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set AuthAdapter instance
      *
      * @param AuthAdapter $authAdapter
+     *
      * @retrun UserAuth
      */
     public function setAuthAdapter(AuthAdapter $authAdapter)
     {
         $this->authAdapter = $authAdapter;
+
         return $this;
     }
 
@@ -165,6 +170,7 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
         if (!isset($this->authService)) {
             $this->authService = $this->getServiceLocator()->get('auth');
         }
+
         return $this->authService;
     }
 
@@ -172,11 +178,13 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set AuthService instance
      *
      * @param AuthService $authService
+     *
      * @retrun UserAuth
      */
     public function setAuthService(AuthService $authService)
     {
         $this->authService = $authService;
+
         return $this;
     }
 
@@ -194,11 +202,13 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set ServiceLocator
      *
      * @param ServiceLocatorInterface $serviceLocator
+     *
      * @return UserAuth
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
         return $this;
     }
 }

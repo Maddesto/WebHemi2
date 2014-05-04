@@ -41,7 +41,9 @@ use Zend\Permissions\Acl\Assertion\AssertionInterface;
  */
 class CleanIPAssertion implements AssertionInterface
 {
-    /** @var ServiceManager $serviceManager */
+    /**
+     * @var ServiceManager $serviceManager
+     */
     protected $serviceManager;
 
     /**
@@ -65,6 +67,7 @@ class CleanIPAssertion implements AssertionInterface
      * @param  RoleInterface       $role
      * @param  ResourceInterface   $resource
      * @param  string              $privilege
+     *
      * @return boolean
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)

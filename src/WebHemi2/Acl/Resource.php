@@ -35,7 +35,9 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  */
 class Resource implements ResourceInterface
 {
-    /** @var string $resourceId */
+    /**
+     * @var string $resourceId
+     */
     protected $resourceId;
 
     /**
@@ -63,11 +65,13 @@ class Resource implements ResourceInterface
      * Set resourceId
      *
      * @param string $resourceId
+     *
      * @return Resource
      */
     public function setResourceId($resourceId)
     {
         $this->resourceId = $resourceId;
+
         return $this;
     }
 }

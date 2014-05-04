@@ -38,7 +38,9 @@ use WebHemi2\Form\AbstractForm;
  */
 class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
 {
-    /** @var ServiceLocatorInterface $serviceLocator */
+    /**
+     * @var ServiceLocatorInterface $serviceLocator
+     */
     protected $serviceLocator;
 
     /**
@@ -46,6 +48,7 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
      *
      * @param string $formName
      * @param string $name
+     *
      * @return AbstractForm
      */
     public function __invoke($formName, $name = null)
@@ -67,11 +70,13 @@ class GetForm extends AbstractPlugin implements ServiceLocatorAwareInterface
      * Set ServiceLocatorInterface instance
      *
      * @param  ServiceLocatorInterface $serviceLocator
+     *
      * @return GetForm
      */
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
+
         return $this;
     }
 }

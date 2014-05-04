@@ -33,7 +33,9 @@ namespace WebHemi2\Acl\Provider;
  */
 class RuleProvider
 {
-    /** @var array $rules */
+    /**
+     * @var array $rules
+     */
     protected $rules = array();
 
     /**
@@ -61,6 +63,7 @@ class RuleProvider
      *
      * @param string $role
      * @param array $resources
+     *
      * @return RuleProvider
      */
     public function addRule($role, array $resources)

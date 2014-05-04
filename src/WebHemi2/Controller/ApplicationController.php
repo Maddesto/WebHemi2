@@ -40,7 +40,6 @@ class ApplicationController extends AbstractController
      * Execute the request
      *
      * @param  MvcEvent $e
-     * @return mixed
      */
     public function onDispatch(MvcEvent $e)
     {
