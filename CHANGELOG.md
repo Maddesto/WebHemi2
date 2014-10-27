@@ -2,12 +2,16 @@ Change log
 ==========
 
 ---------------
+Version 2.0.2.0
+---------------
+- Refactoring: stay with the standalone solution for simplicity and better user experience
+
 Version 2.0.1.1
 ---------------
 - Finished to change code style to validate against PSR-1 and PSR-2
 - Added theme support for the 'Admin' login page
-- Added new Compoment: `Cipher` for encoding (even if there is no mcrypt library) 
-- Added new Compoment: `Image` for simplify the work with images
+- Added new Component: `Cipher` for encoding (even if there is no mcrypt library)
+- Added new Component: `Image` for simplify the work with images
 - Minor bug fixes
 
 Version 2.0.1.0
@@ -16,15 +20,14 @@ Version 2.0.1.0
 - Full application refactoring: no more hacking with Zend Framework Bootstrap
 - Provide a valid Zend Framework 2 module
 - Started to change code style to PSR-2
-- Major bugfixes: eliminate every PHP STRICT errors
-- New git branch worklows: feature/tickets/ and release/
+- Major bug fixes: eliminate every PHP STRICT errors
 
 Version 2.0.0.21
 ----------------
 - Finished the development of user settings module 
 - Fixed auth data refresh bug after editing own profile
 - Fixed user model transaction problem
-- Minor bugfixes
+- Minor bug fixes
 
 Version 2.0.0.20
 ----------------
@@ -34,7 +37,7 @@ Version 2.0.0.20
 
 Version 2.0.0.19
 ----------------
-- Compatibilty fixes for Zend Framework version 2.2.1
+- Compatibility fixes for Zend Framework version 2.2.1
 - Fixes and improvements in WebHemi\Form
 - Added form element filtering prior to validation
 - Implementing [ezyang](https://github.com/ezyang/htmlpurifier)'s HTML Purifier library
@@ -44,7 +47,7 @@ Version 2.0.0.18
 - Minimum required ZF version is 2.2.0+
 - Major improvements in ZF2's form validation
 - User settings module development
-- Fixed source code indentions to Tabs
+- Fixed source code intentions to Tabs
 
 Version 2.0.0.17
 ----------------

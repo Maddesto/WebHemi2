@@ -1,0 +1,36 @@
+<?php
+
+if (empty($this->title)) {
+    $this->title = 'WebHemi2 Site';
+}
+$headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - ')->setAutoEscape(false);
+$css       = $this->headLink()->appendStylesheet('/resources/common/css/reset.css')
+                ->appendStylesheet('/resources/theme/default/css/admin.css');
+$js        = $this->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+                ->appendFile('/resources/common/js/script.js');
+
+echo $this->doctype();
+?>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+<?php
+    echo "\t\t" . $headTitle . PHP_EOL;
+    echo "\t\t" . $css . PHP_EOL;
+    echo "\t\t" . $js . PHP_EOL;
+?>
+    </head>
+    <body>
+        <div class="container">
+            <h1>HEMI WEBSITE LAYOUT</h1>
+<?php if ($this->getIdentity()) : ?>
+            <a href="<?php echo $this->url('user'); ?>">My Profile</a> |
+            <a href="<?php echo $this->url('user/logout'); ?>">Logout</a>
+<?php else : ?>
+            <a href="<?php echo $this->url('user/login'); ?>">Login</a>
+<?php endif; ?>
+            <hr>
+            <?php echo $this->content; ?>
+        </div> <!-- /container -->
+    </body>
+</html>
