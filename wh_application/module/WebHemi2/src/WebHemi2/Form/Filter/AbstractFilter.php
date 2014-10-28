@@ -45,7 +45,7 @@ abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManag
     /**
      * Class constructor.
      *
-     * @param array $options
+     * @param array $optionArray
      */
     public function __construct($optionArray = array())
     {
@@ -53,6 +53,7 @@ abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManag
 
         foreach ($optionArray as $key => $option) {
             if ($option instanceof ServiceManagerAwareInterface) {
+                /** @var \Zend\ServiceManager\ServiceManager $option */
                 $this->setServiceManager($option);
             } else {
                 $filterOptions[] = $option;
@@ -79,7 +80,8 @@ abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManag
      * Set ServiceManager instance
      *
      * @param ServiceManager $serviceManager
-     * @return UserAuth
+     *
+     * @return AbstractFilter
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {

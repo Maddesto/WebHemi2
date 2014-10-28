@@ -24,6 +24,8 @@ namespace WebHemi2\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use WebHemi2\Controller\Plugin\UserAuth;
+use Zend\Mvc\MvcEvent;
+use Zend\View\Model\ViewModel;
 
 /**
  * WebHemi2 Application Controller
@@ -36,6 +38,34 @@ use WebHemi2\Controller\Plugin\UserAuth;
  */
 abstract class AbstractController extends AbstractActionController
 {
+    /**
+     * Execute the request
+     *
+     * @param  MvcEvent $e
+     *
+     * @return mixed
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        if (APPLICATION_MODULE == ADMIN_MODULE) {
+            $headerBlock = new ViewModel();
+            $headerBlock->setTemplate('block/AdminHeaderBlock');
+
+            $menuBlock = new ViewModel();
+            $menuBlock->setVariable('activeMenu', 'application');
+            $menuBlock->setTemplate('block/AdminMenuBlock');
+
+            $footerBlock = new ViewModel();
+            $footerBlock->setTemplate('block/AdminFooterBlock');
+
+            $this->layout()->addChild($headerBlock, 'HeaderBlock')
+                ->addChild($menuBlock, 'MenuBlock')
+                ->addChild($footerBlock, 'FooterBlock');
+        }
+
+        return parent::onDispatch($e);
+    }
+
     /**
      * Retrieve UserAuth controller plugin
      *

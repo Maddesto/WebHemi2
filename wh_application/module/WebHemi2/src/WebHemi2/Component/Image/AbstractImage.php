@@ -46,13 +46,9 @@ abstract class AbstractImage
     /** The default file permisson for the output. */
     const OUTPUT_FILE_PERMISSION = 0640;
 
-    /**
-     * @var array $imageResource Container for one or more image resources.
-     */
+    /** @var resource[] $imageResource Container for one or more image resources. */
     protected $imageResource = array();
-    /**
-     * @var int $chmod File permission of the output.
-     */
+    /** @var int $chmod File permission of the output. */
     protected $chmod;
 
     /**
@@ -254,6 +250,8 @@ abstract class AbstractImage
     /**
      * Retrieve the dimensions of a specific resource
      *
+     * @param int $index
+     *
      * @throws Exception
      *
      * @return array    Array with the resource image's dimensions (in pixel)
@@ -359,15 +357,16 @@ abstract class AbstractImage
      *
      * @return AbstractImage
      */
-    public function grayscaleResource($index = 0)
+    public function greyscaleResource($index = 0)
     {
         if ($resource = $this->getResource($index)) {
+            $greyscalePalette = array();
             list($width, $height) = $this->getResourceDimension($index);
 
             // Create a blank image with the same dimensions.
             $blackWhiteImage = imagecreate($width, $height);
             for ($c = 0; $c < 256; $c++) {
-                $grayscalePalette[$c] = imagecolorallocate($blackWhiteImage, $c, $c, $c);
+                $greyscalePalette[$c] = imagecolorallocate($blackWhiteImage, $c, $c, $c);
             }
 
             // Go through all the colums (Y) and rows (X)
@@ -380,10 +379,10 @@ abstract class AbstractImage
                     $g = ($rgb >> 8) & 0xFF;
                     $b = $rgb & 0xFF;
 
-                    // Convert the components into grayscale alternatives and merge into a new color
-                    $grayscaleIndex = (($r * 0.299) + ($g * 0.587) + ($b * 0.114));
+                    // Convert the components into greyscale alternatives and merge into a new color
+                    $greyscaleIndex = (($r * 0.299) + ($g * 0.587) + ($b * 0.114));
                     // Save the pixel onto new resource.
-                    imagesetpixel($blackWhiteImage, $x, $y, $grayscalePalette[$grayscaleIndex]);
+                    imagesetpixel($blackWhiteImage, $x, $y, $greyscalePalette[$greyscaleIndex]);
                 }
             }
             $this->replaceResource($blackWhiteImage, $index);

@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.2.0 Created by Gixx.
+Version 2.0.2.1 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -36,6 +36,7 @@ Features / Goals
 - Responsive design for 'Admin' application to use the page from mobile devices [PLANNING]
 - Install script [PLANNING]
 - Default website design [PLANNING]
+- Create Composer install script for vendor libraries [IN PROGRESS]
 
 Credits
 -------

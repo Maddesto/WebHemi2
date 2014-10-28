@@ -42,32 +42,6 @@ use WebHemi2\Component\Cipher\Cipher;
 class UserController extends AbstractController
 {
     /**
-     * Execute the request
-     *
-     * @param  MvcEvent $e
-     */
-    public function onDispatch(MvcEvent $e)
-    {
-        parent::onDispatch($e);
-
-        if (ADMIN_MODULE == APPLICATION_MODULE) {
-            $headerBlock = new ViewModel();
-            $headerBlock->setTemplate('block/AdminHeaderBlock');
-
-            $menuBlock = new ViewModel();
-            $menuBlock->activeMenu = 'application';
-            $menuBlock->setTemplate('block/AdminMenuBlock');
-
-            $footerBlock = new ViewModel();
-            $footerBlock->setTemplate('block/AdminFooterBlock');
-
-            $this->layout()->addChild($headerBlock, 'HeaderBlock')
-                ->addChild($menuBlock, 'MenuBlock')
-                ->addChild($footerBlock, 'FooterBlock');
-        }
-    }
-
-    /**
      * Default action
      *
      * @return array
@@ -77,7 +51,7 @@ class UserController extends AbstractController
         // if the user is not authenticated
         if (!$this->getUserAuth()->hasIdentity()) {
             // redirect to login page
-            return $this->redirect()->toRoute('user/login');
+            return $this->redirect()->toRoute('index/user/login');
         }
 
         return array();
@@ -101,7 +75,7 @@ class UserController extends AbstractController
     public function viewuserAction()
     {
         if (!$this->isAllowed('admin/viewuser')) {
-            $this->redirect()->toRoute('user');
+            $this->redirect()->toRoute('index/user');
         }
 
         $userName = $this->params()->fromRoute('userName');
@@ -110,7 +84,7 @@ class UserController extends AbstractController
 
         // redirect to MyProfile when view own
         if ($this->getUserAuth()->getIdentity()->getUserId() == $userModel->getUserId()) {
-            $this->redirect()->toRoute('user/profile');
+            $this->redirect()->toRoute('index/user/profile');
         }
 
         return array('userModel' => $userModel);
@@ -133,7 +107,7 @@ class UserController extends AbstractController
         if (!$userModel
             || !($isOwnProfile || $userAuth->getIdentity()->getRole() == 'admin')
         ) {
-            return $this->redirect()->toRoute('user/view', array('userName' => $userName));
+            return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
         }
 
         /* @var $editForm \WebHemi2\Form\UserForm */
@@ -201,7 +175,7 @@ class UserController extends AbstractController
                         if ($isOwnProfile) {
                             $userAuth->updateIdentity($userModel);
                         }
-                        return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
+                        return $this->redirect()->toRoute('index/user/view', array('userName' => $userModel->getUsername()));
                     }
                 } catch (Exception $e) {
                     $editForm->setMessages(

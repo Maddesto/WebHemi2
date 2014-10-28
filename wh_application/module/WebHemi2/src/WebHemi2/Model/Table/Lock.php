@@ -38,15 +38,15 @@ use Zend\Db\ResultSet\ResultSet;
  */
 class Lock extends AbstractTableGateway
 {
-    /** @var int The maximum number of access attempts */
+    /** The maximum number of access attempts */
     const MAXTRYINGS = 5;
-    /** @var int The number of minutes the login is locked upon reaching the maximum number of access attempts */
+    /** The number of minutes the login is locked upon reaching the maximum number of access attempts */
     const LOCKTIME = 15;
 
     /** @staticvar LockModel|boolean $lockModel */
     public static $lockModel;
 
-    /** @var string $table   The name of the database table */
+    /** @var string $table The name of the database table */
     protected $table = 'webhemi_lock';
 
     /**
@@ -127,7 +127,7 @@ class Lock extends AbstractTableGateway
         // only if the data is valid
         if ($lockModel instanceof LockModel) {
             $lockModel->setTryings(0)
-                    ->setTimeLock();
+                ->setTimeLock();
             return $this->update($lockModel->toArray(), array('lock_id' => $lockModel->getLockId()));
         }
         // on error

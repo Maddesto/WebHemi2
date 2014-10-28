@@ -35,13 +35,11 @@ use Zend\Permissions\Acl\Resource\ResourceInterface;
  */
 class Resource implements ResourceInterface
 {
-    /**
-     * @var string $resourceId
-     */
+    /** @var string $resourceId */
     protected $resourceId;
 
     /**
-     * Class contructor
+     * Class constructor
      * If no resourceId is given, then it can be set with $role->setResourceId($resourceId);
      *
      * @param string $resourceId

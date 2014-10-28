@@ -32,6 +32,26 @@ use WebHemi2\Model\UserMeta as UserMetaModel;
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ *
+ * @method string getAvatar() Retrieve user meta avatar.
+ * @method string setAvatar() Set user meta avatar.
+ * @method string getHeadLine() Retrieve user meta headline.
+ * @method string setHeadLine() Set user meta headline.
+ * @method string setDisplayName() Set user meta display name.
+ * @method string getDisplayEmail() Retrieve user meta display email.
+ * @method string setDisplayEmail() Set user meta display email.
+ * @method string getDetails() Retrieve user meta details.
+ * @method string setDetails() Set user meta details.
+ * @method string getPhoneNumber() Retrieve user meta phone number.
+ * @method string setPhoneNumber() Set user meta phone number.
+ * @method string getLocation() Retrieve user meta location.
+ * @method string setLocation() Set user meta location.
+ * @method string getInstantMessengers() Retrieve user meta instant messenger data (JSON).
+ * @method string setInstantMessengers() Set user meta instant messenger data (JSON).
+ * @method string getSocialNetworks() Retrieve user meta social network data (JSON).
+ * @method string setSocialNetworks() Set user meta social network data (JSON).
+ * @method string getWebsites() Retrieve user meta websites (JSON).
+ * @method string setWebsites() Set user meta websites (JSON).
  */
 class User
 {
@@ -40,41 +60,43 @@ class User
     /* User avatar type: GR Avatar */
     const USER_AVATAR_TYPE_GRAVATAR = 1;
     /* User avatar type: base64 encoded image file content */
-    const USER_AVATAR_TYPE_BASE64 = 2
-    /* User avatar type: link */;
+    const USER_AVATAR_TYPE_BASE64 = 2;
+    /* User avatar type: link */
     const USER_AVATAR_TYPE_URL = 4;
 
-    /** @var int      $userId */
+    /** @var int $userId */
     protected $userId;
-    /** @var string   $username */
+    /** @var string $username */
     protected $username;
-    /** @var string   $email */
+    /** @var string $email */
     protected $email;
-    /** @var string   $password */
+    /** @var string $password */
     protected $password;
-    /** @var string   $hash */
+    /** @var string $hash */
     protected $hash;
-    /** @var string   $role */
+    /** @var string $role */
     protected $role;
-    /** @var string   $lastIp */
+    /** @var string $lastIp */
     protected $lastIp;
-    /** @var string   $registerIp */
+    /** @var string $registerIp */
     protected $registerIp;
-    /** @var bool     $isActive */
+    /** @var bool $isActive */
     protected $isActive;
-    /** @var bool     $isEnabled */
+    /** @var bool $isEnabled */
     protected $isEnabled;
-    /** @var DateTime $timeLogin */
+    /** @var \DateTime $timeLogin */
     protected $timeLogin;
-    /** @var DateTime $timeRegister */
+    /** @var \DateTime $timeRegister */
     protected $timeRegister;
-    /** @var array    $userMeta */
+    /** @var UserMetaModel[] $userMeta */
     protected $userMeta;
 
     /**
      * Set or Retrieve a user meta data
      *
-     * @param string $name
+     * @param string $name Method name.
+     * @param array $arguments Method parameter list.
+     *
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -127,6 +149,7 @@ class User
      * Set user meta data.
      *
      * @param array $userMeta
+     *
      * @return User
      */
     public function setUserMetaData(Array $userMeta)
@@ -150,6 +173,7 @@ class User
      * Set user ID
      *
      * @param int $userId
+     *
      * @return User
      */
     public function setUserId($userId)
@@ -172,6 +196,7 @@ class User
      * Set username
      *
      * @param string $username
+     *
      * @return User
      */
     public function setUsername($username)
@@ -194,6 +219,7 @@ class User
      * Set email address
      *
      * @param string $email
+     *
      * @return User
      */
     public function setEmail($email)
@@ -288,6 +314,7 @@ class User
      * Set password
      *
      * @param string $password
+     *
      * @return User
      */
     public function setPassword($password)
@@ -310,6 +337,7 @@ class User
      * Set hash
      *
      * @param string $hash
+     *
      * @return User
      */
     public function setHash($hash)
@@ -332,6 +360,7 @@ class User
      * Set role
      *
      * @param string $role
+     *
      * @return User
      */
     public function setRole($role)
@@ -343,7 +372,7 @@ class User
     /**
      * Retrieve time of last login
      *
-     * @return DateTime timeLogin
+     * @return \DateTime timeLogin
      */
     public function getTimeLogin()
     {
@@ -353,7 +382,8 @@ class User
     /**
      * Set time of last login
      *
-     * @param DateTime/string $timeLogin
+     * @param \DateTime|string $timeLogin
+     *
      * @return User
      */
     public function setTimeLogin($timeLogin)
@@ -380,6 +410,7 @@ class User
      * Set the IP address of the last login
      *
      * @param string $lastIp
+     *
      * @return User
      */
     public function setLastIp($lastIp)
@@ -391,7 +422,7 @@ class User
     /**
      * Retrieve time of registration
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getTimeRegister()
     {
@@ -401,7 +432,8 @@ class User
     /**
      * Set time of registration
      *
-     * @param DateTime/string $timeRegister
+     * @param DateTime /string $timeRegister
+     *
      * @return User
      */
     public function setTimeRegister($timeRegister)
@@ -427,7 +459,8 @@ class User
     /**
      * Set the IP address of the registration
      *
-     * @param $registerIp the value to be set
+     * @param string $registerIp The value to be set
+     *
      * @return User
      */
     public function setRegisterIp($registerIp)
@@ -449,7 +482,8 @@ class User
     /**
      * Set user active status
      *
-     * @param bool $active
+     * @param bool $active TRUE is active, FALSE otherwise
+     *
      * @return User
      */
     public function setActive($active)
@@ -472,6 +506,7 @@ class User
      * Set user enabled status
      *
      * @param bool $enabled
+     *
      * @return User
      */
     public function setEnabled($enabled)
@@ -487,17 +522,17 @@ class User
      */
     public function exchangeArray(array $data)
     {
-        $this->userId       = (isset($data['user_id']))       ? (int) $data['user_id'] : null;
-        $this->username     = (isset($data['username']))      ? $data['username'] : null;
-        $this->email        = (isset($data['email']))         ? $data['email'] : null;
-        $this->password     = (isset($data['password']))      ? $data['password'] : null;
-        $this->hash         = (isset($data['hash']))          ? $data['hash'] : null;
-        $this->role         = (isset($data['role']))          ? $data['role'] : null;
-        $this->lastIp       = (isset($data['last_ip']))       ? $data['last_ip'] : null;
-        $this->registerIp   = (isset($data['register_ip']))   ? $data['register_ip'] : null;
-        $this->isActive     = (isset($data['is_active']))     ? (bool) $data['is_active'] : null;
-        $this->isEnabled    = (isset($data['is_enabled']))    ? (bool) $data['is_enabled'] : null;
-        $this->timeLogin    = (isset($data['time_login']))    ? new \DateTime($data['time_login']) : null;
+        $this->userId = (isset($data['user_id'])) ? (int)$data['user_id'] : null;
+        $this->username = (isset($data['username'])) ? $data['username'] : null;
+        $this->email = (isset($data['email'])) ? $data['email'] : null;
+        $this->password = (isset($data['password'])) ? $data['password'] : null;
+        $this->hash = (isset($data['hash'])) ? $data['hash'] : null;
+        $this->role = (isset($data['role'])) ? $data['role'] : null;
+        $this->lastIp = (isset($data['last_ip'])) ? $data['last_ip'] : null;
+        $this->registerIp = (isset($data['register_ip'])) ? $data['register_ip'] : null;
+        $this->isActive = (isset($data['is_active'])) ? (bool)$data['is_active'] : null;
+        $this->isEnabled = (isset($data['is_enabled'])) ? (bool)$data['is_enabled'] : null;
+        $this->timeLogin = (isset($data['time_login'])) ? new \DateTime($data['time_login']) : null;
         $this->timeRegister = (isset($data['time_register'])) ? new \DateTime($data['time_register']) : null;
     }
 
@@ -509,17 +544,17 @@ class User
     public function toArray()
     {
         return array(
-            'user_id'       => !empty($this->userId) ? $this->userId : null,
-            'username'      => $this->username,
-            'email'         => $this->email,
-            'password'      => $this->password,
-            'hash'          => $this->hash,
-            'role'          => $this->role,
-            'last_ip'       => $this->lastIp,
-            'register_ip'   => $this->registerIp,
-            'is_active'     => $this->isActive ? 1 : 0,
-            'is_enabled'    => $this->isEnabled ? 1 : 0,
-            'time_login'    => $this->timeLogin ? $this->timeLogin->format('Y-m-d H:i:s') : null,
+            'user_id' => !empty($this->userId) ? $this->userId : null,
+            'username' => $this->username,
+            'email' => $this->email,
+            'password' => $this->password,
+            'hash' => $this->hash,
+            'role' => $this->role,
+            'last_ip' => $this->lastIp,
+            'register_ip' => $this->registerIp,
+            'is_active' => $this->isActive ? 1 : 0,
+            'is_enabled' => $this->isEnabled ? 1 : 0,
+            'time_login' => $this->timeLogin ? $this->timeLogin->format('Y-m-d H:i:s') : null,
             'time_register' => $this->timeRegister ? $this->timeRegister->format('Y-m-d H:i:s') : null
         );
     }
@@ -533,38 +568,38 @@ class User
     {
         $formArray = array(
             'accountInfo' => array(
-                'user_id'       => $this->userId,
-                'username'      => $this->username,
-                'email'         => $this->email,
-                'role'          => $this->role,
+                'user_id' => $this->userId,
+                'username' => $this->username,
+                'email' => $this->email,
+                'role' => $this->role,
             ),
             'personalInfo' => array(
-                'displayname'   => $this->getDisplayName(),
-                'headline'      => $this->getHeadLine(),
-                'displayemail'  => $this->getDisplayEmail(),
-                'details'       => $this->getDetails(),
-                'avatarInfo'    => array(
-                    'avatarimage'   => $this->getAvatar(),
-                    'avatar'        => $this->getAvatar(),
-                    'avatartype'    => $this->getAvatarType(),
-                    'avatargrid'    => (
-                        self::USER_AVATAR_TYPE_GRAVATAR == $this->getAvatarType()
-                            ? $this->getAvatar()
-                            : ''
+                'displayname' => $this->getDisplayName(),
+                'headline' => $this->getHeadLine(),
+                'displayemail' => $this->getDisplayEmail(),
+                'details' => $this->getDetails(),
+                'avatarInfo' => array(
+                    'avatarimage' => $this->getAvatar(),
+                    'avatar' => $this->getAvatar(),
+                    'avatartype' => $this->getAvatarType(),
+                    'avatargrid' => (
+                    self::USER_AVATAR_TYPE_GRAVATAR == $this->getAvatarType()
+                        ? $this->getAvatar()
+                        : ''
                     ),
-                    'avatarurl'     => (
-                        self::USER_AVATAR_TYPE_URL == $this->getAvatarType()
-                            ? $this->getAvatar()
-                            : ''
+                    'avatarurl' => (
+                    self::USER_AVATAR_TYPE_URL == $this->getAvatarType()
+                        ? $this->getAvatar()
+                        : ''
                     ),
                 ),
             ),
             'contactInfo' => array(
-                'phonenumber'       => $this->getPhoneNumber(),
-                'location'          => $this->getLocation(),
+                'phonenumber' => $this->getPhoneNumber(),
+                'location' => $this->getLocation(),
                 'instantmessengers' => $this->getInstantMessengers(),
-                'socialnetworks'    => $this->getSocialNetworks(),
-                'websites'          => $this->getWebsites(),
+                'socialnetworks' => $this->getSocialNetworks(),
+                'websites' => $this->getWebsites(),
             )
         );
         return $formArray;

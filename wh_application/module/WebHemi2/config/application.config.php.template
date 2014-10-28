@@ -1,11 +1,9 @@
 <?php
 
-/* Generated content! Do not modify! */
-
 return array(
     'Admin' => array(
-        'type'       => 'subpath',
-        'path'       => 'admin',
+        'type' => 'subdir',
+        'path' => 'wh-admin',
         'translator' => array(
             'locale' => 'en_US',
         ),
@@ -14,8 +12,8 @@ return array(
         ),
     ),
     'Website' => array(
-        'type'       => 'subdir',
-        'path'       => 'www',
+        'type' => 'subdomain',
+        'path' => 'www',
         'translator' => array(
             'locale' => 'en_US',
         ),

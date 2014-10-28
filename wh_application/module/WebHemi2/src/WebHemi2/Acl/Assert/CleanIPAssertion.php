@@ -41,9 +41,7 @@ use Zend\Permissions\Acl\Assertion\AssertionInterface;
  */
 class CleanIPAssertion implements AssertionInterface
 {
-    /**
-     * @var ServiceManager $serviceManager
-     */
+    /** @var ServiceManager $serviceManager */
     protected $serviceManager;
 
     /**
@@ -63,23 +61,25 @@ class CleanIPAssertion implements AssertionInterface
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param  Acl                 $acl
-     * @param  RoleInterface       $role
-     * @param  ResourceInterface   $resource
-     * @param  string              $privilege
+     * @param  Acl $acl
+     * @param  RoleInterface $role
+     * @param  ResourceInterface $resource
+     * @param  string $privilege
      *
      * @return boolean
      */
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
-        $lockTable = new UserLockTable($this->serviceManager->get('database'));
+        /** @var \Zend\Db\Adapter\Adapter $adapter */
+        $adapter = $this->serviceManager->get('database');
+        $lockTable = new UserLockTable($adapter);
 
         // determine the current timestamp according to the UTC time
-        $currentTime      = new DateTime(gmdate('Y-m-d H:i:s'));
+        $currentTime = new DateTime(gmdate('Y-m-d H:i:s'));
         $currentTimestamp = $currentTime->getTimestamp();
 
         // determine the lock timestamp
-        $lockTime      = $lockTable->getLock()->getTimeLock();
+        $lockTime = $lockTable->getLock()->getTimeLock();
         $lockTimestamp = $lockTime instanceof DateTime ? $lockTime->getTimestamp() : $currentTimestamp;
 
         // determine the timeout in seconds

@@ -35,21 +35,17 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  */
 class Role implements RoleInterface
 {
-    /**
-     * @var string $roleId
-     */
+    /** @var string $roleId */
     protected $roleId;
-    /**
-     * @var RoleInterface $parentRole
-     */
+    /** @var RoleInterface $parentRole */
     protected $parentRole;
 
     /**
-     * Contructor
+     * Class constructor
      * If no roleId is given, then it can be set with $role->setRoleId($roleId);
      *
      * @param string $roleId
-     * @param string|RoleInterface $parent
+     * @param string|RoleInterface $parentRole
      */
     public function __construct($roleId = null, $parentRole = null)
     {

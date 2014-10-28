@@ -25,13 +25,13 @@ return array(
         'invokables' => array(
             'authAdapterDb' => 'WebHemi2\Auth\Adapter\Db',
             'authStorageDb' => 'WebHemi2\Auth\Storage\Db',
-            'authAdapter'   => 'WebHemi2\Auth\Adapter\Adapter',
-            'formService'   => 'WebHemi2\Form\FormService',
+            'authAdapter' => 'WebHemi2\Auth\Adapter\Adapter',
+            'formService' => 'WebHemi2\Form\FormService',
         ),
         'factories' => array(
-            'acl'         => 'WebHemi2\ServiceFactory\AclServiceFactory',
-            'auth'        => 'WebHemi2\ServiceFactory\AuthServiceFactory',
-            'translator'  => 'Zend\I18n\Translator\TranslatorServiceFactory',
+            'acl' => 'WebHemi2\ServiceFactory\AclServiceFactory',
+            'auth' => 'WebHemi2\ServiceFactory\AuthServiceFactory',
+            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
         ),
     ),
     'controllers' => array(
@@ -41,51 +41,53 @@ return array(
     ),
     'view_manager' => array(
         'display_not_found_reason' => true,
-        'display_exceptions'       => true,
-        'doctype'                  => 'HTML5',
-        'not_found_template'       => 'error/404',
-        'exception_template'       => 'error/index',
+        'display_exceptions' => true,
+        'doctype' => 'HTML5',
+        'not_found_template' => 'error/404',
+        'exception_template' => 'error/index',
     ),
     'controller_plugins' => array(
         'invokables' => array(
-            'getForm'   => 'WebHemi2\Controller\Plugin\GetForm',
-            'userAuth'  => 'WebHemi2\Controller\Plugin\UserAuth',
+            'getForm' => 'WebHemi2\Controller\Plugin\GetForm',
+            'userAuth' => 'WebHemi2\Controller\Plugin\UserAuth',
             'isAllowed' => 'WebHemi2\Controller\Plugin\IsAllowed',
+            'redirect ' => 'WebHemi2\Controller\Plugin\Redirect',
         ),
     ),
     'view_helpers' => array(
         'invokables' => array(
-            'avatar'        => 'WebHemi2\View\Helper\Avatar',
-            'formElement'   => 'WebHemi2\Form\View\Helper\FormElement',
+            'avatar' => 'WebHemi2\View\Helper\Avatar',
+            'link' => 'WebHemi2\View\Helper\Link',
+            'formElement' => 'WebHemi2\Form\View\Helper\FormElement',
             'formPlainText' => 'WebHemi2\Form\View\Helper\FormPlainText',
-            'formLocation'  => 'WebHemi2\Form\View\Helper\FormLocation',
+            'formLocation' => 'WebHemi2\Form\View\Helper\FormLocation',
         ),
         'factories' => array(
-            'isAllowed'   => 'WebHemi2\View\Helper\Factory\IsAllowedFactory',
+            'isAllowed' => 'WebHemi2\View\Helper\Factory\IsAllowedFactory',
             'getIdentity' => 'WebHemi2\View\Helper\Factory\GetIdentityFactory',
         ),
     ),
     'access_control' => array(
         'default_role' => 'guest',
-        'template'     => 'error/403',
-        'roles'        => array(
-            'guest'     => array(
-                'parent'   => null,
+        'template' => 'error/403',
+        'roles' => array(
+            'guest' => array(
+                'parent' => null,
             ),
-            'member'    => array(
-                'parent'   => 'guest',
+            'member' => array(
+                'parent' => 'guest',
             ),
             'moderator' => array(
-                'parent'   => 'member',
+                'parent' => 'member',
             ),
-            'editor'    => array(
-                'parent'   => 'moderator',
+            'editor' => array(
+                'parent' => 'moderator',
             ),
             'publisher' => array(
-                'parent'   => 'editor',
+                'parent' => 'editor',
             ),
-            'admin'     => array(
-                'parent'   => 'publisher',
+            'admin' => array(
+                'parent' => 'publisher',
             ),
         ),
         'resources' => array(
@@ -100,28 +102,27 @@ return array(
         ),
         // only handles 'ALLOWED' rules
         'rules' => array(
-            'view'              => 'guest',
-            'comment'           => 'member',
-            'moderate'          => 'moderator',
-            'edit'              => 'editor',
-            'publish'           => 'publisher',
-            'revoke'            => 'publisher',
-            'delete'            => 'publisher',
-            'manage'            => 'admin',
+            'view' => 'guest',
+            'comment' => 'member',
+            'moderate' => 'moderator',
+            'edit' => 'editor',
+            'publish' => 'publisher',
+            'revoke' => 'publisher',
+            'delete' => 'publisher',
+            'manage' => 'admin',
         ),
     ),
     'translator' => array(
-        'locale'               => 'en_US',
+        'locale' => 'en_US',
         'translation_patterns' => array(
             array(
-                'type'     => 'gettext',
+                'type' => 'gettext',
                 'base_dir' => __DIR__ . '/../language',
-                'pattern'  => '%s.mo',
+                'pattern' => '%s.mo',
             ),
         ),
     ),
     'router' => array(
-        'routes' => array(
-        ),
+        'routes' => array(),
     ),
 );

@@ -21,6 +21,7 @@
  */
 namespace WebHemi2\Form\View\Helper;
 
+use Zend\Form\Exception;
 use Zend\Form\View\Helper\FormText;
 use Zend\Form\ElementInterface;
 

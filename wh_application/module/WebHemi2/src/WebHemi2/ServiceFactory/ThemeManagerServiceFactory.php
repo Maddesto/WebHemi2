@@ -22,6 +22,7 @@
 
 namespace WebHemi2\ServiceFactory;
 
+use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use WebHemi2\Theme\ThemeManager;
@@ -45,7 +46,8 @@ class ThemeManagerServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $config  = $serviceLocator->get('Configuration');
+        /** @var ServiceManager $serviceLocator */
+        $config = $serviceLocator->get('Configuration');
         $service = ThemeManager::factory($config['wh_themes'], $serviceLocator);
         return $service;
     }

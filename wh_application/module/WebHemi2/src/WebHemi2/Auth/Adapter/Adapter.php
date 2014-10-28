@@ -45,26 +45,18 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     /** Default bcrypt password cost */
     const PASSWORD_COST = 14;
 
-    /**
-     * @var string $identity
-     */
+    /** @var string $identity */
     public $identity = null;
-    /**
-     * @var string $credential
-     */
+    /** @var string $credential */
     protected $credential = null;
-    /**
-     * @var UserTable $userTable
-     */
+    /** @var UserTable $userTable */
     protected $userTable;
-    /**
-     * @var UserLockTable $userLockTable
-     */
+    /** @var UserLockTable $userLockTable */
     protected $userLockTable;
-    /**
-     * @var boolean $verifiedUser
-     */
+    /** @var boolean $verifiedUser */
     protected $verifiedUser = null;
+    /** @var  ServiceManager $serviceManager */
+    protected $serviceManager;
 
     /**
      * This method is called to attempt an authentication.
@@ -73,7 +65,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
      */
     public function authenticate()
     {
-        // the autologin may set a user so no further checking will be needed
+        // the auto login may set a user so no further checking will be needed
         if (!$this->verifiedUser) {
             // identified by email
             if (strpos($this->identity, '@') !== false) {
@@ -101,7 +93,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
                     array('A record with the supplied identity is not avaliable.')
                 );
             } elseif (!$bcrypt->verify($this->credential, $userModel->getPassword())) {
-                // else if the supplied cretendtial is not valid
+                // else if the supplied credential is not valid
                 $authResult = new Result(
                     Result::FAILURE_CREDENTIAL_INVALID,
                     $this->identity,
@@ -163,7 +155,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     /**
      * Set the value to be used as the identity
      *
-     * @param  string $value
+     * @param  string $identity
      *
      * @return Adapter
      */
@@ -194,7 +186,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     public function getUserTable()
     {
         if (!isset($this->userTable)) {
-            $this->userTable = new UserTable($this->getServiceManager()->get('database'));
+            $this->userTable = new UserTable($this->getDatabaseAdapter());
         }
         return $this->userTable;
     }
@@ -220,7 +212,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     public function getUserLockTable()
     {
         if (!isset($this->userLockTable)) {
-            $this->userLockTable = new UserLockTable($this->getServiceManager()->get('database'));
+            $this->userLockTable = new UserLockTable($this->getDatabaseAdapter());
         }
         return $this->userLockTable;
     }
@@ -228,7 +220,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     /**
      * Set User Lock Table instance
      *
-     * @param UserTable $userLockTable
+     * @param UserLockTable $userLockTable
      *
      * @return Adapter
      */
@@ -251,7 +243,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     /**
      * Set service manager instance
      *
-     * @param ServiceManager $locator
+     * @param ServiceManager $serviceManager
      *
      * @return Adapter
      */
@@ -259,5 +251,18 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     {
         $this->serviceManager = $serviceManager;
         return $this;
+    }
+
+    /**
+     * Retrieve DB adapter
+     *
+     * @return \Zend\Db\Adapter\Adapter
+     */
+    protected function getDatabaseAdapter()
+    {
+        /** @var \Zend\Db\Adapter\Adapter $adapter */
+        $adapter = $this->getServiceManager()->get('database');
+
+        return $adapter;
     }
 }

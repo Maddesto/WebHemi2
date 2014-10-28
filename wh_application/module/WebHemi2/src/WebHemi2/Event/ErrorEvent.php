@@ -24,6 +24,7 @@ namespace WebHemi2\Event;
 
 use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
+use Zend\Http\Response;
 
 /**
  * Frobidden error handler event
@@ -33,7 +34,7 @@ use Zend\View\Model\ViewModel;
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
-*/
+ */
 class ErrorEvent
 {
     /** @staticvar string $template */
@@ -56,15 +57,8 @@ class ErrorEvent
             return;
         }
 
-        // Common view variables
-        $viewVariables = array(
-            'error'      => $e->getParam('error'),
-            'identity'   => $e->getParam('identity'),
-        );
-
         $error = $e->getError();
-        switch($error)
-        {
+        switch ($error) {
             case 'error-unauthorized-controller':
             case 'error-unauthorized-route':
                 self::get403($e);
@@ -83,12 +77,17 @@ class ErrorEvent
      */
     protected static function get403(MvcEvent $e)
     {
+        // Common view variables
+        $viewVariables = array(
+            'error' => $e->getParam('error'),
+            'identity' => $e->getParam('identity'),
+        );
+
         $error = $e->getError();
-        switch($error)
-        {
+        switch ($error) {
             case 'error-unauthorized-controller':
                 $viewVariables['controller'] = $e->getParam('controller');
-                $viewVariables['action']     = $e->getParam('action');
+                $viewVariables['action'] = $e->getParam('action');
                 break;
             case 'error-unauthorized-route':
                 $viewVariables['route'] = $e->getParam('route');
@@ -97,10 +96,10 @@ class ErrorEvent
 
         // add our error page to the view model
         $layout = $e->getViewModel();
-        $layout->title = '403 Forbidden';
+        $layout->setVariable('title', '403 Forbidden');
 
         if (ADMIN_MODULE == APPLICATION_MODULE
-                && $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
+            && $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
         ) {
             $headerBlock = new ViewModel();
             $headerBlock->setTemplate('block/AdminHeaderBlock');
@@ -118,14 +117,15 @@ class ErrorEvent
 
         $model = new ViewModel($viewVariables);
         $model->setTemplate(self::$template[403]);
-        $model->error = $error;
+        $model->setVariable('error', $error);
         $layout->addChild($model);
 
+        /** @var Response $response */
         $response = $e->getResponse();
 
         // if no response object present, we create one
         if (!$response) {
-            $response = new HttpResponse();
+            $response = new \HttpResponse();
             $e->setResponse($response);
         }
         $response->setStatusCode(403);
@@ -141,10 +141,10 @@ class ErrorEvent
     {
         // add our error page to the view model
         $layout = $e->getViewModel();
-        $layout->title = '404 Not Found';
+        $layout->getVariable('title', '404 Not Found');
 
         if (ADMIN_MODULE == APPLICATION_MODULE
-                && $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
+            && $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
         ) {
             $headerBlock = new ViewModel();
             $headerBlock->setTemplate('block/AdminHeaderBlock');
@@ -162,14 +162,15 @@ class ErrorEvent
 
         $model = new ViewModel();
         $model->setTemplate(self::$template[404]);
-        $model->error = $e->getError();
+        $model->setVariable('error', $e->getError());
         $layout->addChild($model);
 
+        /** @var Response $response */
         $response = $e->getResponse();
 
         // if no response object present, we create one
         if (!$response) {
-            $response = new HttpResponse();
+            $response = new \HttpResponse();
             $e->setResponse($response);
         }
         $response->setStatusCode(404);

@@ -79,8 +79,10 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
                 md5(md5(APPLICATION_MODULE))
             );
 
-            // chech for the hash
-            $userTable = new UserTable($this->getServiceLocator()->get('database'));
+            // check for the hash
+            /** @var \Zend\Db\Adapter\Adapter $adapter */
+            $adapter = $this->getServiceLocator()->get('database');
+            $userTable = new UserTable($adapter);
             $userModel = $userTable->getUserByHash($decryptedHash);
 
             if ($userModel instanceof UserModel) {
@@ -151,7 +153,7 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      *
      * @param AuthAdapter $authAdapter
      *
-     * @retrun UserAuth
+     * @return UserAuth
      */
     public function setAuthAdapter(AuthAdapter $authAdapter)
     {
@@ -179,7 +181,7 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      *
      * @param AuthService $authService
      *
-     * @retrun UserAuth
+     * @return UserAuth
      */
     public function setAuthService(AuthService $authService)
     {

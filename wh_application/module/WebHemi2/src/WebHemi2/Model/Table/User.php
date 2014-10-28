@@ -62,12 +62,15 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Id
      *
      * @param int $userId
+     *
      * @return UserModel
      */
     public function getUserById($userId)
     {
-        $rowset    = $this->select(array('user_id' => (int)$userId));
-        $userModel = $rowset->current();
+        /** @var ResultSet $rowSet */
+        $rowSet    = $this->select(array('user_id' => (int)$userId));
+        /** @var UserModel $userModel */
+        $userModel = $rowSet->current();
         if ($userModel) {
             $this->loadUserMeta($userModel);
         }
@@ -79,12 +82,15 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Username
      *
      * @param string $username
+     *
      * @return UserModel
      */
     public function getUserByName($username)
     {
-        $rowset    = $this->select(array('username' => $username));
-        $userModel = $rowset->current();
+        /** @var ResultSet $rowSet */
+        $rowSet    = $this->select(array('username' => $username));
+        /** @var UserModel $userModel */
+        $userModel = $rowSet->current();
         if ($userModel) {
             $this->loadUserMeta($userModel);
         }
@@ -96,12 +102,15 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Username
      *
      * @param string $email
+     *
      * @return UserModel
      */
     public function getUserByEmail($email)
     {
-        $rowset    = $this->select(array('email' => $email));
-        $userModel = $rowset->current();
+        /** @var ResultSet $rowSet */
+        $rowSet    = $this->select(array('email' => $email));
+        /** @var UserModel $userModel */
+        $userModel = $rowSet->current();
         if ($userModel) {
             $this->loadUserMeta($userModel);
         }
@@ -112,13 +121,16 @@ class User extends AbstractTableGateway
     /**
      * Retrieve UserModel by Hash
      *
-     * @param int $userId
+     * @param string $hash
+     *
      * @return UserModel
      */
     public function getUserByHash($hash)
     {
-        $rowset    = $this->select(array('hash' => $hash));
-        $userModel = $rowset->current();
+        /** @var ResultSet $rowSet */
+        $rowSet    = $this->select(array('hash' => $hash));
+        /** @var UserModel $userModel */
+        $userModel = $rowSet->current();
         if ($userModel) {
             $this->loadUserMeta($userModel);
         }
@@ -145,20 +157,22 @@ class User extends AbstractTableGateway
                 ->limit($limit);
         }
 
-        $rowset = $this->selectWith($select);
+        /** @var ResultSet $rowSet */
+        $rowSet = $this->selectWith($select);
 
-        while ($userModel = $rowset->current()) {
+        while ($userModel = $rowSet->current()) {
+            /** @var UserModel $userModel */
             $this->loadUserMeta($userModel);
             $index = $userModel->getDisplayName();
             $users[$index] = $userModel;
-            $rowset->next();
+            $rowSet->next();
         }
         ksort($users);
         return $users;
     }
 
     /**
-     *    Load user meta into user model.
+     * Load user meta into user model.
      *
      * @param UserModel $userModel
      */
@@ -174,7 +188,9 @@ class User extends AbstractTableGateway
      *
      * @param array $userMeta
      * @param int   $userId
+     *
      * @throws Exception\InvalidArgumentException
+     *
      * @return bool|int
      */
     protected function saveUserMeta(array $userMeta, $userId)
@@ -207,7 +223,9 @@ class User extends AbstractTableGateway
      * Insert new user record
      *
      * @param  UserModel $userModel
+     *
      * @return int
+     *
      * @throws Exception\InvalidArgumentException
      * @throws Exception\UnexpectedValueException
      */
@@ -242,7 +260,7 @@ class User extends AbstractTableGateway
                 }
                 // if everything is correct, we apply the changes
                 $connection->commit();
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 // on failure, we rollback the whole transaction
                 $connection->rollback();
                 $result = false;
@@ -258,7 +276,10 @@ class User extends AbstractTableGateway
      * Update user record
      *
      * @param UserModel $userModel
+     * @param  string|array|\Closure $where
+     *
      * @return int
+     *
      * @throws Exception\InvalidArgumentException
      */
     public function update($userModel, $where = null)
@@ -285,7 +306,7 @@ class User extends AbstractTableGateway
                 }
                 // if everything is correct, we apply the changes
                 $connection->commit();
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 // on failure, we rollback the whole transaction
                 $connection->rollback();
                 $result = false;

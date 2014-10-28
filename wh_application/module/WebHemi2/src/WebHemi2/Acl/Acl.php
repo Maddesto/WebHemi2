@@ -31,10 +31,9 @@ use Zend\Authentication\AuthenticationService;
 use WebHemi2\Acl\Provider\RoleProvider;
 use WebHemi2\Acl\Provider\ResourceProvider;
 use WebHemi2\Acl\Provider\RuleProvider;
-use WebHemi2\Acl\Role;
-use WebHemi2\Acl\Resource;
 use WebHemi2\Acl\Assert\CleanIPAssertion;
 use WebHemi2\Model\User as UserModel;
+use Zend\Stdlib\ArrayUtils;
 
 /**
  * WebHemi2 Access Control
@@ -47,44 +46,28 @@ use WebHemi2\Model\User as UserModel;
  */
 class Acl
 {
-    /**
-     * @var array $options
-     */
+    /** @var array $options */
     protected $options;
-    /**
-     * @var ServiceManager $serviceManager
-     */
+    /** @var ServiceManager $serviceManager */
     protected $serviceManager;
-    /**
-     * @var ZendAcl $acl
-     */
+    /** @var ZendAcl $acl */
     protected $acl;
-    /**
-     * @var AuthenticationService $auth
-     */
+    /** @var AuthenticationService $auth */
     protected $auth;
-    /**
-     * @var string $template
-     */
+    /** @var string $template */
     protected $template = 'error/403';
-    /**
-     * @var RoleProvider $roleProvider
-     */
+    /** @var RoleProvider $roleProvider */
     protected $roleProvider;
-    /**
-     * @var ResourceProvider $resourceProvider
-     */
+    /** @var ResourceProvider $resourceProvider */
     protected $resourceProvider;
-    /**
-     * @var RuleProvider $ruleProvider
-     */
+    /** @var RuleProvider $ruleProvider */
     protected $ruleProvider;
 
     /**
      * Instantiate the Access Control
      *
      * @param array|Traversable $options
-     * @param ServiceManager    $serviceManager
+     * @param ServiceManager $serviceManager
      *
      * @throws Exception\InvalidArgumentException
      *
@@ -114,7 +97,7 @@ class Acl
      * Class constructor
      *
      * @param array|Traversable $options
-     * @param ServiceManager    $serviceManager
+     * @param ServiceManager $serviceManager
      */
     protected function __construct($options, ServiceManager $serviceManager)
     {
@@ -140,15 +123,16 @@ class Acl
             $this->template = $this->options['template'];
         }
 
-        $this->roleProvider     = new RoleProvider($this->options['roles'], $this->serviceManager);
+        $this->roleProvider = new RoleProvider($this->options['roles'], $this->serviceManager);
         $this->resourceProvider = new ResourceProvider($this->options['resources'], $this->serviceManager);
-        $this->ruleProvider     = new RuleProvider($this->options['rules'], $this->serviceManager);
+        $this->ruleProvider = new RuleProvider($this->options['rules'], $this->serviceManager);
 
         // build role tree in ACL
         $this->buildRoleTree($this->roleProvider->getRoles());
 
         // add the resources to the ACL
         foreach ($this->resourceProvider->getResources() as $resource) {
+            /** @var \WebHemi2\Acl\Resource $resource */
             $key = new GenericResource($resource->getResourceId());
             $this->acl->addResource($key, null);
         }
@@ -233,7 +217,7 @@ class Acl
      * If the role or the resourse is not valid it will result TRUE.
      *
      * @param  Resource|string $resource
-     * @param  Role|string     $role
+     * @param  Role|string $role
      *
      * @return boolean
      */
@@ -242,26 +226,26 @@ class Acl
         try {
             if (empty($role)) {
                 $role = $this->hasIdentity()
-                        ? $this->getIdentity()->getRole()
-                        : $this->options['default_role'];
+                    ? $this->getIdentity()->getRole()
+                    : $this->options['default_role'];
             }
 
             if (strpos($resource, '/') !== false) {
                 list($controller, $action) = explode('/', $resource);
             } else {
                 $controller = $resource;
-                $action     = '*';
+                $action = '*';
             }
             $controller = ucfirst(strtolower($controller));
 
-            // allow access to a full conntroller (be careful with it, wildcard for guests on your own risk)
+            // allow access to a full controller (be careful with it, wildcard for guests on your own risk)
             $wildCardControllerResource = 'Controller-' . $controller . '/*';
             // allow access to an action
-            $controllerActionResource   = 'Controller-' . $controller . '/' . $action;
+            $controllerActionResource = 'Controller-' . $controller . '/' . $action;
             // allow access to an action override the wildcard
-            $controllerActionForcedResource   = $action == '*' ? false : '!Controller-' . $controller . '/' . $action;
+            $controllerActionForcedResource = $action == '*' ? false : '!Controller-' . $controller . '/' . $action;
             // allow access to an URL (be sure that the URL cannot be changed)
-            $routeResource              = 'Route-' . $_SERVER['REQUEST_URI'];
+            $routeResource = 'Route-' . $_SERVER['REQUEST_URI'];
 
             // allow access for login page, invalid role or non-forced resources
             if ('logout' == $action

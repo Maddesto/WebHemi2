@@ -70,6 +70,7 @@ class FormService implements ServiceManagerAwareInterface
         }
 
         if (!isset(self::$form[$formName])) {
+            /** @var AbstractForm $form */
             $form = new $formName($formId);
             $form->setServiceManager($this->serviceManager);
             self::$form[$formName] = $form;
@@ -92,7 +93,8 @@ class FormService implements ServiceManagerAwareInterface
      * Set ServiceManager instance
      *
      * @param ServiceManager $serviceManager
-     * @return UserAuth
+     *
+     * @return FormService
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {

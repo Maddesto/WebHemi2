@@ -24,7 +24,6 @@
 namespace WebHemi2\Component\Image;
 
 use Exception;
-use WebHemi2\Component\Image\AbstractImage;
 
 /**
  * WebHemi2 .JPEG Image processing Component
@@ -43,9 +42,7 @@ class Jpeg extends AbstractImage
     /** Best compression: low quality and small file size. */
     const COMPRESSION_WORST = 0;
 
-    /**
-     * @var int $quality   Compression index of the output if supported.
-     */
+    /** @var int $quality Compression index of the output if supported. */
     protected $quality = 80;
 
     /**
@@ -81,7 +78,7 @@ class Jpeg extends AbstractImage
      *
      * @return Jpeg
      */
-	public function readImage($fileName)
+    public function readImage($fileName)
     {
         if (!is_null($fileName) && file_exists($fileName) && is_readable($fileName)) {
             if ($resource = @imagecreatefromjpeg($fileName)) {
@@ -98,7 +95,7 @@ class Jpeg extends AbstractImage
     /**
      * Write image resource into Jpeg file.
      *
-     * @param string $fileName   Name of the Jpeg file. If null the file will be written on stdout.
+     * @param string $fileName Name of the Jpeg file. If null the file will be written on stdout.
      *
      * @throws Exception
      */

@@ -35,9 +35,7 @@ use WebHemi2\Acl\Resource;
  */
 class ResourceProvider
 {
-    /**
-     * @var array $resources
-     */
+    /** @var Resource[] $resources */
     protected $resources = array();
 
     /**
@@ -59,7 +57,7 @@ class ResourceProvider
     /**
      * Retrieve resources
      *
-     * @return array
+     * @return Resource[]
      */
     public function getResources()
     {

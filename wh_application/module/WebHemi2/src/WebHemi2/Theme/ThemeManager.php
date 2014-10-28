@@ -22,6 +22,7 @@
 
 namespace WebHemi2\Theme;
 
+use Zend\Stdlib\ArrayUtils;
 use Zend\Stdlib\PriorityQueue;
 use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\Exception;
@@ -45,11 +46,11 @@ class ThemeManager
     protected $options;
     /** @var PriorityQueue $themePath */
     protected $themePathList;
-    /** @var PriorityQueue  $adapters */
+    /** @var PriorityQueue $adapters */
     protected $adapterList;
-    /** @var string  $currentTheme */
-    protected $currentTheme   = null;
-    /** @var ConfigurationAdapter  $currentAdapter */
+    /** @var string $currentTheme */
+    protected $currentTheme = null;
+    /** @var ConfigurationAdapter $currentAdapter */
     protected $currentAdapter = null;
     /** @var ServiceManager $serviceManager */
     protected $serviceManager;
@@ -57,15 +58,16 @@ class ThemeManager
     /**
      * Instantiate a theme manager
      *
-     * @param  array|Traversable $options
-     * @param ServiceManager     $serviceManager
+     * @param  array|\Traversable $options
+     * @param ServiceManager $serviceManager
      *
      * @return ThemeManager
+     *
      * @throws Exception\InvalidArgumentException
      */
     public static function factory($options, ServiceManager $serviceManager)
     {
-        if ($options instanceof Traversable) {
+        if ($options instanceof \Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
         } elseif (!is_array($options)) {
             throw new Exception\InvalidArgumentException(
@@ -86,19 +88,19 @@ class ThemeManager
     /**
      * Class constructor
      *
-     * @param array|Traversable $options
-     * @param ServiceManager    $serviceManager
+     * @param array|\Traversable $options
+     * @param ServiceManager $serviceManager
      */
     protected function __construct($options, ServiceManager $serviceManager)
     {
         // set the options
-        $this->options        = $options;
+        $this->options = $options;
         // set the service manager
         $this->serviceManager = $serviceManager;
         // set the theme path list
-        $this->themePathList  = new PriorityQueue();
+        $this->themePathList = new PriorityQueue();
         // set the theme selector adapter list
-        $this->adapterList    = new PriorityQueue();
+        $this->adapterList = new PriorityQueue();
     }
 
     /**
@@ -134,7 +136,7 @@ class ThemeManager
         // get the theme configuration
         $config = $this->getThemeConfig($this->currentTheme);
         // we're about to change the system-default view settings to custom
-        $viewResolver  = $this->serviceManager->get('ViewResolver');
+        $viewResolver = $this->serviceManager->get('ViewResolver');
         $themeResolver = new AggregateResolver();
 
         if (isset($config['template_map'])) {
@@ -167,6 +169,7 @@ class ThemeManager
      * Set the name of the new theme
      *
      * @param string $themeName
+     *
      * @return boolean
      */
     public function setTheme($themeName)
@@ -182,7 +185,8 @@ class ThemeManager
     /**
      * Retrieve the theme configuration
      *
-     * @param string $themeName     The name of the theme
+     * @param string $themeName The name of the theme
+     *
      * @return array
      */
     public function getThemeConfig($themeName)
@@ -205,7 +209,8 @@ class ThemeManager
     /**
      * Filters the theme name to be valid
      *
-     * @param string $themeName        The name of the theme
+     * @param string $themeName The name of the theme
+     *
      * @return string
      */
     protected function filterThemeName($themeName)
@@ -222,11 +227,11 @@ class ThemeManager
     {
         for ($i = 0; $i < $this->adapterList->count(); $i++) {
             $adapter = $this->adapterList->extract();
-            $theme   = $adapter->getTheme();
+            $theme = $adapter->getTheme();
             // if we found an adapter that provides a valid theme, we set them
             if ($theme) {
                 $this->currentAdapter = $adapter;
-                $this->currentTheme   = $theme;
+                $this->currentTheme = $theme;
                 break;
             }
         }

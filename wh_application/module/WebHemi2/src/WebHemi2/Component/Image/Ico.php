@@ -24,7 +24,6 @@
 namespace WebHemi2\Component\Image;
 
 use Exception;
-use WebHemi2\Component\Image\AbstractImage;
 
 /**
  * WebHemi2 .ICO Image processing Component
@@ -42,25 +41,15 @@ use WebHemi2\Component\Image\AbstractImage;
  */
 class Ico extends AbstractImage
 {
-    /**
-     * @var array $entry Container for one or more entry datas.
-     */
+    /** @var array $entry Container for one or more entry datas. */
     private $entry = array();
-    /**
-     * @var array $entryBin Container for one or more binary entry datas.
-     */
+    /** @var array $entryBin Container for one or more binary entry datas. */
     private $entryBin = array();
-    /**
-     * @var array $header Container for icon header arrays.
-     */
+    /** @var array $header Container for icon header arrays. */
     private $header = array();
-    /**
-     * @var array $headerBin Container for original icon headers.
-     */
+    /** @var array $headerBin Container for original icon headers. */
     private $headerBin = array();
-    /**
-     * @var array $imageBin Container for original image resources.
-     */
+    /** @var array $imageBin Container for original image resources. */
     private $imageBin = array();
 
     /**
@@ -130,7 +119,7 @@ class Ico extends AbstractImage
                     $ignoreAlpha = false;
                     $palette = array();
 
-                    // Bitcount < 24. That means we work wit palette.
+                    // BitCount < 24. That means we work wit palette.
                     if ($this->header[$i]["BitCount"] < 24) {
                         // Collecting the colors
                         for ($j = 0; $j < pow(2, $this->header[$i]["BitCount"]); $j++) {

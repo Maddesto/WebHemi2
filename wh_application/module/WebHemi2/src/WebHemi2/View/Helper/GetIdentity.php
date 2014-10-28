@@ -68,6 +68,8 @@ class GetIdentity extends AbstractHelper
      * Set authService
      *
      * @param AuthenticationService $authService
+     *
+     * @return GetIdentity
      */
     public function setAuthService(AuthenticationService $authService)
     {

@@ -59,15 +59,4 @@ class ConfigurationAdapter
 
         return isset($config['wh_themes']['current_theme']) ? $config['wh_themes']['current_theme'] : null;
     }
-
-    /**
-     * Set the name of the theme in the adapter
-     *
-     * @param string $themeName    The filtered name of the theme
-     * @return bool
-     */
-    public function setTheme($themeName)
-    {
-        return false;
-    }
 }

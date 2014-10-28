@@ -35,13 +35,13 @@ use DateTime;
  */
 class Lock
 {
-    /** @var int       $lockId  */
+    /** @var int $lockId */
     protected $lockId;
-    /** @var string    $clientIp  */
+    /** @var string $clientIp */
     protected $clientIp;
-    /** @var int       $tryings  */
+    /** @var int $tryings */
     protected $tryings;
-    /** @var DateTime  $timeLock  */
+    /** @var DateTime $timeLock */
     protected $timeLock;
 
     /**
@@ -49,9 +49,9 @@ class Lock
      */
     public function __construct()
     {
-        $this->lockId   = null;
+        $this->lockId = null;
         $this->clientIp = $_SERVER['REMOTE_ADDR'];
-        $this->tryings  = 0;
+        $this->tryings = 0;
         $this->timeLock = null;
     }
 
@@ -79,6 +79,7 @@ class Lock
      * Set client IP
      *
      * @param string $clientIp
+     *
      * @return Lock
      */
     public function setClienIp($clientIp)
@@ -101,6 +102,7 @@ class Lock
      * Set trying counter
      *
      * @param int $tryings
+     *
      * @return Lock
      */
     public function setTryings($tryings)
@@ -123,6 +125,7 @@ class Lock
      * Set timelock
      *
      * @param DateTime|string $timeLock
+     *
      * @return Lock
      */
     public function setTimeLock($timeLock = null)
@@ -142,9 +145,9 @@ class Lock
      */
     public function exchangeArray(array $data)
     {
-        $this->lockId   = (isset($data['lock_id']))   ? (int)$data['lock_id'] : null;
+        $this->lockId = (isset($data['lock_id'])) ? (int)$data['lock_id'] : null;
         $this->clientIp = (isset($data['client_ip'])) ? $data['client_ip'] : null;
-        $this->tryings  = (isset($data['tryings']))   ? (int)$data['tryings'] : null;
+        $this->tryings = (isset($data['tryings'])) ? (int)$data['tryings'] : null;
         $this->timeLock = (isset($data['time_lock'])) ? new DateTime($data['time_lock']) : null;
     }
 
@@ -156,9 +159,9 @@ class Lock
     public function toArray()
     {
         return array(
-            'lock_id'   => $this->lockId,
+            'lock_id' => $this->lockId,
             'client_ip' => $this->clientIp,
-            'tryings'   => $this->tryings,
+            'tryings' => $this->tryings,
             'time_lock' => $this->timeLock instanceof DateTime ? $this->timeLock->format('Y-m-d H:i:s') : null,
         );
     }

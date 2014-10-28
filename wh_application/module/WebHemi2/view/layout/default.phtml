@@ -24,10 +24,10 @@ echo $this->doctype();
         <div class="container">
             <h1>HEMI WEBSITE LAYOUT</h1>
 <?php if ($this->getIdentity()) : ?>
-            <a href="<?php echo $this->url('user'); ?>">My Profile</a> |
-            <a href="<?php echo $this->url('user/logout'); ?>">Logout</a>
+            <a href="<?php echo $this->link('index/user'); ?>">My Profile</a> |
+            <a href="<?php echo $this->link('index/user/logout'); ?>">Logout</a>
 <?php else : ?>
-            <a href="<?php echo $this->url('user/login'); ?>">Login</a>
+            <a href="<?php echo $this->link('index/user/login'); ?>">Login</a>
 <?php endif; ?>
             <hr>
             <?php echo $this->content; ?>

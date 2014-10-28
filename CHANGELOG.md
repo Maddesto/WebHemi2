@@ -2,9 +2,18 @@ Change log
 ==========
 
 ---------------
+Version 2.0.2.1
+---------------
+- Fix major bug in routing when the module is a directory and not a subdomain
+- Fix PHPDoc errors
+- Add type hinting for variables
+- TODO: fix problem of sharing session when a module is a directory
+
 Version 2.0.2.0
 ---------------
 - Refactoring: stay with the standalone solution for simplicity and better user experience
+- Remove test codes (templates, config)
+- Add config template for the application
 
 Version 2.0.1.1
 ---------------

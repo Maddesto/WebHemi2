@@ -22,9 +22,11 @@
 
 namespace WebHemi2;
 
-
+use WebHemi2\View\Helper\Link;
+use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\ModuleRouteListener;
+use Zend\Mvc\Router\RouteMatch;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
@@ -46,18 +48,27 @@ class Module implements
     ConfigProviderInterface,
     ServiceProviderInterface
 {
-    /** @staticvar array $configs   A colletcion of configurations. */
+    /** @staticvar array $configs A collection of configurations. */
     private static $configs;
 
     /**
      * Listen to the bootstrap event
      *
      * @param EventInterface $e
+     *
+     * @return void
      */
     public function onBootstrap(EventInterface $e)
     {
-        $serviceManager = $e->getApplication()->getServiceManager();
-        $eventManager   = $e->getApplication()->getEventManager();
+        /** @var \Zend\Mvc\MvcEvent $e */
+        /** @var \Zend\Mvc\Application $application */
+        $application = $e->getApplication();
+        /** @var \Zend\ServiceManager\ServiceManager $serviceManager */
+        $serviceManager = $application->getServiceManager();
+        /** @var \Zend\EventManager\EventManager $eventManager */
+        $eventManager   = $application->getEventManager();
+        /** @var \Zend\View\HelperPluginManager $viewHelperManager */
+        $viewHelperManager = $serviceManager->get('ViewHelperManager');
 
         // instantialize services
         $serviceManager->get('translator');
@@ -66,6 +77,23 @@ class Module implements
         if ($serviceManager->has('theme_manager')) {
             $serviceManager->get('theme_manager');
         }
+
+        // update view helper url
+        $viewHelperManager->setFactory('link', function ($sm) use($serviceManager) {
+                $helper = new Link;
+                $router = Console::isConsole() ? 'HttpRouter' : 'Router';
+                $helper->setRouter($serviceManager->get($router));
+
+                $match = $serviceManager->get('application')
+                    ->getMvcEvent()
+                    ->getRouteMatch();
+
+                if ($match instanceof RouteMatch) {
+                    $helper->setRouteMatch($match);
+                }
+
+                return $helper;
+            });
 
         // attach events to the event manager
         $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array('WebHemi2\Event\ErrorEvent',  'preDispatch'), -500);

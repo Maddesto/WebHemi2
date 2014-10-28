@@ -23,14 +23,11 @@
 namespace WebHemi2\Controller;
 
 use Exception;
-use WebHemi2\Controller\UserController;
 use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Model\User as UserModel;
 use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
-use Zend\Mvc\Controller\AbstractActionController;
 use Zend\Mvc\MvcEvent;
 use Zend\Crypt\Password\Bcrypt;
-use Zend\Authentication\Result;
 use Zend\View\Model\ViewModel;
 
 /**
@@ -41,31 +38,22 @@ use Zend\View\Model\ViewModel;
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ *
+ * @method getForm() getForm(string $formName, string $name) retrieve a WebHemi Form instance with controller plugin
  */
 class AdminController extends UserController
 {
     /**
-     * Execute the request
+     * Retrieve DB adapter
      *
-     * @param  MvcEvent $e
+     * @return \Zend\Db\Adapter\Adapter
      */
-    public function onDispatch(MvcEvent $e)
+    protected function getDatabaseAdapter()
     {
-        parent::onDispatch($e);
+        /** @var \Zend\Db\Adapter\Adapter $adapter */
+        $adapter = $this->getServiceLocator()->get('database');
 
-        $headerBlock = new ViewModel();
-        $headerBlock->setTemplate('block/AdminHeaderBlock');
-
-        $menuBlock = new ViewModel();
-        $menuBlock->activeMenu = 'application';
-        $menuBlock->setTemplate('block/AdminMenuBlock');
-
-        $footerBlock = new ViewModel();
-        $footerBlock->setTemplate('block/AdminFooterBlock');
-
-        $this->layout()->addChild($headerBlock, 'HeaderBlock')
-            ->addChild($menuBlock, 'MenuBlock')
-            ->addChild($footerBlock, 'FooterBlock');
+        return $adapter;
     }
 
     /**
@@ -87,18 +75,20 @@ class AdminController extends UserController
     {
         $view = parent::loginAction();
 
-        $config  = $this->getServiceLocator()->get('Config');
+        $config = $this->getServiceLocator()->get('Config');
 
         // if we display the login page
         if ($view instanceof ViewModel) {
             // TODO: make this an editable config value
-            $view->setVariables(array(
-                'headerTitle' => 'WebHemi2 Administration Login',
-                'siteTitle'   => 'WH Admin',
-                'theme'       => isset($config['wh_themes']['current_theme'])
-                    ?  $config['wh_themes']['current_theme']
-                    : 'default',
-            ));
+            $view->setVariables(
+                array(
+                    'headerTitle' => 'WebHemi2 Administration Login',
+                    'siteTitle' => 'WH Admin',
+                    'theme' => isset($config['wh_themes']['current_theme'])
+                        ? $config['wh_themes']['current_theme']
+                        : 'default',
+                )
+            );
 
             // the login page has its built-in layout
             $view->setTerminal(true);
@@ -114,7 +104,7 @@ class AdminController extends UserController
      */
     public function userAction()
     {
-        $userTable = new UserTable($this->getServiceLocator()->get('database'));
+        $userTable = new UserTable($this->getDatabaseAdapter());
         $userList = $userTable->getUserList();
 
         return array('userList' => $userList);
@@ -127,11 +117,10 @@ class AdminController extends UserController
      */
     public function adduserAction()
     {
-        //$userAuth  = $this->userAuth();
-        $userName  = $this->params()->fromRoute('userName');
-        $userTable = new UserTable($this->getServiceLocator()->get('database'));
+        $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = new UserModel();
-        $request   = $this->getRequest();
+        /** @var \Zend\Http\Request $request */
+        $request = $this->getRequest();
 
         /* @var $editForm \WebHemi2\Form\UserForm */
         $editForm = $this->getForm('UserForm', 'adduser');
@@ -183,7 +172,10 @@ class AdminController extends UserController
                     $result = $userTable->insert($userModel);
 
                     if ($result !== false) {
-                        return $this->redirect()->toRoute('user/view', array('userName' => $userModel->getUsername()));
+                        return $this->redirect()->toRoute(
+                            'index/user/view',
+                            array('userName' => $userModel->getUsername())
+                        );
                     }
                 } catch (Exception $e) {
                     $editForm->setMessages(
@@ -196,7 +188,7 @@ class AdminController extends UserController
         }
 
         return array(
-            'editForm'  => $editForm,
+            'editForm' => $editForm,
         );
     }
 
@@ -207,8 +199,8 @@ class AdminController extends UserController
      */
     public function disableuserAction()
     {
-        $userName  = $this->params()->fromRoute('userName');
-        $userTable = new UserTable($this->getServiceLocator()->get('database'));
+        $userName = $this->params()->fromRoute('userName');
+        $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = $userTable->getUserByName($userName);
 
         if ($userModel) {
@@ -218,7 +210,7 @@ class AdminController extends UserController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
     }
 
     /**
@@ -228,18 +220,20 @@ class AdminController extends UserController
      */
     public function enableuserAction()
     {
-        $userName  = $this->params()->fromRoute('userName');
-        $userTable = new UserTable($this->getServiceLocator()->get('database'));
+        $userName = $this->params()->fromRoute('userName');
+        $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = $userTable->getUserByName($userName);
 
         if ($userModel) {
             // if it is NOT me, then allow the action
             if ($this->getUserAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
+                // Enabling a user also set it to activate.
+                $userModel->setActive(true);
                 $userModel->setEnabled(true);
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
     }
 
     /**
@@ -249,8 +243,8 @@ class AdminController extends UserController
      */
     public function activateuserAction()
     {
-        $userName  = $this->params()->fromRoute('userName');
-        $userTable = new UserTable($this->getServiceLocator()->get('database'));
+        $userName = $this->params()->fromRoute('userName');
+        $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = $userTable->getUserByName($userName);
 
         if ($userModel) {
@@ -260,7 +254,7 @@ class AdminController extends UserController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
     }
 
     /**
@@ -270,8 +264,8 @@ class AdminController extends UserController
      */
     public function deleteuserAction()
     {
-        $userName  = $this->params()->fromRoute('userName');
-        $userTable = new UserTable($this->getServiceLocator()->get('database'));
+        $userName = $this->params()->fromRoute('userName');
+        $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = $userTable->getUserByName($userName);
 
         if ($userModel) {
@@ -280,7 +274,7 @@ class AdminController extends UserController
                 $userTable->delete(array('user_id' => $userModel->getUserId()));
             }
         }
-        return $this->redirect()->toRoute('user');
+        return $this->redirect()->toRoute('index/user');
     }
 
 

@@ -22,9 +22,11 @@
 
 namespace WebHemi2\ServiceFactory;
 
+use WebHemi2\Auth\Auth;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use WebHemi2\Auth\Auth;
+use Zend\Authentication\Storage\StorageInterface;
+use Zend\Authentication\Adapter\AdapterInterface;
 
 /**
  * WebHemi2 authentication service factory
@@ -45,7 +47,9 @@ class AuthServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var StorageInterface $storage */
         $storage = $serviceLocator->get('authStorageDb');
+        /** @var AdapterInterface $adapter */
         $adapter = $serviceLocator->get('authAdapter');
 
         return new Auth($storage, $adapter);

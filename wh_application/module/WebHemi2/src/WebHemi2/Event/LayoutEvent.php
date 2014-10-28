@@ -32,21 +32,22 @@ use Zend\Mvc\MvcEvent;
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
-*/
+ */
 class LayoutEvent
 {
     /**
      * Event handler. Fires upon dispatching the application
      *
      * @param MvcEvent $e
+     *
      * @return void
      */
     public static function preDispatch(MvcEvent $e)
     {
-        $controller      = $e->getTarget();
+        $controller = $e->getTarget();
         $controllerClass = get_class($controller);
         $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
-        $config          = $e->getApplication()->getServiceManager()->get('Configuration');
+        $config = $e->getApplication()->getServiceManager()->get('Configuration');
 
         if (isset($config['module_layouts'][$moduleNamespace])) {
             $controller->layout($config['module_layouts'][$moduleNamespace]);

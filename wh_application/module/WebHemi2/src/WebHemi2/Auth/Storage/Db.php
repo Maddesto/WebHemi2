@@ -39,21 +39,13 @@ use WebHemi2\Model\Table\User as UserTable;
  */
 class Db implements StorageInterface, ServiceManagerAwareInterface
 {
-    /**
-     * @var StorageInterface $storage
-     */
+    /** @var StorageInterface $storage */
     protected $storage;
-    /**
-     * @var UserTable $userTable
-     */
+    /** @var UserTable $userTable */
     protected $userTable;
-    /**
-     * @var mixed $resolvedIdentity
-     */
+    /** @var mixed $resolvedIdentity */
     protected $resolvedIdentity;
-    /**
-     * @var ServiceManager $serviceManager
-     */
+    /** @var ServiceManager $serviceManager */
     protected $serviceManager;
 
     /**
@@ -146,8 +138,11 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
      */
     public function getTable()
     {
+        /** @var \Zend\Db\Adapter\Adapter $adapter */
+        $adapter = $this->getServiceManager()->get('database');
+
         if (!isset($this->userTable)) {
-            $this->userTable = new UserTable($this->getServiceManager()->get('database'));
+            $this->userTable = new UserTable($adapter);
         }
         return $this->userTable;
     }
@@ -178,7 +173,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     /**
      * Set service manager instance
      *
-     * @param ServiceManager $locator
+     * @param ServiceManager $serviceManager
      */
     public function setServiceManager(ServiceManager $serviceManager)
     {

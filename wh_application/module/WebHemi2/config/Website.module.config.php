@@ -22,10 +22,10 @@
 return array(
     'wh_themes' => array(
         'current_theme' => 'default',
-        'theme_paths'   => array(
+        'theme_paths' => array(
             APPLICATION_PATH . '/resources/themes/'
         ),
-        'adapters'      => array(
+        'adapters' => array(
             'WebHemi2\Theme\Adapter\ConfigurationAdapter',
         ),
     ),
@@ -33,63 +33,63 @@ return array(
         'routes' => array(
             // website application
             'index' => array(
-                'type'    => 'Literal',
+                'type' => 'Literal',
                 'options' => array(
-                    'route'    => '/',
+                    'route' => '/',
                     'defaults' => array(
                         '__NAMESPACE__' => 'WebHemi2\Controller',
-                        'controller'    => 'Website',
-                        'action'        => 'index',
+                        'controller' => 'Website',
+                        'action' => 'index',
                     )
                 ),
                 'may_terminate' => true,
             ),
             'view' => array(
-                'type'    => 'Regex',
+                'type' => 'Regex',
                 'options' => array(
-                    'regex'    =>
+                    'regex' =>
                         '(?:/(?<category>[a-zA-Z0-9_-]+))?/(?<id>[\/a-zA-Z0-9_-]+)(\.(?<format>(json|html|rss)))?',
                     'defaults' => array(
                         '__NAMESPACE__' => 'WebHemi2\Controller',
-                        'controller'    => 'Website',
-                        'action'        => 'view',
-                        'category'      => 'default',
-                        'format'        => 'html',
+                        'controller' => 'Website',
+                        'action' => 'view',
+                        'category' => 'default',
+                        'format' => 'html',
                     ),
                     'spec' => '/%category%/%id%.%format%',
                 ),
                 'may_terminate' => true,
             ),
             'user' => array(
-                'type'     => 'Literal',
+                'type' => 'Literal',
                 'priority' => 1000,
-                'options'  => array(
+                'options' => array(
                     'route' => '/user',
                     'defaults' => array(
                         '__NAMESPACE__' => 'WebHemi2\Controller',
                         'controller' => 'User',
-                        'action'     => 'index',
+                        'action' => 'index',
                     ),
                 ),
                 'may_terminate' => true,
-                'child_routes'  => array(
+                'child_routes' => array(
                     'login' => array(
-                        'type'    => 'Literal',
+                        'type' => 'Literal',
                         'options' => array(
-                            'route'    => '/login',
+                            'route' => '/login',
                             'defaults' => array(
                                 'controller' => 'User',
-                                'action'     => 'login',
+                                'action' => 'login',
                             ),
                         ),
                     ),
                     'logout' => array(
-                        'type'    => 'Literal',
+                        'type' => 'Literal',
                         'options' => array(
-                            'route'    => '/logout',
+                            'route' => '/logout',
                             'defaults' => array(
                                 'controller' => 'User',
-                                'action'     => 'logout',
+                                'action' => 'logout',
                             ),
                         ),
                     ),
@@ -125,7 +125,7 @@ return array(
         ),
         'rules' => array(
             'Controller-Website/*' => 'guest',
-            'Controller-User/*'    => 'guest',
+            'Controller-User/*' => 'guest',
         ),
     ),
 );

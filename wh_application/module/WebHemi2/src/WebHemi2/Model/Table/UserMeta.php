@@ -25,6 +25,7 @@ namespace WebHemi2\Model\Table;
 use WebHemi2\Model\UserMeta as UserMetaModel;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Zend\Db\Adapter\Adapter;
+use Zend\Db\Adapter\Exception;
 use Zend\Db\ResultSet\ResultSet;
 
 /**
@@ -63,8 +64,8 @@ class UserMeta extends AbstractTableGateway
      */
     public function getUserMeta($userId, $metaKey)
     {
-        $rowset        = $this->select(array('user_id' => $userId, 'meta_key' => $metaKey));
-        $userMetaModel = $rowset->current();
+        $rowSet        = $this->select(array('user_id' => $userId, 'meta_key' => $metaKey));
+        $userMetaModel = $rowSet->current();
 
         return $userMetaModel;
     }
@@ -78,11 +79,12 @@ class UserMeta extends AbstractTableGateway
      */
     public function getUserMetaAll($userId)
     {
-        $rowset   = $this->select(array('user_id' => $userId));
+        $rowSet   = $this->select(array('user_id' => $userId));
         $userMeta = array();
-        while ($metaModel = $rowset->current()) {
+        while ($metaModel = $rowSet->current()) {
+            /** @var UserMetaModel $metaModel */
             $userMeta[$metaModel->getMetaKey()] = $metaModel;
-            $rowset->next();
+            $rowSet->next();
         }
 
         return $userMeta;

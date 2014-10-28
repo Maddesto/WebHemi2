@@ -22,12 +22,12 @@
 
 namespace WebHemi2\Form;
 
-use WebHemi2\Form\AbstractForm;
 use WebHemi2\Form\Element\PlainText;
 use WebHemi2\Form\Element\Location;
 use WebHemi2\Model\User;
 use Zend\Form\Fieldset;
 use Zend\Form\Element;
+use Zend\Form\Exception;
 use Zend\Validator;
 use Zend\I18n\Validator as I18nValidator;
 use Zend\Filter as Filter;
@@ -44,7 +44,7 @@ use Zend\Filter as Filter;
 class UserForm extends AbstractForm
 {
     /** @var array $allowedAvatarMime */
-    protected $allowedAvatarMime = array('image/gif','image/jpeg','image/pjpeg','image/png','image/x-png');
+    protected $allowedAvatarMime = array('image/gif', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
     /** @var string $defaultFormId */
     protected $defaultFormId = 'edituser';
 
@@ -74,16 +74,16 @@ class UserForm extends AbstractForm
         $userName
             ->setOptions(
                 array(
-                    'required'   => true,
-                    'filters'    => array(
+                    'required' => true,
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                     'validators' => array(
                         new Validator\StringLength(
                             array(
-                            'min'      => '4',
-                            'max'      => '255',
-                            'encoding' => 'UTF-8'
+                                'min' => '4',
+                                'max' => '255',
+                                'encoding' => 'UTF-8'
                             )
                         ),
                         new Validator\Regex('/^[a-z]{1}[a-z0-9\-\_]{3,254}$/i')
@@ -96,8 +96,8 @@ class UserForm extends AbstractForm
                     'id' => 'username',
                     'accesskey' => 'u',
                     'maxlength' => '255',
-                    'tabindex'  => self::$tabindex++,
-                    'pattern'   => '^[a-zA-Z]{1}[a-zA-Z0-9\.\-\_]{3,254}$',
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^[a-zA-Z]{1}[a-zA-Z0-9\.\-\_]{3,254}$',
                 )
             );
 
@@ -106,8 +106,8 @@ class UserForm extends AbstractForm
         $email
             ->setOptions(
                 array(
-                    'required'   => true,
-                    'filters'    => array(
+                    'required' => true,
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                     'validators' => array(
@@ -115,14 +115,14 @@ class UserForm extends AbstractForm
                             array(
                                 'allow' => Validator\Hostname::ALLOW_DNS,
                                 'useDomainCheck' => true,
-                                'useMxCheck'     => true,
+                                'useMxCheck' => true,
                                 'useDeepMxCheck' => true
                             )
                         ),
                         new Validator\StringLength(
                             array(
-                                'min'      => '6',
-                                'max'      => '255',
+                                'min' => '6',
+                                'max' => '255',
                                 'encoding' => 'UTF-8'
                             )
                         ),
@@ -133,12 +133,12 @@ class UserForm extends AbstractForm
             ->setLabel('Email')
             ->setAttributes(
                 array(
-                    'id'        => 'email',
-                    'type'      => 'email',
+                    'id' => 'email',
+                    'type' => 'email',
                     'accesskey' => 'e',
                     'maxlength' => '255',
-                    'tabindex'  => self::$tabindex++,
-                    'pattern'   => '^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$',
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$',
                 )
             );
 
@@ -147,22 +147,22 @@ class UserForm extends AbstractForm
         $role
             ->setOptions(
                 array(
-                    'required'      => true,
+                    'required' => true,
                     'value_options' => array(
-                        'member'    => 'Member',
+                        'member' => 'Member',
                         'moderator' => 'Moderator',
-                        'editor'    => 'Editor',
+                        'editor' => 'Editor',
                         'publisher' => 'Publisher',
-                        'admin'     => 'Administrator',
+                        'admin' => 'Administrator',
                     )
                 )
             )
             ->setLabel('General privilege')
             ->setAttributes(
                 array(
-                    'id'        => 'role',
+                    'id' => 'role',
                     'accesskey' => 'r',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                 )
             );
 
@@ -182,15 +182,15 @@ class UserForm extends AbstractForm
             ->setOptions(
                 array(
                     'allow_empty' => false,
-                    'required'    => true,
-                    'filters'     => array(
+                    'required' => true,
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
-                    'validators'  => array(
+                    'validators' => array(
                         new Validator\StringLength(
                             array(
-                                'min'      => '8',
-                                'max'      => '255',
+                                'min' => '8',
+                                'max' => '255',
                                 'encoding' => 'UTF-8'
                             )
                         ),
@@ -200,11 +200,11 @@ class UserForm extends AbstractForm
             ->setLabel('Change password')
             ->setAttributes(
                 array(
-                    'id'        => 'password',
+                    'id' => 'password',
                     'accesskey' => 'p',
                     'maxlength' => '255',
-                    'tabindex'  => self::$tabindex++,
-                    'pattern'   => '^.*{8,255}$',
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^.*{8,255}$',
                 )
             );
 
@@ -214,11 +214,11 @@ class UserForm extends AbstractForm
             ->setLabel('Confirm password')
             ->setAttributes(
                 array(
-                    'id'        => 'password',
+                    'id' => 'password',
                     'accesskey' => 'c',
                     'maxlength' => '255',
-                    'tabindex'  => self::$tabindex++,
-                    'pattern'   => '^.*{8,255}$',
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^.*{8,255}$',
                 )
             );
 
@@ -236,13 +236,13 @@ class UserForm extends AbstractForm
         $displayName
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                     'validators' => array(
                         new Validator\StringLength(
                             array(
-                                'max'      => '255',
+                                'max' => '255',
                                 'encoding' => 'UTF-8'
                             )
                         ),
@@ -252,10 +252,10 @@ class UserForm extends AbstractForm
             ->setLabel('Display Name')
             ->setAttributes(
                 array(
-                    'id'          => 'displayname',
-                    'accesskey'   => 'n',
-                    'maxlength'   => '255',
-                    'tabindex'    => self::$tabindex++,
+                    'id' => 'displayname',
+                    'accesskey' => 'n',
+                    'maxlength' => '255',
+                    'tabindex' => self::$tabindex++,
                     'placeholder' => 'e.g.: Banana Joe',
                 )
             );
@@ -265,13 +265,13 @@ class UserForm extends AbstractForm
         $headLine
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                     'validators' => array(
                         new Validator\StringLength(
                             array(
-                                'max'      => '255',
+                                'max' => '255',
                                 'encoding' => 'UTF-8'
                             )
                         ),
@@ -281,10 +281,10 @@ class UserForm extends AbstractForm
             ->setLabel('Headline')
             ->setAttributes(
                 array(
-                    'id'          => 'headline',
-                    'accesskey'   => 'h',
-                    'maxlength'   => '255',
-                    'tabindex'    => self::$tabindex++,
+                    'id' => 'headline',
+                    'accesskey' => 'h',
+                    'maxlength' => '255',
+                    'tabindex' => self::$tabindex++,
                     'placeholder' => 'e.g.: Billionaire genius',
                 )
             );
@@ -296,16 +296,16 @@ class UserForm extends AbstractForm
             ->setOptions(
                 array(
                     'use_hidden_element' => true,
-                    'checked_value'      => '1',
-                    'unchecked_value'    => '0'
+                    'checked_value' => '1',
+                    'unchecked_value' => '0'
                 )
             )
             ->setAttributes(
                 array(
-                    'id'        => 'displayemail',
+                    'id' => 'displayemail',
                     'accesskey' => 'd',
                     'maxlength' => '255',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                 )
             );
 
@@ -314,7 +314,7 @@ class UserForm extends AbstractForm
         $details
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                 )
@@ -322,9 +322,9 @@ class UserForm extends AbstractForm
             ->setLabel('Details')
             ->setAttributes(
                 array(
-                    'id'          => 'details',
-                    'accesskey'   => 't',
-                    'tabindex'    => self::$tabindex++,
+                    'id' => 'details',
+                    'accesskey' => 't',
+                    'tabindex' => self::$tabindex++,
                     'placeholder' => 'e.g.: I love car racings.',
                 )
             );
@@ -356,7 +356,7 @@ class UserForm extends AbstractForm
                             'value' => User::USER_AVATAR_TYPE_NONE,
                             'attributes' => array(
                                 'accesskey' => 'y',
-                                'tabindex'  => self::$tabindex++,
+                                'tabindex' => self::$tabindex++,
                             )
                         ),
                         array(
@@ -364,7 +364,7 @@ class UserForm extends AbstractForm
                             'value' => User::USER_AVATAR_TYPE_GRAVATAR,
                             'attributes' => array(
                                 'accesskey' => 'g',
-                                'tabindex'  => self::$tabindex++,
+                                'tabindex' => self::$tabindex++,
                             )
                         ),
                         array(
@@ -372,7 +372,7 @@ class UserForm extends AbstractForm
                             'value' => User::USER_AVATAR_TYPE_BASE64,
                             'attributes' => array(
                                 'accesskey' => 'f',
-                                'tabindex'  => self::$tabindex++,
+                                'tabindex' => self::$tabindex++,
                             )
                         ),
                         array(
@@ -380,7 +380,7 @@ class UserForm extends AbstractForm
                             'value' => User::USER_AVATAR_TYPE_URL,
                             'attributes' => array(
                                 'accesskey' => 'l',
-                                'tabindex'  => self::$tabindex++,
+                                'tabindex' => self::$tabindex++,
                             )
                         ),
                     )
@@ -394,11 +394,11 @@ class UserForm extends AbstractForm
             ->setLabel('GR Avatar ID')
             ->setAttributes(
                 array(
-                    'id'          => 'avatargrid',
-                    'type'        => 'email',
-                    'accesskey'   => 'a',
-                    'maxlength'   => '255',
-                    'tabindex'    => self::$tabindex++,
+                    'id' => 'avatargrid',
+                    'type' => 'email',
+                    'accesskey' => 'a',
+                    'maxlength' => '255',
+                    'tabindex' => self::$tabindex++,
                     'placeholder' => 'e.g.: mike@foo.org',
                 )
             );
@@ -409,11 +409,11 @@ class UserForm extends AbstractForm
             ->setLabel('Image location')
             ->setAttributes(
                 array(
-                    'id'          => 'avatarurl',
-                    'type'        => 'url',
-                    'accesskey'   => 'w',
-                    'maxlength'   => '255',
-                    'tabindex'    => self::$tabindex++,
+                    'id' => 'avatarurl',
+                    'type' => 'url',
+                    'accesskey' => 'w',
+                    'maxlength' => '255',
+                    'tabindex' => self::$tabindex++,
                     'placeholder' => 'e.g.: http://foo.org/avatar.jpg',
                 )
             );
@@ -424,9 +424,9 @@ class UserForm extends AbstractForm
             ->setLabel('Upload your avatar')
             ->setAttributes(
                 array(
-                    'id'        => 'avatarfile',
+                    'id' => 'avatarfile',
                     'accesskey' => 'i',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                 )
             );
 
@@ -461,13 +461,13 @@ class UserForm extends AbstractForm
         $phoneNumber
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                     'validators' => array(
                         new Validator\StringLength(
                             array(
-                                'max'      => '255',
+                                'max' => '255',
                                 'encoding' => 'UTF-8'
                             )
                         ),
@@ -477,13 +477,13 @@ class UserForm extends AbstractForm
             ->setLabel('Phone number')
             ->setAttributes(
                 array(
-                    'type'      => 'tel',
-                    'id'        => 'phonenumber',
+                    'type' => 'tel',
+                    'id' => 'phonenumber',
                     'accesskey' => 'n',
                     'maxlength' => '255',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                     'placeholder' => 'e.g.: 33 2 123 4567',
-                    'pattern'   => '^[\d\s]+$',
+                    'pattern' => '^[\d\s]+$',
                 )
             );
 
@@ -492,13 +492,13 @@ class UserForm extends AbstractForm
         $location
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                     'validators' => array(
                         new Validator\StringLength(
                             array(
-                                'max'      => '255',
+                                'max' => '255',
                                 'encoding' => 'UTF-8'
                             )
                         ),
@@ -508,10 +508,10 @@ class UserForm extends AbstractForm
             ->setLabel('Location')
             ->setAttributes(
                 array(
-                    'id'        => 'location',
+                    'id' => 'location',
                     'accesskey' => 'n',
                     'maxlength' => '255',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                     'placeholder' => 'e.g.: London, England',
                 )
             );
@@ -521,7 +521,7 @@ class UserForm extends AbstractForm
         $instantMessengers
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                 )
@@ -529,9 +529,9 @@ class UserForm extends AbstractForm
             ->setLabel('Instant Messengers')
             ->setAttributes(
                 array(
-                    'id'        => 'instantmessengers',
+                    'id' => 'instantmessengers',
                     'accesskey' => 'n',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                 )
             );
 
@@ -540,7 +540,7 @@ class UserForm extends AbstractForm
         $socialNetworks
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                 )
@@ -548,9 +548,9 @@ class UserForm extends AbstractForm
             ->setLabel('Social Networks')
             ->setAttributes(
                 array(
-                    'id'        => 'socialnetworks',
+                    'id' => 'socialnetworks',
                     'accesskey' => 'n',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                 )
             );
 
@@ -559,7 +559,7 @@ class UserForm extends AbstractForm
         $websites
             ->setOptions(
                 array(
-                    'filters'    => array(
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
                 )
@@ -567,9 +567,9 @@ class UserForm extends AbstractForm
             ->setLabel('Websites')
             ->setAttributes(
                 array(
-                    'id'        => 'websites',
+                    'id' => 'websites',
                     'accesskey' => 'w',
-                    'tabindex'  => self::$tabindex++,
+                    'tabindex' => self::$tabindex++,
                 )
             );
 
@@ -588,8 +588,8 @@ class UserForm extends AbstractForm
             ->setAttributes(
                 array(
                     'accesskey' => 's',
-                    'type'      => 'submit',
-                    'tabindex'  => self::$tabindex++
+                    'type' => 'submit',
+                    'tabindex' => self::$tabindex++
                 )
             );
 
@@ -606,17 +606,19 @@ class UserForm extends AbstractForm
      *
      * Typically, also passes data on to the composed input filter.
      *
-     * @param  array|\ArrayAccess|Traversable $data
-     * @return Form|FormInterface
+     * @param  array|\ArrayAccess|\Traversable $data
+     *
+     * @return UserForm
+     *
      * @throws Exception\InvalidArgumentException
      */
     public function setData($data)
     {
         /* @var $data \Zend\Stdlib\Parameters */
-        $avatarInfo  = $data['personalInfo']['avatarInfo'];
+        $avatarInfo = $data['personalInfo']['avatarInfo'];
         $avatarValue = '';
-        $fileName    = $avatarInfo['avatarfile']['tmp_name'];
-        $fileType    = $avatarInfo['avatarfile']['type'];
+        $fileName = $avatarInfo['avatarfile']['tmp_name'];
+        $fileType = $avatarInfo['avatarfile']['type'];
 
         // this is good for displaying the avatar based on the chosen type whether it is valid (type and size) or not.
         switch ($avatarInfo['avatartype']) {
@@ -653,12 +655,6 @@ class UserForm extends AbstractForm
         $this
             ->get('personalInfo')
             ->get('avatarInfo')
-            ->get('avatarimage')
-            ->setValue($avatarValue);
-
-        $this
-            ->get('personalInfo')
-            ->get('avatarInfo')
             ->get('avatar')
             ->setValue($avatarValue);
 
@@ -673,7 +669,7 @@ class UserForm extends AbstractForm
      */
     protected function renderElement(Element $element)
     {
-        $id  = $element->getAttribute('id');
+        $id = $element->getAttribute('id');
         /* @var $acl \WebHemi2\Acl\Acl */
         $acl = $this->getAclService();
 
@@ -694,8 +690,8 @@ class UserForm extends AbstractForm
                 if (!$acl->isAllowed('admin/adduser')) {
                     $element->setOptions(
                         array(
-                            'required'   => false,
-                            'filters'    => array(),
+                            'required' => false,
+                            'filters' => array(),
                             'validators' => array()
                         )
                     );
@@ -714,7 +710,9 @@ class UserForm extends AbstractForm
      * Typically, will proxy to the composed input filter.
      *
      * @param Element $formElement
+     *
      * @return bool
+     *
      * @throws Exception\DomainException
      */
     public function isValid(Element $formElement = null)
@@ -737,29 +735,29 @@ class UserForm extends AbstractForm
      */
     protected function prepareAccountInfoFieldset()
     {
-        /* @var $acl \WebHemi2\Acl\Acl */
+        /* @var \WebHemi2\Acl\Acl $acl */
         $acl = $this->getAclService();
 
         // if no rights to change, no need to validate
         if (!$acl->isAllowed('admin/adduser')) {
             $this->get('accountInfo')->get('username')->setOptions(
                 array(
-                    'required'   => false,
-                    'filters'    => array(),
+                    'required' => false,
+                    'filters' => array(),
                     'validators' => array()
                 )
             );
             $this->get('accountInfo')->get('email')->setOptions(
                 array(
-                    'required'   => false,
-                    'filters'    => array(),
+                    'required' => false,
+                    'filters' => array(),
                     'validators' => array()
                 )
             );
             $this->get('accountInfo')->get('role')->setOptions(
                 array(
-                    'required'   => false,
-                    'filters'    => array(),
+                    'required' => false,
+                    'filters' => array(),
                     'validators' => array()
                 )
             );
@@ -772,11 +770,11 @@ class UserForm extends AbstractForm
      */
     protected function prepareSecurityInfoFieldset()
     {
-        /* @var $securityFieldset \Zend\Form\Fieldset */
+        /* @var Fieldset $securityFieldset */
         $securityFieldset = $this->get('securityInfo');
-        /* @var $passwordElement \Zend\Form\Element\Password */
+        /* @var Element\Password $passwordElement */
         $passwordElement = $securityFieldset->get('password');
-        /* @var $confirmElement \Zend\Form\Element\Password */
+        /* @var Element\Password $confirmElement */
         $confirmElement = $securityFieldset->get('confirmation');
         // If there were no password change attempt, than we remove the required flag.
         if ($this->defaultFormId == $this->getName()
@@ -784,13 +782,13 @@ class UserForm extends AbstractForm
         ) {
             $passwordElement->setOptions(
                 array(
-                    'required'    => false,
+                    'required' => false,
                     'allow_empty' => true,
                 )
             );
             $confirmElement->setOptions(
                 array(
-                    'required'    => false,
+                    'required' => false,
                     'allow_empty' => true,
                 )
             );
@@ -798,11 +796,11 @@ class UserForm extends AbstractForm
             $confirmElement->setOptions(
                 array(
                     'allow_empty' => false,
-                    'required'    => true,
-                    'filters'     => array(
+                    'required' => true,
+                    'filters' => array(
                         new Filter\StringTrim(),
                     ),
-                    'validators'  => array(
+                    'validators' => array(
                         new Validator\Identical(
                             array(
                                 'token' => $passwordElement->getValue()
@@ -821,7 +819,7 @@ class UserForm extends AbstractForm
     {
         // Adding filters and validators for the Avatar section
         $avatarType = $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->getValue();
-        $avatar     = $this->get('personalInfo')->get('avatarInfo')->get('avatar')->getValue();
+        $avatar = $this->get('personalInfo')->get('avatarInfo')->get('avatar')->getValue();
 
         switch ($avatarType) {
             case User::USER_AVATAR_TYPE_BASE64:
@@ -841,7 +839,7 @@ class UserForm extends AbstractForm
                 if (!empty($fileData['tmp_name'])) {
                     $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
                         array(
-                            'required'    => true,
+                            'required' => true,
                             'allow_empty' => false,
                             'validators' => array(
                                 new Validator\File\UploadFile(),
@@ -860,12 +858,12 @@ class UserForm extends AbstractForm
             case User::USER_AVATAR_TYPE_URL:
                 $this->get('personalInfo')->get('avatarInfo')->get('avatarurl')->setOptions(
                     array(
-                        'required'    => true,
+                        'required' => true,
                         'allow_empty' => false,
-                        'filters'    => array(
+                        'filters' => array(
                             new Filter\StringTrim(),
                         ),
-                        'validators'  => array(
+                        'validators' => array(
                             new Validator\Uri(
                                 array(
                                     'allowRelative' => false,
@@ -874,8 +872,8 @@ class UserForm extends AbstractForm
                             ),
                             new Validator\StringLength(
                                 array(
-                                    'min'      => '11',
-                                    'max'      => '255',
+                                    'min' => '11',
+                                    'max' => '255',
                                     'encoding' => 'UTF-8'
                                 )
                             ),
@@ -888,21 +886,21 @@ class UserForm extends AbstractForm
                 $this->get('personalInfo')->get('avatarInfo')->get('avatargrid')->setOptions(
                     array(
                         'allow_empty' => true,
-                        'filters'    => array(
+                        'filters' => array(
                             new Filter\StringTrim(),
                         ),
-                        'validators'  => array(
+                        'validators' => array(
                             new Validator\EmailAddress(
                                 array(
                                     'allow' => Validator\Hostname::ALLOW_DNS,
                                     'useDomainCheck' => true,
-                                    'useMxCheck'     => true,
+                                    'useMxCheck' => true,
                                     'useDeepMxCheck' => true
                                 )
                             ),
                             new Validator\StringLength(
                                 array(
-                                    'max'      => '255',
+                                    'max' => '255',
                                     'encoding' => 'UTF-8'
                                 )
                             ),
@@ -938,17 +936,17 @@ class UserForm extends AbstractForm
                         $countryCode = $phoneCodeData[$phoneNumber[0]][$prefix];
                         $phoneNumberElement->setOptions(
                             array(
-                                'validators'  => array(
+                                'validators' => array(
                                     new I18nValidator\PhoneNumber(
                                         array(
                                             'country' => $countryCode,
-                                            'allowed_types' => array('general','mobile')
+                                            'allowed_types' => array('general', 'mobile')
                                         )
                                     )
                                 ),
                             )
                         )
-                        ->setValue($phoneNumber);
+                            ->setValue($phoneNumber);
                         break;
                     }
 

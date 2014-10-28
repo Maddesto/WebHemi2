@@ -48,22 +48,23 @@ class IsAllowed extends AbstractHelper
      */
     public function __invoke($resource, $privilege = null)
     {
-        $acl                = $this->getAclService();
+        $acl = $this->getAclService();
         $controllerResource = 'Controller-' . ucfirst(strtolower($resource));
         if (strpos($resource, '/') === false) {
             $controllerResource .= '/*';
         }
-        $routeResource      = 'Route-' . $resource;
+        $routeResource = 'Route-' . $resource;
 
-        return $acl->isAllowed($resource, $privilege)
-                && $acl->isAllowed($controllerResource, $privilege)
-                && $acl->isAllowed($routeResource, $privilege);
+        return ($acl->isAllowed($resource, $privilege)
+            && $acl->isAllowed($controllerResource, $privilege)
+            && $acl->isAllowed($routeResource, $privilege)
+        );
     }
 
     /**
      * Retrieve ACL service object
      *
-     * @return WebHemi2\Acl\Acl
+     * @return Acl
      */
     public function getAclService()
     {
@@ -73,7 +74,7 @@ class IsAllowed extends AbstractHelper
     /**
      * Set ACL service object
      *
-     * @param WebHemi2\Acl\Acl $aclService
+     * @param Acl $aclService
      * @return IsAllowed
      */
     public function setAclService(Acl $aclService)

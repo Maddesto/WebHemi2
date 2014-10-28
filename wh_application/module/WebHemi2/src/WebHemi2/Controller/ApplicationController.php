@@ -37,32 +37,6 @@ use Zend\Mvc\MvcEvent;
 class ApplicationController extends AbstractController
 {
     /**
-     * Execute the request
-     *
-     * @param  MvcEvent $e
-     */
-    public function onDispatch(MvcEvent $e)
-    {
-        parent::onDispatch($e);
-
-        $layout = $this->layout();
-
-        $headerBlock = new ViewModel();
-        $headerBlock->setTemplate('block/AdminHeaderBlock');
-
-        $menuBlock = new ViewModel();
-        $menuBlock->activeMenu = 'application';
-        $menuBlock->setTemplate('block/AdminMenuBlock');
-
-        $footerBlock = new ViewModel();
-        $footerBlock->setTemplate('block/AdminFooterBlock');
-
-        $layout->addChild($headerBlock, 'HeaderBlock')
-            ->addChild($menuBlock, 'MenuBlock')
-            ->addChild($footerBlock, 'FooterBlock');
-    }
-
-    /**
      * Default action
      *
      * @return array

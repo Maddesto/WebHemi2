@@ -25,8 +25,8 @@ namespace WebHemi2\Controller\Plugin;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\Mvc\Controller\PluginManager;
 use WebHemi2\Acl\Role;
-use WebHemi2\Acl\Resource;
 use WebHemi2\Acl\Acl;
 
 /**
@@ -45,7 +45,7 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
      */
     protected $aclService;
     /**
-     * @var ServiceLocatorInterface $serviceLocator
+     * @var PluginManager $serviceLocator
      */
     protected $serviceLocator;
 

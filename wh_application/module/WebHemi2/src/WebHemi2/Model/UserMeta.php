@@ -54,6 +54,7 @@ class UserMeta
      * Set UserId
      *
      * @param int $userId
+     *
      * @return UserMeta
      */
     public function setUserId($userId)
@@ -76,6 +77,7 @@ class UserMeta
      * Set meta key
      *
      * @param string $metaKey
+     *
      * @return UserMeta
      */
     public function setMetaKey($metaKey)
@@ -98,6 +100,7 @@ class UserMeta
      * Set meta data
      *
      * @param mixed $meta
+     *
      * @return UserMeta
      */
     public function setMeta($meta)

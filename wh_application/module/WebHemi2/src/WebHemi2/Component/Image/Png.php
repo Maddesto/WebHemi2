@@ -24,7 +24,6 @@
 namespace WebHemi2\Component\Image;
 
 use Exception;
-use WebHemi2\Component\Image\AbstractImage;
 
 /**
  * WebHemi2 .PNG Image processing Component
@@ -43,17 +42,11 @@ class Png extends AbstractImage
     /** Best compression: low quality and small file size. */
     const COMPRESSION_WORST = 9;
 
-    /**
-     * @var int $quality   Compression index of the output if supported.
-     */
+    /** @var int $quality Compression index of the output if supported. */
     protected $quality = self::COMPRESSION_BEST;
-    /**
-     * @var int $imageFilter   PNG filter(s) used on output.
-     */
+    /** @var int $imageFilter PNG filter(s) used on output. */
     protected $imageFilter = PNG_NO_FILTER;
-    /**
-     * @var array $availableFilters   The list of the available filters for PNG format.
-     */
+    /** @var array $availableFilters The list of the available filters for PNG format. */
     protected $availableFilters = array(
         PNG_NO_FILTER,
         PNG_FILTER_NONE,
@@ -149,7 +142,7 @@ class Png extends AbstractImage
      *
      * @return Png
      */
-	public function readImage($fileName)
+    public function readImage($fileName)
     {
         if (!is_null($fileName) && file_exists($fileName) && is_readable($fileName)) {
             if ($resource = @imagecreatefrompng($fileName)) {
@@ -168,7 +161,7 @@ class Png extends AbstractImage
     /**
      * Write image resource into Png file.
      *
-     * @param string $fileName   Name of the Png file. If null the file will be written on stdout.
+     * @param string $fileName Name of the Png file. If null the file will be written on stdout.
      *
      * @throws Exception
      */

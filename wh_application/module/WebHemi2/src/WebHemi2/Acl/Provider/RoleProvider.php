@@ -35,18 +35,17 @@ use WebHemi2\Acl\Role;
  */
 class RoleProvider
 {
-    /**
-     * @var array $roles
-     */
+    /** @var array $roles */
     protected $roles = array();
 
     /**
-     * Class contructor
+     * Class constructor
      *
      * @param array $config
      */
     public function __construct(array $config = array())
     {
+        /** @var Role[] $roles */
         $roles = array();
         // we process the config and build the Role "tree" (actually it is a list with references to parents)
         foreach ($config as $roleName => $roleOptions) {

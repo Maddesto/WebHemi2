@@ -22,6 +22,7 @@
 
 namespace WebHemi2\ServiceFactory;
 
+use Zend\ServiceManager\ServiceManager;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use WebHemi2\Acl\Acl;
@@ -45,6 +46,7 @@ class AclServiceFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        /** @var ServiceManager $serviceLocator */
         $config = $serviceLocator->get('Configuration');
         $service = Acl::factory($config['access_control'], $serviceLocator);
         return $service;
