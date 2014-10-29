@@ -46,7 +46,7 @@ Installation
 - Edit the `wh_application\config\autoload\db.global.php` and add the database connection data.
 - Rename the `wh_application\module\WebHemi2\config\application.config.php.template` to `application.config.php`.
 - Import the `wh_application\module\WebHemi2\schema\dump.sql` into your database
-- Login to the http://<yourdomain>/wh_admin with admin / admin (l/p).
+- Login to the http://yourdomain.com/wh_admin with admin / admin (l/p).
 
 Credits
 -------
