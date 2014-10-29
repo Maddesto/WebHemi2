@@ -159,7 +159,7 @@ class LoginForm extends AbstractForm
 
         $url = '/user/login';
         if (APPLICATION_MODULE_TYPE == APPLICATION_MODULE_TYPE_SUBDIR && APPLICATION_MODULE != WEBSITE_MODULE) {
-            $url = '/' . APPLICATION_MODULE_PATH . $url;
+            $url = '/' . APPLICATION_MODULE_URI . $url;
         }
 
         $this->setAttribute('action', $url);

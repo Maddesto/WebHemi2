@@ -24,7 +24,6 @@ namespace WebHemi2\Controller;
 
 use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
-use Zend\Mvc\MvcEvent;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Authentication\Result;
 use Zend\View\Model\ViewModel;

@@ -1,3 +1,7 @@
+SetEnvIf Host .*\.dev APPLICATION_ENV=dev
+
+Options -Indexes
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 

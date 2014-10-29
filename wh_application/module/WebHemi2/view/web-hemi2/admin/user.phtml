@@ -1,10 +1,10 @@
 <h1><?php echo $this->translate('Users') ?></h1>
 <p><?php echo $this->translate('Ut convallis, sem sit amet interdum consectetuer, odio augue aliquam leo, nec dapibus tortor nibh sed augue. Integer eu magna sit amet metus fermentum posuere. Morbi sit amet nulla sed dolor elementum imperdiet. Quisque fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque adipiscing eros ut libero. Ut condimentum mi vel tellus. Suspendisse laoreet. Fusce ut est sed dolor gravida convallis. Morbi vitae ante. Vivamus ultrices luctus nunc. Suspendisse et dolor. Etiam dignissim. Proin malesuada adipiscing lacus. Donec metus. Curabitur gravida.'); ?></p>
-<a href="<?php echo $this->link('index/user/profile'); ?>"><?php echo $this->translate('My Profile'); ?></a>
+<a href="<?php echo $this->url('index/user/profile'); ?>"><?php echo $this->translate('My Profile'); ?></a>
 <hr />
 
 <?php if($this->isAllowed('admin/adduser')): ?>
-<a href="<?php echo $this->link('index/user/new'); ?>" class="addUser" style="display:inline-block;text-align: center;">
+<a href="<?php echo $this->url('index/user/new'); ?>" class="addUser" style="display:inline-block;text-align: center;">
     <?php
         echo $this->avatar(
             'http://a.dryicons.com/images/icon_sets/classy_icons_set/png/128x128/user_add.png',
@@ -37,13 +37,13 @@ foreach($userList as $id => $userModel):
 
         if ($userModel->getUserId() == $this->getIdentity()->getuserId()) {
             $class[] = 'self';
-            $link = $this->link('index/user/profile');
+            $link = $this->url('index/user/profile');
         }
         elseif(!$this->isAllowed('admin/viewuser')) {
             $link = '#';
         }
         else {
-            $link = $this->link('index/user/view', array('userName' => $userModel->getUserName()));
+            $link = $this->url('index/user/view', array('userName' => $userModel->getUserName()));
         }
 ?>
 

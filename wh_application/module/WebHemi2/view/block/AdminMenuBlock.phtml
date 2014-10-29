@@ -1,14 +1,14 @@
 <nav>
     <ul>
-        <li><a href="<?php echo $this->link('index'); ?>">Dashboard</a></li>
-        <li><a href="<?php echo $this->link('index/user'); ?>">Users</a></li>
+        <li><a href="<?php echo $this->url('index'); ?>">Dashboard</a></li>
+        <li><a href="<?php echo $this->url('index/user'); ?>">Users</a></li>
 <?php if($this->isAllowed('application')): ?>
-        <li><a href="<?php echo $this->link('index/application'); ?>">Application</a></li>
+        <li><a href="<?php echo $this->url('index/application'); ?>">Application</a></li>
 <?php endif; ?>
 <?php if($this->isAllowed('component')): ?>
-        <li><a href="<?php echo $this->link('index/component'); ?>">Components</a></li>
+        <li><a href="<?php echo $this->url('index/component'); ?>">Components</a></li>
 <?php endif; ?>
-        <li><a href="<?php echo $this->link('index/about'); ?>">About</a></li>
-        <li><a href="<?php echo $this->link('index/user/logout'); ?>">Logout</a></li>
+        <li><a href="<?php echo $this->url('index/about'); ?>">About</a></li>
+        <li><a href="<?php echo $this->url('index/user/logout'); ?>">Logout</a></li>
     </ul>
 </nav>

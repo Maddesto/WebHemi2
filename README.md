@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.2.1 Created by Gixx.
+Version 2.0.2.2 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -36,7 +36,17 @@ Features / Goals
 - Responsive design for 'Admin' application to use the page from mobile devices [PLANNING]
 - Install script [PLANNING]
 - Default website design [PLANNING]
-- Create Composer install script for vendor libraries [IN PROGRESS]
+- Create Composer install script for vendor libraries [DONE]
+
+Installation
+------------
+
+- Download and unzip the source files or clone the repository into your document root
+- [Install composer](https://getcomposer.org/doc/00-intro.md#installation-nix) and run `php composer.phar install --no-dev` to get the required Zend Framework 2 packages
+- Edit the `wh_application\config\autoload\db.global.php` and add the database connection data.
+- Rename the `wh_application\module\WebHemi2\config\application.config.php.template` to `application.config.php`.
+- Import the `wh_application\module\WebHemi2\schema\dump.sql` into your database
+- Login to the http://<yourdomain>/wh_admin with admin / admin (l/p).
 
 Credits
 -------

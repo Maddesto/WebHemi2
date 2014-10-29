@@ -24,7 +24,7 @@ namespace WebHemi2\View\Helper;
 
 use Traversable;
 use Zend\View\Exception;
-use Zend\View\Helper\Url;
+use Zend\View\Helper\Url as ZendUrl;
 
 
 
@@ -37,7 +37,7 @@ use Zend\View\Helper\Url;
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class Link extends Url
+class Url extends ZendUrl
 {
     /**
      * Generates a url given the name of a route. Additionally prepends with the module if the
@@ -55,12 +55,12 @@ class Link extends Url
      */
     public function __invoke($name = null, $params = array(), $options = array(), $reuseMatchedParams = false)
     {
-        $link = parent::__invoke($name, $params, $options, $reuseMatchedParams);
+        $url = parent::__invoke($name, $params, $options, $reuseMatchedParams);
 
         if (APPLICATION_MODULE_TYPE == APPLICATION_MODULE_TYPE_SUBDIR && APPLICATION_MODULE !== WEBSITE_MODULE) {
-            $link = '/' . APPLICATION_MODULE_PATH . $link;
+            $url = '/' . APPLICATION_MODULE_URI . $url;
         }
 
-        return $link;
+        return $url;
     }
 }

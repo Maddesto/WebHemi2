@@ -28,7 +28,7 @@ return array(
                 'options' => array(
                     'route' => '/[:mod]',
                     'constraints' => array(
-                        'mod' => '(?:' . APPLICATION_MODULE_PATH . '/?|)'
+                        'mod' => '(?:' . APPLICATION_MODULE_URI . '/?|)'
                     ),
                     'defaults' => array(
                         '__NAMESPACE__' => 'WebHemi2\Controller',

@@ -2,6 +2,12 @@ Change log
 ==========
 
 ---------------
+Version 2.0.2.2
+---------------
+- Added Composer install script for the vendor codes (ZF2)
+- Changed WebHemi2's View\Helper\Link to View\Helper\Url to cover ZF2's function completely
+- Change application constant definitions to call anonymous functions instead of global functions
+
 Version 2.0.2.1
 ---------------
 - Fix major bug in routing when the module is a directory and not a subdomain

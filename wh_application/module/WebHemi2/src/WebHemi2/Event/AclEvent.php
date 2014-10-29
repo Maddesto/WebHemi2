@@ -74,7 +74,7 @@ class AclEvent
             ) {
                 $url = '/user/login';
                 if (APPLICATION_MODULE_TYPE == APPLICATION_MODULE_TYPE_SUBDIR && APPLICATION_MODULE != WEBSITE_MODULE) {
-                    $url = '/' . APPLICATION_MODULE_PATH . $url;
+                    $url = '/' . APPLICATION_MODULE_URI . $url;
                 }
 
                 /** @var \Zend\Http\PhpEnvironment\Response $response */

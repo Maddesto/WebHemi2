@@ -30,99 +30,74 @@ define('WEBSITE_MODULE', 'Website');
 define('APPLICATION_MODULE_TYPE_SUBDOMAIN', 'subdomain');
 define('APPLICATION_MODULE_TYPE_SUBDIR', 'subdir');
 
-define('APPLICATION_MODULE', getApplicationModuleName());
-define('APPLICATION_MODULE_TYPE', getApplicationModuleType(APPLICATION_MODULE));
-define('APPLICATION_MODULE_PATH', getApplicationModulePath(APPLICATION_MODULE));
+define('APPLICATION_MODULE', call_user_func(function() {
+        $modules = include APPLICATION_PATH . '/config/application.config.php';
+        $module = WEBSITE_MODULE;
+        $subDomain = '';
 
-/**
- * Read the WebHemi2 config to determine from the URL which module is the active one.
- *
- * @return string
- */
-function getApplicationModuleName()
-{
-    $modules = include APPLICATION_PATH . '/config/application.config.php';
-    $module = WEBSITE_MODULE;
-    $subDomain = '';
+        // if no URL is present, then the current URL will be used
+        if (empty($url)) {
+            $url = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 's' : '') . '://';
+            $url .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING'];
+        }
 
-    // if no URL is present, then the current URL will be used
-    if (empty($url)) {
-        $url = 'http' . ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']) ? 's' : '') . '://';
-        $url .= $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . $_SERVER['QUERY_STRING'];
-    }
+        // parse the URL into
+        $urlParts = parse_url($url);
 
-    // parse the URL into
-    $urlParts = parse_url($url);
+        // if the host is not an IP address, then we can check the subdomain-based module names too
+        if (!preg_match(
+            '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/',
+            $urlParts['host']
+        )
+        ) {
+            $domainParts = explode('.', $urlParts['host']);
+            $tld = array_pop($domainParts);
+            $domain = array_pop($domainParts) . '.' . $tld;
+            $subDomain = implode('.', $domainParts);
+        }
 
-    // if the host is not an IP address, then we can check the subdomain-based module names too
-    if (!preg_match(
-        '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/',
-        $urlParts['host']
-    )
-    ) {
-        $domainParts = explode('.', $urlParts['host']);
-        $tld = array_pop($domainParts);
-        $domain = array_pop($domainParts) . '.' . $tld;
-        $subDomain = implode('.', $domainParts);
-    }
+        // if no subdomain present, then it should be handled as 'www'
+        if (empty($subDomain)) {
+            $subDomain = 'www';
+        }
 
-    // if no subdomain present, then it should be handled as 'www'
-    if (empty($subDomain)) {
-        $subDomain = 'www';
-    }
+        // we ignore the first (actually an emtpy string) and last (the rest of the URL)
+        list(, $subdir) = explode('/', $urlParts['path'], 3);
 
-    // we ignore the first (actually an emtpy string) and last (the rest of the URL)
-    list(, $subdir) = explode('/', $urlParts['path'], 3);
-
-    // we run through the available application-modules
-    foreach ($modules as $moduleName => $moduleData) {
-        // subdirectory-based modules
-        if ($subDomain == 'www') {
-            if (!empty($subdir)
-                && $moduleData['type'] == APPLICATION_MODULE_TYPE_SUBDIR
-                && $moduleData['path'] == $subdir
-            ) {
-                $module = $moduleName;
-                break;
-            }
-        } else {
-            // subdomain-based modules
-            if ($moduleData['type'] == APPLICATION_MODULE_TYPE_SUBDOMAIN
-                && $moduleData['path'] == $subDomain
-            ) {
-                $module = $moduleName;
-                break;
+        // we run through the available application-modules
+        foreach ($modules as $moduleName => $moduleData) {
+            // subdirectory-based modules
+            if ($subDomain == 'www') {
+                if (!empty($subdir)
+                    && $moduleData['type'] == APPLICATION_MODULE_TYPE_SUBDIR
+                    && $moduleData['path'] == $subdir
+                ) {
+                    $module = $moduleName;
+                    break;
+                }
+            } else {
+                // subdomain-based modules
+                if ($moduleData['type'] == APPLICATION_MODULE_TYPE_SUBDOMAIN
+                    && $moduleData['path'] == $subDomain
+                ) {
+                    $module = $moduleName;
+                    break;
+                }
             }
         }
-    }
 
-    return $module;
-}
+        return $module;
+    })
+);
+define('APPLICATION_MODULE_TYPE', call_user_func(function($moduleName) {
+        $modules = include APPLICATION_PATH . '/config/application.config.php';
 
-/**
- * Retrieve module type
- *
- * @param $moduleName
- *
- * @return string
- */
-function getApplicationModuleType($moduleName)
-{
-    $modules = include APPLICATION_PATH . '/config/application.config.php';
+        return isset($modules[$moduleName]) ? $modules[$moduleName]['type'] : 'subdir';
+    }, APPLICATION_MODULE)
+);
+define('APPLICATION_MODULE_URI', call_user_func(function($moduleName) {
+        $modules = include APPLICATION_PATH . '/config/application.config.php';
 
-    return $modules[$moduleName]['type'];
-}
-
-/**
- * Retrieve module path
- *
- * @param $moduleName
- *
- * @return string
- */
-function getApplicationModulePath($moduleName)
-{
-    $modules = include APPLICATION_PATH . '/config/application.config.php';
-
-    return $modules[$moduleName]['path'];
-}
+        return isset($modules[$moduleName]) ? $modules[$moduleName]['path'] : '/';
+    }, APPLICATION_MODULE)
+);

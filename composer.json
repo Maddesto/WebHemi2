@@ -1,0 +1,28 @@
+{
+    "name": "gixx/webhemi2",
+    "config": {
+        "vendor-dir": "wh_application/vendor"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.zendframework.com/"
+        }
+    ],
+    "require": {
+        "zendframework/zend-authentication": "2.3.*",
+        "zendframework/zend-config": "2.3.*",
+        "zendframework/zend-console": "2.3.*",
+        "zendframework/zend-crypt": "2.3.*",
+        "zendframework/zend-db": "2.3.*",
+        "zendframework/zend-http": "2.3.*",
+        "zendframework/zend-i18n": "2.3.*",
+        "zendframework/zend-log": "2.3.*",
+        "zendframework/zend-modulemanager": "2.3.*",
+        "zendframework/zend-mvc": "2.3.*",
+        "zendframework/zend-permissions-acl": "2.3.*",
+        "zendframework/zend-session": "2.3.*",
+        "zendframework/zend-serializer": "2.3.*",
+        "zendframework/zend-view": "2.3.*"
+    }
+}

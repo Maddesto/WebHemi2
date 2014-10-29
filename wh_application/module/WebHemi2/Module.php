@@ -22,7 +22,7 @@
 
 namespace WebHemi2;
 
-use WebHemi2\View\Helper\Link;
+use WebHemi2\View\Helper\Url;
 use Zend\Console\Console;
 use Zend\Mvc\MvcEvent;
 use Zend\Mvc\ModuleRouteListener;
@@ -79,8 +79,8 @@ class Module implements
         }
 
         // update view helper url
-        $viewHelperManager->setFactory('link', function ($sm) use($serviceManager) {
-                $helper = new Link;
+        $viewHelperManager->setFactory('url', function ($sm) use($serviceManager) {
+                $helper = new Url;
                 $router = Console::isConsole() ? 'HttpRouter' : 'Router';
                 $helper->setRouter($serviceManager->get($router));
 

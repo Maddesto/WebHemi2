@@ -57,7 +57,7 @@ return array(
     'view_helpers' => array(
         'invokables' => array(
             'avatar' => 'WebHemi2\View\Helper\Avatar',
-            'link' => 'WebHemi2\View\Helper\Link',
+            'url' => 'WebHemi2\View\Helper\Url',
             'formElement' => 'WebHemi2\Form\View\Helper\FormElement',
             'formPlainText' => 'WebHemi2\Form\View\Helper\FormPlainText',
             'formLocation' => 'WebHemi2\Form\View\Helper\FormLocation',
