@@ -3,7 +3,7 @@
 <a href="<?php echo $this->url('index/user/profile'); ?>"><?php echo $this->translate('My Profile'); ?></a>
 <hr />
 
-<?php if($this->isAllowed('admin/adduser')): ?>
+<?php if($this->isAllowed('admin:user-add')): ?>
 <a href="<?php echo $this->url('index/user/new'); ?>" class="addUser" style="display:inline-block;text-align: center;">
     <?php
         echo $this->avatar(
@@ -20,11 +20,11 @@
 </a>
 <?php endif; ?>
 <?php
-/* @var $userModel \WebHemi2\Model\User */
+/** @var \WebHemi2\Model\User[] $userList */
 foreach($userList as $id => $userModel):
     if (
         $userModel->getEnabled()
-        || (!$userModel->getEnabled() && $this->isAllowed('admin/enableuser'))
+        || (!$userModel->getEnabled() && $this->isAllowed('admin:user-enable'))
     ):
         $class = array();
         if (!$userModel->getActive()) {
@@ -39,7 +39,7 @@ foreach($userList as $id => $userModel):
             $class[] = 'self';
             $link = $this->url('index/user/profile');
         }
-        elseif(!$this->isAllowed('admin/viewuser')) {
+        elseif(!$this->isAllowed('admin:user-view')) {
             $link = '#';
         }
         else {

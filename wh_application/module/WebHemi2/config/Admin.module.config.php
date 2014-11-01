@@ -47,7 +47,7 @@ return array(
                             'defaults' => array(
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
                                 'controller' => 'Admin',
-                                'action' => 'user',
+                                'action' => 'userList',
                             ),
                         ),
                         'may_terminate' => true,
@@ -78,7 +78,7 @@ return array(
                                     'route' => '/profile',
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'profile',
+                                        'action' => 'userProfile',
                                     ),
                                 ),
                             ),
@@ -88,7 +88,7 @@ return array(
                                     'route' => '/new',
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'adduser',
+                                        'action' => 'userAdd',
                                     ),
                                 ),
                             ),
@@ -101,7 +101,7 @@ return array(
                                     ),
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'edituser',
+                                        'action' => 'userEdit',
                                     ),
                                 ),
                             ),
@@ -114,7 +114,7 @@ return array(
                                     ),
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'viewuser',
+                                        'action' => 'userView',
                                     ),
                                 ),
                             ),
@@ -127,7 +127,7 @@ return array(
                                     ),
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'disableuser',
+                                        'action' => 'userDisable',
                                     ),
                                 ),
                             ),
@@ -140,7 +140,7 @@ return array(
                                     ),
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'enableUser',
+                                        'action' => 'userEnable',
                                     ),
                                 ),
                             ),
@@ -153,7 +153,7 @@ return array(
                                     ),
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'activateuser',
+                                        'action' => 'userActivate',
                                     ),
                                 ),
                             ),
@@ -166,7 +166,7 @@ return array(
                                     ),
                                     'defaults' => array(
                                         'controller' => 'Admin',
-                                        'action' => 'deleteuser',
+                                        'action' => 'userDelete',
                                     ),
                                 ),
                             ),
@@ -177,8 +177,9 @@ return array(
                         'options' => array(
                             'route' => 'about',
                             'defaults' => array(
-                                'controller' => 'Admin',
-                                'action' => 'about',
+                                '__NAMESPACE__' => 'WebHemi2\Controller',
+                                'controller' => 'About',
+                                'action' => 'index',
                             ),
                         ),
                     ),
@@ -212,6 +213,7 @@ return array(
         'invokables' => array(
             'WebHemi2\Controller\Admin' => 'WebHemi2\Controller\AdminController',
             'WebHemi2\Controller\Application' => 'WebHemi2\Controller\ApplicationController',
+            'WebHemi2\Controller\About' => 'WebHemi2\Controller\AboutController',
             'WebHemi2\Controller\Component' => 'WebHemi2\Controller\ComponentController',
             'WebHemi2\Controller\User' => 'WebHemi2\Controller\UserController',
         ),
@@ -225,34 +227,6 @@ return array(
         ),
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/admin.phtml',
-        ),
-    ),
-    'access_control' => array(
-        'resources' => array(
-            'Controller-Admin/*',
-            'Controller-Admin/adduser',
-            'Controller-Admin/viewuser',
-            'Controller-Admin/edituser',
-            'Controller-Admin/deleteuser',
-            'Controller-Admin/enableuser',
-            'Controller-Admin/disableuser',
-            'Controller-Admin/activateuser',
-            '!Controller-Admin/login',
-            'Controller-Application/*',
-            'Controller-Component/*',
-        ),
-        'rules' => array(
-            'Controller-Admin/*' => 'member',
-            'Controller-Admin/adduser' => 'admin',
-            'Controller-Admin/viewuser' => 'moderator',
-            'Controller-Admin/edituser' => 'member',
-            'Controller-Admin/deleteuser' => 'admin',
-            'Controller-Admin/enableuser' => 'admin',
-            'Controller-Admin/disableuser' => 'admin',
-            'Controller-Admin/activateuser' => 'admin',
-            '!Controller-Admin/login' => 'guest',
-            'Controller-Application/*' => 'moderator',
-            'Controller-Component/*' => 'admin',
         ),
     ),
 );

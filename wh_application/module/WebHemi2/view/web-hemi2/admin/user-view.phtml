@@ -6,15 +6,15 @@ if (!isset($myProfile)) {
 /* @var $userModel \WebHemi2\Model\User */
 
 
-// IF admin AND owner THEN allowe to edit profile
-if ($myProfile || $this->getIdentity()->getRole() == 'admin') :
+// IF admin AND owner THEN allow to edit profile
+if ($myProfile || $this->isAllowed('admin:user-enable')) :
 ?>
 <a href="<?php echo $this->url('index/user/edit', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Edit profile'); ?>"><?php echo $this->translate('Edit profile'); ?></a>
 <?php endif; ?>
 
 <?php
 // If not owner AND has privilege THEN:
-if (!$myProfile && $this->isAllowed('admin/enableuser')) :
+if (!$myProfile && $this->isAllowed('admin:user-enable') && $this->isAllowed('admin:user-disable')) :
     // IF user is disabled
     if (!$userModel->getEnabled()):
 ?>
@@ -26,14 +26,14 @@ if (!$myProfile && $this->isAllowed('admin/enableuser')) :
 
 <?php
 // If not owner AND has privilege AND user is not activated THEN allow to activate
-if (!$myProfile && !$userModel->getActive() && $this->isAllowed('admin/activateuser')) :
+if (!$myProfile && !$userModel->getActive() && $this->isAllowed('admin:user-activate')) :
 ?>
 <a href="<?php echo $this->url('index/user/activate', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Activate user'); ?>"><?php echo $this->translate('Activate user'); ?></a>
 <?php endif; ?>
 
 <?php
 // If not owner AND has privilege THEN allow to delete
-if (!$myProfile && $this->isAllowed('admin/deleteuser')) :
+if (!$myProfile && $this->isAllowed('admin:user-delete')) :
 ?>
 <a href="<?php echo $this->url('index/user/delete', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Delete user'); ?>"><?php echo $this->translate('Delete user'); ?></a>
 <?php endif; ?>
@@ -47,7 +47,6 @@ if (!$myProfile && $this->isAllowed('admin/deleteuser')) :
         );
     ?>
     <h1><?php echo $userModel->getDisplayName(); ?></h1>
-    <span>[<?php echo $this->translate($userModel->getRole()); ?>]</span>
     <?php if($headLine = $userModel->getHeadLine()): ?><h2><?php echo $headLine; ?></h2><?php endif; ?>
     <?php if($location = $userModel->getLocation()): ?><h3><?php echo $location; ?></h3><?php endif; ?>
 </div>
@@ -56,7 +55,7 @@ if (!$myProfile && $this->isAllowed('admin/deleteuser')) :
         <tr>
             <td class="email"><?php echo $this->translate('Email'); ?></td>
             <td>
-                <?php if($userModel->getDisplayEmail() || $this->isAllowed('manage')): ?>
+                <?php if($userModel->getDisplayEmail() || $this->isAllowed('admin:user-edit')): ?>
                 <a href="mailto:<?php echo $userModel->getEmail(); ?>"><?php echo $userModel->getEmail(); ?></a>
                 <?php else: ?>
                 <span><?php echo $this->translate('hidden'); ?></span>

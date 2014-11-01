@@ -22,8 +22,10 @@
 
 namespace WebHemi2\Model;
 
+use WebHemi2\Model\Acl as AclModel;
+
 /**
- * WebHemi2 User Meta Model
+ * WebHemi2 User Acl Model
  *
  * @category   WebHemi2
  * @package    WebHemi2_Model
@@ -31,14 +33,14 @@ namespace WebHemi2\Model;
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class UserMeta extends \ArrayObject
+class UserAcl extends \ArrayObject
 {
-    /** @var int  $userId */
+    /** @var int $userId */
     protected $userId;
-    /** @var string $metaKey */
-    protected $metaKey;
-    /** @var string $meta */
-    protected $meta;
+    /** @var string $application */
+    protected $application;
+    /** @var string $role */
+    protected $role;
 
     /**
      * Retrieve UserId
@@ -55,7 +57,7 @@ class UserMeta extends \ArrayObject
      *
      * @param int $userId
      *
-     * @return UserMeta
+     * @return UserAcl
      */
     public function setUserId($userId)
     {
@@ -64,49 +66,55 @@ class UserMeta extends \ArrayObject
     }
 
     /**
-     * Retrieve meta key
+     * Retrieve application
      *
      * @return string
      */
-    public function getMetaKey()
+    public function getApplication()
     {
-        return $this->metaKey;
+        return $this->application;
     }
 
     /**
-     * Set meta key
+     * Set application
      *
-     * @param string $metaKey
+     * @param string $application
      *
-     * @return UserMeta
+     * @return UserAcl
      */
-    public function setMetaKey($metaKey)
+    public function setApplication($application)
     {
-        $this->metaKey = $metaKey;
+        $this->application = $application;
         return $this;
     }
 
     /**
-     * Retrieve meta data
+     * Retrieve role
      *
-     * @return mixed
+     * @return string
      */
-    public function getMeta()
+    public function getRole()
     {
-        return $this->meta;
+        return $this->role;
     }
 
     /**
-     * Set meta data
+     * Set role
      *
-     * @param mixed $meta
+     * @param mixed $role
      *
-     * @return UserMeta
+     * @return UserAcl
+     *
+     * @throws \Exception
      */
-    public function setMeta($meta)
+    public function setRole($role)
     {
-        $this->meta = $meta;
-        return $this;
+        if (in_array($role, AclModel::$availableRoles)) {
+            $this->role = $role;
+            return $this;
+        }
+
+        throw new \Exception('Role "' . $role . '" is not defined.');
     }
 
     /**
@@ -118,9 +126,9 @@ class UserMeta extends \ArrayObject
      */
     public function exchangeArray($data)
     {
-        $this->userId  = (isset($data['user_id']))  ? (int) $data['user_id'] : null;
-        $this->metaKey = (isset($data['meta_key'])) ? $data['meta_key'] : null;
-        $this->meta    = (isset($data['meta']))     ? $data['meta'] : null;
+        $this->userId = (isset($data['user_id'])) ? (int)$data['user_id'] : null;
+        $this->application = (isset($data['application'])) ? $data['application'] : null;
+        $this->role = (isset($data['role'])) ? $data['role'] : null;
 
         return $data;
     }
@@ -133,9 +141,9 @@ class UserMeta extends \ArrayObject
     public function toArray()
     {
         return array(
-            'user_id'  => $this->userId,
-            'meta_key' => $this->metaKey,
-            'meta'     => $this->meta,
+            'user_id' => $this->userId,
+            'application' => $this->application,
+            'role' => $this->role,
         );
     }
 }

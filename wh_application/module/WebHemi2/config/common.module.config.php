@@ -68,49 +68,7 @@ return array(
         ),
     ),
     'access_control' => array(
-        'default_role' => 'guest',
         'template' => 'error/403',
-        'roles' => array(
-            'guest' => array(
-                'parent' => null,
-            ),
-            'member' => array(
-                'parent' => 'guest',
-            ),
-            'moderator' => array(
-                'parent' => 'member',
-            ),
-            'editor' => array(
-                'parent' => 'moderator',
-            ),
-            'publisher' => array(
-                'parent' => 'editor',
-            ),
-            'admin' => array(
-                'parent' => 'publisher',
-            ),
-        ),
-        'resources' => array(
-            'view',
-            'comment',
-            'moderate',
-            'edit',
-            'publish',
-            'revoke',
-            'delete',
-            'manage',
-        ),
-        // only handles 'ALLOWED' rules
-        'rules' => array(
-            'view' => 'guest',
-            'comment' => 'member',
-            'moderate' => 'moderator',
-            'edit' => 'editor',
-            'publish' => 'publisher',
-            'revoke' => 'publisher',
-            'delete' => 'publisher',
-            'manage' => 'admin',
-        ),
     ),
     'translator' => array(
         'locale' => 'en_US',

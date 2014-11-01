@@ -5,8 +5,8 @@ Options -Indexes
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    RewriteCond %{REQUEST_URI} !\/index\.html$
-    RewriteRule ^wh_application/?(.*)$ /wh_application/$1/index.html [R,L]
+    RewriteCond %{REQUEST_URI} !\.html$
+    RewriteRule ^wh_application/?(.*)$ /wh_application/$1.html [R,L]
 
     RewriteCond %{REQUEST_FILENAME} -s [OR]
     RewriteCond %{REQUEST_FILENAME} -l [OR]

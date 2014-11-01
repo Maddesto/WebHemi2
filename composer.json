@@ -24,5 +24,8 @@
         "zendframework/zend-session": "2.3.*",
         "zendframework/zend-serializer": "2.3.*",
         "zendframework/zend-view": "2.3.*"
+    },
+    "require-dev": {
+        "phpmd/phpmd" : "@stable"
     }
 }

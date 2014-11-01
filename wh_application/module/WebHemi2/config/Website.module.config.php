@@ -68,7 +68,7 @@ return array(
                     'defaults' => array(
                         '__NAMESPACE__' => 'WebHemi2\Controller',
                         'controller' => 'User',
-                        'action' => 'index',
+                        'action' => 'userProfile',
                     ),
                 ),
                 'may_terminate' => true,
@@ -116,16 +116,6 @@ return array(
         ),
         'template_map' => array(
             'layout/layout' => __DIR__ . '/../view/layout/default.phtml',
-        ),
-    ),
-    'access_control' => array(
-        'resources' => array(
-            'Controller-Website/*',
-            'Controller-User/*',
-        ),
-        'rules' => array(
-            'Controller-Website/*' => 'guest',
-            'Controller-User/*' => 'guest',
         ),
     ),
 );

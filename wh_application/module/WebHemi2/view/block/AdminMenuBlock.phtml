@@ -2,11 +2,8 @@
     <ul>
         <li><a href="<?php echo $this->url('index'); ?>">Dashboard</a></li>
         <li><a href="<?php echo $this->url('index/user'); ?>">Users</a></li>
-<?php if($this->isAllowed('application')): ?>
+<?php if($this->isAllowed('application:index')): ?>
         <li><a href="<?php echo $this->url('index/application'); ?>">Application</a></li>
-<?php endif; ?>
-<?php if($this->isAllowed('component')): ?>
-        <li><a href="<?php echo $this->url('index/component'); ?>">Components</a></li>
 <?php endif; ?>
         <li><a href="<?php echo $this->url('index/about'); ?>">About</a></li>
         <li><a href="<?php echo $this->url('index/user/logout'); ?>">Logout</a></li>

@@ -70,7 +70,7 @@ class Module implements
         /** @var \Zend\View\HelperPluginManager $viewHelperManager */
         $viewHelperManager = $serviceManager->get('ViewHelperManager');
 
-        // instantialize services
+        // instantiate services
         $serviceManager->get('translator');
         $serviceManager->get('acl');
 
@@ -105,16 +105,16 @@ class Module implements
         $moduleRouteListener->attach($eventManager);
     }
 
-    /**
-     * Check whether the specific configuration exists.
-     *
-     * @param string $name    The name of the config section.
-     * @return bool
-     */
-    public static function hasConfig($name)
-    {
-        return isset(self::$configs[$name]);
-    }
+//    /**
+//     * Check whether the specific configuration exists.
+//     *
+//     * @param string $name    The name of the config section.
+//     * @return bool
+//     */
+//    public static function hasConfig($name)
+//    {
+//        return isset(self::$configs[$name]);
+//    }
 
     /**
      * Retrieves the Module Configuration
@@ -126,7 +126,7 @@ class Module implements
         require_once __DIR__ . '/resources/application_constants.php';
 
         // for the first call, we set the Config
-        if (!isset(self::$configs['Module'])) {
+        if (!isset($configs)) {
             // There's only tho physical modules (Admin and Website) the others are virtual modules and inherit
             // from Website module
             $mainModule = APPLICATION_MODULE == ADMIN_MODULE
@@ -134,27 +134,28 @@ class Module implements
                     : WEBSITE_MODULE;
 
             // load the general config
-            $this->setConfig('Module', __DIR__ . '/config/common.module.config.php');
+            $this->setConfig(__DIR__ . '/config/common.module.config.php');
             // load the main module config
-            $this->setConfig('Module', __DIR__ . '/config/' . $mainModule . '.module.config.php');
+            $this->setConfig(__DIR__ . '/config/' . $mainModule . '.module.config.php');
             // load the customizable configs
-            $this->setConfig('Module', __DIR__ . '/config/application.config.php', false, APPLICATION_MODULE);
+            $this->setConfig(__DIR__ . '/config/application.config.php', false, APPLICATION_MODULE);
         }
 
-        return self::$configs['Module'];
+        return self::$configs;
     }
 
     /**
      * Load the given configuration.
      *
-     * @param string $name         The name of the config section.
      * @param string $filename     The path to the config file.
      * @param boolean $overwrite   Merge or overwrite.
      * @param string $segment      Includes only a segment of the config.
-     * @throws Exception
+     *
+     * @throws \Exception
+     *
      * @return void
      */
-    protected function setConfig($name, $filename, $overwrite = false, $segment = null)
+    protected function setConfig($filename, $overwrite = false, $segment = null)
     {
         if (file_exists($filename) && is_readable($filename)) {
             $config = include $filename;
@@ -171,10 +172,10 @@ class Module implements
             // if the given path returns as an array
             if (is_array($config)) {
                 // set or replace
-                if ($overwrite || !isset(self::$configs[$name])) {
-                    self::$configs[$name] = $config;
+                if ($overwrite || !isset(self::$configs)) {
+                    self::$configs = $config;
                 } else {
-                    self::$configs[$name] = $this->mergeConfig(self::$configs[$name], $config);
+                    self::$configs = $this->mergeConfig(self::$configs, $config);
                 }
             } else {
                 throw new \Exception('The given path does not contain any configurations');
@@ -189,13 +190,12 @@ class Module implements
      * This rewrites the given key->value pairs and does not make key->array(value1, value2) like the
      * `array_merge_recursive` does.
      *
-     * @param array _   Two or more arrays to be merged.
-     *
      * @return array
+     *
+     * @throws \Exception
      */
     protected function mergeConfig()
     {
-        dump();
         if (func_num_args() < 2) {
             throw new \Exception(__CLASS__ . '::' . __METHOD__ . ' needs two or more array arguments');
         }
@@ -215,7 +215,7 @@ class Module implements
             foreach ($array as $key => $value) {
                 if (is_string($key)) {
                     if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                        $merged[$key] = self::mergeConfig($merged[$key], $value);
+                        $merged[$key] = $this->mergeConfig($merged[$key], $value);
                     } else {
                         $merged[$key] = $value;
                     }

@@ -43,22 +43,13 @@ class IsAllowed extends AbstractHelper
      * Check privilege
      *
      * @param string $resource
-     * @param string $privilege
+     * @param string $role
      * @return boolean
      */
-    public function __invoke($resource, $privilege = null)
+    public function __invoke($resource, $role = null)
     {
         $acl = $this->getAclService();
-        $controllerResource = 'Controller-' . ucfirst(strtolower($resource));
-        if (strpos($resource, '/') === false) {
-            $controllerResource .= '/*';
-        }
-        $routeResource = 'Route-' . $resource;
-
-        return ($acl->isAllowed($resource, $privilege)
-            && $acl->isAllowed($controllerResource, $privilege)
-            && $acl->isAllowed($routeResource, $privilege)
-        );
+        return $acl->isAllowed($resource, $role);
     }
 
     /**

@@ -44,19 +44,6 @@ use Zend\View\Model\ViewModel;
 class AdminController extends UserController
 {
     /**
-     * Retrieve DB adapter
-     *
-     * @return \Zend\Db\Adapter\Adapter
-     */
-    protected function getDatabaseAdapter()
-    {
-        /** @var \Zend\Db\Adapter\Adapter $adapter */
-        $adapter = $this->getServiceLocator()->get('database');
-
-        return $adapter;
-    }
-
-    /**
      * Default action
      *
      * @return array
@@ -102,7 +89,7 @@ class AdminController extends UserController
      *
      * @return array
      */
-    public function userAction()
+    public function userListAction()
     {
         $userTable = new UserTable($this->getDatabaseAdapter());
         $userList = $userTable->getUserList();
@@ -115,7 +102,7 @@ class AdminController extends UserController
      *
      * @return array
      */
-    public function adduserAction()
+    public function userAddAction()
     {
         $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = new UserModel();
@@ -197,7 +184,7 @@ class AdminController extends UserController
      *
      * @return array
      */
-    public function disableuserAction()
+    public function userDisableAction()
     {
         $userName = $this->params()->fromRoute('userName');
         $userTable = new UserTable($this->getDatabaseAdapter());
@@ -218,7 +205,7 @@ class AdminController extends UserController
      *
      * @return array
      */
-    public function enableuserAction()
+    public function userEnableAction()
     {
         $userName = $this->params()->fromRoute('userName');
         $userTable = new UserTable($this->getDatabaseAdapter());
@@ -241,7 +228,7 @@ class AdminController extends UserController
      *
      * @return array
      */
-    public function activateuserAction()
+    public function userActivateAction()
     {
         $userName = $this->params()->fromRoute('userName');
         $userTable = new UserTable($this->getDatabaseAdapter());
@@ -262,7 +249,7 @@ class AdminController extends UserController
      *
      * @return array
      */
-    public function deleteuserAction()
+    public function userDeleteAction()
     {
         $userName = $this->params()->fromRoute('userName');
         $userTable = new UserTable($this->getDatabaseAdapter());
@@ -275,16 +262,5 @@ class AdminController extends UserController
             }
         }
         return $this->redirect()->toRoute('index/user');
-    }
-
-
-    /**
-     * WebHemi2 info page
-     *
-     * @return array
-     */
-    public function aboutAction()
-    {
-        return array();
     }
 }

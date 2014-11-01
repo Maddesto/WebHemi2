@@ -22,6 +22,8 @@
 
 namespace WebHemi2\Acl\Provider;
 
+use WebHemi2\Model\Acl;
+
 /**
  * WebHemi2 Rule Container and Provider
  *
@@ -39,11 +41,18 @@ class RuleProvider
     /**
      * Class constructor
      *
-     * @param array $config
+     * @param Acl[] $config
      */
-    public function __construct(array $config = array())
+    public function __construct($config = array())
     {
-        $this->rules = $config;
+        foreach ($config as $resource => $rule) {
+            foreach (ACL::$availableRoles as $role) {
+                // if the resource is enable for the role
+                if ($rule->getRule($role)) {
+                    $this->addRule($resource, $role);
+                }
+            }
+        }
     }
 
     /**
@@ -59,17 +68,17 @@ class RuleProvider
     /**
      * Add a new rule
      *
+     * @param string $resource
      * @param string $role
-     * @param array $resources
      *
      * @return RuleProvider
      */
-    public function addRule($role, array $resources)
+    public function addRule($resource, $role)
     {
-        $this->rules[] = array(
-            'role' => $role,
-            'resources' => $resources
-        );
+        if (!isset($this->rules[$resource])) {
+            $this->rules[$resource] = array();
+        }
+        $this->rules[$resource][] = $role;
 
         return $this;
     }

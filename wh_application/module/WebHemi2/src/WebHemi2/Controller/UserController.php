@@ -22,8 +22,10 @@
 
 namespace WebHemi2\Controller;
 
+use WebHemi2\Model\Acl as AclModel;
 use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
+use WebHemi2\Form\AbstractForm;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Authentication\Result;
 use Zend\View\Model\ViewModel;
@@ -37,15 +39,42 @@ use WebHemi2\Component\Cipher\Cipher;
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
- */
+ *
+ * @method bool isAllowed() Controller plugin call to check access
+ * @method AbstractForm getForm() Instantiate a WebHemi2 form
+ * @method Plugin\Redirect redirect() Redirect to url
+  */
 class UserController extends AbstractController
 {
+    /**
+     * Retrieve DB adapter
+     *
+     * @return \Zend\Db\Adapter\Adapter
+     */
+    protected function getDatabaseAdapter()
+    {
+        /** @var \Zend\Db\Adapter\Adapter $adapter */
+        $adapter = $this->getServiceLocator()->get('database');
+
+        return $adapter;
+    }
+
     /**
      * Default action
      *
      * @return array
      */
     public function indexAction()
+    {
+
+    }
+
+    /**
+     * user profile action
+     *
+     * @return array
+     */
+    public function userProfileAction()
     {
         // if the user is not authenticated
         if (!$this->getUserAuth()->hasIdentity()) {
@@ -57,28 +86,18 @@ class UserController extends AbstractController
     }
 
     /**
-     * user profile action
-     *
-     * @return array
-     */
-    public function profileAction()
-    {
-        return array();
-    }
-
-    /**
      * View User info
      *
      * @return array
      */
-    public function viewuserAction()
+    public function userViewAction()
     {
-        if (!$this->isAllowed('admin/viewuser')) {
+        if (!$this->isAllowed('admin:user-view')) {
             $this->redirect()->toRoute('index/user');
         }
 
         $userName = $this->params()->fromRoute('userName');
-        $userTable = new UserTable($this->getServiceLocator()->get('database'));
+        $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = $userTable->getUserByName($userName);
 
         // redirect to MyProfile when view own
@@ -94,17 +113,18 @@ class UserController extends AbstractController
      *
      * @return array
      */
-    public function edituserAction()
+    public function userEditAction()
     {
         $userAuth     = $this->getUserAuth();
         $userName     = $this->params()->fromRoute('userName');
-        $userTable    = new UserTable($this->getServiceLocator()->get('database'));
+        $userTable    = new UserTable($this->getDatabaseAdapter());
         $userModel    = $userTable->getUserByName($userName);
+        /** @var \Zend\Http\Request $request */
         $request      = $this->getRequest();
         $isOwnProfile = $userAuth->getIdentity()->getUserId() == $userModel->getUserId();
 
         if (!$userModel
-            || !($isOwnProfile || $userAuth->getIdentity()->getRole() == 'admin')
+            || !($isOwnProfile || $userAuth->getIdentity()->getRole() == AclModel::ROLE_ADMIN)
         ) {
             return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
         }
@@ -123,7 +143,7 @@ class UserController extends AbstractController
             if ($editForm->isValid()) {
                 $userData = $editForm->getData();
                 // only the admin can edit some data
-                if ($userAuth->getIdentity()->getRole() == 'admin') {
+                if ($userAuth->getIdentity()->getRole() == AclModel::ROLE_ADMIN) {
                     if (!empty($userData['accountInfo']['username'])) {
                         $userModel->setUsername($userData['accountInfo']['username']);
                     }
@@ -132,7 +152,7 @@ class UserController extends AbstractController
                         $userModel->setEmail($userData['accountInfo']['email']);
                     }
 
-                    // renew the hash (for autologin)
+                    // renew the hash (for auto login)
                     $hash = md5($userModel->getUsername() . '-' . $userModel->getEmail());
                     $userModel->setHash($hash);
 
@@ -176,7 +196,7 @@ class UserController extends AbstractController
                         }
                         return $this->redirect()->toRoute('index/user/view', array('userName' => $userModel->getUsername()));
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $editForm->setMessages(
                         array(
                             'submit' => $e->getMessage()
@@ -201,14 +221,16 @@ class UserController extends AbstractController
      */
     public function loginAction()
     {
-        /* @var $form \WebHemi2\Form\UserForm */
+        /* @var \WebHemi2\Form\UserForm $form */
         $form = $this->getForm('LoginForm');
+        /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();
         $userAuth  = $this->getUserAuth();
 
         // upon login attempt
         if ($request->isPost()) {
             $error = false;
+            /** @var  */
             $form->setData($request->getPost());
 
             $identification = $form->get('identification')->getValue();
@@ -238,6 +260,7 @@ class UserController extends AbstractController
                     // if user is authenticated
                     case Result::SUCCESS:
                         if ($form->has('remember', true)) {
+                            /** @var \Zend\Form\Element\Checkbox $rememberMe */
                             $rememberMe = $form->get('remember');
                             if ($rememberMe) {
                                 // if there's such element and checked we save the flag into cookie

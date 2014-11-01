@@ -2,6 +2,14 @@ Change log
 ==========
 
 ---------------
+Version 2.0.2.3
+---------------
+- Refactored ACL, to allow the users to have different rules in different applications
+- Clean up configuration files from unnecessary ALC data
+- Reorganize the action names as well as the routers
+- Fixed .htaccess redirect to protect WebHemi2 files
+- Minor bug fixes
+
 Version 2.0.2.2
 ---------------
 - Added Composer install script for the vendor codes (ZF2)

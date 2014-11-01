@@ -69,10 +69,10 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
         if (!$this->verifiedUser) {
             // identified by email
             if (strpos($this->identity, '@') !== false) {
-                $userModel = $this->getUserTable()->getUserByEmail($this->identity);
+                $userModel = $this->getUserTable()->getUserByEmail($this->identity, APPLICATION_MODULE);
             } else {
                 // identified by username
-                $userModel = $this->getUserTable()->getUserByName($this->identity);
+                $userModel = $this->getUserTable()->getUserByName($this->identity, APPLICATION_MODULE);
             }
 
             $bcrypt = new Bcrypt();

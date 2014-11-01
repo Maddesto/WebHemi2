@@ -23,6 +23,7 @@
 namespace WebHemi2\Model;
 
 use WebHemi2\Model\UserMeta as UserMetaModel;
+use WebHemi2\Model\UserAcl as UserAclModel;
 
 /**
  * WebHemi2 User Model
@@ -53,7 +54,7 @@ use WebHemi2\Model\UserMeta as UserMetaModel;
  * @method string getWebsites() Retrieve user meta websites (JSON).
  * @method string setWebsites() Set user meta websites (JSON).
  */
-class User
+class User extends \ArrayObject
 {
     /* User avatar type: No avatar */
     const USER_AVATAR_TYPE_NONE = 0;
@@ -74,12 +75,12 @@ class User
     protected $password;
     /** @var string $hash */
     protected $hash;
-    /** @var string $role */
-    protected $role;
     /** @var string $lastIp */
     protected $lastIp;
     /** @var string $registerIp */
     protected $registerIp;
+    /** @var string $role */
+    protected $role;
     /** @var bool $isActive */
     protected $isActive;
     /** @var bool $isEnabled */
@@ -519,21 +520,24 @@ class User
      * Exchange array values into object properties.
      *
      * @param array $data
+     *
+     * @return array
      */
-    public function exchangeArray(array $data)
+    public function exchangeArray($data)
     {
         $this->userId = (isset($data['user_id'])) ? (int)$data['user_id'] : null;
         $this->username = (isset($data['username'])) ? $data['username'] : null;
         $this->email = (isset($data['email'])) ? $data['email'] : null;
         $this->password = (isset($data['password'])) ? $data['password'] : null;
         $this->hash = (isset($data['hash'])) ? $data['hash'] : null;
-        $this->role = (isset($data['role'])) ? $data['role'] : null;
         $this->lastIp = (isset($data['last_ip'])) ? $data['last_ip'] : null;
         $this->registerIp = (isset($data['register_ip'])) ? $data['register_ip'] : null;
         $this->isActive = (isset($data['is_active'])) ? (bool)$data['is_active'] : null;
         $this->isEnabled = (isset($data['is_enabled'])) ? (bool)$data['is_enabled'] : null;
         $this->timeLogin = (isset($data['time_login'])) ? new \DateTime($data['time_login']) : null;
         $this->timeRegister = (isset($data['time_register'])) ? new \DateTime($data['time_register']) : null;
+
+        return $data;
     }
 
     /**

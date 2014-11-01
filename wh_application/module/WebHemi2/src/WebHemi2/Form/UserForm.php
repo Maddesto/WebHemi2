@@ -142,35 +142,10 @@ class UserForm extends AbstractForm
                 )
             );
 
-        // the role select box
-        $role = new Element\Select('role');
-        $role
-            ->setOptions(
-                array(
-                    'required' => true,
-                    'value_options' => array(
-                        'member' => 'Member',
-                        'moderator' => 'Moderator',
-                        'editor' => 'Editor',
-                        'publisher' => 'Publisher',
-                        'admin' => 'Administrator',
-                    )
-                )
-            )
-            ->setLabel('General privilege')
-            ->setAttributes(
-                array(
-                    'id' => 'role',
-                    'accesskey' => 'r',
-                    'tabindex' => self::$tabindex++,
-                )
-            );
-
         $accountInfoFieldset
             ->add($userId)
             ->add($userName)
-            ->add($email)
-            ->add($role);
+            ->add($email);
 
         // --- security info filedset ----------------------------------------------------------------------------------
         $securityInfoFieldset = new Fieldset('securityInfo');
@@ -686,8 +661,7 @@ class UserForm extends AbstractForm
 
             case 'username':
             case 'email':
-            case 'role':
-                if (!$acl->isAllowed('admin/adduser')) {
+                if (!$acl->isAllowed('admin:user-add')) {
                     $element->setOptions(
                         array(
                             'required' => false,
@@ -739,7 +713,7 @@ class UserForm extends AbstractForm
         $acl = $this->getAclService();
 
         // if no rights to change, no need to validate
-        if (!$acl->isAllowed('admin/adduser')) {
+        if (!$acl->isAllowed('admin:user-add')) {
             $this->get('accountInfo')->get('username')->setOptions(
                 array(
                     'required' => false,
@@ -748,13 +722,6 @@ class UserForm extends AbstractForm
                 )
             );
             $this->get('accountInfo')->get('email')->setOptions(
-                array(
-                    'required' => false,
-                    'filters' => array(),
-                    'validators' => array()
-                )
-            );
-            $this->get('accountInfo')->get('role')->setOptions(
                 array(
                     'required' => false,
                     'filters' => array(),

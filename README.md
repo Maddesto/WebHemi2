@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.2.2 Created by Gixx.
+Version 2.0.2.3 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -13,6 +13,7 @@ A Zend Framework 2 based blog engine. By comparision, it will be something like 
 Requirements
 ------------
 
+- *nix operating system
 - PHP 5.4+
 - MySQL 5.5+
 - Apache 2.4+ with 'mod_rewrite' enabled
@@ -24,18 +25,18 @@ Features / Goals
 - Logical separation of 'Admin' and 'Website' applications [DONE]
 - Support for custom themes in 'Website' application and for 'Admin' login page [DONE]
 - Subdomain support for applications except 'Website' which is always on 'www' [DONE]
-- Privilege system with IP blacklist [DONE]
+- Application-based privilege system with IP blacklist [DONE]
 - Secure authentication [DONE]
 - Secure Form solution [DONE]
-- Form enhancements [IN PROGRESS]
+- Form enhancements [DONE]
 - Easy-to-use 'Admin' application [IN PROGRESS]
 - 'Virtual folder structure'-like content management [PLANNING]
 - Support for 3rd-party plugins [PLANNING]
 - Language support [PLANNING]
 - User friendly design for 'Admin' application [PLANNING]
 - Responsive design for 'Admin' application to use the page from mobile devices [PLANNING]
-- Install script [PLANNING]
 - Default website design [PLANNING]
+- First-time Setup script [PLANNING]
 - Create Composer install script for vendor libraries [DONE]
 
 Installation

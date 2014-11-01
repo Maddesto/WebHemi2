@@ -33,7 +33,7 @@ use DateTime;
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class Lock
+class Lock extends \ArrayObject
 {
     /** @var int $lockId */
     protected $lockId;
@@ -142,13 +142,17 @@ class Lock
      * Exchange array values into object properties
      *
      * @param array $data
+     *
+     * @return array
      */
-    public function exchangeArray(array $data)
+    public function exchangeArray($data)
     {
         $this->lockId = (isset($data['lock_id'])) ? (int)$data['lock_id'] : null;
         $this->clientIp = (isset($data['client_ip'])) ? $data['client_ip'] : null;
         $this->tryings = (isset($data['tryings'])) ? (int)$data['tryings'] : null;
         $this->timeLock = (isset($data['time_lock'])) ? new DateTime($data['time_lock']) : null;
+
+        return $data;
     }
 
     /**

@@ -162,7 +162,7 @@ class ErrorEvent
 
         $model = new ViewModel();
         $model->setTemplate(self::$template[404]);
-        $model->setVariable('error', $e->getError());
+        $model->setVariable('reason', $e->getError());
         $layout->addChild($model);
 
         /** @var Response $response */

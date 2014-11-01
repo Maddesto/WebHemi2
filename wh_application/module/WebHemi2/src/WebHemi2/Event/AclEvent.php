@@ -22,6 +22,7 @@
 
 namespace WebHemi2\Event;
 
+use WebHemi2\Model\Acl as AclModel;
 use Zend\Mvc\MvcEvent;
 
 /**
@@ -55,15 +56,16 @@ class AclEvent
         /** @var \Zend\Mvc\Router\Http\RouteMatch $routeMatch */
         $routeMatch = $e->getTarget()->getMvcEvent()->getRouteMatch();
 
-        $controllerName = $routeMatch->getParam('controller');
         $actionName = $routeMatch->getParam('action');
+        $actionName = strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $actionName));
+
+        $controllerName = $routeMatch->getParam('controller');
+        $controllerArray = explode('\\', $controllerName);
+        $controller = strtolower(array_pop($controllerArray));
 
         // define the the resource
-        $controllerArray = explode('\\', $controllerName);
-        $controller = array_pop($controllerArray);
-        $resource = strtolower($controller . '/' . $actionName);
-        // @TODO: get default_role option somehow insetad of 'guest'
-        $role = ($auth->hasIdentity()) ? $auth->getIdentity()->getRole() : 'guest';
+        $resource = $controller . ':' . $actionName;
+        $role = ($auth->hasIdentity()) ? $auth->getIdentity()->getRole() : AclModel::ROLE_GUEST;
         $allowed = $acl->isAllowed($resource, $role);
 
         if (!$allowed) {

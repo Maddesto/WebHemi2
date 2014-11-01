@@ -23,16 +23,21 @@
 namespace WebHemi2\Acl;
 
 use Traversable;
+use WebHemi2\Acl\Role as AclRole;
+use WebHemi2\Acl\Resource as AclResource;
+use WebHemi2\Acl\Provider\RoleProvider;
+use WebHemi2\Acl\Provider\ResourceProvider;
+use WebHemi2\Acl\Provider\RuleProvider;
+use WebHemi2\Acl\Assert\CleanIPAssertion;
+use WebHemi2\Model\Acl as AclModel;
+use WebHemi2\Model\User as UserModel;
+use WebHemi2\Model\Table\Acl as AclTable;
+use Zend\Db\Adapter\Adapter;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Exception;
 use Zend\Permissions\Acl\Resource\GenericResource;
 use Zend\Authentication\AuthenticationService;
-use WebHemi2\Acl\Provider\RoleProvider;
-use WebHemi2\Acl\Provider\ResourceProvider;
-use WebHemi2\Acl\Provider\RuleProvider;
-use WebHemi2\Acl\Assert\CleanIPAssertion;
-use WebHemi2\Model\User as UserModel;
 use Zend\Stdlib\ArrayUtils;
 
 /**
@@ -46,6 +51,9 @@ use Zend\Stdlib\ArrayUtils;
  */
 class Acl
 {
+    /** Define default role */
+    const DEFAULT_ROLE = AclModel::ROLE_GUEST;
+
     /** @var array $options */
     protected $options;
     /** @var ServiceManager $serviceManager */
@@ -107,8 +115,15 @@ class Acl
         $this->serviceManager = $serviceManager;
         // set the ACL object
         $this->acl = new ZendAcl();
+        // deny all by default
+        $this->acl->deny();
         // set the UserAuth service
         $this->auth = $this->serviceManager->get('auth');
+
+        // set the template if given (otherwise the default will be used)
+        if (isset($this->options['template'])) {
+            $this->template = $this->options['template'];
+        }
     }
 
     /**
@@ -118,77 +133,43 @@ class Acl
      */
     public function init()
     {
-        // set the template if given (otherwise the default will be used)
-        if (isset($this->options['template'])) {
-            $this->template = $this->options['template'];
+        /** @var Adapter $adapter */
+        $adapter = $this->serviceManager->get('database');
+        $aclTable = new AclTable($adapter);
+
+        $this->roleProvider = new RoleProvider($aclTable->getRoles(), $this->serviceManager);
+        $this->resourceProvider = new ResourceProvider($aclTable->getResources(), $this->serviceManager);
+        $this->ruleProvider = new RuleProvider($aclTable->getAclList(), $this->serviceManager);
+
+        // add roles tree to the ACL
+        foreach ($this->roleProvider->getRoles() as $role) {
+            /** @var AclRole $role */
+            $this->acl->addRole($role);
         }
-
-        $this->roleProvider = new RoleProvider($this->options['roles'], $this->serviceManager);
-        $this->resourceProvider = new ResourceProvider($this->options['resources'], $this->serviceManager);
-        $this->ruleProvider = new RuleProvider($this->options['rules'], $this->serviceManager);
-
-        // build role tree in ACL
-        $this->buildRoleTree($this->roleProvider->getRoles());
 
         // add the resources to the ACL
         foreach ($this->resourceProvider->getResources() as $resource) {
-            /** @var \WebHemi2\Acl\Resource $resource */
+            /** @var AclResource $resource */
             $key = new GenericResource($resource->getResourceId());
             $this->acl->addResource($key, null);
         }
 
-        // set rules
-        $rules = $this->ruleProvider->getRules();
-        foreach ($rules as $resourceName => $roleName) {
-            if ($this->acl->hasResource($resourceName) && $this->acl->hasRole($roleName)) {
-                // allow the resources for the roles, except when the requesting IP is blacklisted.
-                $this->acl->allow($roleName, $resourceName, null, new CleanIPAssertion($this->serviceManager));
+        // prepare assertion object
+        $assert = new CleanIPAssertion($this->serviceManager);
+
+        // setup the acl: explicit allow resource to role, don't waste time with role tree
+        foreach ($this->ruleProvider->getRules() as $resourceName => $roles) {
+            if ($this->acl->hasResource($resourceName)) {
+                foreach($roles as $roleName) {
+                    if ($this->acl->hasRole($roleName)) {
+                        // allow the resources for the roles, except when the requesting IP is blacklisted.
+                        $this->acl->allow($roleName, $resourceName, null, $assert);
+                    }
+                }
             }
         }
 
         return $this;
-    }
-
-    /**
-     * Add roles to the ACL
-     *
-     * @param string|array $roles
-     *
-     * @throws Exception\InvalidArgumentException
-     */
-    protected function buildRoleTree($roles)
-    {
-        if (!is_array($roles)) {
-            $roles = array($roles);
-        }
-
-        foreach ($roles as $role) {
-            // if the role is a troll :)
-            if (!$role instanceof Role) {
-                throw new Exception\InvalidArgumentException(
-                    sprintf(
-                        '%s expects an array of Role objects; received "%s"',
-                        __METHOD__,
-                        (is_object($role) ? get_class($role) : gettype($role))
-                    )
-                );
-            }
-
-            // if the role has already been set
-            if ($this->acl->hasRole($role)) {
-                continue;
-            }
-
-            $parentRole = $role->getParentRole();
-
-            // if there is parent, we recursively add it
-            if ($parentRole !== null) {
-                $this->buildRoleTree($parentRole);
-                $this->acl->addRole($role, $parentRole);
-            } else {
-                $this->acl->addRole($role);
-            }
-        }
     }
 
     /**
@@ -227,25 +208,14 @@ class Acl
             if (empty($role)) {
                 $role = $this->hasIdentity()
                     ? $this->getIdentity()->getRole()
-                    : $this->options['default_role'];
+                    : static::DEFAULT_ROLE;
             }
 
-            if (strpos($resource, '/') !== false) {
-                list($controller, $action) = explode('/', $resource);
-            } else {
-                $controller = $resource;
-                $action = '*';
+            if (!$this->acl->hasResource($resource)) {
+                return false;
             }
-            $controller = ucfirst(strtolower($controller));
 
-            // allow access to a full controller (be careful with it, wildcard for guests on your own risk)
-            $wildCardControllerResource = 'Controller-' . $controller . '/*';
-            // allow access to an action
-            $controllerActionResource = 'Controller-' . $controller . '/' . $action;
-            // allow access to an action override the wildcard
-            $controllerActionForcedResource = $action == '*' ? false : '!Controller-' . $controller . '/' . $action;
-            // allow access to an URL (be sure that the URL cannot be changed)
-            $routeResource = 'Route-' . $_SERVER['REQUEST_URI'];
+            list(, $action) = explode(':', $resource);
 
             // allow access for login page, invalid role or non-forced resources
             if ('logout' == $action
@@ -255,28 +225,9 @@ class Acl
                 return true;
             }
 
-            $allowed = (
-                    (
-                        !$this->acl->hasResource($wildCardControllerResource)
-                        || $this->acl->isAllowed($role, $wildCardControllerResource)
-                    )
-                    || (
-                        $this->acl->hasResource($controllerActionForcedResource)
-                        || $this->acl->isAllowed($role, $controllerActionForcedResource)
-                    )
-                )
-                && (
-                    !$this->acl->hasResource($controllerActionResource)
-                    || $this->acl->isAllowed($role, $controllerActionResource)
-                )
-                && (
-                    !$this->acl->hasResource($routeResource)
-                    || $this->acl->isAllowed($role, $routeResource)
-                );
-
-            return $allowed;
+            return $this->acl->isAllowed($role, $resource);
         } catch (Exception\InvalidArgumentException $e) {
-            // It is not necessary to terminate the script. Fair enough to return with a FALSE
+            // It is not necessary to terminate the whole script running. Fair enough to return with a FALSE.
             return false;
         }
     }

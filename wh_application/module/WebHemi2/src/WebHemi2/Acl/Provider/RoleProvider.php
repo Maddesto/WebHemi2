@@ -47,27 +47,14 @@ class RoleProvider
     {
         /** @var Role[] $roles */
         $roles = array();
-        // we process the config and build the Role "tree" (actually it is a list with references to parents)
-        foreach ($config as $roleName => $roleOptions) {
+
+        foreach ($config as $roleName) {
             // if it is a new role, we set it
             if (!isset($roles[$roleName])) {
                 $roles[$roleName] = new Role($roleName);
             }
-
-            // if there is a parent given in the options
-            if (isset($roleOptions['parent']) && !empty($roleOptions['parent'])) {
-                $parentRoleName = $roleOptions['parent'];
-                // if the parent is a new role, we set it
-                if (!isset($roles[$parentRoleName])) {
-                    $roles[$parentRoleName] = new Role($parentRoleName);
-                }
-
-                // we set the parent for the role
-                $roles[$roleName]->setParentRole($roles[$parentRoleName]);
-            }
         }
 
-        // save the role list
         $this->roles = $roles;
     }
 

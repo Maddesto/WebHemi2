@@ -22,9 +22,12 @@
 
 namespace WebHemi2\Model\Table;
 
+use WebHemi2\Model\Acl as AclModel;
 use WebHemi2\Model\User as UserModel;
 use WebHemi2\Model\UserMeta as UserMetaModel;
+use WebHemi2\Model\UserAcl as UserAclModel;
 use WebHemi2\Model\Table\UserMeta as UserMetaTable;
+use WebHemi2\Model\Table\UserAcl as UserAclTable;
 use Zend\Db\Exception;
 use Zend\Db\TableGateway\AbstractTableGateway;
 use Zend\Db\Adapter\Driver\Pdo\Connection as PdoConnection;
@@ -42,7 +45,7 @@ use Zend\Db\ResultSet\ResultSet;
  */
 class User extends AbstractTableGateway
 {
-    /** @var string $table   The name of the database table */
+    /** @var string $table The name of the database table */
     protected $table = 'webhemi_user';
 
     /**
@@ -62,17 +65,18 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Id
      *
      * @param int $userId
+     * @param string $loadRoleForApplication
      *
      * @return UserModel
      */
-    public function getUserById($userId)
+    public function getUserById($userId, $loadRoleForApplication = null)
     {
-        /** @var ResultSet $rowSet */
-        $rowSet    = $this->select(array('user_id' => (int)$userId));
+        $rowSet = $this->select(array('user_id' => (int)$userId));
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
+
         if ($userModel) {
-            $this->loadUserMeta($userModel);
+            $this->initUser($userModel, $loadRoleForApplication);
         }
 
         return $userModel;
@@ -82,17 +86,19 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Username
      *
      * @param string $username
+     * @param string $loadRoleForApplication
      *
      * @return UserModel
      */
-    public function getUserByName($username)
+    public function getUserByName($username, $loadRoleForApplication = null)
     {
         /** @var ResultSet $rowSet */
-        $rowSet    = $this->select(array('username' => $username));
+        $rowSet = $this->select(array('username' => $username));
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
+
         if ($userModel) {
-            $this->loadUserMeta($userModel);
+            $this->initUser($userModel, $loadRoleForApplication);
         }
 
         return $userModel;
@@ -102,17 +108,19 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Username
      *
      * @param string $email
+     * @param string $loadRoleForApplication
      *
      * @return UserModel
      */
-    public function getUserByEmail($email)
+    public function getUserByEmail($email, $loadRoleForApplication = null)
     {
         /** @var ResultSet $rowSet */
-        $rowSet    = $this->select(array('email' => $email));
+        $rowSet = $this->select(array('email' => $email));
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
+
         if ($userModel) {
-            $this->loadUserMeta($userModel);
+            $this->initUser($userModel, $loadRoleForApplication);
         }
 
         return $userModel;
@@ -122,20 +130,43 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Hash
      *
      * @param string $hash
+     * @param string $loadRoleForApplication
      *
      * @return UserModel
      */
-    public function getUserByHash($hash)
+    public function getUserByHash($hash, $loadRoleForApplication = null)
     {
         /** @var ResultSet $rowSet */
-        $rowSet    = $this->select(array('hash' => $hash));
+        $rowSet = $this->select(array('hash' => $hash));
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
+
         if ($userModel) {
-            $this->loadUserMeta($userModel);
+            $this->initUser($userModel, $loadRoleForApplication);
         }
 
         return $userModel;
+    }
+
+    /**
+     * Init UserModel: set attached data
+     *
+     * @param UserModel &$userModel
+     * @param string $loadRoleForApplication
+     *
+     * @return UserModel
+     */
+    public function initUser(UserModel &$userModel, $loadRoleForApplication = null)
+    {
+        if (!$userModel instanceof UserModel) {
+            throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
+        }
+
+        if ($loadRoleForApplication) {
+            $this->loadUserRole($userModel, $loadRoleForApplication);
+        }
+
+        $this->loadUserMeta($userModel);
     }
 
     /**
@@ -172,14 +203,60 @@ class User extends AbstractTableGateway
     }
 
     /**
+     * Load user role into user model.
+     *
+     * @param UserModel &$userModel
+     * @param string $application
+     */
+    protected function loadUserRole(UserModel &$userModel, $application)
+    {
+        $userAclTable = new UserAclTable($this->adapter);
+        $userAclModel = $userAclTable->getUserAcl($userModel->getUserId(), $application);
+
+        if ($userAclModel) {
+            $userModel->setRole($userAclModel->getRole());
+        } else {
+            $userModel->setRole(AclModel::ROLE_GUEST);
+        }
+    }
+
+    /**
+     * Save user role into user model.
+     *
+     * @param string $role
+     * @param int $userId
+     * @param string $application
+     *
+     * @throws Exception\InvalidArgumentException
+     *
+     * @return bool|int
+     */
+    protected function saveUserRole($role, $userId, $application)
+    {
+        $userAclTable = new UserAclTable($this->adapter);
+        $userAclModel = $userAclTable->getUserAcl($userId, $application);
+
+        if ($userAclModel instanceof UserAclModel) {
+            $userAclModel->setRole($role);
+        } else {
+            $userAclModel = new UserAclModel();
+            $userAclModel->setUserId($userId)
+                ->setApplication($application)
+                ->setRole($role);
+        }
+
+        return $userAclTable->save($userAclModel);
+    }
+
+    /**
      * Load user meta into user model.
      *
-     * @param UserModel $userModel
+     * @param UserModel &$userModel
      */
     protected function loadUserMeta(UserModel &$userModel)
     {
-        $userMetaTable  = new UserMetaTable($this->adapter);
-        $userMeta       = $userMetaTable->getUserMetaAll($userModel->getUserId());
+        $userMetaTable = new UserMetaTable($this->adapter);
+        $userMeta = $userMetaTable->getUserMetaAll($userModel->getUserId());
         $userModel->setUserMetaData($userMeta);
     }
 
@@ -187,7 +264,7 @@ class User extends AbstractTableGateway
      * Save all user meta data from the user model
      *
      * @param array $userMeta
-     * @param int   $userId
+     * @param int $userId
      *
      * @throws Exception\InvalidArgumentException
      *
@@ -251,8 +328,8 @@ class User extends AbstractTableGateway
 
         // if insertion was succesful, we may go on
         if ($result !== false) {
-            $userId      = $this->lastInsertValue;
-            $userMeta    = $userModel->getUserMetaData();
+            $userId = $this->lastInsertValue;
+            $userMeta = $userModel->getUserMetaData();
             try {
                 $metaResult = $this->saveUserMeta($userMeta, $userId);
                 if ($metaResult === false) {

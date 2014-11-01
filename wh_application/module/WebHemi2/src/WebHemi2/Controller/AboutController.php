@@ -14,56 +14,35 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category   WebHemi2
- * @package    WebHemi2_Acl_Provider
+ * @package    WebHemi2_Controller
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
-namespace WebHemi2\Acl\Provider;
+namespace WebHemi2\Controller;
 
-use WebHemi2\Acl\Resource;
+use Zend\View\Model\ViewModel;
+use Zend\Mvc\MvcEvent;
 
 /**
- * WebHemi2 Resource Container and Provider
+ * WebHemi2 About Controller
  *
  * @category   WebHemi2
- * @package    WebHemi2_Acl_Provider
+ * @package    WebHemi2_Controller
  * @author     Gixx @ www.gixx-web.com
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
-class ResourceProvider
+class AboutController extends AbstractController
 {
-    /** @var Resource[] $resources */
-    protected $resources = array();
-
     /**
-     * Class constructor
+     * Default action
      *
-     * @param array $config
+     * @return array
      */
-    public function __construct(array $config = array())
+    public function indexAction()
     {
-        $resources = array();
-
-        foreach ($config as $resourceName) {
-            // if it is a new resource, we set it
-            if (!isset($resources[$resourceName])) {
-                $resources[$resourceName] = new Resource($resourceName);
-            }
-        }
-
-        $this->resources = $resources;
-    }
-
-    /**
-     * Retrieve resources
-     *
-     * @return Resource[]
-     */
-    public function getResources()
-    {
-        return $this->resources;
+        return array();
     }
 }
