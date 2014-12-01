@@ -60,7 +60,7 @@ CREATE TABLE `webhemi_user` (
 
 LOCK TABLES `webhemi_user` WRITE;
 /*!40000 ALTER TABLE `webhemi_user` DISABLE KEYS */;
-INSERT INTO `webhemi_user` VALUES (1,'admin','admin@armyspy.com','$2y$14$vhLxtyar2rNcBjWk6p8PcebtpkxvHpnUnr1T0Of9kP0eNBXYfzvWS','6e24a1858c949ee67b4eaf1a23d5ab31','admin','127.0.0.1','127.0.0.1',1,1,'2014-01-01 00:00:00','2014-01-01 00:00:00');
+INSERT INTO `webhemi_user` VALUES (1,'admin','admin@armyspy.com','$2y$14$vhLxtyar2rNcBjWk6p8PcebtpkxvHpnUnr1T0Of9kP0eNBXYfzvWS','6e24a1858c949ee67b4eaf1a23d5ab31','127.0.0.1','127.0.0.1',1,1,'2014-01-01 00:00:00','2014-01-01 00:00:00');
 /*!40000 ALTER TABLE `webhemi_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
