@@ -79,7 +79,7 @@ class UserController extends AbstractController
         // if the user is not authenticated
         if (!$this->getUserAuth()->hasIdentity()) {
             // redirect to login page
-            return $this->redirect()->toRoute('index/user/login');
+            return $this->redirect()->toRoute('index/login');
         }
 
         return array();
@@ -117,6 +117,11 @@ class UserController extends AbstractController
     {
         $userAuth     = $this->getUserAuth();
         $userName     = $this->params()->fromRoute('userName');
+
+        if (!$userName) {
+            $userName = $userAuth->getIdentity()->getUsername();
+        }
+
         $userTable    = new UserTable($this->getDatabaseAdapter());
         $userModel    = $userTable->getUserByName($userName);
         /** @var \Zend\Http\Request $request */
@@ -194,7 +199,12 @@ class UserController extends AbstractController
                         if ($isOwnProfile) {
                             $userAuth->updateIdentity($userModel);
                         }
-                        return $this->redirect()->toRoute('index/user/view', array('userName' => $userModel->getUsername()));
+
+                        $route = APPLICATION_MODULE == ADMIN_MODULE
+                            ? 'index/user/view'
+                            : 'index/user';
+
+                        return $this->redirect()->toRoute($route, array('userName' => $userModel->getUsername()));
                     }
                 } catch (\Exception $e) {
                     $editForm->setMessages(

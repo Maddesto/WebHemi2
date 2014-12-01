@@ -1,10 +1,10 @@
 <h1><?php echo $this->translate('Users') ?></h1>
 <p><?php echo $this->translate('Ut convallis, sem sit amet interdum consectetuer, odio augue aliquam leo, nec dapibus tortor nibh sed augue. Integer eu magna sit amet metus fermentum posuere. Morbi sit amet nulla sed dolor elementum imperdiet. Quisque fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque adipiscing eros ut libero. Ut condimentum mi vel tellus. Suspendisse laoreet. Fusce ut est sed dolor gravida convallis. Morbi vitae ante. Vivamus ultrices luctus nunc. Suspendisse et dolor. Etiam dignissim. Proin malesuada adipiscing lacus. Donec metus. Curabitur gravida.'); ?></p>
-<a href="<?php echo $this->url('index/user/profile'); ?>"><?php echo $this->translate('My Profile'); ?></a>
+<a href="<?php echo $this->url('index/control-panel/user/profile'); ?>"><?php echo $this->translate('My Profile'); ?></a>
 <hr />
 
-<?php if($this->isAllowed('admin:user-add')): ?>
-<a href="<?php echo $this->url('index/user/new'); ?>" class="addUser" style="display:inline-block;text-align: center;">
+<?php if($this->isAllowed('user-management:user-add')): ?>
+<a href="<?php echo $this->url('index/control-panel/user/add'); ?>" class="addUser" style="display:inline-block;text-align: center;">
     <?php
         echo $this->avatar(
             'http://a.dryicons.com/images/icon_sets/classy_icons_set/png/128x128/user_add.png',
@@ -24,7 +24,7 @@
 foreach($userList as $id => $userModel):
     if (
         $userModel->getEnabled()
-        || (!$userModel->getEnabled() && $this->isAllowed('admin:user-enable'))
+        || (!$userModel->getEnabled() && $this->isAllowed('user-management:user-enable'))
     ):
         $class = array();
         if (!$userModel->getActive()) {
@@ -37,13 +37,13 @@ foreach($userList as $id => $userModel):
 
         if ($userModel->getUserId() == $this->getIdentity()->getuserId()) {
             $class[] = 'self';
-            $link = $this->url('index/user/profile');
+            $link = $this->url('index/control-panel/user/profile');
         }
-        elseif(!$this->isAllowed('admin:user-view')) {
+        elseif(!$this->isAllowed('user-management:user-view')) {
             $link = '#';
         }
         else {
-            $link = $this->url('index/user/view', array('userName' => $userModel->getUserName()));
+            $link = $this->url('index/control-panel/user/view', array('userName' => $userModel->getUserName()));
         }
 ?>
 

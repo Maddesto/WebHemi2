@@ -57,13 +57,12 @@ return array(
                             ),
                             'spec' => '/%category%/%id%.%format%',
                         ),
-                        'may_terminate' => true,
                     ),
                     'user' => array(
                         'type' => 'Literal',
                         'priority' => 1000,
                         'options' => array(
-                            'route' => 'user',
+                            'route' => 'my-profile/',
                             'defaults' => array(
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
                                 'controller' => 'User',
@@ -72,25 +71,37 @@ return array(
                         ),
                         'may_terminate' => true,
                         'child_routes' => array(
-                            'login' => array(
+                            'edit' => array(
                                 'type' => 'Literal',
+                                'priority' => 1000,
                                 'options' => array(
-                                    'route' => '/login',
+                                    'route' => 'edit/',
                                     'defaults' => array(
+                                        '__NAMESPACE__' => 'WebHemi2\Controller',
                                         'controller' => 'User',
-                                        'action' => 'login',
+                                        'action' => 'userEdit',
                                     ),
                                 ),
                             ),
-                            'logout' => array(
-                                'type' => 'Literal',
-                                'options' => array(
-                                    'route' => '/logout',
-                                    'defaults' => array(
-                                        'controller' => 'User',
-                                        'action' => 'logout',
-                                    ),
-                                ),
+                        ),
+                    ),
+                    'login' => array(
+                        'type' => 'Literal',
+                        'options' => array(
+                            'route' => 'login/',
+                            'defaults' => array(
+                                'controller' => 'User',
+                                'action' => 'login',
+                            ),
+                        ),
+                    ),
+                    'logout' => array(
+                        'type' => 'Literal',
+                        'options' => array(
+                            'route' => 'logout/',
+                            'defaults' => array(
+                                'controller' => 'User',
+                                'action' => 'logout',
                             ),
                         ),
                     ),

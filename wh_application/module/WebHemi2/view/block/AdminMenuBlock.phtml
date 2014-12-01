@@ -1,11 +1,19 @@
 <nav>
     <ul>
+<?php if($this->isAllowed('admin:index')): ?>
         <li><a href="<?php echo $this->url('index'); ?>">Dashboard</a></li>
-        <li><a href="<?php echo $this->url('index/user'); ?>">Users</a></li>
-<?php if($this->isAllowed('application:index')): ?>
+<?php endif; ?>
+<?php if($this->isAllowed('admin:application')): ?>
         <li><a href="<?php echo $this->url('index/application'); ?>">Application</a></li>
 <?php endif; ?>
+<?php if($this->isAllowed('admin:control-panel')): ?>
+        <li><a href="<?php echo $this->url('index/control-panel'); ?>">Control Panel</a></li>
+<?php endif; ?>
+<?php if($this->isAllowed('admin:about')): ?>
         <li><a href="<?php echo $this->url('index/about'); ?>">About</a></li>
-        <li><a href="<?php echo $this->url('index/user/logout'); ?>">Logout</a></li>
+<?php endif; ?>
+<?php if($this->isAllowed('admin:logout')): ?>
+        <li><a href="<?php echo $this->url('index/logout'); ?>">Logout</a></li>
+<?php endif; ?>
     </ul>
 </nav>

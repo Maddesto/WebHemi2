@@ -61,7 +61,7 @@ class AclEvent
 
         $controllerName = $routeMatch->getParam('controller');
         $controllerArray = explode('\\', $controllerName);
-        $controller = strtolower(array_pop($controllerArray));
+        $controller = strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', array_pop($controllerArray)));
 
         // define the the resource
         $resource = $controller . ':' . $actionName;
@@ -74,7 +74,7 @@ class AclEvent
                 && 'login' != $actionName
                 && !$auth->hasIdentity()
             ) {
-                $url = '/user/login';
+                $url = '/login/';
                 if (APPLICATION_MODULE_TYPE == APPLICATION_MODULE_TYPE_SUBDIR && APPLICATION_MODULE != WEBSITE_MODULE) {
                     $url = '/' . APPLICATION_MODULE_URI . $url;
                 }
@@ -88,8 +88,8 @@ class AclEvent
                 // otherwise it's a 403 Frobidden error
                 $e->setError('error-unauthorized-controller')
                     ->setParam('identity', $acl->getIdentity())
-                    ->setParam('controller', $controllerName)
-                    ->setParam('action', $actionName);
+                    ->setParam('controller', $routeMatch->getParam('controller'))
+                    ->setParam('action', $routeMatch->getParam('action'));
 
                 $eventManager->trigger('dispatch.error', $e);
             }

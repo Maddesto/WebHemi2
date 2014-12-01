@@ -1,10 +1,7 @@
 <h1>403 Forbidden</h1>
 <p>
     <?php if ($error == 'error-unauthorized-controller') : ?>
-        You are not authorized to access <?=$controller;?>
-        <?php if ($action) : ?>
-        ::<?=$action;?>Action()
-        <?php endif;?>
+        You are not authorized to access <?=$controller;?><?php if ($action) : ?>::<?=$action;?>Action()<?php endif;?>
         .
     <?php elseif ($error == 'error-unauthorized-route') : ?>
         You are not authorized to access <?php echo $route;?>.

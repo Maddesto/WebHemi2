@@ -1,0 +1,5 @@
+<h1>Control Panel</h1>
+<p>Pellentesque a diam sit amet mi ullamcorper vehicula. Integer adipiscing risus a sem. Nullam quis massa sit amet nibh viverra malesuada. Nunc sem lacus, accumsan quis, faucibus non, congue vel, arcu. Ut scelerisque hendrerit tellus. Integer sagittis. Vivamus a mauris eget arcu gravida tristique. Nunc iaculis mi in ante. Vivamus imperdiet nibh feugiat est.</p>
+<?php if($this->isAllowed('user-management:user-list')): ?>
+    <a href="<?php echo $this->url('index/control-panel/user'); ?>">Users</a>
+<?php endif; ?>

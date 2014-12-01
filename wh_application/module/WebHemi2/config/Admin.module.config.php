@@ -28,7 +28,7 @@ return array(
                 'options' => array(
                     'route' => '/[:mod]',
                     'constraints' => array(
-                        'mod' => '(?:' . APPLICATION_MODULE_URI . '/?|)'
+                        'mod' => '(?:' . APPLICATION_MODULE_URI . '/|)'
                     ),
                     'defaults' => array(
                         '__NAMESPACE__' => 'WebHemi2\Controller',
@@ -39,134 +39,159 @@ return array(
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-                    'user' => array(
+                    'login' => array(
                         'type' => 'literal',
-                        'priority' => 1000,
                         'options' => array(
-                            'route' => 'user',
+                            'route' => 'login/',
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action' => 'login',
+                            ),
+                        ),
+                    ),
+                    'logout' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => 'logout/',
+                            'defaults' => array(
+                                'controller' => 'Admin',
+                                'action' => 'logout',
+                            ),
+                        ),
+                    ),
+                    'application' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => 'application/',
                             'defaults' => array(
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
                                 'controller' => 'Admin',
-                                'action' => 'userList',
+                                'action' => 'application',
+                            ),
+                        ),
+                    ),
+                    'control-panel' => array(
+                        'type' => 'literal',
+                        'options' => array(
+                            'route' => 'control-panel/',
+                            'defaults' => array(
+                                '__NAMESPACE__' => 'WebHemi2\Controller',
+                                'controller' => 'Admin',
+                                'action' => 'control-panel',
                             ),
                         ),
                         'may_terminate' => true,
                         'child_routes' => array(
-                            'login' => array(
+                            'user' => array(
                                 'type' => 'literal',
+                                'priority' => 1000,
                                 'options' => array(
-                                    'route' => '/login',
+                                    'route' => 'user-management/',
                                     'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'login',
+                                        '__NAMESPACE__' => 'WebHemi2\Controller',
+                                        'controller' => 'UserManagement',
+                                        'action' => 'userList',
                                     ),
                                 ),
-                            ),
-                            'logout' => array(
-                                'type' => 'literal',
-                                'options' => array(
-                                    'route' => '/logout',
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'logout',
+                                'may_terminate' => true,
+                                'child_routes' => array(
+                                    'profile' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => 'profile/',
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userProfile',
+                                            ),
+                                        ),
                                     ),
-                                ),
-                            ),
-                            'profile' => array(
-                                'type' => 'literal',
-                                'options' => array(
-                                    'route' => '/profile',
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userProfile',
+                                    'add' => array(
+                                        'type' => 'literal',
+                                        'options' => array(
+                                            'route' => 'add/',
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userAdd',
+                                            ),
+                                        ),
                                     ),
-                                ),
-                            ),
-                            'new' => array(
-                                'type' => 'literal',
-                                'options' => array(
-                                    'route' => '/new',
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userAdd',
+                                    'edit' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => 'edit/[:userName]/',
+                                            'constraints' => array(
+                                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                            ),
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userEdit',
+                                            ),
+                                        ),
                                     ),
-                                ),
-                            ),
-                            'edit' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/edit/[:userName]',
-                                    'constraints' => array(
-                                        'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    'view' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => 'view/[:userName]/',
+                                            'constraints' => array(
+                                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                            ),
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userView',
+                                            ),
+                                        ),
                                     ),
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userEdit',
+                                    'disable' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => 'disable/[:userName]/',
+                                            'constraints' => array(
+                                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                            ),
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userDisable',
+                                            ),
+                                        ),
                                     ),
-                                ),
-                            ),
-                            'view' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/view/[:userName]',
-                                    'constraints' => array(
-                                        'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    'enable' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => 'enable/[:userName]/',
+                                            'constraints' => array(
+                                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                            ),
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userEnable',
+                                            ),
+                                        ),
                                     ),
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userView',
+                                    'activate' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => 'activate/[:userName]/',
+                                            'constraints' => array(
+                                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                            ),
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userActivate',
+                                            ),
+                                        ),
                                     ),
-                                ),
-                            ),
-                            'disable' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/disable/[:userName]',
-                                    'constraints' => array(
-                                        'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                    ),
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userDisable',
-                                    ),
-                                ),
-                            ),
-                            'enable' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/enable/[:userName]',
-                                    'constraints' => array(
-                                        'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                    ),
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userEnable',
-                                    ),
-                                ),
-                            ),
-                            'activate' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/activate/[:userName]',
-                                    'constraints' => array(
-                                        'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                    ),
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userActivate',
-                                    ),
-                                ),
-                            ),
-                            'delete' => array(
-                                'type' => 'Segment',
-                                'options' => array(
-                                    'route' => '/delete/[:userName]',
-                                    'constraints' => array(
-                                        'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                    ),
-                                    'defaults' => array(
-                                        'controller' => 'Admin',
-                                        'action' => 'userDelete',
+                                    'delete' => array(
+                                        'type' => 'Segment',
+                                        'options' => array(
+                                            'route' => 'delete/[:userName]/',
+                                            'constraints' => array(
+                                                'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                            ),
+                                            'defaults' => array(
+                                                'controller' => 'UserManagement',
+                                                'action' => 'userDelete',
+                                            ),
+                                        ),
                                     ),
                                 ),
                             ),
@@ -175,33 +200,11 @@ return array(
                     'about' => array(
                         'type' => 'literal',
                         'options' => array(
-                            'route' => 'about',
+                            'route' => 'about/',
                             'defaults' => array(
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
-                                'controller' => 'About',
-                                'action' => 'index',
-                            ),
-                        ),
-                    ),
-                    'application' => array(
-                        'type' => 'literal',
-                        'options' => array(
-                            'route' => 'application',
-                            'defaults' => array(
-                                '__NAMESPACE__' => 'WebHemi2\Controller',
-                                'controller' => 'Application',
-                                'action' => 'index',
-                            ),
-                        ),
-                    ),
-                    'component' => array(
-                        'type' => 'literal',
-                        'options' => array(
-                            'route' => 'component',
-                            'defaults' => array(
-                                '__NAMESPACE__' => 'WebHemi2\Controller',
-                                'controller' => 'Component',
-                                'action' => 'index',
+                                'controller' => 'Admin',
+                                'action' => 'about',
                             ),
                         ),
                     ),
@@ -212,10 +215,8 @@ return array(
     'controllers' => array(
         'invokables' => array(
             'WebHemi2\Controller\Admin' => 'WebHemi2\Controller\AdminController',
-            'WebHemi2\Controller\Application' => 'WebHemi2\Controller\ApplicationController',
-            'WebHemi2\Controller\About' => 'WebHemi2\Controller\AboutController',
-            'WebHemi2\Controller\Component' => 'WebHemi2\Controller\ComponentController',
-            'WebHemi2\Controller\User' => 'WebHemi2\Controller\UserController',
+            'WebHemi2\Controller\ControlPanel' => 'WebHemi2\Controller\ControlPanelController',
+            'WebHemi2\Controller\UserManagement' => 'WebHemi2\Controller\UserManagementController',
         ),
     ),
     'module_layouts' => array(

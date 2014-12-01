@@ -661,7 +661,7 @@ class UserForm extends AbstractForm
 
             case 'username':
             case 'email':
-                if (!$acl->isAllowed('admin:user-add')) {
+                if (!$acl->isAllowed('user-management:user-add')) {
                     $element->setOptions(
                         array(
                             'required' => false,
@@ -713,7 +713,7 @@ class UserForm extends AbstractForm
         $acl = $this->getAclService();
 
         // if no rights to change, no need to validate
-        if (!$acl->isAllowed('admin:user-add')) {
+        if (!$acl->isAllowed('user-management:user-add')) {
             $this->get('accountInfo')->get('username')->setOptions(
                 array(
                     'required' => false,
