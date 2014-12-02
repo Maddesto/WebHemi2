@@ -62,15 +62,27 @@ return array(
                         'type' => 'Literal',
                         'priority' => 1000,
                         'options' => array(
-                            'route' => 'my-profile/',
+                            'route' => 'user/',
                             'defaults' => array(
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
                                 'controller' => 'User',
-                                'action' => 'userProfile',
+                                'action' => 'index',
                             ),
                         ),
                         'may_terminate' => true,
                         'child_routes' => array(
+                            'profile' => array(
+                                'type' => 'Literal',
+                                'priority' => 1000,
+                                'options' => array(
+                                    'route' => 'my-profile/',
+                                    'defaults' => array(
+                                        '__NAMESPACE__' => 'WebHemi2\Controller',
+                                        'controller' => 'User',
+                                        'action' => 'userProfile',
+                                    ),
+                                ),
+                            ),
                             'view' => array(
                                 'type' => 'Segment',
                                 'options' => array(
@@ -79,7 +91,7 @@ return array(
                                         'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
                                     ),
                                     'defaults' => array(
-                                        'controller' => 'UserManagement',
+                                        'controller' => 'User',
                                         'action' => 'userView',
                                     ),
                                 ),

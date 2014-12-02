@@ -39,6 +39,14 @@ var Form = {
             }
         });
 
+        // Fix chrome's ignore on autocomplete=off
+        $('input[autocomplete=off]').each(function(){
+            var copy = $(this).clone();
+            copy.val('');
+            copy.insertAfter($(this));
+            $(this).hide();
+        });
+
         this.initialized = true;
         console.info('Form component loaded.');
     }

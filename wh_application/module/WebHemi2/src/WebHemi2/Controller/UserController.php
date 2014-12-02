@@ -100,7 +100,7 @@ class UserController extends AbstractController
         if ($this->getUserAuth()->getIdentity()->getUserId() == $userModel->getUserId()) {
             $route = APPLICATION_MODULE == ADMIN_MODULE
                 ? 'index/control-panel/user/profile'
-                : 'index/user';
+                : 'index/user/profile';
             $this->redirect()->toRoute($route);
         }
 
@@ -125,7 +125,6 @@ class UserController extends AbstractController
         /** @var \Zend\Http\Request $request */
         $request      = $this->getRequest();
         $isOwnProfile = $userAuth->getIdentity()->getUserId() == $userModel->getUserId();
-dump($isOwnProfile);
 
         if (!$userModel
             || !($isOwnProfile || $userAuth->getIdentity()->getRole() == AclModel::ROLE_ADMIN)
@@ -205,7 +204,7 @@ dump($isOwnProfile);
 
                         $route = APPLICATION_MODULE == ADMIN_MODULE
                             ? 'index/control-panel/user/view'
-                            : 'index/user';
+                            : 'index/user/profile';
 
                         return $this->redirect()->toRoute($route, array('userName' => $userModel->getUsername()));
                     }
