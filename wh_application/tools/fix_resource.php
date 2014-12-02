@@ -36,6 +36,11 @@ if (!file_exists(DOC_ROOT . '/resources/common')) {
     echo 'already exists...' . PHP_EOL;
 }
 
+// If no folder exists
+if (!file_exists(DOC_ROOT . '/resources/theme')) {
+    mkdir(DOC_ROOT . '/resources/theme');
+}
+
 // Create symlink for default theme
 echo 'Create symbolic link for default theme: ';
 if (!file_exists(DOC_ROOT . '/resources/theme/default')) {
