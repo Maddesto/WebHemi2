@@ -7,14 +7,14 @@ if (!isset($myProfile)) {
 
 
 // IF admin AND owner THEN allow to edit profile
-if ($myProfile || $this->isAllowed('admin:user-enable')) :
+if ($myProfile || $this->isAllowed('user-management:user-enable')) :
 ?>
 <a href="<?php echo $this->url('index/control-panel/user/edit', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Edit profile'); ?>"><?php echo $this->translate('Edit profile'); ?></a>
 <?php endif; ?>
 
 <?php
 // If not owner AND has privilege THEN:
-if (!$myProfile && $this->isAllowed('admin:user-enable') && $this->isAllowed('admin:user-disable')) :
+if (!$myProfile && $this->isAllowed('user-management:user-enable') && $this->isAllowed('user-management:user-disable')) :
     // IF user is disabled
     if (!$userModel->getEnabled()):
 ?>
@@ -26,14 +26,14 @@ if (!$myProfile && $this->isAllowed('admin:user-enable') && $this->isAllowed('ad
 
 <?php
 // If not owner AND has privilege AND user is not activated THEN allow to activate
-if (!$myProfile && !$userModel->getActive() && $this->isAllowed('admin:user-activate')) :
+if (!$myProfile && !$userModel->getActive() && $this->isAllowed('user-management:user-activate')) :
 ?>
 <a href="<?php echo $this->url('index/control-panel/user/activate', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Activate user'); ?>"><?php echo $this->translate('Activate user'); ?></a>
 <?php endif; ?>
 
 <?php
 // If not owner AND has privilege THEN allow to delete
-if (!$myProfile && $this->isAllowed('admin:user-delete')) :
+if (!$myProfile && $this->isAllowed('user-management:user-delete')) :
 ?>
 <a href="<?php echo $this->url('index/control-panel/user/delete', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Delete user'); ?>"><?php echo $this->translate('Delete user'); ?></a>
 <?php endif; ?>
@@ -55,7 +55,7 @@ if (!$myProfile && $this->isAllowed('admin:user-delete')) :
         <tr>
             <td class="email"><?php echo $this->translate('Email'); ?></td>
             <td>
-                <?php if($userModel->getDisplayEmail() || $this->isAllowed('admin:user-edit')): ?>
+                <?php if($userModel->getDisplayEmail() || $this->isAllowed('user-management:user-edit')): ?>
                 <a href="mailto:<?php echo $userModel->getEmail(); ?>"><?php echo $userModel->getEmail(); ?></a>
                 <?php else: ?>
                 <span><?php echo $this->translate('hidden'); ?></span>

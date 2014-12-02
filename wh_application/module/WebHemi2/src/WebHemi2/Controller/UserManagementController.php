@@ -83,7 +83,6 @@ class UserManagementController extends AdminController
                 // user data
                 $userModel->setUsername($userData['accountInfo']['username']);
                 $userModel->setEmail($userData['accountInfo']['email']);
-                $userModel->setRole($userData['accountInfo']['role']);
 
                 $hash = md5($userModel->getUsername() . '-' . $userModel->getEmail());
                 $userModel->setHash($hash);
@@ -117,7 +116,7 @@ class UserManagementController extends AdminController
 
                     if ($result !== false) {
                         return $this->redirect()->toRoute(
-                            'index/user/view',
+                            'index/control-panel/user/view',
                             array('userName' => $userModel->getUsername())
                         );
                     }
@@ -154,7 +153,7 @@ class UserManagementController extends AdminController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/control-panel/user/view', array('userName' => $userName));
     }
 
     /**
@@ -177,7 +176,7 @@ class UserManagementController extends AdminController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/control-panel/user/view', array('userName' => $userName));
     }
 
     /**
@@ -198,7 +197,7 @@ class UserManagementController extends AdminController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/control-panel/user/view', array('userName' => $userName));
     }
 
     /**
@@ -218,6 +217,6 @@ class UserManagementController extends AdminController
                 $userTable->delete(array('user_id' => $userModel->getUserId()));
             }
         }
-        return $this->redirect()->toRoute('index/user');
+        return $this->redirect()->toRoute('index/control-panel/user');
     }
 }

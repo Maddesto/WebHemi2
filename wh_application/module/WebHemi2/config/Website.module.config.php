@@ -71,6 +71,19 @@ return array(
                         ),
                         'may_terminate' => true,
                         'child_routes' => array(
+                            'view' => array(
+                                'type' => 'Segment',
+                                'options' => array(
+                                    'route' => 'view/[:userName]/',
+                                    'constraints' => array(
+                                        'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                    ),
+                                    'defaults' => array(
+                                        'controller' => 'UserManagement',
+                                        'action' => 'userView',
+                                    ),
+                                ),
+                            ),
                             'edit' => array(
                                 'type' => 'Literal',
                                 'priority' => 1000,

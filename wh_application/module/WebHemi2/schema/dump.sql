@@ -109,10 +109,11 @@ INSERT INTO `webhemi_acl` VALUES
   (15,'user-management:user-view',1,1,1,1,1,0),
   (16,'user:login',1,1,1,1,1,1),
   (17,'user:logout',1,1,1,1,1,0),
-  (18,'user:user-profile',1,1,1,1,1,0),
-  (19,'user:user-edit',1,1,1,1,1,0),
-  (20,'website:index',1,1,1,1,1,1),
-  (21,'website:view',1,1,1,1,1,1);
+  (18,'user:user-view',1,1,1,1,1,1),
+  (19,'user:user-profile',1,1,1,1,1,0),
+  (20,'user:user-edit',1,1,1,1,1,0),
+  (21,'website:index',1,1,1,1,1,1),
+  (22,'website:view',1,1,1,1,1,1);
 /*!40000 ALTER TABLE `webhemi_acl` ENABLE KEYS */;
 UNLOCK TABLES;
 

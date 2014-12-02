@@ -159,7 +159,7 @@ class ErrorEvent
                 ->addChild($menuBlock, 'MenuBlock')
                 ->addChild($footerBlock, 'FooterBlock');
         }
-
+dump($e->getError());
         $model = new ViewModel();
         $model->setTemplate(self::$template[404]);
         $model->setVariable('reason', $e->getError());

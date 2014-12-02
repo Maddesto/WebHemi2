@@ -92,17 +92,16 @@ class UserController extends AbstractController
      */
     public function userViewAction()
     {
-        if (!$this->isAllowed('admin:user-view')) {
-            $this->redirect()->toRoute('index/user');
-        }
-
         $userName = $this->params()->fromRoute('userName');
         $userTable = new UserTable($this->getDatabaseAdapter());
         $userModel = $userTable->getUserByName($userName);
 
         // redirect to MyProfile when view own
         if ($this->getUserAuth()->getIdentity()->getUserId() == $userModel->getUserId()) {
-            $this->redirect()->toRoute('index/user/profile');
+            $route = APPLICATION_MODULE == ADMIN_MODULE
+                ? 'index/control-panel/user/profile'
+                : 'index/user';
+            $this->redirect()->toRoute($route);
         }
 
         return array('userModel' => $userModel);
@@ -117,7 +116,6 @@ class UserController extends AbstractController
     {
         $userAuth     = $this->getUserAuth();
         $userName     = $this->params()->fromRoute('userName');
-
         if (!$userName) {
             $userName = $userAuth->getIdentity()->getUsername();
         }
@@ -127,11 +125,16 @@ class UserController extends AbstractController
         /** @var \Zend\Http\Request $request */
         $request      = $this->getRequest();
         $isOwnProfile = $userAuth->getIdentity()->getUserId() == $userModel->getUserId();
+dump($isOwnProfile);
 
         if (!$userModel
             || !($isOwnProfile || $userAuth->getIdentity()->getRole() == AclModel::ROLE_ADMIN)
         ) {
-            return $this->redirect()->toRoute('index/user/view', array('userName' => $userName));
+            $route = APPLICATION_MODULE == ADMIN_MODULE
+                ? 'index/control-panel/user/view'
+                : 'index/user';
+
+            return $this->redirect()->toRoute($route, array('userName' => $userName));
         }
 
         /* @var $editForm \WebHemi2\Form\UserForm */
@@ -201,7 +204,7 @@ class UserController extends AbstractController
                         }
 
                         $route = APPLICATION_MODULE == ADMIN_MODULE
-                            ? 'index/user/view'
+                            ? 'index/control-panel/user/view'
                             : 'index/user';
 
                         return $this->redirect()->toRoute($route, array('userName' => $userModel->getUsername()));
