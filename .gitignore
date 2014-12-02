@@ -1,2 +1,3 @@
 .idea
 composer.lock
+wh_application/module/WebHemi2/resources/themes/*
