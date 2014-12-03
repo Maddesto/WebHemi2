@@ -109,7 +109,7 @@ class Cipher
             $characterArray = str_split($data);
 
             foreach ($characterArray as $index => $character) {
-                $tmp = ord($$character) - ord($key[$$index]);
+                $tmp = ord($character) - ord($key[$index]);
                 $characterArray[$index] = chr($tmp < 0 ? ($tmp + 256) : $tmp);
             }
             return join('', $characterArray);

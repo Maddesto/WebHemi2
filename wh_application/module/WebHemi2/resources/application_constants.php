@@ -101,3 +101,7 @@ define('APPLICATION_MODULE_URI', call_user_func(function($moduleName) {
         return isset($modules[$moduleName]) ? $modules[$moduleName]['path'] : '/';
     }, APPLICATION_MODULE)
 );
+
+// If no mcrypt extension present
+defined('MCRYPT_RIJNDAEL_256') || define('MCRYPT_RIJNDAEL_256', 'rijndael-256');
+defined('MCRYPT_MODE_CBC') || define('MCRYPT_MODE_CBC', 'cbc');
