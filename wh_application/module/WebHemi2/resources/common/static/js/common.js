@@ -29,7 +29,7 @@ var components = [
 
 // when all the DOM is loaded
 $(document).ready(function() {
-    componentPath = $('script[src*="script.js"]').attr('src').replace(/script.js/, '') + componentPath;
+    componentPath = $('script[src*="common.js"]').attr('src').replace(/common\.js/, '') + componentPath;
     loadComponent();
 });
 

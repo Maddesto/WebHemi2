@@ -9,7 +9,7 @@ Options -Indexes
     RewriteRule ^wh_application/?(.*)$ /wh_application/$1.html [R,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_URI} !\.[a-z0-9]{3,4}$
+    RewriteCond %{REQUEST_URI} !\.[a-z0-9]{2,4}$
     RewriteCond %{REQUEST_URI} !(.+)/$
     RewriteRule ^(.+)$ /$1/ [L,R=301]
 

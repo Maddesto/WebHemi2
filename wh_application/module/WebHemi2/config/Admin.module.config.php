@@ -20,6 +20,24 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 return array(
+    'controllers' => array(
+        'invokables' => array(
+            'WebHemi2\Controller\Admin' => 'WebHemi2\Controller\AdminController',
+            'WebHemi2\Controller\ControlPanel' => 'WebHemi2\Controller\ControlPanelController',
+            'WebHemi2\Controller\UserManagement' => 'WebHemi2\Controller\UserManagementController',
+        ),
+    ),
+    'module_layouts' => array(
+        'WebHemi2' => 'layout/admin',
+    ),
+    'view_manager' => array(
+        'template_path_stack' => array(
+            'admin' => __DIR__ . '/../resources/default/view',
+        ),
+        'template_map' => array(
+            'layout/layout' => __DIR__ . '/../resources/default/view/layout/admin.phtml',
+        ),
+    ),
     'router' => array(
         'routes' => array(
             // Admin application
@@ -210,24 +228,6 @@ return array(
                     ),
                 ),
             ),
-        ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
-            'WebHemi2\Controller\Admin' => 'WebHemi2\Controller\AdminController',
-            'WebHemi2\Controller\ControlPanel' => 'WebHemi2\Controller\ControlPanelController',
-            'WebHemi2\Controller\UserManagement' => 'WebHemi2\Controller\UserManagementController',
-        ),
-    ),
-    'module_layouts' => array(
-        'WebHemi2' => 'layout/admin',
-    ),
-    'view_manager' => array(
-        'template_path_stack' => array(
-            'admin' => __DIR__ . '/../view',
-        ),
-        'template_map' => array(
-            'layout/layout' => __DIR__ . '/../view/layout/admin.phtml',
         ),
     ),
 );

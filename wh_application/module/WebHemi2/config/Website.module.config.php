@@ -29,6 +29,27 @@ return array(
             'WebHemi2\Theme\Adapter\ConfigurationAdapter',
         ),
     ),
+    'service_manager' => array(
+        'factories' => array(
+            'theme_manager' => 'WebHemi2\ServiceFactory\ThemeManagerServiceFactory'
+        ),
+    ),
+    'controllers' => array(
+        'invokables' => array(
+            'WebHemi2\Controller\Website' => 'WebHemi2\Controller\WebsiteController'
+        ),
+    ),
+    'module_layouts' => array(
+        'WebHemi2' => 'layout/default',
+    ),
+    'view_manager' => array(
+        'template_path_stack' => array(
+            'website' => __DIR__ . '/../resources/default/view',
+        ),
+        'template_map' => array(
+            'layout/layout' => __DIR__ . '/../resources/default/view/layout/default.phtml',
+        ),
+    ),
     'router' => array(
         'routes' => array(
             // website application
@@ -132,27 +153,6 @@ return array(
                     ),
                 ),
             ),
-        ),
-    ),
-    'service_manager' => array(
-        'factories' => array(
-            'theme_manager' => 'WebHemi2\ServiceFactory\ThemeManagerServiceFactory'
-        ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
-            'WebHemi2\Controller\Website' => 'WebHemi2\Controller\WebsiteController'
-        ),
-    ),
-    'module_layouts' => array(
-        'WebHemi2' => 'layout/default',
-    ),
-    'view_manager' => array(
-        'template_path_stack' => array(
-            'website' => __DIR__ . '/../view',
-        ),
-        'template_map' => array(
-            'layout/layout' => __DIR__ . '/../view/layout/default.phtml',
         ),
     ),
 );
