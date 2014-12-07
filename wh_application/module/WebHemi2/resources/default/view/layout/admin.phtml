@@ -3,7 +3,9 @@
 if (empty($this->title)) {
     $this->title = 'WebHemi2 Admin';
 }
+
 $this->headTitle($this->sectionTitle);
+
 $headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - ')->setAutoEscape(false);
 $css       = $this->headLink()->appendStylesheet('/resources/common/css/reset.css')
                 ->appendStylesheet('/resources/theme/default/css/admin.css');
@@ -17,9 +19,9 @@ echo $this->doctype();
     <head>
         <meta charset="utf-8">
 <?php
-    echo "\t\t" . $headTitle . PHP_EOL;
-    echo "\t\t" . $css . PHP_EOL;
-    echo "\t\t" . $js . PHP_EOL;
+    echo $headTitle . PHP_EOL;
+    echo $css . PHP_EOL;
+    echo $js . PHP_EOL;
 ?>
     </head>
     <body class="<?php echo $this->sectionClass; ?>">

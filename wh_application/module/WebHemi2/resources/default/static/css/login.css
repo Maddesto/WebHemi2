@@ -1,7 +1,24 @@
 @CHARSET "UTF-8";
 
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 body {
+    position: relative;
     font-family: "Trebuchet MS", Helvetica, sans-serif;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline-style:none;/*IE*/
 }
 
 #loginForm {
@@ -12,11 +29,12 @@ body {
     right: 0;
     top: 0;
     width: 320px;
-    height: 135px;
+    height: 200px;
     padding: 2px;
 }
 
 #loginForm form {
+    background: rgba(255,255,255,0.5);
     padding: 10px 0;
 }
 
@@ -36,3 +54,90 @@ body {
 #loginForm form input {
     width: 210px;
 }
+
+div#wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+div#videoContainer {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+}
+
+/* LANDSCAPE */
+/* ? - 800x480 */
+@media all and (orientation:landscape) and (max-width: 800px) {
+    div#videoContainer,
+    div#videoContainer video {
+        width: 864px;
+        height: 486px;
+    }
+    div#videoContainer {
+        margin-left: calc(-432px + 50%);
+    }
+}
+
+/* WXGA - 1280x800 */
+@media all and (orientation:landscape) and (min-width: 800px) and (max-width: 1280px) {
+    div#videoContainer,
+    div#videoContainer video {
+        width: 1300px;
+        height: 731px;
+    }
+    div#videoContainer {
+        margin-left: calc(-650px + 50%);
+    }
+}
+
+/* WSXGA - 1440x900 */
+@media all and (orientation:landscape) and (min-width: 1280px) and (max-width: 1440px) {
+    div#videoContainer,
+    div#videoContainer video {
+        width: 1450px;
+        height: 816px;
+    }
+    div#videoContainer {
+        margin-left: calc(-725px + 50%);
+    }
+}
+
+/* WUXGA - 1920x1200 */
+@media all and (orientation:landscape) and (min-width: 1440px) and (max-width: 1920px) {
+    div#videoContainer,
+    div#videoContainer video {
+        width: 1930px;
+        height: 1086px;
+    }
+    div#videoContainer {
+        margin-left: calc(-965px + 50%);
+    }
+}
+
+/* QWXGA - 2048x1152 */
+@media all and (orientation:landscape) and (min-width: 1920px) and (max-width: 2048px) {
+    div#videoContainer,
+    div#videoContainer video {
+        width: 2050px;
+        height: 1153px;
+    }
+    div#videoContainer {
+        margin-left: calc(-1025px + 50%);
+    }
+}
+
+/* WQXGA - 2560x1600 */
+@media all and (orientation:landscape) and (min-width: 2048px) and (max-width: 2560px) {
+    div#videoContainer,
+    div#videoContainer video {
+        width: 2565px;
+        height: 1443px;
+    }
+    div#videoContainer {
+        margin-left: calc(-1282px + 50%);
+    }
+}
+
