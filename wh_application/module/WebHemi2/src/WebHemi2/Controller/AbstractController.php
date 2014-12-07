@@ -58,9 +58,9 @@ abstract class AbstractController extends AbstractActionController
             $footerBlock = new ViewModel();
             $footerBlock->setTemplate('block/AdminFooterBlock');
 
-            $this->layout()->addChild($headerBlock, 'HeaderBlock')
-                ->addChild($menuBlock, 'MenuBlock')
-                ->addChild($footerBlock, 'FooterBlock');
+            $this->layout()->addChild($headerBlock, 'headerBlock')
+                ->addChild($menuBlock, 'menuBlock')
+                ->addChild($footerBlock, 'footerBlock');
         }
 
         return parent::onDispatch($e);

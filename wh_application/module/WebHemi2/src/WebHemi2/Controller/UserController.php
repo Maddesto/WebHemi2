@@ -104,6 +104,11 @@ class UserController extends AbstractController
             $this->redirect()->toRoute($route);
         }
 
+        if (APPLICATION_MODULE == ADMIN_MODULE) {
+            $this->layout()->setVariable('sectionTitle', 'Control Panel');
+            $this->layout()->setVariable('sectionClass', 'control-panel');
+        }
+
         return array('userModel' => $userModel);
     }
 
@@ -220,6 +225,11 @@ class UserController extends AbstractController
             $editForm->bind($userModel);
         }
 
+        if (APPLICATION_MODULE == ADMIN_MODULE) {
+            $this->layout()->setVariable('sectionTitle', 'Control Panel');
+            $this->layout()->setVariable('sectionClass', 'control-panel');
+        }
+
         return array(
             'editForm'  => $editForm,
             'userModel' => $userModel,
@@ -233,7 +243,7 @@ class UserController extends AbstractController
      */
     public function loginAction()
     {
-        /* @var \WebHemi2\Form\UserForm $form */
+        /* @var \WebHemi2\Form\LoginForm $form */
         $form = $this->getForm('LoginForm');
         /** @var \Zend\Http\Request $request */
         $request = $this->getRequest();

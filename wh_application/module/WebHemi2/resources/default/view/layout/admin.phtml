@@ -3,13 +3,13 @@
 if (empty($this->title)) {
     $this->title = 'WebHemi2 Admin';
 }
+$this->headTitle($this->sectionTitle);
 $headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - ')->setAutoEscape(false);
 $css       = $this->headLink()->appendStylesheet('/resources/common/css/reset.css')
                 ->appendStylesheet('/resources/theme/default/css/admin.css');
 $js        = $this->headScript()->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
                 ->appendFile('/resources/common/js/common.js')
-                ->appendFile('/resources/theme/default/js/admin.js')
-                ->appendFile('/resources/theme/default/js/common.js');
+                ->appendFile('/resources/theme/default/js/admin.js');
 
 echo $this->doctype();
 ?>
@@ -22,12 +22,25 @@ echo $this->doctype();
     echo "\t\t" . $js . PHP_EOL;
 ?>
     </head>
-    <body>
-        <?php echo $this->HeaderBlock; ?>
-        <?php echo $this->MenuBlock; ?>
-        <div class="container">
-            <?php echo $this->content; ?>
-        </div> <!-- /container -->
-        <?php echo $this->FooterBlock; ?>
+    <body class="<?php echo $this->sectionClass; ?>">
+        <aside>
+            <?php echo $this->menuBlock; ?>
+        </aside>
+        <section>
+            <header>
+                <h1><?php echo $this->sectionTitle; ?></h1>
+            </header>
+            <article>
+                <header>
+                    <?php echo $this->headerBlock; ?>
+                </header>
+                <div>
+                    <?php echo $this->content; ?>
+                </div>
+                <footer>
+                    <?php echo $this->footerBlock; ?>
+                </footer>
+            </article>
+        </section>
     </body>
 </html>

@@ -27,6 +27,7 @@ use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Model\User as UserModel;
 use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
 use Zend\Crypt\Password\Bcrypt;
+use Zend\Mvc\MvcEvent;
 
 /**
  * WebHemi2 Admin Controller
@@ -41,6 +42,21 @@ use Zend\Crypt\Password\Bcrypt;
  */
 class UserManagementController extends AdminController
 {
+    /**
+     * Execute the request
+     *
+     * @param  MvcEvent $e
+     *
+     * @return mixed
+     */
+    public function onDispatch(MvcEvent $e)
+    {
+        $this->layout()->setVariable('sectionTitle', 'Control Panel');
+        $this->layout()->setVariable('sectionClass', 'control-panel');
+
+        return parent::onDispatch($e);
+    }
+
     /**
      * User index page
      *

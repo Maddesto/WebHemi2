@@ -22,7 +22,6 @@
 
 namespace WebHemi2\Form;
 
-use WebHemi2\Form\AbstractForm;
 use Zend\Form\Fieldset;
 use Zend\Form\Element;
 use Zend\Validator;
@@ -48,9 +47,9 @@ class LoginForm extends AbstractForm
     {
         parent::__construct('login');
 
-        // filedset for form elements
-        $fieldset = new Fieldset('loginInfo');
-        $fieldset->setLabel('Login information');
+        // filed set for form elements
+        $fieldSet = new Fieldset('loginInfo');
+        $fieldSet->setLabel('Login information');
 
         // the identification input
         $identification = new Element\Text('identification');
@@ -114,15 +113,14 @@ class LoginForm extends AbstractForm
             )
         );
 
-
-        // in ADMIN module there's no way to remember the password or autocomplete the input fields
+        // in ADMIN module there's no way to remember the password or auto-complete the input fields
         if (APPLICATION_MODULE == ADMIN_MODULE) {
             $identification->setAttribute('autocomplete', 'off');
             $password->setAttribute('autocomplete', 'off');
             $this->setAttribute('autocomplete', 'off');
         }
 
-        $fieldset->add($identification)
+        $fieldSet->add($identification)
                 ->add($password);
 
         // if NOT in ADMIN module, then we supply "remember me" functionality
@@ -144,7 +142,7 @@ class LoginForm extends AbstractForm
                     )
                 );
 
-            $fieldset->add($remember);
+            $fieldSet->add($remember);
         }
 
         $submit = new Element\Button('submit');
@@ -163,7 +161,7 @@ class LoginForm extends AbstractForm
         }
 
         $this->setAttribute('action', $url);
-        $this->add($fieldset)
+        $this->add($fieldSet)
             ->add($submit);
     }
 }

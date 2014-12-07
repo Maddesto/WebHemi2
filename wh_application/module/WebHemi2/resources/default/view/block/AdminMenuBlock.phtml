@@ -1,19 +1,21 @@
-<nav>
+<nav class="menu">
     <ul>
 <?php if($this->isAllowed('admin:index')): ?>
-        <li><a href="<?php echo $this->url('index'); ?>">Dashboard</a></li>
+        <li class="dashboard"><a href="<?php echo $this->url('index'); ?>"><span>Dashboard</span></a></li>
 <?php endif; ?>
 <?php if($this->isAllowed('admin:application')): ?>
-        <li><a href="<?php echo $this->url('index/application'); ?>">Application</a></li>
+        <li class="application"><a href="<?php echo $this->url('index/application'); ?>"><span>Application</span></a></li>
 <?php endif; ?>
 <?php if($this->isAllowed('admin:control-panel')): ?>
-        <li><a href="<?php echo $this->url('index/control-panel'); ?>">Control Panel</a></li>
+        <li class="control-panel"><a href="<?php echo $this->url('index/control-panel'); ?>"><span>Control Panel</span></a></li>
 <?php endif; ?>
 <?php if($this->isAllowed('admin:about')): ?>
-        <li><a href="<?php echo $this->url('index/about'); ?>">About</a></li>
+        <li class="about"><a href="<?php echo $this->url('index/about'); ?>"><span>About</span></a></li>
 <?php endif; ?>
-<?php if($this->isAllowed('admin:logout')): ?>
-        <li><a href="<?php echo $this->url('index/logout'); ?>">Logout</a></li>
-<?php endif; ?>
+    </ul>
+</nav>
+<nav class="logout">
+    <ul>
+        <li class="logout"><a href="<?php echo $this->url('index/logout'); ?>"><span>Logout</span></a></li>
     </ul>
 </nav>
