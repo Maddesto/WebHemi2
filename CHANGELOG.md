@@ -2,6 +2,17 @@ Change log
 ==========
 
 ---------------
+Version 2.0.2.4
+---------------
+- Give up [WH-#] versioning the commits
+- Added tools for generating password and creating resource folder links
+- Fixed major issues in user management
+- Fixed issues with routing
+- Refactored default theme resources
+- Fixed Chrome's autocomplete ignore bug
+- Switched to better CSS reset
+- First template designs for the default theme (admin login and admin area)
+
 Version 2.0.2.3
 ---------------
 - Refactored ACL, to allow the users to have different rules in different applications
