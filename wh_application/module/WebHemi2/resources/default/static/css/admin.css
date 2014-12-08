@@ -129,17 +129,17 @@ aside nav ul li.application a span {
 }
 
 aside nav ul li.control-panel a span {
-    background: #c60000 url("../img/admin/icons/control-panel.png") 8px 10px no-repeat;
+    background: #c33825 url("../img/admin/icons/control-panel.png") 8px 10px no-repeat;
     background-size: 48px 48px;
 }
 
 aside nav ul li.about a span {
-    background: #fca315 url("../img/admin/icons/about.png") 8px 10px no-repeat;
+    background: #e87e04 url("../img/admin/icons/about.png") 8px 10px no-repeat;
     background-size: 48px 48px;
 }
 
 aside nav ul li.logout a span {
-    background: #5f997c url("../img/admin/icons/logout.png") 8px 10px no-repeat;
+    background: #11743e url("../img/admin/icons/logout.png") 8px 10px no-repeat;
     background-size: 48px 48px;
 }
 
@@ -211,11 +211,11 @@ body.application section > header {
 }
 
 body.control-panel section > header {
-    background-color: #c60000;
+    background-color: #c33825;
 }
 
 body.about section > header {
-    background-color: #fca315;
+    background-color: #e87e04;
 }
 
 section > header h1 {
@@ -225,12 +225,13 @@ section > header h1 {
     text-align: right;
     padding-right: 70px;
     margin-left: -620px;
-    font-size: 48px;
-    line-height: 50px;
+    font-size: 50px;
+    line-height: 70px;
     transform: rotate(270deg);
     transform-origin: top right;
-    color: rgba(255,255,255,0.5);
+    color: rgba(255,255,255,1);
     text-transform: uppercase;
+    overflow: hidden;
 }
 
 section > article {
@@ -257,6 +258,7 @@ section > article > div {
     left: 0;
     bottom: 50px;
     min-height: 450px;
+    padding: 20px;
 }
 
 section > article > footer {
