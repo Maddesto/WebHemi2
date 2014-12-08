@@ -217,9 +217,8 @@ class Acl
 
             list(, $action) = explode(':', $resource);
 
-            // allow access for login page, invalid role or non-forced resources
+            // allow access for logout page, invalid role or non-forced resources
             if ('logout' == $action
-                || 'login' == $action
                 || !$this->acl->hasRole($role)
             ) {
                 return true;

@@ -164,4 +164,36 @@ class LoginForm extends AbstractForm
         $this->add($fieldSet)
             ->add($submit);
     }
+
+    /**
+     * Clean up error messages to hide sensitive information from attackers
+     *
+     * @author Gabor Ivan <gabor.ivan@westwing.de>
+     *
+     * @TODO log original error messages for admin
+     */
+    public function cleanupMessages()
+    {
+        $hasErrorMessages = false;
+        $element = null;
+
+        /** @var \Zend\Form\Fieldset $fieldSet */
+        foreach($this->getFieldsets() as $fieldSet) {
+            /** @var \Zend\Form\Element $element */
+            foreach ($fieldSet->getElements() as $element) {
+                $messages = $element->getMessages();
+                if (!empty($messages)) {
+                    $element->setMessages(array());
+                    $hasErrorMessages = true;
+                }
+            }
+        }
+
+        if ($hasErrorMessages) {
+            // attach the new error message to the last element.
+            if ($element instanceof Element) {
+                $element->setMessages(array('Login attempt failed. Please check all credentials and try again.'));
+            }
+        }
+    }
 }

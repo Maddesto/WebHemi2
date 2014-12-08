@@ -18,7 +18,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    outline-style:none;/*IE*/
+    outline-style:none;
 }
 
 #loginForm {
@@ -31,6 +31,7 @@ body {
     width: 320px;
     height: 200px;
     padding: 2px;
+    z-index: 100;
 }
 
 #loginForm form {

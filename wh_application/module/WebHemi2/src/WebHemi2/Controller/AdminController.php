@@ -23,6 +23,7 @@
 namespace WebHemi2\Controller;
 
 use Zend\View\Model\ViewModel;
+use WebHemi2\Form\AbstractForm;
 
 /**
  * WebHemi2 Admin Controller
@@ -33,7 +34,7 @@ use Zend\View\Model\ViewModel;
  * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  *
- * @method getForm() getForm(string $formName, string $name) retrieve a WebHemi Form instance with controller plugin
+ * @method AbstractForm getForm() Instantiate a WebHemi2 form
  */
 class AdminController extends UserController
 {
@@ -58,7 +59,8 @@ class AdminController extends UserController
     public function loginAction()
     {
         $view = parent::loginAction();
-
+        /** @var \WebHemi2\Form\LoginForm $form */
+        $form = $this->getForm('LoginForm');
         $config = $this->getServiceLocator()->get('Config');
 
         // if we display the login page
@@ -77,6 +79,9 @@ class AdminController extends UserController
             // the login page has its built-in layout
             $view->setTerminal(true);
         }
+
+        // Cleanup standard input error messages to hide from attackers which data is invalid.
+        $form->cleanupMessages();
 
         return $view;
     }
