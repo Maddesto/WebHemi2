@@ -44,7 +44,7 @@ return array(
         'display_exceptions' => true,
         'doctype' => 'HTML5',
         'not_found_template' => 'error/404',
-        'exception_template' => 'error/index',
+        'exception_template' => 'error/500',
     ),
     'controller_plugins' => array(
         'invokables' => array(

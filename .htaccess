@@ -1,6 +1,11 @@
 SetEnvIf Host .*\.dev APPLICATION_ENV=dev
 
-Options -Indexes
+Options -Indexes -MultiViews
+
+# Set all error pages to rewriteless entry point
+ErrorDocument 403 /index.php
+ErrorDocument 404 /index.php
+ErrorDocument 500 /index.php
 
 <IfModule mod_expires.c>
     # Enable expirations
@@ -24,6 +29,9 @@ Options -Indexes
     # Enable rewrites
     RewriteEngine On
 
+    # Change default entry point
+    DirectoryIndex application.php
+
     # Protect application with redeirect to invalid route
     RewriteCond %{REQUEST_URI} !\.html$
     RewriteRule ^wh_application/?(.*)$ /wh_application/$1.html [R,L]
@@ -34,13 +42,7 @@ Options -Indexes
     RewriteCond %{REQUEST_URI} !(.+)/$
     RewriteRule ^(.+)$ /$1/ [L,R=301]
 
-    RewriteCond %{REQUEST_FILENAME} -s [OR]
-    RewriteCond %{REQUEST_FILENAME} -l [OR]
-    RewriteCond %{REQUEST_FILENAME} -d
-    RewriteRule ^.*$ - [NC,L]
-
-    # Redirect everything to the entry point
-    RewriteCond %{REQUEST_URI}::$1 ^(/.+)(.+)::\2$
-    RewriteRule ^(.*) - [E=BASE:%1]
-    RewriteRule ^(.*)$ %{ENV:BASE}index.php [NC,L]
+    # Redirect all request to entry point
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ application.php [NC,L]
 </IfModule>

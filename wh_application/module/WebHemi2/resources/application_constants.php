@@ -31,7 +31,13 @@ define('APPLICATION_MODULE_TYPE_SUBDOMAIN', 'subdomain');
 define('APPLICATION_MODULE_TYPE_SUBDIR', 'subdir');
 
 define('APPLICATION_MODULE', call_user_func(function() {
-        $modules = include APPLICATION_PATH . '/config/application.config.php';
+        $configFile = APPLICATION_PATH . '/config/application.config.php';
+        if (file_exists($configFile)) {
+            $modules = include($configFile);
+        } else {
+            $modules = array();
+        }
+        // set a default module
         $module = WEBSITE_MODULE;
         $subDomain = '';
 
@@ -90,15 +96,25 @@ define('APPLICATION_MODULE', call_user_func(function() {
     })
 );
 define('APPLICATION_MODULE_TYPE', call_user_func(function($moduleName) {
-        $modules = include APPLICATION_PATH . '/config/application.config.php';
+        $configFile = APPLICATION_PATH . '/config/application.config.php';
+        if (file_exists($configFile)) {
+            $modules = include($configFile);
+        } else {
+            $modules = array();
+        }
 
-        return isset($modules[$moduleName]) ? $modules[$moduleName]['type'] : 'subdir';
+        return isset($modules[$moduleName]) ? $modules[$moduleName]['type'] : (WEBSITE_MODULE == $moduleName ? 'subdomain' : 'subdir');
     }, APPLICATION_MODULE)
 );
 define('APPLICATION_MODULE_URI', call_user_func(function($moduleName) {
-        $modules = include APPLICATION_PATH . '/config/application.config.php';
+        $configFile = APPLICATION_PATH . '/config/application.config.php';
+        if (file_exists($configFile)) {
+            $modules = include($configFile);
+        } else {
+            $modules = array();
+        }
 
-        return isset($modules[$moduleName]) ? $modules[$moduleName]['path'] : '/';
+        return isset($modules[$moduleName]) ? $modules[$moduleName]['path'] : (WEBSITE_MODULE == $moduleName ? 'www' : '/');
     }, APPLICATION_MODULE)
 );
 
