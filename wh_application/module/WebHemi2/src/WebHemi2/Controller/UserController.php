@@ -258,18 +258,6 @@ class UserController extends AbstractController
             $identification = $form->get('identification')->getValue();
             $password = $form->get('password')->getValue();
 
-            // if no identification present
-            if (empty($identification)) {
-                $form->get('identification')->setMessages(array('No identification given.'));
-                $error = true;
-            }
-
-            // if no password present
-            if (empty($password)) {
-                $form->get('password')->setMessages(array('No password given.'));
-                $error = true;
-            }
-
             // it everything seems to be valid
             if (!$error && $form->isValid()) {
                 $authAdapter = $userAuth->getAuthAdapter();

@@ -22,10 +22,13 @@
 
 namespace WebHemi2\Form;
 
+use WebHemi2\Model\Table\Lock as UserLockTable;
 use Zend\Form\Fieldset;
 use Zend\Form\Element;
+use Zend\Form\Exception;
 use Zend\Validator;
 use Zend\Filter;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Login Form
@@ -163,6 +166,20 @@ class LoginForm extends AbstractForm
         $this->setAttribute('action', $url);
         $this->add($fieldSet)
             ->add($submit);
+
+        $this->init();
+    }
+
+    /**
+     * This function is automatically called when creating element with factory. It
+     * allows to perform various operations (add elements...)
+     *
+     * @return void
+     */
+    public function init()
+    {
+       parent::init();
+       // Here, we have $this->serviceLocator !!
     }
 
     /**
@@ -195,5 +212,31 @@ class LoginForm extends AbstractForm
                 $element->setMessages(array('Login attempt failed. Please check all credentials and try again.'));
             }
         }
+    }
+
+    /**
+     * Validate the form
+     *
+     * Typically, will proxy to the composed input filter.
+     *
+     * @param Element $formElement
+     * @return bool
+     * @throws Exception\DomainException
+     */
+    public function isValid(Element $formElement = null)
+    {
+        $isValid = parent::isValid($formElement);
+        static $setLock;
+
+        // Ensure that the IP ban counter works also with invalid form post (against DDOS attacks)
+        if (!$isValid && !isset($setLock)) {
+            /** @var \Zend\Db\Adapter\Adapter $adapter */
+            $adapter = $this->getServiceManager()->get('database');
+            $lockTable = new UserLockTable($adapter);
+            $lockTable->setLock();
+            $setLock = true;
+        }
+
+        return $isValid;
     }
 }
