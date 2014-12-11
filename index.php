@@ -20,13 +20,15 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
+// define environment
 define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
-
+// allow debug for development
 if ('dev' == APPLICATION_ENV) {
     require_once(__DIR__ . '/wh_application/library/dump.php');
 }
+// create applitacion-wide constants
 require_once(__DIR__ . '/wh_application/module/WebHemi2/resources/application_constants.php');
-
+// load application config to get template info
 $applicationConfigFile = APPLICATION_PATH . '/config/application.config.php';
 
 if (file_exists($applicationConfigFile)) {
@@ -45,6 +47,7 @@ if (file_exists($applicationConfigFile)) {
 
 $theme = $applicationConfig[APPLICATION_MODULE]['wh_themes']['current_theme'];
 
+// include common config to get the error template
 $commonConfig = include(APPLICATION_PATH . '/config/common.module.config.php');
 $errorTemplate = $commonConfig['view_manager']['exception_template'];
 
@@ -52,6 +55,7 @@ if ($theme == 'default') {
     $themePath = APPLICATION_PATH . '/resources/default';
 } else {
     $themePath = APPLICATION_PATH . '/resources/themes/' . $theme;
+    // include theme config to get the theme error template if defined
     $templateConfig = include($themePath . '/theme.config.php');
     $errorTemplate = $templateConfig['exception_template'];
 }
