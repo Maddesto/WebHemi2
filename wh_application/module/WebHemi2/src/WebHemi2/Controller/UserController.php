@@ -299,11 +299,11 @@ class UserController extends AbstractController
 
                                     // set cookie for this module
                                     setcookie(
-                                        'atln-' . bin2hex(APPLICATION_MODULE),
+                                        AUTOLOGIN_COOKIE_PREFIX .'-' . bin2hex(APPLICATION_MODULE),
                                         $encryptedHash,
                                         time() + (60 * 60 * 24 * 14),
                                         '/',
-                                        $_SERVER['SERVER_NAME'],
+                                        '',
                                         false,
                                         true
                                     );
@@ -339,13 +339,13 @@ class UserController extends AbstractController
     {
         $this->getUserAuth()->clearIdentity();
         // if there was autologin cookie, we remove it
-        if (isset($_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)])) {
+        if (isset($_COOKIE[AUTOLOGIN_COOKIE_PREFIX .'-' . bin2hex(APPLICATION_MODULE)])) {
             setcookie(
-                'atln-' . bin2hex(APPLICATION_MODULE),
+                AUTOLOGIN_COOKIE_PREFIX .'-' . bin2hex(APPLICATION_MODULE),
                 'exit',
                 time() - 1,
                 '/',
-                $_SERVER['SERVER_NAME'],
+                '',
                 false,
                 true
             );

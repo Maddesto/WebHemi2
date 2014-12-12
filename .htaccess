@@ -1,5 +1,12 @@
 SetEnvIf Host .*\.dev APPLICATION_ENV=dev
 
+# Disable cookies for static subdomain
+<IfModule mod_headers.c>
+    SetEnvIf Host static\..* IS_STATIC_DOMAIN
+    Header unset Cookie env=IS_STATIC_DOMAIN
+    Header unset Set-Cookie env=IS_STATIC_DOMAIN
+</IfModule>
+
 Options -Indexes -MultiViews
 
 # Set all error pages to rewriteless entry point
@@ -36,7 +43,7 @@ ErrorDocument 500 /index.php
     RewriteCond %{REQUEST_URI} !\.html$
     RewriteRule ^wh_application/?(.*)$ /wh_application/$1.html [R,L]
 
-    # Redirect favicon.ico
+    # Redirect favicon.ico to PHP script
     RewriteCond %{REQUEST_URI} favicon.ico$
     RewriteRule ^(.*)$ favicon.php [NC,L]
 

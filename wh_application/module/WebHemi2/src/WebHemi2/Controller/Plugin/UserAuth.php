@@ -67,10 +67,10 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
 
         // if not already logged in and has autologin cookie for the module which is not the ADMIN module
         if (!$identity
-            && isset($_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)])
+            && isset($_COOKIE[AUTOLOGIN_COOKIE_PREFIX .'-' . bin2hex(APPLICATION_MODULE)])
             && APPLICATION_MODULE !== ADMIN_MODULE
         ) {
-            $encryptedHash = $_COOKIE['atln-' . bin2hex(APPLICATION_MODULE)];
+            $encryptedHash = $_COOKIE[AUTOLOGIN_COOKIE_PREFIX .'-' . bin2hex(APPLICATION_MODULE)];
 
             // decrypting the hash for this module
             $decryptedHash = Cipher::decode(

@@ -2,6 +2,14 @@ Change log
 ==========
 
 ---------------
+Version 2.0.2.5
+---------------
+- Add error page for Error 500, when no mod_rewrite is enabled
+- IP ban counter now also work with invalid form POSTs
+- Separate entry point to favicon.ico: now a PHP script will provide the favicon based on the APPLICAITION_MODULE
+- Modified view helpers to include static content from the cookie free static domain
+- TODO: make the static domain to be set on/off
+
 Version 2.0.2.4
 ---------------
 - Give up [WH-#] versioning the commits

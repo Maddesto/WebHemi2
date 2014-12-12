@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.2.4 Created by Gixx.
+Version 2.0.2.5 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -25,19 +25,20 @@ Features / Goals
 - Logical separation of 'Admin' and 'Website' applications [DONE]
 - Support for custom themes in 'Website' application and for 'Admin' login page [DONE]
 - Subdomain support for applications except 'Website' which is always on 'www' [DONE]
+- Cookie free subdomain support for static files [DONE]
 - Application-based privilege system with IP blacklist [DONE]
+- Create Composer install script for vendor libraries [DONE]
 - Secure authentication [DONE]
 - Secure Form solution [DONE]
 - Form enhancements [DONE]
 - Easy-to-use 'Admin' application [IN PROGRESS]
+- Default website design [IN PROGRESS]
 - 'Virtual folder structure'-like content management [PLANNING]
 - Support for 3rd-party plugins [PLANNING]
 - Language support [PLANNING]
 - User friendly design for 'Admin' application [PLANNING]
 - Responsive design for 'Admin' application to use the page from mobile devices [PLANNING]
-- Default website design [PLANNING]
 - First-time Setup script [PLANNING]
-- Create Composer install script for vendor libraries [DONE]
 
 Installation
 ------------

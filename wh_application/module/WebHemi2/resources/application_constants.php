@@ -22,15 +22,25 @@
 
 define('WEBHEMI_VERSION', '2.0.1.0');
 
-define('APPLICATION_PATH', dirname(__DIR__));
-
 define('ADMIN_MODULE', 'Admin');
 define('WEBSITE_MODULE', 'Website');
 
+define('AUTOLOGIN_COOKIE_PREFIX', 'atln');
+
+define('APPLICATION_PATH', dirname(__DIR__));
 define('APPLICATION_MODULE_TYPE_SUBDOMAIN', 'subdomain');
 define('APPLICATION_MODULE_TYPE_SUBDIR', 'subdir');
 
-define('APPLICATION_MODULE', call_user_func(function() {
+$configFile = APPLICATION_PATH . '/config/application.config.php';
+if (file_exists($configFile)) {
+    $modules = include($configFile);
+} else {
+    $modules = array();
+}
+
+define('APPLICATION_MODULE', call_user_func(function($modules) {
+        $domain = $_SERVER['SERVER_NAME'];
+
         $configFile = APPLICATION_PATH . '/config/application.config.php';
         if (file_exists($configFile)) {
             $modules = include($configFile);
@@ -62,10 +72,15 @@ define('APPLICATION_MODULE', call_user_func(function() {
             $subDomain = implode('.', $domainParts);
         }
 
+
         // if no subdomain present, then it should be handled as 'www'
         if (empty($subDomain)) {
             $subDomain = 'www';
         }
+
+        // additionally we store the domains as well
+        define('APPLICATION_DOMAIN', $subDomain . '.' . $domain);
+        define('APPLICATION_STATIC_DOMAIN', 'static.' . $domain);
 
         // we ignore the first (actually an emtpy string) and last (the rest of the URL)
         list(, $subdir) = explode('/', $urlParts['path'], 3);
@@ -93,30 +108,19 @@ define('APPLICATION_MODULE', call_user_func(function() {
         }
 
         return $module;
-    })
+    }, $modules)
 );
-define('APPLICATION_MODULE_TYPE', call_user_func(function($moduleName) {
-        $configFile = APPLICATION_PATH . '/config/application.config.php';
-        if (file_exists($configFile)) {
-            $modules = include($configFile);
-        } else {
-            $modules = array();
-        }
-
+define('APPLICATION_MODULE_TYPE', call_user_func(function($moduleName, $modules) {
         return isset($modules[$moduleName]) ? $modules[$moduleName]['type'] : (WEBSITE_MODULE == $moduleName ? 'subdomain' : 'subdir');
-    }, APPLICATION_MODULE)
+    }, APPLICATION_MODULE, $modules)
 );
-define('APPLICATION_MODULE_URI', call_user_func(function($moduleName) {
-        $configFile = APPLICATION_PATH . '/config/application.config.php';
-        if (file_exists($configFile)) {
-            $modules = include($configFile);
-        } else {
-            $modules = array();
-        }
-
+define('APPLICATION_MODULE_URI', call_user_func(function($moduleName, $modules) {
         return isset($modules[$moduleName]) ? $modules[$moduleName]['path'] : (WEBSITE_MODULE == $moduleName ? 'www' : '/');
-    }, APPLICATION_MODULE)
+    }, APPLICATION_MODULE, $modules)
 );
+
+// remove global variable
+unset($modules);
 
 // If no mcrypt extension present
 defined('MCRYPT_RIJNDAEL_256') || define('MCRYPT_RIJNDAEL_256', 'rijndael-256');

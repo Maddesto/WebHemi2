@@ -58,6 +58,8 @@ return array(
         'invokables' => array(
             'avatar' => 'WebHemi2\View\Helper\Avatar',
             'url' => 'WebHemi2\View\Helper\Url',
+            'headScript' => 'WebHemi2\View\Helper\HeadScript',
+            'headLink' => 'WebHemi2\View\Helper\HeadLink',
             'formElement' => 'WebHemi2\Form\View\Helper\FormElement',
             'formPlainText' => 'WebHemi2\Form\View\Helper\FormPlainText',
             'formLocation' => 'WebHemi2\Form\View\Helper\FormLocation',
