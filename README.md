@@ -32,12 +32,12 @@ Features / Goals
 - Secure Form solution [DONE]
 - Form enhancements [DONE]
 - Easy-to-use 'Admin' application [IN PROGRESS]
-- Default website design [IN PROGRESS]
+- User friendly design for 'Admin' application [IN PROGRESS]
+- Responsive design for 'Admin' application to use the page from mobile devices [IN PROGRESS]
+- Default website design [PLANNING]
 - 'Virtual folder structure'-like content management [PLANNING]
 - Support for 3rd-party plugins [PLANNING]
 - Language support [PLANNING]
-- User friendly design for 'Admin' application [PLANNING]
-- Responsive design for 'Admin' application to use the page from mobile devices [PLANNING]
 - First-time Setup script [PLANNING]
 
 Installation
