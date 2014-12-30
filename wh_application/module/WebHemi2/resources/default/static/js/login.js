@@ -21,7 +21,7 @@
 
 $(document).ready(function() {
     var videoTag = '<div id="wrapper"><div id="videoContainer"><video autoplay="autoplay" muted="muted" loop="loop">' +
-        '<source src="http://' + STATIC_DOMAIN + '/resources/theme/default/video/WD0221.mp4" type="video/mp4">' +
+        '<source src="http://' + STATIC_DOMAIN + '/resources/theme/default/video/blue-silk.webm" type="video/webm">' +
         '</video></div></div>';
 
     $('body').append(videoTag);
