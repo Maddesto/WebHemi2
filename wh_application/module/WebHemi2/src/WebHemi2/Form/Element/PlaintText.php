@@ -16,7 +16,7 @@
  * @category   WebHemi2
  * @package    WebHemi2_Form_Element
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -30,7 +30,7 @@ use Zend\Form\Element as ZendElement;
  * @category   WebHemi2
  * @package    WebHemi2_Form_Element
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class PlainText extends ZendElement

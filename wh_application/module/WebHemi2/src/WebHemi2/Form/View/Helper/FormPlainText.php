@@ -16,7 +16,7 @@
  * @category   WebHemi2
  * @package    WebHemi2_Form_View_Helper
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 namespace WebHemi2\Form\View\Helper;
@@ -30,7 +30,7 @@ use Zend\Form\ElementInterface;
  * @category   WebHemi2
  * @package    WebHemi2_Form_View_Helper
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class FormPlainText extends AbstractHelper

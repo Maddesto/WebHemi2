@@ -16,7 +16,7 @@
  * @category   WebHemi2
  * @package    WebHemi2_Model
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -31,7 +31,7 @@ use WebHemi2\Model\UserAcl as UserAclModel;
  * @category   WebHemi2
  * @package    WebHemi2_Model
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  *
  * @method string getAvatar() Retrieve user meta avatar.

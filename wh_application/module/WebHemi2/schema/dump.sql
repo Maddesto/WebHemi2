@@ -60,7 +60,7 @@ CREATE TABLE `webhemi_user` (
 
 LOCK TABLES `webhemi_user` WRITE;
 /*!40000 ALTER TABLE `webhemi_user` DISABLE KEYS */;
-INSERT INTO `webhemi_user` VALUES (1,'admin','admin@localhost','run in console: php wh_application/library/encode_password.php','3913282e49a363f16f67aba50945000a','127.0.0.1','127.0.0.1',1,1,'2014-01-01 00:00:00','2014-01-01 00:00:00');
+INSERT INTO `webhemi_user` VALUES (1,'admin','admin@localhost','run in console: php wh_application/library/encode_password.php','3913282e49a363f16f67aba50945000a','127.0.0.1','127.0.0.1',1,1,'2015-01-01 00:00:00','2015-01-01 00:00:00');
 /*!40000 ALTER TABLE `webhemi_user` ENABLE KEYS */;
 UNLOCK TABLES;
 

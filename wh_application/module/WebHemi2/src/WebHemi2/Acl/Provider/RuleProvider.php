@@ -16,7 +16,7 @@
  * @category   WebHemi2
  * @package    WebHemi2_Acl_Provider
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -30,7 +30,7 @@ use WebHemi2\Model\Acl;
  * @category   WebHemi2
  * @package    WebHemi2_Acl_Provider
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 class RuleProvider

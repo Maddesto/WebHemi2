@@ -16,7 +16,7 @@
  * @category   WebHemi2
  * @package    WebHemi2_Form_Filter
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
@@ -34,7 +34,7 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
  * @category   WebHemi2
  * @package    WebHemi2_Form_Filter
  * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2014, Gixx-web (http://www.gixx-web.com)
+ * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManagerAwareInterface, FilterInterface
