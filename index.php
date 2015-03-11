@@ -20,6 +20,12 @@
  * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  */
 
+/**
+ * If there is rewrite enabled for the webserver the primary entry point will be the application.php.
+ * 
+ * If there is no rewrite enabled for the webserver this file - as the default entry point -  will provide an error page.
+ *
+ */
 // define environment
 define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
 // allow debug for development
