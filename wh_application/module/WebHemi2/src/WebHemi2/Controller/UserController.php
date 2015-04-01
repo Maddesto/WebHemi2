@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Controller
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Controller
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Controller;
@@ -32,13 +36,16 @@ use Zend\View\Model\ViewModel;
 use WebHemi2\Component\Cipher\Cipher;
 
 /**
- * WebHemi2 User Controller
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Controller
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * User Controller
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Controller
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  *
  * @method bool isAllowed() Controller plugin call to check access
  * @method AbstractForm getForm() Instantiate a WebHemi2 form
@@ -82,7 +89,7 @@ class UserController extends AbstractController
             return $this->redirect()->toRoute('index/login');
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -109,7 +116,7 @@ class UserController extends AbstractController
             $this->layout()->setVariable('sectionClass', 'control-panel');
         }
 
-        return array('userModel' => $userModel);
+        return ['userModel' => $userModel];
     }
 
     /**
@@ -138,7 +145,7 @@ class UserController extends AbstractController
                 ? 'index/control-panel/user/view'
                 : 'index/user';
 
-            return $this->redirect()->toRoute($route, array('userName' => $userName));
+            return $this->redirect()->toRoute($route, ['userName' => $userName]);
         }
 
         /* @var $editForm \WebHemi2\Form\UserForm */
@@ -211,13 +218,13 @@ class UserController extends AbstractController
                             ? 'index/control-panel/user/view'
                             : 'index/user/profile';
 
-                        return $this->redirect()->toRoute($route, array('userName' => $userModel->getUsername()));
+                        return $this->redirect()->toRoute($route, ['userName' => $userModel->getUsername()]);
                     }
                 } catch (\Exception $e) {
                     $editForm->setMessages(
-                        array(
+                        [
                             'submit' => $e->getMessage()
-                        )
+                        ]
                     );
                 }
             }
@@ -230,10 +237,10 @@ class UserController extends AbstractController
             $this->layout()->setVariable('sectionClass', 'control-panel');
         }
 
-        return array(
+        return [
             'editForm'  => $editForm,
             'userModel' => $userModel,
-        );
+        ];
     }
 
     /**
@@ -315,12 +322,10 @@ class UserController extends AbstractController
                         // @TODO: implement redirect to referer if needed
                         return $this->redirect()->toRoute('index');
                         break;
-
                     case Result::FAILURE_CREDENTIAL_INVALID:
                         // attach error message to the form
                         $form->get('password')->setMessages($authResult->getMessages());
                         break;
-
                     default:
                         // attach error message to the form
                         $form->get('identification')->setMessages($authResult->getMessages());
@@ -328,7 +333,7 @@ class UserController extends AbstractController
                 }
             }
         }
-        $view = new ViewModel(array('loginForm' => $form));
+        $view = new ViewModel(['loginForm' => $form]);
         return $view;
     }
 

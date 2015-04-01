@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,146 +16,147 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
-return array(
-    'wh_themes' => array(
+return [
+    'wh_themes' => [
         'current_theme' => 'default',
-        'theme_paths' => array(
+        'theme_paths' => [
             APPLICATION_PATH . '/resources/themes/'
-        ),
-        'adapters' => array(
+        ],
+        'adapters' => [
             'WebHemi2\Theme\Adapter\ConfigurationAdapter',
-        ),
-    ),
-    'service_manager' => array(
-        'factories' => array(
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
             'theme_manager' => 'WebHemi2\ServiceFactory\ThemeManagerServiceFactory'
-        ),
-    ),
-    'controllers' => array(
-        'invokables' => array(
+        ],
+    ],
+    'controllers' => [
+        'invokables' => [
             'WebHemi2\Controller\Website' => 'WebHemi2\Controller\WebsiteController'
-        ),
-    ),
-    'module_layouts' => array(
+        ],
+    ],
+    'module_layouts' => [
         'WebHemi2' => 'layout/default',
-    ),
-    'view_manager' => array(
-        'template_path_stack' => array(
+    ],
+    'view_manager' => [
+        'template_path_stack' => [
             'website' => __DIR__ . '/../resources/default/view',
-        ),
-        'template_map' => array(
+        ],
+        'template_map' => [
             'layout/layout' => __DIR__ . '/../resources/default/view/layout/default.phtml',
-        ),
-    ),
-    'router' => array(
-        'routes' => array(
+        ],
+    ],
+    'router' => [
+        'routes' => [
             // website application
-            'index' => array(
+            'index' => [
                 'type' => 'Literal',
-                'options' => array(
+                'options' => [
                     'route' => '/',
-                    'defaults' => array(
+                    'defaults' => [
                         '__NAMESPACE__' => 'WebHemi2\Controller',
                         'controller' => 'Website',
                         'action' => 'index',
-                    )
-                ),
+                    ]
+                ],
                 'may_terminate' => true,
-                'child_routes' => array(
-                    'view' => array(
+                'child_routes' => [
+                    'view' => [
                         'type' => 'Regex',
-                        'options' => array(
+                        'options' => [
                             'regex' => '(?:/(?<category>[a-zA-Z0-9_-]+))?/(?<id>[\/a-zA-Z0-9_-]+)(\.(?<format>(json|html|rss)))?',
-                            'defaults' => array(
+                            'defaults' => [
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
                                 'controller' => 'Website',
                                 'action' => 'view',
                                 'category' => 'default',
                                 'format' => 'html',
-                            ),
+                            ],
                             'spec' => '/%category%/%id%.%format%',
-                        ),
-                    ),
-                    'user' => array(
+                        ],
+                    ],
+                    'user' => [
                         'type' => 'Literal',
                         'priority' => 1000,
-                        'options' => array(
+                        'options' => [
                             'route' => 'user/',
-                            'defaults' => array(
+                            'defaults' => [
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
                                 'controller' => 'User',
                                 'action' => 'index',
-                            ),
-                        ),
+                            ],
+                        ],
                         'may_terminate' => true,
-                        'child_routes' => array(
-                            'profile' => array(
+                        'child_routes' => [
+                            'profile' => [
                                 'type' => 'Literal',
                                 'priority' => 1000,
-                                'options' => array(
+                                'options' => [
                                     'route' => 'my-profile/',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         '__NAMESPACE__' => 'WebHemi2\Controller',
                                         'controller' => 'User',
                                         'action' => 'userProfile',
-                                    ),
-                                ),
-                            ),
-                            'view' => array(
+                                    ],
+                                ],
+                            ],
+                            'view' => [
                                 'type' => 'Segment',
-                                'options' => array(
+                                'options' => [
                                     'route' => 'view/[:userName]/',
-                                    'constraints' => array(
+                                    'constraints' => [
                                         'userName' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                    ),
-                                    'defaults' => array(
+                                    ],
+                                    'defaults' => [
                                         'controller' => 'User',
                                         'action' => 'userView',
-                                    ),
-                                ),
-                            ),
-                            'edit' => array(
+                                    ],
+                                ],
+                            ],
+                            'edit' => [
                                 'type' => 'Literal',
                                 'priority' => 1000,
-                                'options' => array(
+                                'options' => [
                                     'route' => 'edit/',
-                                    'defaults' => array(
+                                    'defaults' => [
                                         '__NAMESPACE__' => 'WebHemi2\Controller',
                                         'controller' => 'User',
                                         'action' => 'userEdit',
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                    'login' => array(
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'login' => [
                         'type' => 'Literal',
-                        'options' => array(
+                        'options' => [
                             'route' => 'login/',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'User',
                                 'action' => 'login',
-                            ),
-                        ),
-                    ),
-                    'logout' => array(
+                            ],
+                        ],
+                    ],
+                    'logout' => [
                         'type' => 'Literal',
-                        'options' => array(
+                        'options' => [
                             'route' => 'logout/',
-                            'defaults' => array(
+                            'defaults' => [
                                 'controller' => 'User',
                                 'action' => 'logout',
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ),
-);
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ],
+];

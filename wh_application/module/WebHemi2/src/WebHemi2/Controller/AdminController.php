@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Controller
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Controller
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Controller;
@@ -26,13 +30,16 @@ use Zend\View\Model\ViewModel;
 use WebHemi2\Form\AbstractForm;
 
 /**
- * WebHemi2 Admin Controller
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Controller
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * Admin Controller
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Controller
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  *
  * @method AbstractForm getForm() Instantiate a WebHemi2 form
  */
@@ -48,7 +55,7 @@ class AdminController extends UserController
         $this->layout()->setVariable('sectionTitle', 'Dashboard');
         $this->layout()->setVariable('sectionClass', 'dashboard');
 
-        return array();
+        return [];
     }
 
     /**
@@ -67,13 +74,13 @@ class AdminController extends UserController
         if ($view instanceof ViewModel) {
             // TODO: make this an editable config value
             $view->setVariables(
-                array(
+                [
                     'headerTitle' => 'WebHemi2 Administration Login',
                     'siteTitle' => 'WH Admin',
                     'theme' => isset($config['wh_themes']['current_theme'])
                         ? $config['wh_themes']['current_theme']
                         : 'default',
-                )
+                ]
             );
 
             // the login page has its built-in layout
@@ -98,7 +105,7 @@ class AdminController extends UserController
             $this->layout()->setVariable('sectionClass', 'about');
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -113,7 +120,7 @@ class AdminController extends UserController
             $this->layout()->setVariable('sectionClass', 'application');
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -128,6 +135,6 @@ class AdminController extends UserController
             $this->layout()->setVariable('sectionClass', 'control-panel');
         }
 
-        return array();
+        return [];
     }
 }

@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Acl
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Acl
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Acl;
@@ -41,13 +45,16 @@ use Zend\Authentication\AuthenticationService;
 use Zend\Stdlib\ArrayUtils;
 
 /**
- * WebHemi2 Access Control
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Acl
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * Access Control
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Acl
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class Acl
 {
@@ -160,7 +167,7 @@ class Acl
         // setup the acl: explicit allow resource to role, don't waste time with role tree
         foreach ($this->ruleProvider->getRules() as $resourceName => $roles) {
             if ($this->acl->hasResource($resourceName)) {
-                foreach($roles as $roleName) {
+                foreach ($roles as $roleName) {
                     if ($this->acl->hasRole($roleName)) {
                         // allow the resources for the roles, except when the requesting IP is blacklisted.
                         $this->acl->allow($roleName, $resourceName, null, $assert);

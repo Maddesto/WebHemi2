@@ -1,12 +1,16 @@
 <?php
 /**
- * WebHemi2 auto-loading setup
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * PHP version 5.4
+ * auto-loading setup
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));

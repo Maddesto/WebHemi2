@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2;
@@ -34,13 +38,16 @@ use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 
 /**
- * WebHemi2 module bootstrap
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * module bootstrap
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class Module implements
     AutoloaderProviderInterface,
@@ -79,7 +86,7 @@ class Module implements
         }
 
         // update view helper url
-        $viewHelperManager->setFactory('url', function ($sm) use($serviceManager) {
+        $viewHelperManager->setFactory('url', function ($sm) use ($serviceManager) {
                 $helper = new Url;
                 $router = Console::isConsole() ? 'HttpRouter' : 'Router';
                 $helper->setRouter($serviceManager->get($router));
@@ -96,25 +103,14 @@ class Module implements
             });
 
         // attach events to the event manager
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array('WebHemi2\Event\ErrorEvent',  'preDispatch'), -500);
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, array('WebHemi2\Event\AclEvent',    'onRoute'), -100);
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, array('WebHemi2\Event\LayoutEvent', 'preDispatch'), 10);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'preDispatch'], -500);
+        $eventManager->attach(MvcEvent::EVENT_ROUTE, ['WebHemi2\Event\AclEvent',    'onRoute'], -100);
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, ['WebHemi2\Event\LayoutEvent', 'preDispatch'], 10);
 
         // link the event manager to the modoule route listener
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
-
-//    /**
-//     * Check whether the specific configuration exists.
-//     *
-//     * @param string $name    The name of the config section.
-//     * @return bool
-//     */
-//    public static function hasConfig($name)
-//    {
-//        return isset(self::$configs[$name]);
-//    }
 
     /**
      * Retrieves the Module Configuration
@@ -123,7 +119,7 @@ class Module implements
      */
     public function getConfig()
     {
-        require_once __DIR__ . '/resources/application_constants.php';
+        include_once __DIR__ . '/resources/application_constants.php';
 
         // for the first call, we set the Config
         if (!isset($configs)) {
@@ -147,9 +143,9 @@ class Module implements
     /**
      * Load the given configuration.
      *
-     * @param string $filename     The path to the config file.
-     * @param boolean $overwrite   Merge or overwrite.
-     * @param string $segment      Includes only a segment of the config.
+     * @param string $filename   The path to the config file.
+     * @param boolean $overwrite Merge or overwrite.
+     * @param string $segment    Includes only a segment of the config.
      *
      * @throws \Exception
      *
@@ -158,6 +154,7 @@ class Module implements
     protected function setConfig($filename, $overwrite = false, $segment = null)
     {
         if (file_exists($filename) && is_readable($filename)) {
+            /** @noinspection PhpIncludeInspection */
             $config = include $filename;
 
             // if segment is given
@@ -200,7 +197,7 @@ class Module implements
             throw new \Exception(__CLASS__ . '::' . __METHOD__ . ' needs two or more array arguments');
         }
         $arrays = func_get_args();
-        $merged = array();
+        $merged = [];
 
         while ($arrays) {
             $array = array_shift($arrays);
@@ -234,16 +231,16 @@ class Module implements
      */
     public function getAutoloaderConfig()
     {
-        return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
+        return [
+            'Zend\Loader\ClassMapAutoloader' => [
                 __DIR__ . '/autoload_classmap.php',
-            ),
-            'Zend\Loader\StandardAutoloader' => array(
-                'namespaces' => array(
+            ],
+            'Zend\Loader\StandardAutoloader' => [
+                'namespaces' => [
                     __NAMESPACE__ => __DIR__ . '/src/' . __NAMESPACE__,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 
     /**
@@ -254,7 +251,7 @@ class Module implements
     public function getViewHelperConfig()
     {
         // already defined in the module config file
-        return array();
+        return [];
     }
 
     /**
@@ -265,7 +262,7 @@ class Module implements
     public function getControllerPluginConfig()
     {
         // already defined in the module config file
-        return array();
+        return [];
     }
 
     /**
@@ -276,6 +273,6 @@ class Module implements
     public function getServiceConfig()
     {
         // already defined in the module config file
-        return array();
+        return [];
     }
 }

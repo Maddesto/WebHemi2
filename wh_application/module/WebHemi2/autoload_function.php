@@ -9,5 +9,6 @@ return function ($class) {
     if (!isset($map[$class])) {
         return false;
     }
+    /** @noinspection PhpIncludeInspection */
     return include $map[$class];
 };

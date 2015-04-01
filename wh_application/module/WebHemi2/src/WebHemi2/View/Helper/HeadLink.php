@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_View_Helper
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_View_Helper
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\View\Helper;
@@ -28,11 +32,12 @@ use Zend\View\Helper\HeadLink as ZendHeadLink;
 /**
  * View helper extension for the Zend View Helper HeadLink
  *
- * @category   WebHemi2
- * @package    WebHemi2_View_Helper
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_View_Helper
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class HeadLink extends ZendHeadLink
 {
@@ -44,7 +49,7 @@ class HeadLink extends ZendHeadLink
      *
      * @throws Exception\BadMethodCallException
      *
-     * @return void
+     * @return HeadLink
      */
     public function __call($method, $args)
     {
@@ -62,10 +67,12 @@ class HeadLink extends ZendHeadLink
             }
 
             if (1 > $argc) {
-                throw new Exception\BadMethodCallException(sprintf(
+                throw new Exception\BadMethodCallException(
+                    sprintf(
                         '%s requires at least one argument',
                         $method
-                    ));
+                    )
+                );
             }
 
             if (is_array($args[0])) {
@@ -91,6 +98,7 @@ class HeadLink extends ZendHeadLink
             return $this;
         }
 
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         return parent::__call($method, $args);
     }
 }

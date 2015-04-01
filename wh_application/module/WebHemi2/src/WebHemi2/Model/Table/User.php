@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Model\Table;
@@ -35,13 +39,16 @@ use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
 
 /**
- * WebHemi2 User Table
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * User Table
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class User extends AbstractTableGateway
 {
@@ -71,7 +78,7 @@ class User extends AbstractTableGateway
      */
     public function getUserById($userId, $loadRoleForApplication = null)
     {
-        $rowSet = $this->select(array('user_id' => (int)$userId));
+        $rowSet = $this->select(['user_id' => (int)$userId]);
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
 
@@ -93,7 +100,7 @@ class User extends AbstractTableGateway
     public function getUserByName($username, $loadRoleForApplication = null)
     {
         /** @var ResultSet $rowSet */
-        $rowSet = $this->select(array('username' => $username));
+        $rowSet = $this->select(['username' => $username]);
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
 
@@ -115,7 +122,7 @@ class User extends AbstractTableGateway
     public function getUserByEmail($email, $loadRoleForApplication = null)
     {
         /** @var ResultSet $rowSet */
-        $rowSet = $this->select(array('email' => $email));
+        $rowSet = $this->select(['email' => $email]);
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
 
@@ -137,7 +144,7 @@ class User extends AbstractTableGateway
     public function getUserByHash($hash, $loadRoleForApplication = null)
     {
         /** @var ResultSet $rowSet */
-        $rowSet = $this->select(array('hash' => $hash));
+        $rowSet = $this->select(['hash' => $hash]);
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
 
@@ -179,7 +186,7 @@ class User extends AbstractTableGateway
      */
     public function getUserList($offset = null, $limit = null)
     {
-        $users = array();
+        $users = [];
 
         $select = $this->sql->select();
 
@@ -371,7 +378,7 @@ class User extends AbstractTableGateway
 
         // start the transaction
         $connection->beginTransaction();
-        $result = parent::update($userModel->toArray(), array('user_id' => $userModel->getUserId()));
+        $result = parent::update($userModel->toArray(), ['user_id' => $userModel->getUserId()]);
         // if the update was successful, we may go on
         if ($result !== false) {
             $userMeta = $userModel->getUserMetaData();

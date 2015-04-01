@@ -10,22 +10,23 @@
         }
     ],
     "require": {
-        "zendframework/zend-authentication": "2.3.*",
-        "zendframework/zend-config": "2.3.*",
-        "zendframework/zend-console": "2.3.*",
-        "zendframework/zend-crypt": "2.3.*",
-        "zendframework/zend-db": "2.3.*",
-        "zendframework/zend-http": "2.3.*",
-        "zendframework/zend-i18n": "2.3.*",
-        "zendframework/zend-log": "2.3.*",
-        "zendframework/zend-modulemanager": "2.3.*",
-        "zendframework/zend-mvc": "2.3.*",
-        "zendframework/zend-permissions-acl": "2.3.*",
-        "zendframework/zend-session": "2.3.*",
-        "zendframework/zend-serializer": "2.3.*",
-        "zendframework/zend-view": "2.3.*"
+        "zendframework/zend-authentication": "2.*",
+        "zendframework/zend-config": "2.*",
+        "zendframework/zend-console": "2.*",
+        "zendframework/zend-crypt": "2.*",
+        "zendframework/zend-db": "2.*",
+        "zendframework/zend-http": "2.*",
+        "zendframework/zend-i18n": "2.*",
+        "zendframework/zend-log": "2.*",
+        "zendframework/zend-modulemanager": "2.*",
+        "zendframework/zend-mvc": "2.*",
+        "zendframework/zend-permissions-acl": "2.*",
+        "zendframework/zend-session": "2.*",
+        "zendframework/zend-serializer": "2.*",
+        "zendframework/zend-view": "2.*"
     },
     "require-dev": {
-        "phpmd/phpmd" : "@stable"
+        "phpmd/phpmd" : "@stable",
+        "squizlabs/php_codesniffer": "2.*"
     }
 }

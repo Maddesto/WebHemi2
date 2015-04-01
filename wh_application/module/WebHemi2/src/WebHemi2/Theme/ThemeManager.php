@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Theme
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Theme
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Theme;
@@ -32,13 +36,16 @@ use Zend\View\Resolver\TemplatePathStack;
 use WebHemi2\Theme\Adapter\ConfigurationAdapter;
 
 /**
- * WebHemi2 theme manager
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Theme
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * theme manager
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Theme
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class ThemeManager
 {
@@ -199,11 +206,12 @@ class ThemeManager
 
             // if found it and readable, return it
             if (file_exists($themePath) && is_readable($themePath)) {
+                /** @noinspection PhpIncludeInspection */
                 return include $themePath;
             }
         }
 
-        return array();
+        return [];
     }
 
     /**
@@ -215,7 +223,7 @@ class ThemeManager
      */
     protected function filterThemeName($themeName)
     {
-        return str_replace(array('.', '/'), '', $themeName);
+        return str_replace(['.', '/'], '', $themeName);
     }
 
     /**

@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Controller
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Controller
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Controller;
@@ -30,13 +34,16 @@ use Zend\Crypt\Password\Bcrypt;
 use Zend\Mvc\MvcEvent;
 
 /**
- * WebHemi2 Admin Controller
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Controller
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * Admin Controller
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Controller
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  *
  * @method getForm() getForm(string $formName, string $name) retrieve a WebHemi Form instance with controller plugin
  */
@@ -67,7 +74,7 @@ class UserManagementController extends AdminController
         $userTable = new UserTable($this->getDatabaseAdapter());
         $userList = $userTable->getUserList();
 
-        return array('userList' => $userList);
+        return ['userList' => $userList];
     }
 
     /**
@@ -133,22 +140,22 @@ class UserManagementController extends AdminController
                     if ($result !== false) {
                         return $this->redirect()->toRoute(
                             'index/control-panel/user/view',
-                            array('userName' => $userModel->getUsername())
+                            ['userName' => $userModel->getUsername()]
                         );
                     }
                 } catch (Exception $e) {
                     $editForm->setMessages(
-                        array(
+                        [
                             'submit' => $e->getMessage()
-                        )
+                        ]
                     );
                 }
             }
         }
 
-        return array(
+        return [
             'editForm' => $editForm,
-        );
+        ];
     }
 
     /**
@@ -169,7 +176,7 @@ class UserManagementController extends AdminController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('index/control-panel/user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/control-panel/user/view', ['userName' => $userName]);
     }
 
     /**
@@ -192,7 +199,7 @@ class UserManagementController extends AdminController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('index/control-panel/user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/control-panel/user/view', ['userName' => $userName]);
     }
 
     /**
@@ -213,7 +220,7 @@ class UserManagementController extends AdminController
                 $userTable->update($userModel);
             }
         }
-        return $this->redirect()->toRoute('index/control-panel/user/view', array('userName' => $userName));
+        return $this->redirect()->toRoute('index/control-panel/user/view', ['userName' => $userName]);
     }
 
     /**
@@ -230,7 +237,7 @@ class UserManagementController extends AdminController
         if ($userModel) {
             // if it is NOT me, then allow the action
             if ($this->getUserAuth()->getIdentity()->getUserId() != $userModel->getUserId()) {
-                $userTable->delete(array('user_id' => $userModel->getUserId()));
+                $userTable->delete(['user_id' => $userModel->getUserId()]);
             }
         }
         return $this->redirect()->toRoute('index/control-panel/user');

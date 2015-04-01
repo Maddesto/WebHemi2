@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,12 +16,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
  */
 
 namespace WebHemi2\Component\Image;
@@ -26,14 +30,17 @@ namespace WebHemi2\Component\Image;
 use Exception;
 
 /**
- * WebHemi2 .PNG Image processing Component
+ * WebHemi2
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * .PNG Image processing Component
+ *
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
  */
 class Png extends AbstractImage
 {
@@ -47,7 +54,7 @@ class Png extends AbstractImage
     /** @var int $imageFilter PNG filter(s) used on output. */
     protected $imageFilter = PNG_NO_FILTER;
     /** @var array $availableFilters The list of the available filters for PNG format. */
-    protected $availableFilters = array(
+    protected $availableFilters = [
         PNG_NO_FILTER,
         PNG_FILTER_NONE,
         PNG_FILTER_SUB,
@@ -55,7 +62,7 @@ class Png extends AbstractImage
         PNG_FILTER_AVG,
         PNG_FILTER_PAETH,
         PNG_ALL_FILTERS
-    );
+    ];
 
     /**
      * Set image compression.
@@ -145,7 +152,7 @@ class Png extends AbstractImage
     public function readImage($fileName)
     {
         if (!is_null($fileName) && file_exists($fileName) && is_readable($fileName)) {
-            if ($resource = @imagecreatefrompng($fileName)) {
+            if ($resource = imagecreatefrompng($fileName)) {
                 imagesavealpha($resource, true);
                 imagealphablending($resource, false);
                 $this->imageResource[0] = $resource;
@@ -175,7 +182,7 @@ class Png extends AbstractImage
             imagepng($resource, $fileName, $this->quality, $this->imageFilter);
 
             if (!is_null($fileName)) {
-                @chmod($fileName, $this->chmod);
+                chmod($fileName, $this->chmod);
             }
         } else {
             throw new Exception('No image resource available!');

@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Model\Table;
@@ -29,13 +33,16 @@ use Zend\Db\Adapter\Exception;
 use Zend\Db\ResultSet\ResultSet;
 
 /**
- * WebHemi2 Acl Table
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * Acl Table
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class Acl extends AbstractTableGateway
 {
@@ -65,7 +72,7 @@ class Acl extends AbstractTableGateway
     public function getAclById($aclId)
     {
         /** @var ResultSet $rowSet */
-        $rowSet   = $this->select(array('acl_id' => (int)$aclId));
+        $rowSet   = $this->select(['acl_id' => (int)$aclId]);
         /** @var AclModel $aclModel */
         $aclModel = $rowSet->current();
 
@@ -82,7 +89,7 @@ class Acl extends AbstractTableGateway
     public function getAclByResource($resource)
     {
         /** @var ResultSet $rowSet */
-        $rowSet    = $this->select(array('resource' => $resource));
+        $rowSet    = $this->select(['resource' => $resource]);
         /** @var AclModel $aclModel */
         $aclModel = $rowSet->current();
 
@@ -118,7 +125,7 @@ class Acl extends AbstractTableGateway
      */
     public function getAclList()
     {
-        $aclList = array();
+        $aclList = [];
 
         $select = $this->sql->select();
         /** @var ResultSet $rowSet */

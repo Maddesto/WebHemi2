@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,26 +16,29 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Model
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Model;
 
 use WebHemi2\Model\UserMeta as UserMetaModel;
-use WebHemi2\Model\UserAcl as UserAclModel;
 
 /**
- * WebHemi2 User Model
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * User Model
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Model
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  *
  * @method string getAvatar() Retrieve user meta avatar.
  * @method string setAvatar() Set user meta avatar.
@@ -102,7 +108,7 @@ class User extends \ArrayObject
      */
     public function __call($name, $arguments)
     {
-        $data = array();
+        $data = [];
 
         // if getter or setter
         if (preg_match('/^(?<method>(get|set))(?<key>.*)$/', $name, $data)) {
@@ -272,12 +278,12 @@ class User extends \ArrayObject
         $content = null;
 
         if (strpos($avatar, 'data:image') === 0) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/^data\:image\/(?:jpeg|gif|png);base64,(?P<content>.*)$/', $avatar, $matches)) {
-                $content = @base64_decode($matches['content']);
+                $content = base64_decode($matches['content']);
 
                 if ($content) {
-                    $content = @imagecreatefromstring($content);
+                    $content = imagecreatefromstring($content);
 
                     if ($content) {
                         imagedestroy($content);
@@ -288,8 +294,8 @@ class User extends \ArrayObject
             }
         } elseif (strpos($avatar, 'http:') === 0) {
             // if the avatar is an URL, then we check if it's an image.'
-            $content = @getimagesize($avatar);
-            if ($content && in_array($content[2], array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG))) {
+            $content = getimagesize($avatar);
+            if ($content && in_array($content[2], [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG])) {
                 unset($content);
                 return self::USER_AVATAR_TYPE_URL;
             }
@@ -547,7 +553,7 @@ class User extends \ArrayObject
      */
     public function toArray()
     {
-        return array(
+        return [
             'user_id' => !empty($this->userId) ? $this->userId : null,
             'username' => $this->username,
             'email' => $this->email,
@@ -560,7 +566,7 @@ class User extends \ArrayObject
             'is_enabled' => $this->isEnabled ? 1 : 0,
             'time_login' => $this->timeLogin ? $this->timeLogin->format('Y-m-d H:i:s') : null,
             'time_register' => $this->timeRegister ? $this->timeRegister->format('Y-m-d H:i:s') : null
-        );
+        ];
     }
 
     /**
@@ -570,19 +576,19 @@ class User extends \ArrayObject
      */
     public function getArrayCopy()
     {
-        $formArray = array(
-            'accountInfo' => array(
+        $formArray = [
+            'accountInfo' => [
                 'user_id' => $this->userId,
                 'username' => $this->username,
                 'email' => $this->email,
                 'role' => $this->role,
-            ),
-            'personalInfo' => array(
+            ],
+            'personalInfo' => [
                 'displayname' => $this->getDisplayName(),
                 'headline' => $this->getHeadLine(),
                 'displayemail' => $this->getDisplayEmail(),
                 'details' => $this->getDetails(),
-                'avatarInfo' => array(
+                'avatarInfo' => [
                     'avatarimage' => $this->getAvatar(),
                     'avatar' => $this->getAvatar(),
                     'avatartype' => $this->getAvatarType(),
@@ -596,16 +602,16 @@ class User extends \ArrayObject
                         ? $this->getAvatar()
                         : ''
                     ),
-                ),
-            ),
-            'contactInfo' => array(
+                ],
+            ],
+            'contactInfo' => [
                 'phonenumber' => $this->getPhoneNumber(),
                 'location' => $this->getLocation(),
                 'instantmessengers' => $this->getInstantMessengers(),
                 'socialnetworks' => $this->getSocialNetworks(),
                 'websites' => $this->getWebsites(),
-            )
-        );
+            ]
+        ];
         return $formArray;
     }
 }

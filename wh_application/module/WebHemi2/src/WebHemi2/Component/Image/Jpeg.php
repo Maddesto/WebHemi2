@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,12 +16,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
  */
 
 namespace WebHemi2\Component\Image;
@@ -26,14 +30,17 @@ namespace WebHemi2\Component\Image;
 use Exception;
 
 /**
- * WebHemi2 .JPEG Image processing Component
+ * WebHemi2
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * .JPEG Image processing Component
+ *
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
  */
 class Jpeg extends AbstractImage
 {
@@ -81,7 +88,7 @@ class Jpeg extends AbstractImage
     public function readImage($fileName)
     {
         if (!is_null($fileName) && file_exists($fileName) && is_readable($fileName)) {
-            if ($resource = @imagecreatefromjpeg($fileName)) {
+            if ($resource = imagecreatefromjpeg($fileName)) {
                 $this->imageResource[0] = $resource;
             } else {
                 throw new Exception('Resource is not a JPEG image');
@@ -98,6 +105,7 @@ class Jpeg extends AbstractImage
      * @param string $fileName Name of the Jpeg file. If null the file will be written on stdout.
      *
      * @throws Exception
+     * @return void
      */
     public function writeImage($fileName = null)
     {
@@ -109,7 +117,7 @@ class Jpeg extends AbstractImage
             imagejpeg($resource, $fileName, $this->quality);
 
             if (!is_null($fileName)) {
-                @chmod($fileName, $this->chmod);
+                chmod($fileName, $this->chmod);
             }
         } else {
             throw new Exception('No image resource available!');

@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,17 +16,19 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 /**
  * Contains only the mutually unambiguous mappings between phone codes and country codes.
  */
-return array(
-    2 => array(
+return [
+    2 => [
         20 => 'EG',
         27 => 'ZA',
         211 => 'SS',
@@ -83,8 +88,8 @@ return array(
         297 => 'AW',
         298 => 'FO',
         299 => 'GL',
-    ),
-    3 => array(
+    ],
+    3 => [
         30 => 'GR',
         31 => 'NL',
         32 => 'BE',
@@ -118,8 +123,8 @@ return array(
         386 => 'SI',
         387 => 'BA',
         389 => 'MK',
-    ),
-    4 => array(
+    ],
+    4 => [
         40 => 'RO',
         41 => 'CH',
         43 => 'AT',
@@ -130,8 +135,8 @@ return array(
         420 => 'CZ',
         421 => 'SK',
         423 => 'LI',
-    ),
-    5 => array(
+    ],
+    5 => [
         51 => 'PE',
         52 => 'MX',
         53 => 'CU',
@@ -158,8 +163,8 @@ return array(
         596 => 'MQ',
         597 => 'SR',
         598 => 'UY',
-    ),
-    6 => array(
+    ],
+    6 => [
         60 => 'MY',
         62 => 'ID',
         63 => 'PH',
@@ -187,8 +192,8 @@ return array(
         690 => 'TK',
         691 => 'FM',
         692 => 'MH',
-    ),
-    8 => array(
+    ],
+    8 => [
         81 => 'JP',
         82 => 'KR',
         84 => 'VN',
@@ -200,8 +205,8 @@ return array(
         856 => 'LA',
         880 => 'BD',
         886 => 'TW',
-    ),
-    9 => array(
+    ],
+    9 => [
         90 => 'TR',
         91 => 'IN',
         92 => 'PK',
@@ -232,5 +237,5 @@ return array(
         995 => 'GE',
         996 => 'KG',
         998 => 'UZ',
-    ),
-);
+    ],
+];

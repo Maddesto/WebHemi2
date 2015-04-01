@@ -77,7 +77,7 @@ if (!$myProfile && $this->isAllowed('user-management:user-delete')) :
             <td>
                 <?php
                     if($instantMessengerData = $userModel->getInstantMessengers()):
-                        $instantMessengerData = @json_decode($instantMessengerData, true);
+                        $instantMessengerData = json_decode($instantMessengerData, true);
                         if ($instantMessengerData && is_array($instantMessengerData)):
                             foreach ($instantMessengerData as $imType => $imId):
                 ?>
@@ -96,7 +96,7 @@ if (!$myProfile && $this->isAllowed('user-management:user-delete')) :
             <td>
                 <?php
                     if($socialNetworkData = $userModel->getSocialNetworks()):
-                        $socialNetworkData = @json_decode($socialNetworkData, true);
+                        $socialNetworkData = json_decode($socialNetworkData, true);
                         if ($socialNetworkData && is_array($socialNetworkData)):
                             foreach ($socialNetworkData as $snType => $snId):
                 ?>
@@ -115,7 +115,7 @@ if (!$myProfile && $this->isAllowed('user-management:user-delete')) :
             <td>
                 <?php
                     if($webSiteData = $userModel->getWebsites()):
-                        $webSiteData = @json_decode($webSiteData, true);
+                        $webSiteData = json_decode($webSiteData, true);
                         if ($webSiteData && is_array($webSiteData)):
                             foreach ($webSiteData as $wsTitle => $url):
                 ?>

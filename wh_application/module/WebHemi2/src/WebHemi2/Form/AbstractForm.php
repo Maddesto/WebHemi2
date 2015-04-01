@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Form
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Form
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Form;
@@ -36,13 +40,16 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
 use WebHemi2\Acl\Acl;
 
 /**
- * WebHemi2 Form Abstraction
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Form
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * Form Abstraction
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Form
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
 {
@@ -54,7 +61,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
     /** @staticvar int $tabindex */
     protected static $tabindex = 1;
     /** @staticvar array $validatedElements */
-    protected static $validatedForms = array();
+    protected static $validatedForms = [];
 
     /**
      * Class constructor
@@ -99,7 +106,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
     /**
      * Retrieve a named element or fieldset
      *
-     * @param  string $elementOrFieldset
+     * @param string $elementOrFieldset
      *
      * @return Element
      */
@@ -175,7 +182,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                 $validators    = $formElement->getOption('validators');
                 $filters       = $formElement->getOption('filters');
                 $value         = $formElement->getValue();
-                $messages      = array();
+                $messages      = [];
 
                 if (!empty($filters)) {
                     // apply all the filter on the value
@@ -230,7 +237,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
             ));
         }
 
-        $data = array();
+        $data = [];
 
         if (empty($formElement)) {
             foreach ($this->getFieldsets() as $fieldset) {
@@ -303,7 +310,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
         // if no ID present, we use the name to add one
         if (empty($id)) {
             $name = $element->getName();
-            $matches = array();
+            $matches = [];
 
             if (preg_match('/(?:.*\[)?([^\]]+)\]?$/', $name, $matches)) {
                 $id = $matches[1];

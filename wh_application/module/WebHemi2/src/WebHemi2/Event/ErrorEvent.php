@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Event
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Event
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Event;
@@ -27,21 +31,22 @@ use Zend\View\Model\ViewModel;
 use Zend\Http\Response;
 
 /**
- * Frobidden error handler event
+ * Forbidden error handler event
  *
- * @category   WebHemi2
- * @package    WebHemi2_Event
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Event
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class ErrorEvent
 {
-    /** @staticvar string $template */
-    public static $template = array(
+    /** @var string $template */
+    public static $template = [
         403 => 'error/403',
         404 => 'error/404'
-    );
+    ];
 
     /**
      * Prepares the ACL error page
@@ -78,10 +83,10 @@ class ErrorEvent
     protected static function get403(MvcEvent $e)
     {
         // Common view variables
-        $viewVariables = array(
+        $viewVariables = [
             'error' => $e->getParam('error'),
             'identity' => $e->getParam('identity'),
-        );
+        ];
 
         $error = $e->getError();
         switch ($error) {

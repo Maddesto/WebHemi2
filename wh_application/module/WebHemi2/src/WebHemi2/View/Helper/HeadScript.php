@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_View_Helper
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_View_Helper
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\View\Helper;
@@ -28,11 +32,12 @@ use Zend\View\Helper\HeadScript as ZendHeadScript;
 /**
  * View helper extension for the Zend View Helper HeadScript
  *
- * @category   WebHemi2
- * @package    WebHemi2_View_Helper
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_View_Helper
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class HeadScript extends ZendHeadScript
 {
@@ -49,24 +54,29 @@ class HeadScript extends ZendHeadScript
     {
         if (preg_match('/^(?P<action>set|(ap|pre)pend|offsetSet)(?P<mode>File|Script)$/', $method, $matches)) {
             if (1 > count($args)) {
-                throw new Exception\BadMethodCallException(sprintf(
+                throw new Exception\BadMethodCallException(
+                    sprintf(
                         'Method "%s" requires at least one argument',
                         $method
-                    ));
+                    )
+                );
             }
 
-            $action  = $matches['action'];
-            $mode    = strtolower($matches['mode']);
-            $type    = 'text/javascript';
-            $attrs   = array();
+            $action = $matches['action'];
+            $mode   = strtolower($matches['mode']);
+            $type   = 'text/javascript';
+            $attrs  = [];
+            $index  = 0;
 
             if ('offsetSet' == $action) {
                 $index = array_shift($args);
                 if (1 > count($args)) {
-                    throw new Exception\BadMethodCallException(sprintf(
+                    throw new Exception\BadMethodCallException(
+                        sprintf(
                             'Method "%s" requires at least two arguments, an index and source',
                             $method
-                        ));
+                        )
+                    );
                 }
             }
 
@@ -97,7 +107,8 @@ class HeadScript extends ZendHeadScript
                         // For local static file we should use the
                         if (strpos($item->attributes['src'], '/resources') === 0) {
                             list($protocol,) = explode('/', $_SERVER['SERVER_PROTOCOL']);
-                            $item->attributes['src'] = strtolower($protocol) . '://' . APPLICATION_STATIC_DOMAIN . $item->attributes['src'];
+                            $item->attributes['src'] = strtolower($protocol)
+                                . '://' . APPLICATION_STATIC_DOMAIN . $item->attributes['src'];
                         }
 
                         if ('offsetSet' == $action) {

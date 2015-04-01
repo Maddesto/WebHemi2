@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,12 +16,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
  */
 
 namespace WebHemi2\Component\Image;
@@ -26,31 +30,33 @@ namespace WebHemi2\Component\Image;
 use Exception;
 
 /**
- * WebHemi2 .ICO Image processing Component
+ * WebHemi2
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * .ICO Image processing Component
  *
- * @copyright Original floIcon copyright (c) 2007 by Joshua Hatfield.
- * @license http://flobi.users.phpclasses.org/browse/file/19222.html
- * @example http://tech.flobi.com/test/floIcon/private.php
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @copyright  2007 Joshua Hatfield. Original floIcon
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
+ * @license    http://flobi.users.phpclasses.org/browse/file/19222.html
+ * @example    http://tech.flobi.com/test/floIcon/private.php
  */
 class Ico extends AbstractImage
 {
     /** @var array $entry Container for one or more entry datas. */
-    private $entry = array();
+    private $entry = [];
     /** @var array $entryBin Container for one or more binary entry datas. */
-    private $entryBin = array();
+    private $entryBin = [];
     /** @var array $header Container for icon header arrays. */
-    private $header = array();
+    private $header = [];
     /** @var array $headerBin Container for original icon headers. */
-    private $headerBin = array();
+    private $headerBin = [];
     /** @var array $imageBin Container for original image resources. */
-    private $imageBin = array();
+    private $imageBin = [];
 
     /**
      * Read image file and create resource.
@@ -90,13 +96,13 @@ class Ico extends AbstractImage
                 );
 
                 // Get image.
-                $this->imageBin = @fread($filePointer, $this->entry[$i]["SizeInBytes"] - strlen($this->headerBin[$i]));
+                $this->imageBin = fread($filePointer, $this->entry[$i]["SizeInBytes"] - strlen($this->headerBin[$i]));
                 fseek($filePointer, $position);
 
                 // Set resource.
-                if ($resource = @imagecreatefromstring($this->headerBin[$i] . $this->imageBin[$i])) {
+                if ($resource = imagecreatefromstring($this->headerBin[$i] . $this->imageBin[$i])) {
                     // This must be a PNG image...
-                    $this->header[$i] = array(
+                    $this->header[$i] = [
                         "Size" => 0,
                         "Width" => imagesx($resource),
                         "Height" => imagesy($resource) * 2,
@@ -108,7 +114,7 @@ class Ico extends AbstractImage
                         "YpixelsPerM" => 0,
                         "ColorsUsed" => 0,
                         "ColorsImportant" => 0,
-                    );
+                    ];
                 } else {
                     // Otherwise we build up the image pixel-by-pixel.
                     $resource = imagecreatetruecolor($this->entry[$i]["Width"], $this->entry[$i]["Height"]);
@@ -117,7 +123,7 @@ class Ico extends AbstractImage
                     $position = 0;
                     // By default we do not ignore the alpha blending
                     $ignoreAlpha = false;
-                    $palette = array();
+                    $palette = [];
 
                     // BitCount < 24. That means we work wit palette.
                     if ($this->header[$i]["BitCount"] < 24) {
@@ -140,7 +146,7 @@ class Ico extends AbstractImage
 
                         // Go through every pixel of the original image and clone it onto the resource.
                         for ($row = 0; $row < $this->entry[$i]["Height"]; $row++) {
-                            $colors = array();
+                            $colors = [];
 
                             for ($column = 0; $column < $this->entry[$i]["Width"]; $column++) {
                                 if ($this->header[$i]["BitCount"] < 8) {
@@ -188,7 +194,7 @@ class Ico extends AbstractImage
                         $retry = true;
 
                         while ($retry) {
-                            $alphas = array();
+                            $alphas = [];
                             $retry = false;
 
                             for ($row = 0; $row < $this->entry[$i]["Height"] && !$retry; $row++) {
@@ -243,7 +249,7 @@ class Ico extends AbstractImage
                         imagecolortransparent($resource, $palette[-1]);
 
                         for ($row = 0; $row < $this->entry[$i]["Height"]; $row++) {
-                            $colors = array();
+                            $colors = [];
 
                             for ($column = 0; $column < $this->entry[$i]["Width"]; $column++) {
                                 $color = array_shift($colors);
@@ -311,7 +317,7 @@ class Ico extends AbstractImage
      */
     public function writeImage($fileName = null)
     {
-        $order = array();
+        $order = [];
         $counter = count($this->imageResource);
 
         // Sort resources from smallest to largest.
@@ -353,12 +359,12 @@ class Ico extends AbstractImage
             header('Content-type: image/x-icon');
             echo $output . $outputImages;
             exit;
-        } elseif (!@file_put_contents($fileName, $output . $outputImages)) {
+        } elseif (!file_put_contents($fileName, $output . $outputImages)) {
             throw new Exception('Unable to write file: ' . $fileName);
         }
 
         if (!is_null($fileName)) {
-            @chmod($fileName, $this->chmod);
+            chmod($fileName, $this->chmod);
         }
 
         return true;
@@ -387,8 +393,8 @@ class Ico extends AbstractImage
         $index = count($this->imageResource);
         $height = imagesy($resource);
         $width = imagesx($resource);
-        $realIndexPalette = array();
-        $realPalette = array();
+        $realIndexPalette = [];
+        $realPalette = [];
         $hasTransparency = false;
         $blackColor = false;
         $isTrueColor = false;
@@ -443,12 +449,12 @@ class Ico extends AbstractImage
         } else {
             if ($hasTransparency && $blackColor === false) {
                 $blackColor = count($realPalette);
-                $color = array(
+                $color = [
                     "red" => 0,
                     "blue" => 0,
                     "green" => 0,
                     "alpha" => 0
-                );
+                ];
                 $realPalette[] = $color;
             }
             $colorCount = count($realPalette);
@@ -607,7 +613,7 @@ class Ico extends AbstractImage
             $colorCount = 0;
         }
 
-        $this->header[$index] = array(
+        $this->header[$index] = [
             "Size" => 40,
             "Width" => $width,
             "Height" => $height * 2,
@@ -619,7 +625,7 @@ class Ico extends AbstractImage
             "YpixelsPerM" => 0,
             "ColorsUsed" => $colorCount,
             "ColorsImportant" => 0,
-        );
+        ];
         $this->headerBin[$index] = pack(
             "LLLSSLLLLLL",
             $this->header[$index]["Size"],
@@ -634,7 +640,7 @@ class Ico extends AbstractImage
             $this->header[$index]["ColorsUsed"],
             $this->header[$index]["ColorsImportant"]
         );
-        $this->entry[$index] = array(
+        $this->entry[$index] = [
             "Width" => $width,
             "Height" => $height,
             "ColorCount" => $colorCount,
@@ -643,7 +649,7 @@ class Ico extends AbstractImage
             "BitCount" => $bitCount,
             "SizeInBytes" => $this->header[$index]["Size"] + $this->header[$index]["ImageSize"],
             "FileOffset" => -1,
-        );
+        ];
         $this->entryBin[$index] = "";
         $this->imageResource[$index] = $resource;
 
@@ -662,11 +668,11 @@ class Ico extends AbstractImage
         if (isset($this->imageResource[$index])) {
             // so the array will be re-indexed
             array_splice($this->imageResource, ($index + 1), 1);
-            @array_splice($this->entry, ($index + 1), 1);
-            @array_splice($this->entryBin, ($index + 1), 1);
-            @array_splice($this->header, ($index + 1), 1);
-            @array_splice($this->headerBin, ($index + 1), 1);
-            @array_splice($this->imageBin, ($index + 1), 1);
+            array_splice($this->entry, ($index + 1), 1);
+            array_splice($this->entryBin, ($index + 1), 1);
+            array_splice($this->header, ($index + 1), 1);
+            array_splice($this->headerBin, ($index + 1), 1);
+            array_splice($this->imageBin, ($index + 1), 1);
         }
 
         return $this;
@@ -679,11 +685,11 @@ class Ico extends AbstractImage
      */
     public function clearImage()
     {
-        $this->entry = array();
-        $this->entryBin = array();
-        $this->header = array();
-        $this->headerBin = array();
-        $this->imageBin = array();
+        $this->entry = [];
+        $this->entryBin = [];
+        $this->header = [];
+        $this->headerBin = [];
+        $this->imageBin = [];
 
         return parent::clearImage();
     }

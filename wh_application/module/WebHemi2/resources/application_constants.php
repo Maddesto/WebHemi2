@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 define('WEBHEMI_VERSION', '2.0.1.0');
@@ -33,19 +37,22 @@ define('APPLICATION_MODULE_TYPE_SUBDIR', 'subdir');
 
 $configFile = APPLICATION_PATH . '/config/application.config.php';
 if (file_exists($configFile)) {
-    $modules = include($configFile);
+    /** @noinspection PhpIncludeInspection */
+    $modules = include $configFile;
 } else {
-    $modules = array();
+    $modules = [];
 }
 
-define('APPLICATION_MODULE', call_user_func(function($modules) {
+define('APPLICATION_MODULE', call_user_func(
+    function ($modules) {
         $domain = $_SERVER['SERVER_NAME'];
 
         $configFile = APPLICATION_PATH . '/config/application.config.php';
         if (file_exists($configFile)) {
+            /** @noinspection PhpIncludeInspection */
             $modules = include($configFile);
         } else {
-            $modules = array();
+            $modules = [];
         }
         // set a default module
         $module = WEBSITE_MODULE;
@@ -111,11 +118,15 @@ define('APPLICATION_MODULE', call_user_func(function($modules) {
     }, $modules)
 );
 define('APPLICATION_MODULE_TYPE', call_user_func(function($moduleName, $modules) {
-        return isset($modules[$moduleName]) ? $modules[$moduleName]['type'] : (WEBSITE_MODULE == $moduleName ? 'subdomain' : 'subdir');
+        return isset($modules[$moduleName])
+            ? $modules[$moduleName]['type']
+            : (WEBSITE_MODULE == $moduleName ? 'subdomain' : 'subdir');
     }, APPLICATION_MODULE, $modules)
 );
 define('APPLICATION_MODULE_URI', call_user_func(function($moduleName, $modules) {
-        return isset($modules[$moduleName]) ? $modules[$moduleName]['path'] : (WEBSITE_MODULE == $moduleName ? 'www' : '/');
+        return isset($modules[$moduleName])
+            ? $modules[$moduleName]['path']
+            : (WEBSITE_MODULE == $moduleName ? 'www' : '/');
     }, APPLICATION_MODULE, $modules)
 );
 

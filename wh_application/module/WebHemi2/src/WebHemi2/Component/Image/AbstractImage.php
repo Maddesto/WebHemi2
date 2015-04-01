@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,12 +16,13 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
  */
 
 namespace WebHemi2\Component\Image;
@@ -26,28 +30,31 @@ namespace WebHemi2\Component\Image;
 use Exception;
 
 /**
- * WebHemi2 Image processing Component
+ * WebHemi2
  *
- * @category     WebHemi2
- * @package      WebHemi2_Component
- * @subpackage   WebHemi2_Component_Image
- * @author       Gixx @ www.gixx-web.com
- * @copyright    Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license      http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * Image processing Component
+ *
+ * @category   WebHemi2
+ * @package    WebHemi2_Component
+ * @subpackage WebHemi2_Component_Image
+ * @author     Gabor Ivan <gixx@gixx-web.com>
+ * @copyright  2015 Gixx-web (http://www.gixx-web.com)
+ * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link       http://www.gixx-web.com
  */
 abstract class AbstractImage
 {
     /** Image will be scaled up the fit the new size if the new image has greater dimensions: true|[FALSE] */
     const RESIZE_OPTION_SCALE_UP = 'scaleUp';
-    /** Image will be resized to be not cropped. The empty parts will be filled with color: [TRUE]|false */
+    /** Image will be sized instead of to be not cropped. The empty parts will be filled with color: [TRUE]|false */
     const RESIZE_OPTION_FIT_FULL_SIZE = 'fitFullSize';
     /** The color or the empty parts upon rotation or resize: [TRANSPARENT]|"r,g,b[,a]" */
     const RESIZE_OPTION_FILL_COLOR = 'fillColor';
-    /** The default file permisson for the output. */
+    /** The default file permission for the output. */
     const OUTPUT_FILE_PERMISSION = 0640;
 
     /** @var resource[] $imageResource Container for one or more image resources. */
-    protected $imageResource = array();
+    protected $imageResource = [];
     /** @var int $chmod File permission of the output. */
     protected $chmod;
 
@@ -120,6 +127,7 @@ abstract class AbstractImage
      * @param string $fileName
      *
      * @throws Exception
+     * @return void
      */
     abstract public function writeImage($fileName);
 
@@ -184,7 +192,7 @@ abstract class AbstractImage
         imagealphablending($resource, false);
 
         if ($color == 'transparent') {
-            $color = array(0, 0, 0, 127);
+            $color = [0, 0, 0, 127];
         } elseif (is_string($color)) {
             $color = explode(',', $color);
         }
@@ -210,7 +218,7 @@ abstract class AbstractImage
     {
         if (isset($this->imageResource[$index])) {
             if (is_resource($this->imageResource[$index])) {
-                @imagedestroy($this->imageResource[$index]);
+                imagedestroy($this->imageResource[$index]);
             }
             // So the array will be re-indexed.
             array_splice($this->imageResource, ($index + 1), 1);
@@ -236,7 +244,7 @@ abstract class AbstractImage
             if ($oldResource) {
                 $this->imageResource[$index] = $newResource;
                 // Free up memory.
-                @imagedestroy($oldResource);
+                imagedestroy($oldResource);
             } else {
                 throw new Exception('No such resource to replace!');
             }
@@ -259,10 +267,10 @@ abstract class AbstractImage
     public function getResourceDimension($index = 0)
     {
         if ($resource = $this->getResource($index)) {
-            return array(
+            return [
                 'width' => imagesx($resource),
                 'height' => imagesy($resource)
-            );
+            ];
         } else {
             throw new Exception('No such resource!');
         }
@@ -282,7 +290,7 @@ abstract class AbstractImage
      *
      * @return AbstractImage
      */
-    public function resizeResource($width, $height, $index = 0, $options = array())
+    public function resizeResource($width, $height, $index = 0, $options = [])
     {
         if ($resource = $this->getResource($index)) {
             $scaleUp = array_key_exists(self::RESIZE_OPTION_SCALE_UP, $options)
@@ -360,7 +368,7 @@ abstract class AbstractImage
     public function greyscaleResource($index = 0)
     {
         if ($resource = $this->getResource($index)) {
-            $greyscalePalette = array();
+            $greyscalePalette = [];
             list($width, $height) = $this->getResourceDimension($index);
 
             // Create a blank image with the same dimensions.
@@ -402,11 +410,11 @@ abstract class AbstractImage
     {
         foreach ($this->imageResource as $index => $resource) {
             if (is_resource($resource)) {
-                @imagedestroy($resource);
+                imagedestroy($resource);
             }
         }
 
-        $this->imageResource = array();
+        $this->imageResource = [];
         return $this;
     }
 }

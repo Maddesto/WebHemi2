@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Model\Table;
@@ -29,13 +33,16 @@ use Zend\Db\Adapter\Exception;
 use Zend\Db\ResultSet\ResultSet;
 
 /**
- * WebHemi2 User Meta Table
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * User Meta Table
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class UserMeta extends AbstractTableGateway
 {
@@ -64,7 +71,7 @@ class UserMeta extends AbstractTableGateway
      */
     public function getUserMeta($userId, $metaKey)
     {
-        $rowSet        = $this->select(array('user_id' => $userId, 'meta_key' => $metaKey));
+        $rowSet        = $this->select(['user_id' => $userId, 'meta_key' => $metaKey]);
         $userMetaModel = $rowSet->current();
 
         return $userMetaModel;
@@ -79,8 +86,8 @@ class UserMeta extends AbstractTableGateway
      */
     public function getUserMetaAll($userId)
     {
-        $rowSet   = $this->select(array('user_id' => $userId));
-        $userMeta = array();
+        $rowSet   = $this->select(['user_id' => $userId]);
+        $userMeta = [];
         while ($metaModel = $rowSet->current()) {
             /** @var UserMetaModel $metaModel */
             $userMeta[$metaModel->getMetaKey()] = $metaModel;
@@ -111,10 +118,10 @@ class UserMeta extends AbstractTableGateway
         } else {
             return parent::update(
                 $userMetaModel->toArray(),
-                array(
+                [
                     'user_id'  => $userMetaModel->getUserId(),
                     'meta_key' => $userMetaModel->getMetaKey()
-                )
+                ]
             );
         }
     }

@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Model\Table;
@@ -29,13 +33,16 @@ use Zend\Db\Adapter\Exception;
 use Zend\Db\ResultSet\ResultSet;
 
 /**
- * WebHemi2 User Acl Table
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Model_Table
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * User Acl Table
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Model_Table
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class UserAcl extends AbstractTableGateway
 {
@@ -65,7 +72,7 @@ class UserAcl extends AbstractTableGateway
      */
     public function getUserAcl($userId, $application)
     {
-        $rowSet = $this->select(array('user_id' => $userId, 'application' => $application));
+        $rowSet = $this->select(['user_id' => $userId, 'application' => $application]);
         if ($rowSet) {
             return $rowSet->current();
         }
@@ -95,10 +102,10 @@ class UserAcl extends AbstractTableGateway
         } else {
             return parent::update(
                 $userAclModel->toArray(),
-                array(
+                [
                     'user_id'  => $userAclModel->getUserId(),
                     'application' => $userAclModel->getApplication()
-                )
+                ]
             );
         }
     }

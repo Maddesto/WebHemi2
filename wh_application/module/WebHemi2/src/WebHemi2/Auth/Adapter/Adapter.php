@@ -3,6 +3,9 @@
 /**
  * WebHemi2
  *
+ * PHP version 5.4
+ *
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -13,11 +16,12 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category   WebHemi2
- * @package    WebHemi2_Auth_Adapter
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @category  WebHemi2
+ * @package   WebHemi2_Auth_Adapter
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 
 namespace WebHemi2\Auth\Adapter;
@@ -32,13 +36,16 @@ use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Model\Table\Lock as UserLockTable;
 
 /**
- * WebHemi2 User Authentication Adapter
+ * WebHemi2
  *
- * @category   WebHemi2
- * @package    WebHemi2_Auth_Adapter
- * @author     Gixx @ www.gixx-web.com
- * @copyright  Copyright (c) 2015, Gixx-web (http://www.gixx-web.com)
- * @license    http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * User Authentication Adapter
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Auth_Adapter
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class Adapter implements AdapterInterface, ServiceManagerAwareInterface
 {
@@ -83,21 +90,21 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
                 $authResult = new Result(
                     Result::FAILURE_IDENTITY_NOT_FOUND,
                     $this->identity,
-                    array('A record with the supplied identity could not be found.')
+                    ['A record with the supplied identity could not be found.']
                 );
             } elseif (!$userModel->getActive() || !$userModel->getEnabled()) {
                 // else if the identity exists but not activated or disabled
                 $authResult = new Result(
                     Result::FAILURE_UNCATEGORIZED,
                     $this->identity,
-                    array('A record with the supplied identity is not avaliable.')
+                    ['A record with the supplied identity is not avaliable.']
                 );
             } elseif (!$bcrypt->verify($this->credential, $userModel->getPassword())) {
                 // else if the supplied credential is not valid
                 $authResult = new Result(
                     Result::FAILURE_CREDENTIAL_INVALID,
                     $this->identity,
-                    array('Supplied credential is invalid.')
+                    ['Supplied credential is invalid.']
                 );
             }
         } else {
@@ -123,7 +130,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
             $authResult = new Result(
                 Result::SUCCESS,
                 $userModel,
-                array('Authentication successful.')
+                ['Authentication successful.']
             );
 
             // avoid auth process in the same runtime
@@ -132,7 +139,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
             // reset the counter
             $this->getUserLockTable()->releaseLock();
         } else {
-            // increment the counter so the ACL's IP assert can ban for a specific time (LockTable::LOCKTIME)
+            // increment the counter so the ACL's IP assert can ban for a specific time (LockTable::LOCK_TIME)
             $this->getUserLockTable()->setLock();
         }
 
