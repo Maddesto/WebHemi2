@@ -33,10 +33,7 @@
  */
 // define environment
 define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
-// allow debug for development
-if ('dev' == APPLICATION_ENV) {
-    require_once(__DIR__ . '/wh_application/library/dump.php');
-}
+
 // create applitacion-wide constants
 require_once(__DIR__ . '/wh_application/module/WebHemi2/resources/application_constants.php');
 // load application config to get template info

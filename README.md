@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.2.5 Created by Gixx.
+Version 2.0.3 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -14,7 +14,7 @@ Requirements
 ------------
 
 - *nix operating system
-- PHP 5.4+
+- PHP 5.5+
 - MySQL 5.5+
 - Apache 2.4+ with 'mod_rewrite' enabled
 - [Zend Framework 2.3+](https://github.com/zendframework/zf2)

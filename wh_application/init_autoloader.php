@@ -15,12 +15,6 @@
 
 define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
 
-if ('dev' == APPLICATION_ENV) {
-    error_reporting(E_ALL);
-    ini_set('display_errors', 'On');
-    require_once __DIR__ . '/library/dump.php';
-}
-
 // Composer autoloading
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {
     $loader = include __DIR__ . '/vendor/autoload.php';
