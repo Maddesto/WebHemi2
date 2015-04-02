@@ -718,14 +718,16 @@ class UserForm extends AbstractForm
 
         // if no rights to change, no need to validate
         if (!$acl->isAllowed('user-management:user-add')) {
-            $this->get('accountInfo')->get('username')->setOptions(
+            /** @var Fieldset $accountInfoFieldset */
+            $accountInfoFieldset = $this->get('accountInfo');
+            $accountInfoFieldset->get('username')->setOptions(
                 [
                     'required' => false,
                     'filters' => [],
                     'validators' => []
                 ]
             );
-            $this->get('accountInfo')->get('email')->setOptions(
+            $accountInfoFieldset->get('email')->setOptions(
                 [
                     'required' => false,
                     'filters' => [],
@@ -793,18 +795,22 @@ class UserForm extends AbstractForm
     protected function prepareAvatar()
     {
         // Adding filters and validators for the Avatar section
-        $avatarType = $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->getValue();
-        $avatar = $this->get('personalInfo')->get('avatarInfo')->get('avatar')->getValue();
+        /** @var Fieldset $personalInfoFieldset */
+        $personalInfoFieldset = $this->get('personalInfo');
+        /** @var Fieldset $avatarSubFieldset */
+        $avatarSubFieldset = $personalInfoFieldset->get('avatarInfo');
+        $avatarType = $avatarSubFieldset->get('avatartype')->getValue();
+        $avatar = $avatarSubFieldset->get('avatar')->getValue();
 
         switch ($avatarType) {
             case User::USER_AVATAR_TYPE_BASE64:
-                $fileData = $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->getValue();
+                $fileData = $avatarSubFieldset->get('avatarfile')->getValue();
 
                 // if the current avatar is not an uploaded one
                 if (strpos($avatar, 'data:image') === false) {
                     // if no file present, we prevent PHP errors by changing the type
                     if (empty($fileData['tmp_name'])) {
-                        $this->get('personalInfo')->get('avatarInfo')->get('avatartype')->setValue(
+                        $avatarSubFieldset->get('avatartype')->setValue(
                             User::USER_AVATAR_TYPE_NONE
                         );
                     }
@@ -812,7 +818,7 @@ class UserForm extends AbstractForm
 
                 // if there's an uploaded file then we set up the validators
                 if (!empty($fileData['tmp_name'])) {
-                    $this->get('personalInfo')->get('avatarInfo')->get('avatarfile')->setOptions(
+                    $avatarSubFieldset->get('avatarfile')->setOptions(
                         [
                             'required' => true,
                             'allow_empty' => false,
@@ -830,7 +836,7 @@ class UserForm extends AbstractForm
 
                 break;
             case User::USER_AVATAR_TYPE_URL:
-                $this->get('personalInfo')->get('avatarInfo')->get('avatarurl')->setOptions(
+                $avatarSubFieldset->get('avatarurl')->setOptions(
                     [
                         'required' => true,
                         'allow_empty' => false,
@@ -856,7 +862,7 @@ class UserForm extends AbstractForm
                 );
                 break;
             case User::USER_AVATAR_TYPE_GRAVATAR:
-                $this->get('personalInfo')->get('avatarInfo')->get('avatargrid')->setOptions(
+                $avatarSubFieldset->get('avatargrid')->setOptions(
                     [
                         'allow_empty' => true,
                         'filters' => [

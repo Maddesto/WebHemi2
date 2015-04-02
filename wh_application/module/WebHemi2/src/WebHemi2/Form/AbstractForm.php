@@ -85,7 +85,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
      */
     public function has($elementOrFieldset, $searchInFieldsets = false)
     {
-        if (array_key_exists($elementOrFieldset, $this->byName)) {
+        if ($this->iterator->get($elementOrFieldset) !== null) {
             return true;
         } elseif ($searchInFieldsets) {
             foreach ($this->fieldsets as $fieldset) {
@@ -124,7 +124,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
                 }
             }
         } else {
-            return $this->byName[$elementOrFieldset];
+            return $this->iterator->get($elementOrFieldset);
         }
 
         throw new Exception\InvalidElementException(
