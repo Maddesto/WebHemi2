@@ -23,7 +23,6 @@
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-
 define('WEBHEMI_VERSION', '2.0.1.0');
 
 define('ADMIN_MODULE', 'Admin');
@@ -41,6 +40,14 @@ if (file_exists($configFile)) {
     $modules = include $configFile;
 } else {
     $modules = [];
+}
+
+// For the unit test it is required to define these keys
+if (php_sapi_name() === 'cli') {
+    $_SERVER['SERVER_NAME'] = 'localhost';
+    $_SERVER['HTTP_HOST'] = 'localhost';
+    $_SERVER['REQUEST_URI'] = '/';
+    $_SERVER['QUERY_STRING'] = '';
 }
 
 define('APPLICATION_MODULE', call_user_func(
