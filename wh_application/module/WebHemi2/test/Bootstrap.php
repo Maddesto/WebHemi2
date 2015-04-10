@@ -19,7 +19,7 @@ class Bootstrap
 
     public static function init()
     {
-        $zf2ModulePaths = array(dirname(dirname(__DIR__)));
+        $zf2ModulePaths = [dirname(dirname(__DIR__))];
         if (($path = static::findParentPath('vendor'))) {
             $zf2ModulePaths[] = $path;
         }
@@ -30,14 +30,14 @@ class Bootstrap
         static::initAutoloader();
 
         // use ModuleManager to load this module and it's dependencies
-        $config = array(
-            'module_listener_options' => array(
+        $config = [
+            'module_listener_options' => [
                 'module_paths' => $zf2ModulePaths,
-            ),
-            'modules' => array(
+            ],
+            'modules' => [
                 'WebHemi2'
-            )
-        );
+            ]
+        ];
 
         $serviceManager = new ServiceManager(new ServiceManagerConfig());
         $serviceManager->setService('ApplicationConfig', $config);
@@ -85,11 +85,13 @@ class Bootstrap
                 $loader->add('ZendXml', $zf2Path);
             } else {
                 include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-                AutoloaderFactory::factory(array(
-                    'Zend\Loader\StandardAutoloader' => array(
-                        'autoregister_zf' => true
-                    )
-                ));
+                AutoloaderFactory::factory(
+                    [
+                        'Zend\Loader\StandardAutoloader' => [
+                            'autoregister_zf' => true
+                        ]
+                    ]
+                );
             }
         }
 
