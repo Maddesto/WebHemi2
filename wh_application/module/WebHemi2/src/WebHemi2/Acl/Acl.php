@@ -37,7 +37,7 @@ use WebHemi2\Model\Acl as AclModel;
 use WebHemi2\Model\User as UserModel;
 use WebHemi2\Model\Table\Acl as AclTable;
 use Zend\Db\Adapter\Adapter;
-use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager;
 use Zend\Permissions\Acl\Acl as ZendAcl;
 use Zend\Permissions\Acl\Exception;
 use Zend\Permissions\Acl\Resource\GenericResource;
@@ -63,8 +63,8 @@ class Acl
 
     /** @var array $options */
     protected $options;
-    /** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+    /** @var ServiceManager\ServiceLocatorInterface $serviceLocator */
+    protected $serviceLocator;
     /** @var ZendAcl $acl */
     protected $acl;
     /** @var AuthenticationService $auth */
@@ -82,13 +82,13 @@ class Acl
      * Instantiate the Access Control
      *
      * @param array|Traversable $options
-     * @param ServiceManager $serviceManager
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      *
      * @throws Exception\InvalidArgumentException
      *
      * @return Acl
      */
-    public static function factory($options, ServiceManager $serviceManager)
+    public static function factory($options, ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         if ($options instanceof Traversable) {
             $options = ArrayUtils::iteratorToArray($options);
@@ -102,7 +102,7 @@ class Acl
             );
         }
 
-        $acl = new static($options, $serviceManager);
+        $acl = new static($options, $serviceLocator);
         $acl->init();
 
         return $acl;
@@ -112,20 +112,20 @@ class Acl
      * Class constructor
      *
      * @param array|Traversable $options
-     * @param ServiceManager $serviceManager
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    protected function __construct($options, ServiceManager $serviceManager)
+    protected function __construct($options, ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
         // set the options
         $this->options = $options;
         // set the service manager
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
         // set the ACL object
         $this->acl = new ZendAcl();
         // deny all by default
         $this->acl->deny();
         // set the UserAuth service
-        $this->auth = $this->serviceManager->get('auth');
+        $this->auth = $this->serviceLocator->get('auth');
 
         // set the template if given (otherwise the default will be used)
         if (isset($this->options['template'])) {
@@ -141,12 +141,12 @@ class Acl
     public function init()
     {
         /** @var Adapter $adapter */
-        $adapter = $this->serviceManager->get('database');
+        $adapter = $this->serviceLocator->get('database');
         $aclTable = new AclTable($adapter);
 
-        $this->roleProvider = new RoleProvider($aclTable->getRoles(), $this->serviceManager);
-        $this->resourceProvider = new ResourceProvider($aclTable->getResources(), $this->serviceManager);
-        $this->ruleProvider = new RuleProvider($aclTable->getAclList(), $this->serviceManager);
+        $this->roleProvider = new RoleProvider($aclTable->getRoles(), $this->serviceLocator);
+        $this->resourceProvider = new ResourceProvider($aclTable->getResources(), $this->serviceLocator);
+        $this->ruleProvider = new RuleProvider($aclTable->getAclList(), $this->serviceLocator);
 
         // add roles tree to the ACL
         foreach ($this->roleProvider->getRoles() as $role) {
@@ -162,7 +162,7 @@ class Acl
         }
 
         // prepare assertion object
-        $assert = new CleanIPAssertion($this->serviceManager);
+        $assert = new CleanIPAssertion($this->serviceLocator);
 
         // setup the acl: explicit allow resource to role, don't waste time with role tree
         foreach ($this->ruleProvider->getRules() as $resourceName => $roles) {

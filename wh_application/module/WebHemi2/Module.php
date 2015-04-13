@@ -28,14 +28,11 @@ namespace WebHemi2;
 
 use WebHemi2\View\Helper\Url;
 use Zend\Console\Console;
-use Zend\Mvc\MvcEvent;
-use Zend\Mvc\ModuleRouteListener;
-use Zend\Mvc\Router\RouteMatch;
-use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\Feature\ConfigProviderInterface;
-use Zend\ModuleManager\Feature\ServiceProviderInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
-use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
+use Zend\Mvc;
+use Zend\ServiceManager;
+use Zend\EventManager;
+use Zend\View\HelperPluginManager;
+use Zend\ModuleManager\Feature;
 
 /**
  * WebHemi2
@@ -50,10 +47,9 @@ use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
  * @link      http://www.gixx-web.com
  */
 class Module implements
-    AutoloaderProviderInterface,
-    BootstrapListenerInterface,
-    ConfigProviderInterface,
-    ServiceProviderInterface
+    Feature\AutoloaderProviderInterface,
+    Feature\BootstrapListenerInterface,
+    Feature\ConfigProviderInterface
 {
     /** @staticvar array $configs A collection of configurations. */
     private static $configs;
@@ -61,20 +57,20 @@ class Module implements
     /**
      * Listen to the bootstrap event
      *
-     * @param EventInterface $e
+     * @param EventManager\EventInterface $e
      *
      * @return void
      */
-    public function onBootstrap(EventInterface $e)
+    public function onBootstrap(EventManager\EventInterface $e)
     {
-        /** @var \Zend\Mvc\MvcEvent $e */
-        /** @var \Zend\Mvc\Application $application */
+        /** @var Mvc\MvcEvent $e */
+        /** @var Mvc\Application $application */
         $application = $e->getApplication();
-        /** @var \Zend\ServiceManager\ServiceManager $serviceManager */
+        /** @var ServiceManager\ServiceManager $serviceManager */
         $serviceManager = $application->getServiceManager();
-        /** @var \Zend\EventManager\EventManager $eventManager */
+        /** @var EventManager\EventManager $eventManager */
         $eventManager   = $application->getEventManager();
-        /** @var \Zend\View\HelperPluginManager $viewHelperManager */
+        /** @var HelperPluginManager $viewHelperManager */
         $viewHelperManager = $serviceManager->get('ViewHelperManager');
 
         // instantiate services
@@ -89,13 +85,15 @@ class Module implements
         $viewHelperManager->setFactory('url', function ($sm) use ($serviceManager) {
                 $helper = new Url;
                 $router = Console::isConsole() ? 'HttpRouter' : 'Router';
-                $helper->setRouter($serviceManager->get($router));
+                /** @var Mvc\Router\RouteStackInterface $routerStack */
+                $routerStack = $serviceManager->get($router);
+                $helper->setRouter($routerStack);
 
                 $match = $serviceManager->get('application')
                     ->getMvcEvent()
                     ->getRouteMatch();
 
-                if ($match instanceof RouteMatch) {
+                if ($match instanceof Mvc\Router\RouteMatch) {
                     $helper->setRouteMatch($match);
                 }
 
@@ -103,12 +101,12 @@ class Module implements
             });
 
         // attach events to the event manager
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'preDispatch'], -500);
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, ['WebHemi2\Event\AclEvent',    'onRoute'], -100);
-        $eventManager->attach(MvcEvent::EVENT_DISPATCH, ['WebHemi2\Event\LayoutEvent', 'preDispatch'], 10);
+        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'preDispatch'], -500);
+        $eventManager->attach(Mvc\MvcEvent::EVENT_ROUTE, ['WebHemi2\Event\AclEvent',    'onRoute'], -100);
+        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH, ['WebHemi2\Event\LayoutEvent', 'preDispatch'], 10);
 
         // link the event manager to the modoule route listener
-        $moduleRouteListener = new ModuleRouteListener();
+        $moduleRouteListener = new Mvc\ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
     }
 
@@ -241,38 +239,5 @@ class Module implements
                 ],
             ],
         ];
-    }
-
-    /**
-     * Retrieve the View Helper Configuration
-     *
-     * @return array
-     */
-    public function getViewHelperConfig()
-    {
-        // already defined in the module config file
-        return [];
-    }
-
-    /**
-     * Retrieve the Controller Plugin Configuration
-     *
-     * @return array
-     */
-    public function getControllerPluginConfig()
-    {
-        // already defined in the module config file
-        return [];
-    }
-
-    /**
-     * Retrieve the Service Configuration
-     *
-     * @return array
-     */
-    public function getServiceConfig()
-    {
-        // already defined in the module config file
-        return [];
     }
 }

@@ -35,8 +35,7 @@ use Zend\Filter\AbstractFilter;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\Form\View\Helper\Form as FormHelper;
 use Zend\Validator\AbstractValidator;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager;
 use WebHemi2\Acl\Acl;
 
 /**
@@ -51,12 +50,12 @@ use WebHemi2\Acl\Acl;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
+abstract class AbstractForm extends Form implements ServiceManager\ServiceLocatorAwareInterface
 {
     /** @var array $options */
     protected $options;
-    /** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+    /** @var  ServiceManager\ServiceLocatorInterface $serviceLocator */
+    protected $serviceLocator;
 
     /** @staticvar int $tabindex */
     protected static $tabindex = 1;
@@ -432,7 +431,7 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
      */
     public function getViewRenderer()
     {
-        return $this->getServiceManager()->get('viewmanager')->getRenderer();
+        return $this->getServiceLocator()->get('viewmanager')->getRenderer();
     }
 
     /**
@@ -452,27 +451,29 @@ abstract class AbstractForm extends Form implements ServiceManagerAwareInterface
      */
     public function getAclService()
     {
-        return $this->getServiceManager()->get('acl');
+        return $this->getServiceLocator()->get('acl');
     }
 
     /**
      * Retrieve service manager instance
      *
-     * @return ServiceManager
+     * @return ServiceManager\ServiceLocatorInterface
      */
-    public function getServiceManager()
+    public function getServiceLocator()
     {
-        return $this->serviceManager;
+        return $this->serviceLocator;
     }
 
     /**
      * Set service manager instance
      *
-     * @param ServiceManager $serviceManager
-     * @return void
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
+     *
+     * @return AbstractForm
      */
-    public function setServiceManager(ServiceManager $serviceManager)
+    public function setServiceLocator(ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
+        return $this;
     }
 }

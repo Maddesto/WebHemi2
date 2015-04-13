@@ -28,7 +28,7 @@ namespace WebHemi2\Acl\Assert;
 
 use DateTime;
 use WebHemi2\Model\Table\Lock as UserLockTable;
-use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager;
 use Zend\Permissions\Acl\Acl;
 use Zend\Permissions\Acl\Resource\ResourceInterface;
 use Zend\Permissions\Acl\Role\RoleInterface;
@@ -48,17 +48,17 @@ use Zend\Permissions\Acl\Assertion\AssertionInterface;
  */
 class CleanIPAssertion implements AssertionInterface
 {
-    /** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+    /** @var ServiceManager\ServiceLocatorInterface $serviceLocator */
+    protected $serviceLocator;
 
     /**
      * Class constructor
      *
-     * @param ServiceManager $serviceManager
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(ServiceManager $serviceManager)
+    public function __construct(ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
     }
 
     /**
@@ -78,7 +78,7 @@ class CleanIPAssertion implements AssertionInterface
     public function assert(Acl $acl, RoleInterface $role = null, ResourceInterface $resource = null, $privilege = null)
     {
         /** @var \Zend\Db\Adapter\Adapter $adapter */
-        $adapter = $this->serviceManager->get('database');
+        $adapter = $this->serviceLocator->get('database');
         $lockTable = new UserLockTable($adapter);
 
         // determine the current timestamp according to the UTC time

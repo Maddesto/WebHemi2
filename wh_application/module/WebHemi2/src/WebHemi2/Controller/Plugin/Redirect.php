@@ -33,7 +33,6 @@ use Zend\Mvc\Controller\Plugin\Url;
 use WebHemi2\Controller\AbstractController;
 use Zend\Mvc\InjectApplicationEventInterface;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Controller plugin for redirecting
@@ -47,11 +46,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  */
 class Redirect extends AbstractPlugin
 {
-    /**
-     * @var ServiceLocatorInterface $serviceLocator
-     */
-    protected $serviceLocator;
-
     protected $event;
     protected $response;
 

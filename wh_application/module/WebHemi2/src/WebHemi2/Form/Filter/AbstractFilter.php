@@ -29,8 +29,7 @@ namespace WebHemi2\Form\Filter;
 use Zend\Filter\AbstractFilter as ZendAbstractFilter;
 use Zend\Filter\FilterInterface;
 use Zend\Filter\Exception;
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager;
 
 /**
  * WebHemi2
@@ -44,10 +43,10 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManagerAwareInterface, FilterInterface
+abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManager\ServiceLocatorAwareInterface, FilterInterface
 {
-    /** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+    /** @var  ServiceManager\ServiceLocatorInterface $serviceLocator */
+    protected $serviceLocator;
 
     /**
      * Class constructor.
@@ -59,9 +58,9 @@ abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManag
         $filterOptions = [];
 
         foreach ($optionArray as $key => $option) {
-            if ($option instanceof ServiceManagerAwareInterface) {
-                /** @var \Zend\ServiceManager\ServiceManager $option */
-                $this->setServiceManager($option);
+            if ($option instanceof ServiceManager\ServiceLocatorInterface) {
+                /** @var ServiceManager\ServiceLocatorInterface $option */
+                $this->setServiceLocator($option);
             } else {
                 $filterOptions[] = $option;
             }
@@ -71,28 +70,25 @@ abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManag
     }
 
     /**
-     * Retrieve ServiceManager instance
+     * Retrieve service manager instance
      *
-     * @return ServiceManager
+     * @return ServiceManager\ServiceLocatorInterface
      */
-    public function getServiceManager()
+    public function getServiceLocator()
     {
-        if (!isset($this->serviceManager)) {
-            throw new Exception\RuntimeException('Service manager is not provided!');
-        }
-        return $this->serviceManager;
+        return $this->serviceLocator;
     }
 
     /**
-     * Set ServiceManager instance
+     * Set service manager instance
      *
-     * @param ServiceManager $serviceManager
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      *
      * @return AbstractFilter
      */
-    public function setServiceManager(ServiceManager $serviceManager)
+    public function setServiceLocator(ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
         return $this;
     }
 }

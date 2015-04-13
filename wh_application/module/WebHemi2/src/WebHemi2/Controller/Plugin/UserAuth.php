@@ -28,13 +28,13 @@ namespace WebHemi2\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\Authentication\Result;
 use WebHemi2\Auth\Auth as AuthService;
 use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
 use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Model\User as UserModel;
 use WebHemi2\Component\Cipher\Cipher;
+use WebHemi2\Controller\AbstractController;
 
 /**
  * Controller plugin for Authentication
@@ -46,7 +46,7 @@ use WebHemi2\Component\Cipher\Cipher;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
+class UserAuth extends AbstractPlugin
 {
     /**
      * @var AuthAdapter $authAdapter
@@ -56,10 +56,7 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      * @var AuthService $authService
      */
     protected $authService;
-    /**
-     * @var ServiceLocatorInterface $serviceLocator
-     */
-    protected $serviceLocator;
+
 
     /**
      * Proxy convenience method
@@ -204,20 +201,8 @@ class UserAuth extends AbstractPlugin implements ServiceLocatorAwareInterface
      */
     public function getServiceLocator()
     {
-        return $this->serviceLocator->getController()->getServiceLocator();
-    }
-
-    /**
-     * Set ServiceLocator
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return UserAuth
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
+        /** @var AbstractController $controller */
+        $controller = $this->getController();
+        return $controller->getServiceLocator();
     }
 }

@@ -27,9 +27,8 @@
 namespace WebHemi2\Controller\Plugin;
 
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\Mvc\Controller\PluginManager;
+use Zend\ServiceManager;
+use WebHemi2\Controller\AbstractController;
 use WebHemi2\Acl\Role;
 use WebHemi2\Acl\Acl;
 
@@ -43,16 +42,12 @@ use WebHemi2\Acl\Acl;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
+class IsAllowed extends AbstractPlugin
 {
     /**
      * @var Acl $aclService
      */
     protected $aclService;
-    /**
-     * @var PluginManager $serviceLocator
-     */
-    protected $serviceLocator;
 
     /**
      * Return true if and only if the Role has access to the Resource.
@@ -99,24 +94,12 @@ class IsAllowed extends AbstractPlugin implements ServiceLocatorAwareInterface
     /**
      * Retrieve ServiceLocatorInterface instance
      *
-     * @return ServiceLocatorInterface
+     * @return ServiceManager\ServiceLocatorInterface
      */
     public function getServiceLocator()
     {
-        return $this->serviceLocator->getController()->getServiceLocator();
-    }
-
-    /**
-     * Set ServiceLocatorInterface instance
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return IsAllowed
-     */
-    public function setServiceLocator(ServiceLocatorInterface $serviceLocator)
-    {
-        $this->serviceLocator = $serviceLocator;
-
-        return $this;
+        /** @var AbstractController $controller */
+        $controller = $this->getController();
+        return $controller->getServiceLocator();
     }
 }

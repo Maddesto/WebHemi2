@@ -26,9 +26,7 @@
 
 namespace WebHemi2\Form;
 
-use Zend\ServiceManager\ServiceManager;
-use Zend\ServiceManager\Exception;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
+use Zend\ServiceManager;
 
 /**
  * WebHemi2
@@ -42,12 +40,12 @@ use Zend\ServiceManager\ServiceManagerAwareInterface;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class FormService implements ServiceManagerAwareInterface
+class FormService implements ServiceManager\ServiceLocatorAwareInterface
 {
     /** @var array $form */
     protected static $form;
-    /** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+    /** @var  ServiceManager\ServiceLocatorInterface $serviceLocator */
+    protected $serviceLocator;
 
     /**
      * Class constructor
@@ -63,7 +61,7 @@ class FormService implements ServiceManagerAwareInterface
      *
      * @param string $name
      * @param array $arguments
-     * @throws Exception\InvalidArgumentException
+     * @throws ServiceManager\Exception\InvalidArgumentException
      */
     public function __call($name, $arguments)
     {
@@ -73,13 +71,13 @@ class FormService implements ServiceManagerAwareInterface
         $formId = isset($arguments[0]) ? $arguments[0] : null;
 
         if (!class_exists($formName)) {
-            throw new Exception\InvalidArgumentException(sprintf('%s doesn\'t seem to be a valid class.', $formName));
+            throw new ServiceManager\Exception\InvalidArgumentException(sprintf('%s doesn\'t seem to be a valid class.', $formName));
         }
 
         if (!isset(self::$form[$formName])) {
             /** @var AbstractForm $form */
             $form = new $formName($formId);
-            $form->setServiceManager($this->serviceManager);
+            $form->setServiceLocator($this->serviceLocator);
             self::$form[$formName] = $form;
         }
 
@@ -87,25 +85,25 @@ class FormService implements ServiceManagerAwareInterface
     }
 
     /**
-     * Retrieve ServiceManager instance
+     * Retrieve service manager instance
      *
-     * @return ServiceManager
+     * @return ServiceManager\ServiceLocatorInterface
      */
-    public function getServiceManager()
+    public function getServiceLocator()
     {
-        return $this->serviceManager;
+        return $this->serviceLocator;
     }
 
     /**
-     * Set ServiceManager instance
+     * Set service manager instance
      *
-     * @param ServiceManager $serviceManager
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      *
      * @return FormService
      */
-    public function setServiceManager(ServiceManager $serviceManager)
+    public function setServiceLocator(ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
         return $this;
     }
 }

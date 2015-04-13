@@ -28,8 +28,7 @@ namespace WebHemi2\Auth\Adapter;
 
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
-use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager;
 use Zend\Crypt\Password\Bcrypt;
 use WebHemi2\Model\User as UserModel;
 use WebHemi2\Model\Table\User as UserTable;
@@ -47,7 +46,7 @@ use WebHemi2\Model\Table\Lock as UserLockTable;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class Adapter implements AdapterInterface, ServiceManagerAwareInterface
+class Adapter implements AdapterInterface, ServiceManager\ServiceLocatorAwareInterface
 {
     /** Default bcrypt password cost */
     const PASSWORD_COST = 14;
@@ -62,8 +61,8 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     protected $userLockTable;
     /** @var boolean $verifiedUser */
     protected $verifiedUser = null;
-    /** @var  ServiceManager $serviceManager */
-    protected $serviceManager;
+    /** @var  ServiceManager\ServiceLocatorInterface $serviceLocator */
+    protected $serviceLocator;
 
     /**
      * This method is called to attempt an authentication.
@@ -240,23 +239,23 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     /**
      * Retrieve service manager instance
      *
-     * @return ServiceManager
+     * @return ServiceManager\ServiceLocatorInterface
      */
-    public function getServiceManager()
+    public function getServiceLocator()
     {
-        return $this->serviceManager;
+        return $this->serviceLocator;
     }
 
     /**
      * Set service manager instance
      *
-     * @param ServiceManager $serviceManager
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
      *
      * @return Adapter
      */
-    public function setServiceManager(ServiceManager $serviceManager)
+    public function setServiceLocator(ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
         return $this;
     }
 
@@ -268,7 +267,7 @@ class Adapter implements AdapterInterface, ServiceManagerAwareInterface
     protected function getDatabaseAdapter()
     {
         /** @var \Zend\Db\Adapter\Adapter $adapter */
-        $adapter = $this->getServiceManager()->get('database');
+        $adapter = $this->getServiceLocator()->get('database');
 
         return $adapter;
     }

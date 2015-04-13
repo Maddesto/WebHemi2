@@ -28,8 +28,7 @@ namespace WebHemi2\Auth\Storage;
 
 use Zend\Authentication\Storage\Session;
 use Zend\Authentication\Storage\StorageInterface;
-use Zend\ServiceManager\ServiceManagerAwareInterface;
-use Zend\ServiceManager\ServiceManager;
+use Zend\ServiceManager;
 use WebHemi2\Model\Table\User as UserTable;
 
 /**
@@ -44,7 +43,7 @@ use WebHemi2\Model\Table\User as UserTable;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class Db implements StorageInterface, ServiceManagerAwareInterface
+class Db implements StorageInterface, ServiceManager\ServiceLocatorAwareInterface
 {
     /** @var StorageInterface $storage */
     protected $storage;
@@ -52,8 +51,8 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     protected $userTable;
     /** @var mixed $resolvedIdentity */
     protected $resolvedIdentity;
-    /** @var ServiceManager $serviceManager */
-    protected $serviceManager;
+    /** @var  ServiceManager\ServiceLocatorInterface $serviceLocator */
+    protected $serviceLocator;
 
     /**
      * Check whether the storage is empty
@@ -150,7 +149,7 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     public function getTable()
     {
         /** @var \Zend\Db\Adapter\Adapter $adapter */
-        $adapter = $this->getServiceManager()->get('database');
+        $adapter = $this->getServiceLocator()->get('database');
 
         if (!isset($this->userTable)) {
             $this->userTable = new UserTable($adapter);
@@ -174,20 +173,23 @@ class Db implements StorageInterface, ServiceManagerAwareInterface
     /**
      * Retrieve service manager instance
      *
-     * @return ServiceManager
+     * @return ServiceManager\ServiceLocatorInterface
      */
-    public function getServiceManager()
+    public function getServiceLocator()
     {
-        return $this->serviceManager;
+        return $this->serviceLocator;
     }
 
     /**
      * Set service manager instance
      *
-     * @param ServiceManager $serviceManager
+     * @param ServiceManager\ServiceLocatorInterface $serviceLocator
+     *
+     * @return Db
      */
-    public function setServiceManager(ServiceManager $serviceManager)
+    public function setServiceLocator(ServiceManager\ServiceLocatorInterface $serviceLocator)
     {
-        $this->serviceManager = $serviceManager;
+        $this->serviceLocator = $serviceLocator;
+        return $this;
     }
 }
