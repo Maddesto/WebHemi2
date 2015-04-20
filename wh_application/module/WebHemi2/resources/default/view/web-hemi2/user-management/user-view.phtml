@@ -9,7 +9,7 @@ if (!isset($myProfile)) {
 // IF admin AND owner THEN allow to edit profile
 if ($myProfile || $this->isAllowed('user-management:user-enable')) :
 ?>
-<a href="<?php echo $this->url('index/control-panel/user/edit', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Edit profile'); ?>"><?php echo $this->translate('Edit profile'); ?></a>
+<a href="<?php echo $this->url('index/control-panel/user/edit', ['userName' => $userModel->getUserName()]) ?>" title="<?php echo $this->translate('Edit profile'); ?>"><?php echo $this->translate('Edit profile'); ?></a>
 <?php endif; ?>
 
 <?php
@@ -18,9 +18,9 @@ if (!$myProfile && $this->isAllowed('user-management:user-enable') && $this->isA
     // IF user is disabled
     if (!$userModel->getEnabled()):
 ?>
-<a href="<?php echo $this->url('index/control-panel/user/enable', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Enable user'); ?>"><?php echo $this->translate('Enable user'); ?></a>
+<a href="<?php echo $this->url('index/control-panel/user/enable', ['userName' => $userModel->getUserName()]) ?>" title="<?php echo $this->translate('Enable user'); ?>"><?php echo $this->translate('Enable user'); ?></a>
     <?php else: ?>
-<a href="<?php echo $this->url('index/control-panel/user/disable', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Disable user'); ?>"><?php echo $this->translate('Disable user'); ?></a>
+<a href="<?php echo $this->url('index/control-panel/user/disable', ['userName' => $userModel->getUserName()]) ?>" title="<?php echo $this->translate('Disable user'); ?>"><?php echo $this->translate('Disable user'); ?></a>
     <?php endif; ?>
 <?php endif; ?>
 
@@ -28,22 +28,22 @@ if (!$myProfile && $this->isAllowed('user-management:user-enable') && $this->isA
 // If not owner AND has privilege AND user is not activated THEN allow to activate
 if (!$myProfile && !$userModel->getActive() && $this->isAllowed('user-management:user-activate')) :
 ?>
-<a href="<?php echo $this->url('index/control-panel/user/activate', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Activate user'); ?>"><?php echo $this->translate('Activate user'); ?></a>
+<a href="<?php echo $this->url('index/control-panel/user/activate', ['userName' => $userModel->getUserName()]) ?>" title="<?php echo $this->translate('Activate user'); ?>"><?php echo $this->translate('Activate user'); ?></a>
 <?php endif; ?>
 
 <?php
 // If not owner AND has privilege THEN allow to delete
 if (!$myProfile && $this->isAllowed('user-management:user-delete')) :
 ?>
-<a href="<?php echo $this->url('index/control-panel/user/delete', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Delete user'); ?>"><?php echo $this->translate('Delete user'); ?></a>
+<a href="<?php echo $this->url('index/control-panel/user/delete', ['userName' => $userModel->getUserName()]) ?>" title="<?php echo $this->translate('Delete user'); ?>"><?php echo $this->translate('Delete user'); ?></a>
 <?php endif; ?>
 
 <div style="width: auto; overflow:hidden; margin-bottom: 10px;">
     <?php
         echo $this->avatar(
-            $userModel->getAvatar(), array(), array(
+            $userModel->getAvatar(), [], [
                 'style' => 'width: 100px; float: left; padding-right: 16px;'
-            )
+            ]
         );
     ?>
     <h1><?php echo $userModel->getDisplayName(); ?></h1>

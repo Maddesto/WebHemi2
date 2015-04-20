@@ -71,7 +71,10 @@ class FormService implements ServiceManager\ServiceLocatorAwareInterface
         $formId = isset($arguments[0]) ? $arguments[0] : null;
 
         if (!class_exists($formName)) {
-            throw new ServiceManager\Exception\InvalidArgumentException(sprintf('%s doesn\'t seem to be a valid class.', $formName));
+            throw new ServiceManager\Exception\InvalidArgumentException(sprintf(
+                '%s doesn\'t seem to be a valid class.',
+                $formName
+            ));
         }
 
         if (!isset(self::$form[$formName])) {

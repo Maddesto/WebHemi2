@@ -76,7 +76,7 @@ define('APPLICATION_MODULE', call_user_func(
 
         // if the host is not an IP address, then we can check the subdomain-based module names too
         if (!preg_match(
-            '/^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/',
+            '/^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/',
             $urlParts['host']
         )
         ) {
@@ -124,13 +124,13 @@ define('APPLICATION_MODULE', call_user_func(
         return $module;
     }, $modules)
 );
-define('APPLICATION_MODULE_TYPE', call_user_func(function($moduleName, $modules) {
+define('APPLICATION_MODULE_TYPE', call_user_func(function ($moduleName, $modules) {
         return isset($modules[$moduleName])
             ? $modules[$moduleName]['type']
             : (WEBSITE_MODULE == $moduleName ? 'subdomain' : 'subdir');
     }, APPLICATION_MODULE, $modules)
 );
-define('APPLICATION_MODULE_URI', call_user_func(function($moduleName, $modules) {
+define('APPLICATION_MODULE_URI', call_user_func(function ($moduleName, $modules) {
         return isset($modules[$moduleName])
             ? $modules[$moduleName]['path']
             : (WEBSITE_MODULE == $moduleName ? 'www' : '/');

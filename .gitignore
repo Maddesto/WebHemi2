@@ -2,3 +2,14 @@ composer.lock
 /.idea
 /resources
 /wh_application/module/WebHemi2/resources/themes
+
+
+# experimental
+wh_application/module/WebHemi2/resources/common/static/js/jquery-2.1.1.min.js
+wh_application/module/WebHemi2/resources/default/static/img/admin/underwater.jpg
+wh_application/module/WebHemi2/resources/default/static/video/WD0221.mov
+wh_application/module/WebHemi2/resources/default/static/video/WD0221.mp4
+wh_application/module/WebHemi2/resources/default/static/video/WD0221.webm
+wh_application/module/WebHemi2/resources/default/static/video/WD0221.wmv
+wh_application/module/WebHemi2/resources/default/static/video/WD0221_P.mp4
+wh_application/module/WebHemi2/resources/default/static/video/WD0221_P.webm

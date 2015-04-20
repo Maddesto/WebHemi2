@@ -33,7 +33,10 @@ echo 'WebHemi2 resource builder (' . SCRIPT_VERSION . ')' . PHP_EOL . PHP_EOL;
 // Create symlink for common static folder
 echo 'Create symbolic link for common resources: ';
 if (!file_exists(DOC_ROOT . '/resources/common')) {
-    if (symlink(DOC_ROOT . '/wh_application/module/WebHemi2/resources/common/static', DOC_ROOT . '/resources/common')) {
+    if (symlink(
+        DOC_ROOT . '/wh_application/module/WebHemi2/resources/common/static',
+        DOC_ROOT . '/resources/common'
+    )) {
         echo 'Done' . PHP_EOL;
     }
 } else {
@@ -48,7 +51,10 @@ if (!file_exists(DOC_ROOT . '/resources/theme')) {
 // Create symlink for default theme
 echo 'Create symbolic link for default theme: ';
 if (!file_exists(DOC_ROOT . '/resources/theme/default')) {
-    if (symlink(DOC_ROOT . '/wh_application/module/WebHemi2/resources/default/static', DOC_ROOT . '/resources/theme/default')) {
+    if (symlink(
+        DOC_ROOT . '/wh_application/module/WebHemi2/resources/default/static',
+        DOC_ROOT . '/resources/theme/default'
+    )) {
         echo 'Done' . PHP_EOL;
     }
 } else {
@@ -57,17 +63,20 @@ if (!file_exists(DOC_ROOT . '/resources/theme/default')) {
 
 // Create symlink for all additional themes
 echo 'Create symbolic link for additional themes: ' . PHP_EOL;
-if ($handle = opendir(DOC_ROOT . '/wh_application/module/WebHemi2/resources/themes/')) {
+$handle = opendir(DOC_ROOT . '/wh_application/module/WebHemi2/resources/themes/');
+if ($handle) {
     while (false !== ($entry = readdir($handle))) {
         if ($entry != '.' && $entry != '..') {
-            if (
-                is_dir(DOC_ROOT . '/wh_application/module/WebHemi2/resources/themes/' . $entry)
+            if (is_dir(DOC_ROOT . '/wh_application/module/WebHemi2/resources/themes/' . $entry)
                 && file_exists(DOC_ROOT . '/wh_application/module/WebHemi2/resources/themes/' . $entry . '/static')
             ) {
                 echo "\t-> " . $entry . ': ';
 
                 if (!file_exists(DOC_ROOT . '/resources/theme/' . $entry)) {
-                    if (symlink(DOC_ROOT . '/wh_application/module/WebHemi2/resources/themes/' . $entry . '/static', DOC_ROOT . '/resources/theme/' . $entry)) {
+                    if (symlink(
+                        DOC_ROOT . '/wh_application/module/WebHemi2/resources/themes/' . $entry . '/static',
+                        DOC_ROOT . '/resources/theme/' . $entry
+                    )) {
                         echo 'Done' . PHP_EOL;
                     }
                 } else {

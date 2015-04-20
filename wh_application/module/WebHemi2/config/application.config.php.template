@@ -1,24 +1,24 @@
 <?php
 
-return array(
-    'Admin' => array(
+return [
+    'Admin' => [
         'type' => 'subdir',
         'path' => 'wh-admin',
-        'translator' => array(
+        'translator' => [
             'locale' => 'en_US',
-        ),
-        'wh_themes' => array(
+        ],
+        'wh_themes' => [
             'current_theme' => 'default',
-        ),
-    ),
-    'Website' => array(
+        ],
+    ],
+    'Website' => [
         'type' => 'subdomain',
         'path' => 'www',
-        'translator' => array(
+        'translator' => [
             'locale' => 'en_US',
-        ),
-        'wh_themes' => array(
+        ],
+        'wh_themes' => [
             'current_theme' => 'default',
-        ),
-    ),
-);
+        ],
+    ],
+];

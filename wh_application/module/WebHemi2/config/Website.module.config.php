@@ -72,7 +72,8 @@ return [
                     'view' => [
                         'type' => 'Regex',
                         'options' => [
-                            'regex' => '(?:/(?<category>[a-zA-Z0-9_-]+))?/(?<id>[\/a-zA-Z0-9_-]+)(\.(?<format>(json|html|rss)))?',
+                            'regex' => '(?:/(?<category>[a-zA-Z0-9_-]+))?/(?<id>[\/a-zA-Z0-9_-]+)'
+                                . '(\.(?<format>(json|html|rss)))?',
                             'defaults' => [
                                 '__NAMESPACE__' => 'WebHemi2\Controller',
                                 'controller' => 'Website',

@@ -95,8 +95,8 @@ function dump()
         }
 
         if (!$isCli) {
-            echo '<div style="border:1px solid gray;margin: 10px;padding:5px;background:white;word-wrap:break-word;">' . PHP_EOL;
-            echo str_replace('&lt;?php', '', highlight_string($content, true)) . PHP_EOL;
+            echo '<div style="border:1px solid gray;margin:10px;padding:5px;background:white;word-wrap:break-word;">';
+            echo PHP_EOL . str_replace('&lt;?php', '', highlight_string($content, true)) . PHP_EOL;
             echo '</div>';
         }
     }

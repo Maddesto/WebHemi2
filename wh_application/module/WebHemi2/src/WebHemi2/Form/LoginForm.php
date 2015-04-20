@@ -235,7 +235,7 @@ class LoginForm extends AbstractForm
         // Ensure that the IP ban counter works also with invalid form post (against DDOS attacks)
         if (!$isValid && !isset($setLock)) {
             /** @var \Zend\Db\Adapter\Adapter $adapter */
-            $adapter = $this->getServiceManager()->get('database');
+            $adapter = $this->getServiceLocator()->get('database');
             $lockTable = new UserLockTable($adapter);
             $lockTable->setLock();
             $setLock = true;

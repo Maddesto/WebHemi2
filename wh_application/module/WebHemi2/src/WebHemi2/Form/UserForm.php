@@ -833,7 +833,6 @@ class UserForm extends AbstractForm
                         ]
                     );
                 }
-
                 break;
             case User::USER_AVATAR_TYPE_URL:
                 $avatarSubFieldset->get('avatarurl')->setOptions(

@@ -53,7 +53,11 @@ class HeadLink extends ZendHeadLink
      */
     public function __call($method, $args)
     {
-        if (preg_match('/^(?P<action>set|(ap|pre)pend|offsetSet)(?P<type>Stylesheet|Alternate|Prev|Next)$/', $method, $matches)) {
+        if (preg_match(
+            '/^(?P<action>set|(ap|pre)pend|offsetSet)(?P<type>Stylesheet|Alternate|Prev|Next)$/',
+            $method,
+            $matches
+        )) {
             $argc   = count($args);
             $action = $matches['action'];
             $type   = $matches['type'];

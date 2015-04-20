@@ -43,7 +43,9 @@ use Zend\ServiceManager;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-abstract class AbstractFilter extends ZendAbstractFilter implements ServiceManager\ServiceLocatorAwareInterface, FilterInterface
+abstract class AbstractFilter extends ZendAbstractFilter implements
+    ServiceManager\ServiceLocatorAwareInterface,
+    FilterInterface
 {
     /** @var  ServiceManager\ServiceLocatorInterface $serviceLocator */
     protected $serviceLocator;

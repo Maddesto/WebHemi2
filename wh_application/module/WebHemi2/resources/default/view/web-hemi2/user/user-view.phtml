@@ -4,16 +4,16 @@ if (!isset($myProfile)) {
 } else {
     /* @var $userModel \WebHemi2\Model\User */
 ?>
-<a href="<?php echo $this->url('index/user/edit', array('userName' => $userModel->getUserName())) ?>" title="<?php echo $this->translate('Edit profile'); ?>"><?php echo $this->translate('Edit profile'); ?></a>
+<a href="<?php echo $this->url('index/user/edit', ['userName' => $userModel->getUserName()]) ?>" title="<?php echo $this->translate('Edit profile'); ?>"><?php echo $this->translate('Edit profile'); ?></a>
 <?php
 }
 ?>
 <div style="width: auto; overflow:hidden; margin-bottom: 10px;">
     <?php
         echo $this->avatar(
-            $userModel->getAvatar(), array(), array(
+            $userModel->getAvatar(), [], [
                 'style' => 'width: 100px; float: left; padding-right: 16px;'
-            )
+            ]
         );
     ?>
     <h1><?php echo $userModel->getDisplayName(); ?></h1>

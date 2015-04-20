@@ -24,10 +24,10 @@
 
 define('SCRIPT_VERSION', 'v.1.2');
 
-require_once __DIR__ . '/../vendor/zendframework/zend-crypt/Zend/Crypt/Password/PasswordInterface.php';
-require_once __DIR__ . '/../vendor/zendframework/zend-crypt/Zend/Crypt/Password/Bcrypt.php';
-require_once __DIR__ . '/../vendor/zendframework/zend-math/Zend/Math/Rand.php';
-require_once __DIR__ . '/../vendor/zendframework/zend-stdlib/Zend/Stdlib/ArrayUtils.php';
+require_once __DIR__ . '/../vendor/zendframework/zend-crypt/Password/PasswordInterface.php';
+require_once __DIR__ . '/../vendor/zendframework/zend-crypt/Password/Bcrypt.php';
+require_once __DIR__ . '/../vendor/zendframework/zend-math/Rand.php';
+require_once __DIR__ . '/../vendor/zendframework/zend-stdlib/ArrayUtils.php';
 
 /**
  * Generate a random password string.
@@ -43,8 +43,8 @@ function randomPassword($length = 8)
     $alphaLength = strlen($alphabet) - 1;
 
     for ($i = 0; $i < $length; $i++) {
-        $n = rand(0, $alphaLength);
-        $pass[] = $alphabet[$n];
+        $character = rand(0, $alphaLength);
+        $pass[] = $alphabet[$character];
     }
     return implode($pass); //turn the array into a string
 }
