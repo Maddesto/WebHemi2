@@ -51,7 +51,7 @@ class Module implements
     Feature\BootstrapListenerInterface,
     Feature\ConfigProviderInterface
 {
-    /** @staticvar array $configs A collection of configurations. */
+    /** @var array $configs A collection of configurations. */
     private static $configs;
 
     /**

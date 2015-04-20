@@ -45,10 +45,19 @@
   "require-dev": {
     "phpmd/phpmd": "@stable",
     "squizlabs/php_codesniffer": "2.*",
-    "phpunit/phpunit": "*",
+    "phpunit/phpunit": "4.*",
     "zendframework/zend-test": "2.*"
   },
+  "autoload":{
+    "psr-4": {
+      "WebHemi2\\": "wh_application/module/WebHemi2/src/"
+    },
+    "classmap": ["./wh_application/module/WebHemi2/Module.php"]
+  },
   "autoload-dev": {
-    "files": ["wh_application/library/dump.php"]
+    "files": ["wh_application/library/dump.php"],
+    "psr-4": {
+      "WebHemi2Test\\": "wh_application/module/WebHemi2/test/"
+    }
   }
 }

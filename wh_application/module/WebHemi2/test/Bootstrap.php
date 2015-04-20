@@ -1,24 +1,63 @@
 <?php
 
+/**
+ * WebHemi2
+ *
+ * PHP version 5.4
+ *
+ *
+ * LICENSE
+ *
+ * This source file is subject to the new BSD license that is bundled
+ * with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://webhemi.gixx-web.com/license/new-bsd
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@gixx-web.com so we can send you a copy immediately.
+ *
+ * @category  WebHemi2Test
+ * @package   WebHemi2Test
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
+ */
+
 namespace WebHemi2Test;
 
 use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
+use Zend\ModuleManager\ModuleManager;
 use RuntimeException;
 
-error_reporting(E_ALL | E_STRICT);
-chdir(__DIR__);
-
 /**
- * Test bootstrap, for setting up autoloading
+ * WebHemi2Test
+ *
+ * Module bootstrap
+ *
+ * @category  WebHemi2Test
+ * @package   WebHemi2Test
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
  */
 class Bootstrap
 {
+    /** @var  ServiceManager */
     protected static $serviceManager;
 
+    /**
+     * Init bootstrap
+     *
+     * @return void
+     */
     public static function init()
     {
+        error_reporting(E_ALL | E_STRICT);
+
         $zf2ModulePaths = [dirname(dirname(__DIR__))];
         if (($path = static::findParentPath('vendor'))) {
             $zf2ModulePaths[] = $path;
@@ -39,23 +78,30 @@ class Bootstrap
             ]
         ];
 
-        $serviceManager = new ServiceManager(new ServiceManagerConfig());
-        $serviceManager->setService('ApplicationConfig', $config);
-        $serviceManager->get('ModuleManager')->loadModules();
-        static::$serviceManager = $serviceManager;
-    }
+        static::$serviceManager = new ServiceManager(new ServiceManagerConfig());
+        static::$serviceManager->setService('ApplicationConfig', $config);
 
-    public static function chroot()
-    {
+        /** @var ModuleManager $moduleManager */
+        $moduleManager = static::$serviceManager->get('ModuleManager');
+        $moduleManager->loadModules();
+
         $rootPath = dirname(static::findParentPath('module'));
         chdir($rootPath);
     }
 
+    /**
+     * Retrieve the service manager instance
+     *
+     * @return ServiceManager
+     */
     public static function getServiceManager()
     {
         return static::$serviceManager;
     }
 
+    /**
+     * Init the autoloader
+     */
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
@@ -100,6 +146,13 @@ class Bootstrap
         }
     }
 
+    /**
+     * Find a specific folder in the parent path
+     *
+     * @param string $path The folder name or path
+     *
+     * @return bool|string
+     */
     protected static function findParentPath($path)
     {
         $dir = __DIR__;
@@ -116,4 +169,3 @@ class Bootstrap
 }
 
 Bootstrap::init();
-Bootstrap::chroot();
