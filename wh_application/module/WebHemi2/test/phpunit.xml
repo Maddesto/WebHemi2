@@ -6,20 +6,25 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          verbose="true"
-         stopOnFailure="false"
          processIsolation="false"
          backupGlobals="false"
-         syntaxCheck="true">
-    <testsuites>
+         syntaxCheck="true"
+         stopOnError="true"
+         stopOnFailure="true">
 
+    <testsuites>
         <testsuite name="Controller Tests">
             <directory>./WebHemi2Test/Controller</directory>
         </testsuite>
     </testsuites>
 
     <filter>
-        <whitelist>
+        <whitelist addUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../src</directory>
         </whitelist>
     </filter>
+
+    <logging>
+        <log type="coverage-html" target="../../../data/coverage" title="WebHemi2" charset="UTF-8" yui="true" highlight="true" lowUpperBound="35" highLowerBound="70" />
+    </logging>
 </phpunit>
