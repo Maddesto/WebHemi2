@@ -40,7 +40,7 @@ function dump()
                 $file    = '&lt;unknown&gt';
                 $line    = '&lt;unknown&gt';
 
-                @header('Content-type:text/html;charset=UTF-8');
+                header('Content-type:text/html;charset=UTF-8');
                 ob_start();
                 var_dump($var);
                 $dumpData = ob_get_clean();
@@ -50,7 +50,7 @@ function dump()
                     $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
                     foreach ($backtrace as $traceInfo) {
-                        if (in_array($traceInfo['function'], array('varDump', 'dump'))) {
+                        if (in_array($traceInfo['function'], ['varDump', 'dump'])) {
                             $file  = $traceInfo['file'];
                             $line  = $traceInfo['line'];
                         } else {
@@ -61,7 +61,7 @@ function dump()
                     $variable = 'unknown';
                     $source = file($file);
                     $code = $source[$line - 1];
-                    $match = array();
+                    $match = [];
 
                     if (preg_match('#dump\((.+)\)#', $code, $match)) {
                         $maxLength = strlen($match[1]);

@@ -39,7 +39,7 @@ require_once __DIR__ . '/../vendor/zendframework/zend-stdlib/Zend/Stdlib/ArrayUt
 function randomPassword($length = 8)
 {
     $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";
-    $pass = array(); //remember to declare $pass as an array
+    $pass = []; //remember to declare $pass as an array
     $alphaLength = strlen($alphabet) - 1;
 
     for ($i = 0; $i < $length; $i++) {
