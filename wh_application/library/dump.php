@@ -22,7 +22,7 @@
  * @link      http://www.gixx-web.com
  */
 error_reporting(E_ALL);
-ini_set('display_errors','On');
+ini_set('display_errors', 'On');
 
 /**
  * Dump data in a more pretty way
@@ -68,14 +68,17 @@ function dump()
                         $variable = '';
                         $c = 0;
                         for ($i = 0; $i < $maxLength; $i++) {
-                            if ($match[1][$i] == '(')
+                            if ($match[1][$i] == '(') {
                                 $c++;
+                            }
 
-                            if ($match[1][$i] == ')')
+                            if ($match[1][$i] == ')') {
                                 $c--;
+                            }
 
-                            if ($c < 0)
+                            if ($c < 0) {
                                 break;
+                            }
 
                             $variable .= $match[1][$i];
                         }
@@ -101,4 +104,3 @@ function dump()
         }
     }
 }
-

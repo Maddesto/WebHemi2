@@ -57,15 +57,15 @@ class Module implements
     /**
      * Listen to the bootstrap event
      *
-     * @param EventManager\EventInterface $e
+     * @param EventManager\EventInterface $event
      *
      * @return void
      */
-    public function onBootstrap(EventManager\EventInterface $e)
+    public function onBootstrap(EventManager\EventInterface $event)
     {
-        /** @var Mvc\MvcEvent $e */
+        /** @var Mvc\MvcEvent $event */
         /** @var Mvc\Application $application */
-        $application = $e->getApplication();
+        $application = $event->getApplication();
         /** @var ServiceManager\ServiceManager $serviceManager */
         $serviceManager = $application->getServiceManager();
         /** @var EventManager\EventManager $eventManager */
@@ -82,23 +82,23 @@ class Module implements
         }
 
         // update view helper url
-        $viewHelperManager->setFactory('url', function ($sm) use ($serviceManager) {
-                $helper = new Url;
-                $router = Console::isConsole() ? 'HttpRouter' : 'Router';
-                /** @var Mvc\Router\RouteStackInterface $routerStack */
-                $routerStack = $serviceManager->get($router);
-                $helper->setRouter($routerStack);
+        $viewHelperManager->setFactory('url', function () use ($serviceManager) {
+            $helper = new Url;
+            $router = Console::isConsole() ? 'HttpRouter' : 'Router';
+            /** @var Mvc\Router\RouteStackInterface $routerStack */
+            $routerStack = $serviceManager->get($router);
+            $helper->setRouter($routerStack);
 
-                $match = $serviceManager->get('application')
-                    ->getMvcEvent()
-                    ->getRouteMatch();
+            $match = $serviceManager->get('application')
+                ->getMvcEvent()
+                ->getRouteMatch();
 
-                if ($match instanceof Mvc\Router\RouteMatch) {
-                    $helper->setRouteMatch($match);
-                }
+            if ($match instanceof Mvc\Router\RouteMatch) {
+                $helper->setRouteMatch($match);
+            }
 
-                return $helper;
-            });
+            return $helper;
+        });
 
         // attach events to the event manager
         $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'preDispatch'], -500);
@@ -225,7 +225,7 @@ class Module implements
     /**
      * Retrieve the Autoloader Configuration
      *
-     * @return array
+     * @return void
      */
     public function getAutoloaderConfig()
     {

@@ -48,10 +48,12 @@ if (php_sapi_name() === 'cli') {
     $_SERVER['HTTP_HOST'] = 'localhost';
     $_SERVER['REQUEST_URI'] = '/';
     $_SERVER['QUERY_STRING'] = '';
+    $_SERVER['REMOTE_ADDR'] = 'http://foo.org';
+    $_SERVER['SERVER_PROTOCOL'] = 'HTTP';
 }
 
 define('APPLICATION_MODULE', call_user_func(
-    function ($modules) {
+    function () {
         $domain = $_SERVER['SERVER_NAME'];
 
         $configFile = APPLICATION_PATH . '/config/application.config.php';
@@ -78,8 +80,7 @@ define('APPLICATION_MODULE', call_user_func(
         if (!preg_match(
             '/^((\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d|[1-9]\d|1\d{2}|2[0-4]\d|25[0-5])$/',
             $urlParts['host']
-        )
-        ) {
+        )) {
             $domainParts = explode('.', $urlParts['host']);
             $tld = array_pop($domainParts);
             $domain = array_pop($domainParts) . '.' . $tld;
