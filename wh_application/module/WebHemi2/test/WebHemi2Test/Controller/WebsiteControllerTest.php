@@ -26,7 +26,13 @@
 
 namespace WebHemi2Test\Controller;
 
-use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
+use WebHemi2Test\Bootstrap;
+use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
+use Zend\Http\Request;
+use Zend\Http\Response;
+use Zend\Mvc\MvcEvent;
+use Zend\Mvc\Router\RouteMatch;
+use PHPUnit_Framework_TestCase;
 use WebHemi2\Controller\WebsiteController;
 
 /**
@@ -41,25 +47,40 @@ use WebHemi2\Controller\WebsiteController;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class WebsiteControllerTest extends AbstractHttpControllerTestCase
+class WebsiteControllerTest extends PHPUnit_Framework_TestCase
 {
     /** @var  WebsiteController $controller */
     protected $controller;
+    /** @var  Request $request */
+    protected $request;
+    /** @var  Response $response */
+    protected $response;
+    /** @var  RouteMatch $routeMatch */
+    protected $routeMatch;
+    /** @var  MvcEvent $event */
+    protected $event;
 
     /**
      * General setup for the tests
      */
     public function setUp()
     {
-        $this->setTraceError(true);
-        $this->controller = new WebsiteController;
+        $serviceManager = Bootstrap::getServiceManager();
 
-//        $controller->getPluginManager()
-//            ->setInvokableClass('UserAuth', 'WebHemi2\Controller\Plugin\UserAuth');
-//
-//        $this->controller = $controller;
+        $this->controller = new WebsiteController();
+        $this->request    = new Request();
+        $this->routeMatch = new RouteMatch(array('controller' => 'index'));
+        $this->event      = new MvcEvent();
+        $config = $serviceManager->get('Config');
+        $routerConfig = isset($config['router']) ? $config['router'] : array();
+        $router = HttpRouter::factory($routerConfig);
 
-        parent::setUp();
+        $this->event->setRouter($router);
+        $this->event->setRouteMatch($this->routeMatch);
+        $this->controller->setEvent($this->event);
+        $this->controller->setServiceLocator($serviceManager);
+        $this->controller->getPluginManager()
+            ->setInvokableClass('UserAuth', 'WebHemi2\Controller\Plugin\UserAuth');
     }
 
     /**
@@ -67,12 +88,12 @@ class WebsiteControllerTest extends AbstractHttpControllerTestCase
      */
     public function testIndexActionCanBeAccessed()
     {
-        $this->dispatch('/');
-        $this->assertResponseStatusCode(200);
+        $this->routeMatch->setParam('action', 'index');
 
-        $this->assertModuleName('WebHemi2');
-        $this->assertControllerName('WebHemi2\Controller\Website');
-        $this->assertControllerClass('WebsiteController');
-        $this->assertMatchedRouteName('index');
+        $result   = $this->controller->dispatch($this->request);
+        $response = $this->controller->getResponse();
+
+        $this->assertInternalType('array', $result);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 }

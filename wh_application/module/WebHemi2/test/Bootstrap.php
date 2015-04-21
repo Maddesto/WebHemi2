@@ -23,19 +23,17 @@
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
+namespace webHemi2Test;
 
-namespace WebHemi2Test;
-
-use Zend\Loader\AutoloaderFactory;
 use Zend\Mvc\Service\ServiceManagerConfig;
 use Zend\ServiceManager\ServiceManager;
-use Zend\ModuleManager\ModuleManager;
+use Zend\Stdlib\ArrayUtils;
 use RuntimeException;
 
 /**
- * WebHemi2Test
+ * WebHemi2
  *
- * Module bootstrap
+ * UnitTest bootstrap
  *
  * @category  WebHemi2Test
  * @package   WebHemi2Test
@@ -46,51 +44,67 @@ use RuntimeException;
  */
 class Bootstrap
 {
-    /** @var  ServiceManager */
+    /** @var  ServiceManager $serviceManager */
     protected static $serviceManager;
+    /** @var  array $config */
+    protected static $config;
 
     /**
-     * Init bootstrap
+     * Initialize bootstrap
      *
-     * @return void
+     * @static
      */
     public static function init()
     {
         error_reporting(E_ALL | E_STRICT);
+        chdir(__DIR__);
 
-        $zf2ModulePaths = [dirname(dirname(__DIR__))];
-        if (($path = static::findParentPath('vendor'))) {
-            $zf2ModulePaths[] = $path;
+        $zf2ModulePaths = [];
+
+        // Load the user-defined test configuration file, if it exists; otherwise, load
+        if (file_exists(__DIR__ . '/TestConfig.php') && is_readable(__DIR__ . '/TestConfig.php')) {
+            $testConfig = include __DIR__ . '/TestConfig.php';
+        } else {
+            $testConfig = include __DIR__ . '/TestConfig.php.dist';
         }
-        if (($path = static::findParentPath('module')) !== $zf2ModulePaths[0]) {
-            $zf2ModulePaths[] = $path;
+
+        if (isset($testConfig['module_listener_options']['module_paths'])) {
+            $modulePaths = $testConfig['module_listener_options']['module_paths'];
+            foreach ($modulePaths as $modulePath) {
+                if (($path = static::findParentPath($modulePath))) {
+                    $zf2ModulePaths[] = $path;
+                }
+            }
         }
+
+        $zf2ModulePaths  = implode(PATH_SEPARATOR, $zf2ModulePaths) . PATH_SEPARATOR;
+        $zf2ModulePaths .= getenv('ZF2_MODULES_TEST_PATHS') ?: (
+            defined('ZF2_MODULES_TEST_PATHS') ? ZF2_MODULES_TEST_PATHS : ''
+        );
 
         static::initAutoloader();
 
         // use ModuleManager to load this module and it's dependencies
-        $config = [
-            'module_listener_options' => [
-                'module_paths' => $zf2ModulePaths,
-            ],
-            'modules' => [
-                'WebHemi2'
-            ]
-        ];
+        $baseConfig = array(
+            'module_listener_options' => array(
+                'module_paths' => explode(PATH_SEPARATOR, $zf2ModulePaths),
+            ),
+        );
 
-        static::$serviceManager = new ServiceManager(new ServiceManagerConfig());
-        static::$serviceManager->setService('ApplicationConfig', $config);
+        $config = ArrayUtils::merge($baseConfig, $testConfig);
 
-        /** @var ModuleManager $moduleManager */
-        $moduleManager = static::$serviceManager->get('ModuleManager');
-        $moduleManager->loadModules();
+        $serviceManager = new ServiceManager(new ServiceManagerConfig());
+        $serviceManager->setService('ApplicationConfig', $config);
+        $serviceManager->get('ModuleManager')->loadModules();
 
-        $rootPath = dirname(static::findParentPath('module'));
-        chdir($rootPath);
+        static::$serviceManager = $serviceManager;
+        static::$config = $config;
     }
 
     /**
-     * Retrieve the service manager instance
+     * Retrieve ServiceManager instance
+     *
+     * @static
      *
      * @return ServiceManager
      */
@@ -100,56 +114,39 @@ class Bootstrap
     }
 
     /**
-     * Init the autoloader
+     * Retrieve config
+     *
+     * @static
+     *
+     * @return mixed
+     */
+    public static function getConfig()
+    {
+        return static::$config;
+    }
+
+    /**
+     * Init autoloader
+     *
+     * @static
      */
     protected static function initAutoloader()
     {
         $vendorPath = static::findParentPath('vendor');
 
-        // Composer autoloading
-        if (file_exists($vendorPath . '/autoload.php')) {
-            $loader = include $vendorPath . '/autoload.php';
-        }
-
-        if (class_exists('Zend\Loader\AutoloaderFactory')) {
-            return;
-        }
-
-        $zf2Path = false;
-
-        if (is_dir(__DIR__ . '/vendor/ZF2/library')) {
-            $zf2Path = __DIR__ . '/vendor/ZF2/library';
-        } elseif (getenv('ZF2_PATH')) {      // Support for ZF2_PATH environment variable or git submodule
-            $zf2Path = getenv('ZF2_PATH');
-        } elseif (get_cfg_var('zf2_path')) { // Support for zf2_path directive value
-            $zf2Path = get_cfg_var('zf2_path');
-        }
-
-        if ($zf2Path) {
-            if (isset($loader)) {
-                $loader->add('Zend', $zf2Path);
-                $loader->add('ZendXml', $zf2Path);
-            } else {
-                include $zf2Path . '/Zend/Loader/AutoloaderFactory.php';
-                AutoloaderFactory::factory(
-                    [
-                        'Zend\Loader\StandardAutoloader' => [
-                            'autoregister_zf' => true
-                        ]
-                    ]
-                );
-            }
-        }
-
-        if (!class_exists('Zend\Loader\AutoloaderFactory')) {
-            throw new RuntimeException('Unable to load ZF2. Run `php composer.phar install`.');
+        if (is_readable($vendorPath . '/autoload.php')) {
+            require_once $vendorPath . '/autoload.php';
+        } else {
+            throw new RuntimeException("Composer autoload not found");
         }
     }
 
     /**
-     * Find a specific folder in the parent path
+     * Recursively finds a path in the tree
      *
-     * @param string $path The folder name or path
+     * @static
+     *
+     * @param $path
      *
      * @return bool|string
      */
