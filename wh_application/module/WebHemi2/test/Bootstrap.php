@@ -59,6 +59,8 @@ class Bootstrap
         error_reporting(E_ALL | E_STRICT);
         chdir(__DIR__);
 
+        require_once(__DIR__ . '/../../../library/application_constants.php');
+
         $zf2ModulePaths = [];
 
         // Load the user-defined test configuration file, if it exists; otherwise, load
