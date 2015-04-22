@@ -50,11 +50,11 @@ abstract class AbstractController extends AbstractActionController
     /**
      * Execute the request
      *
-     * @param  MvcEvent $e
+     * @param  MvcEvent $event
      *
      * @return mixed
      */
-    public function onDispatch(MvcEvent $e)
+    public function onDispatch(MvcEvent $event)
     {
         if (APPLICATION_MODULE == ADMIN_MODULE) {
             $headerBlock = new ViewModel();
@@ -72,7 +72,7 @@ abstract class AbstractController extends AbstractActionController
                 ->addChild($footerBlock, 'footerBlock');
         }
 
-        return parent::onDispatch($e);
+        return parent::onDispatch($event);
     }
 
     /**

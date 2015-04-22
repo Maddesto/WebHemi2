@@ -44,22 +44,22 @@ class AclEvent
     /**
      * Event handler. Fires upon route event
      *
-     * @param MvcEvent $e
+     * @param MvcEvent $event
      *
      * @return void
      */
-    public static function onRoute(MvcEvent $e)
+    public static function onRoute(MvcEvent $event)
     {
         /** @var \Zend\ServiceManager\ServiceManager $serviceManager */
-        $serviceManager = $e->getTarget()->getServiceManager();
+        $serviceManager = $event->getTarget()->getServiceManager();
         /** @var \Zend\EventManager\EventManager $eventManager */
-        $eventManager = $e->getTarget()->getEventManager();
+        $eventManager = $event->getTarget()->getEventManager();
         /** @var $acl \WebHemi2\Acl\Acl */
         $acl = $serviceManager->get('acl');
         /** @var $auth \WebHemi2\Auth\Auth */
         $auth = $serviceManager->get('auth');
         /** @var \Zend\Mvc\Router\Http\RouteMatch $routeMatch */
-        $routeMatch = $e->getTarget()->getMvcEvent()->getRouteMatch();
+        $routeMatch = $event->getTarget()->getMvcEvent()->getRouteMatch();
 
         $actionName = $routeMatch->getParam('action');
         $actionName = strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $actionName));
@@ -85,18 +85,18 @@ class AclEvent
                 }
 
                 /** @var \Zend\Http\PhpEnvironment\Response $response */
-                $response = $e->getTarget()->getMvcEvent()->getResponse();
+                $response = $event->getTarget()->getMvcEvent()->getResponse();
                 $response->getHeaders()->addHeaderLine('Location', $url);
                 $response->setStatusCode(302);
                 $response->send();
             } else {
                 // otherwise it's a 403 Frobidden error
-                $e->setError('error-unauthorized-controller')
+                $event->setError('error-unauthorized-controller')
                     ->setParam('identity', $acl->getIdentity())
                     ->setParam('controller', $routeMatch->getParam('controller'))
                     ->setParam('action', $routeMatch->getParam('action'));
 
-                $eventManager->trigger('dispatch.error', $e);
+                $eventManager->trigger('dispatch.error', $event);
             }
         }
     }

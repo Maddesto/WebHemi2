@@ -148,7 +148,7 @@ class UserController extends AbstractController
             return $this->redirect()->toRoute($route, ['userName' => $userName]);
         }
 
-        /* @var $editForm \WebHemi2\Form\UserForm */
+        /** @var $editForm \WebHemi2\Form\UserForm */
         $editForm = $this->getForm('UserForm');
 
         if ($request->isPost()) {

@@ -51,60 +51,60 @@ class ErrorEvent
     /**
      * Prepares the ACL error page
      *
-     * @param MvcEvent $e
+     * @param MvcEvent $event
      * @return void
      */
-    public static function preDispatch(MvcEvent $e)
+    public static function preDispatch(MvcEvent $event)
     {
         // Do nothing if the result is a response object
-        $result = $e->getResult();
+        $result = $event->getResult();
         if ($result instanceof Response) {
             return;
         }
 
-        $error = $e->getError();
+        $error = $event->getError();
         switch ($error) {
             case 'error-unauthorized-controller':
             case 'error-unauthorized-route':
-                self::get403($e);
+                self::get403($event);
                 break;
 
             default:
-                self::get404($e);
+                self::get404($event);
         }
     }
 
     /**
      * Prepares the 403 error page
      *
-     * @param MvcEvent $e
+     * @param MvcEvent $event
      * @return void
      */
-    protected static function get403(MvcEvent $e)
+    protected static function get403(MvcEvent $event)
     {
         // Common view variables
         $viewVariables = [
-            'error' => $e->getParam('error'),
-            'identity' => $e->getParam('identity'),
+            'error' => $event->getParam('error'),
+            'identity' => $event->getParam('identity'),
         ];
 
-        $error = $e->getError();
+        $error = $event->getError();
         switch ($error) {
             case 'error-unauthorized-controller':
-                $viewVariables['controller'] = $e->getParam('controller');
-                $viewVariables['action'] = $e->getParam('action');
+                $viewVariables['controller'] = $event->getParam('controller');
+                $viewVariables['action'] = $event->getParam('action');
                 break;
             case 'error-unauthorized-route':
-                $viewVariables['route'] = $e->getParam('route');
+                $viewVariables['route'] = $event->getParam('route');
                 break;
         }
 
         // add our error page to the view model
-        $layout = $e->getViewModel();
+        $layout = $event->getViewModel();
         $layout->setVariable('title', '403 Forbidden');
 
         if (ADMIN_MODULE == APPLICATION_MODULE
-            && $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
+            && $event->getApplication()->getServiceManager()->get('auth')->hasIdentity()
         ) {
             $headerBlock = new ViewModel();
             $headerBlock->setTemplate('block/AdminHeaderBlock');
@@ -126,12 +126,12 @@ class ErrorEvent
         $layout->addChild($model);
 
         /** @var Response $response */
-        $response = $e->getResponse();
+        $response = $event->getResponse();
 
         // if no response object present, we create one
         if (!$response) {
             $response = new \HttpResponse();
-            $e->setResponse($response);
+            $event->setResponse($response);
         }
         $response->setStatusCode(403);
     }
@@ -139,17 +139,17 @@ class ErrorEvent
     /**
      * Prepares the 404 error page
      *
-     * @param MvcEvent $e
+     * @param MvcEvent $event
      * @return void
      */
-    protected static function get404(MvcEvent $e)
+    protected static function get404(MvcEvent $event)
     {
         // add our error page to the view model
-        $layout = $e->getViewModel();
+        $layout = $event->getViewModel();
         $layout->getVariable('title', '404 Not Found');
 
         if (ADMIN_MODULE == APPLICATION_MODULE
-            && $e->getApplication()->getServiceManager()->get('auth')->hasIdentity()
+            && $event->getApplication()->getServiceManager()->get('auth')->hasIdentity()
         ) {
             $headerBlock = new ViewModel();
             $headerBlock->setTemplate('block/AdminHeaderBlock');
@@ -167,16 +167,16 @@ class ErrorEvent
 
         $model = new ViewModel();
         $model->setTemplate(self::$template[404]);
-        $model->setVariable('reason', $e->getError());
+        $model->setVariable('reason', $event->getError());
         $layout->addChild($model);
 
         /** @var Response $response */
-        $response = $e->getResponse();
+        $response = $event->getResponse();
 
         // if no response object present, we create one
         if (!$response) {
             $response = new \HttpResponse();
-            $e->setResponse($response);
+            $event->setResponse($response);
         }
         $response->setStatusCode(404);
     }

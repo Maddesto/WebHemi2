@@ -43,16 +43,16 @@ class LayoutEvent
     /**
      * Event handler. Fires upon dispatching the application
      *
-     * @param MvcEvent $e
+     * @param MvcEvent $event
      *
      * @return void
      */
-    public static function preDispatch(MvcEvent $e)
+    public static function preDispatch(MvcEvent $event)
     {
-        $controller = $e->getTarget();
+        $controller = $event->getTarget();
         $controllerClass = get_class($controller);
         $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
-        $config = $e->getApplication()->getServiceManager()->get('Configuration');
+        $config = $event->getApplication()->getServiceManager()->get('Configuration');
 
         if (isset($config['module_layouts'][$moduleNamespace])) {
             $controller->layout($config['module_layouts'][$moduleNamespace]);
