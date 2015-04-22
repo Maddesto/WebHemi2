@@ -31,13 +31,11 @@
  * If there is no rewrite enabled for the webserver this file - as the default entry point -  will provide an error page.
  *
  */
-// define environment
-define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
-
 // create applitacion-wide constants
-require_once(__DIR__ . '/wh_application/module/WebHemi2/resources/application_constants.php');
+require_once(__DIR__ . '/wh_application/library/application_constants.php');
+
 // load application config to get template info
-$applicationConfigFile = APPLICATION_PATH . '/config/application.config.php';
+$applicationConfigFile = APPLICATION_MODULE_PATH . '/config/application.config.php';
 
 if (file_exists($applicationConfigFile)) {
     $applicationConfig = include($applicationConfigFile);
@@ -56,13 +54,13 @@ if (file_exists($applicationConfigFile)) {
 $theme = $applicationConfig[APPLICATION_MODULE]['wh_themes']['current_theme'];
 
 // include common config to get the error template
-$commonConfig = include(APPLICATION_PATH . '/config/common.module.config.php');
+$commonConfig = include(APPLICATION_MODULE_PATH . '/config/common.module.config.php');
 $errorTemplate = $commonConfig['view_manager']['exception_template'];
 
 if ($theme == 'default') {
-    $themePath = APPLICATION_PATH . '/resources/default';
+    $themePath = APPLICATION_MODULE_PATH . '/resources/default';
 } else {
-    $themePath = APPLICATION_PATH . '/resources/themes/' . $theme;
+    $themePath = APPLICATION_MODULE_PATH . '/resources/themes/' . $theme;
     // include theme config to get the theme error template if defined
     $templateConfig = include($themePath . '/theme.config.php');
     $errorTemplate = $templateConfig['exception_template'];

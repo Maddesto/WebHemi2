@@ -117,8 +117,6 @@ class Module implements
      */
     public function getConfig()
     {
-        include_once __DIR__ . '/resources/application_constants.php';
-
         // for the first call, we set the Config
         if (!isset($configs)) {
             // There's only tho physical modules (Admin and Website) the others are virtual modules and inherit

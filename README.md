@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.3 Created by Gixx.
+Version 2.0.3-p1 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -31,11 +31,14 @@ Features / Goals
 - Secure authentication [DONE]
 - Secure Form solution [DONE]
 - Form enhancements [DONE]
+
 - Easy-to-use 'Admin' application [IN PROGRESS]
 - User friendly design for 'Admin' application [IN PROGRESS]
-- Responsive design for 'Admin' application to use the page from mobile devices [IN PROGRESS]
-- Default website design [PLANNING]
+- Write UnitTests for the WebHemi2 module [IN PROGRESS]
+
 - 'Virtual folder structure'-like content management [PLANNING]
+- Default website design [PLANNING]
+- Responsive design for 'Admin' application to use the page from mobile devices [PLANNING]
 - Support for 3rd-party plugins [PLANNING]
 - Language support [PLANNING]
 - First-time Setup script [PLANNING]
@@ -44,7 +47,7 @@ Installation
 ------------
 
 - Download and unzip the source files or clone the repository into your document root
-- [Install composer](https://getcomposer.org/doc/00-intro.md#installation-nix) and run `php composer.phar install --no-dev` to get the required Zend Framework 2 packages
+- [Install composer](https://getcomposer.org/doc/00-intro.md#installation-nix) and run `php composer.phar install --no-dev` to get the required packages
 - Edit the `wh_application\config\autoload\db.global.php` and add the database connection data.
 - Rename the `wh_application\module\WebHemi2\config\application.config.php.template` to `application.config.php`.
 - Import the `wh_application\module\WebHemi2\schema\dump.sql` into your database

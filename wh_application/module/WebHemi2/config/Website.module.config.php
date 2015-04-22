@@ -27,7 +27,7 @@ return [
     'wh_themes' => [
         'current_theme' => 'default',
         'theme_paths' => [
-            APPLICATION_PATH . '/resources/themes/'
+            APPLICATION_MODULE_PATH . '/resources/themes/'
         ],
         'adapters' => [
             'WebHemi2\Theme\Adapter\ConfigurationAdapter',

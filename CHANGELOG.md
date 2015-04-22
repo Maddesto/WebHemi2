@@ -1,7 +1,15 @@
 Change log
 ==========
 
--------------
+----------------
+Version 2.0.3-p1
+----------------
+- Added the first working UnitTest
+- Refactored the autoloading: now it fully depends on the composer
+- Continue refactoring code style according to CodeSniffer
+- The default favicon is a physical file and not a base64 encoded string any more.
+- Minor bug fixes
+
 Version 2.0.3
 -------------
 - Add Code Sniffer to `dev` and fix several issues that break the PSR-2 standard

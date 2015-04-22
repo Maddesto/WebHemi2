@@ -21,14 +21,15 @@
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
 
 /**
  * Dump data in a more pretty way
  */
 function dump()
 {
+    error_reporting(E_ALL);
+    ini_set('display_errors', 'On');
+
     if (func_num_args() > 0) {
         $isCli = php_sapi_name() == 'cli';
         $content = '';

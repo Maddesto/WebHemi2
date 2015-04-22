@@ -23,6 +23,8 @@
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
+
+
 define('WEBHEMI_VERSION', '2.0.1.0');
 
 define('ADMIN_MODULE', 'Admin');
@@ -30,11 +32,13 @@ define('WEBSITE_MODULE', 'Website');
 
 define('AUTOLOGIN_COOKIE_PREFIX', 'atln');
 
-define('APPLICATION_PATH', dirname(__DIR__));
+define('APPLICATION_ROOT', dirname(__DIR__));
+define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
+define('APPLICATION_MODULE_PATH', APPLICATION_ROOT . '/module/WebHemi2');
 define('APPLICATION_MODULE_TYPE_SUBDOMAIN', 'subdomain');
 define('APPLICATION_MODULE_TYPE_SUBDIR', 'subdir');
 
-$configFile = APPLICATION_PATH . '/config/application.config.php';
+$configFile = APPLICATION_MODULE_PATH . '/config/application.config.php';
 if (file_exists($configFile)) {
     /** @noinspection PhpIncludeInspection */
     $modules = include $configFile;
@@ -49,20 +53,13 @@ if (php_sapi_name() === 'cli') {
     $_SERVER['REQUEST_URI'] = '/';
     $_SERVER['QUERY_STRING'] = '';
     $_SERVER['REMOTE_ADDR'] = 'http://foo.org';
-    $_SERVER['SERVER_PROTOCOL'] = 'HTTP';
+    $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
 }
 
 define('APPLICATION_MODULE', call_user_func(
-    function () {
+    function ($modules) {
         $domain = $_SERVER['SERVER_NAME'];
 
-        $configFile = APPLICATION_PATH . '/config/application.config.php';
-        if (file_exists($configFile)) {
-            /** @noinspection PhpIncludeInspection */
-            $modules = include($configFile);
-        } else {
-            $modules = [];
-        }
         // set a default module
         $module = WEBSITE_MODULE;
         $subDomain = '';
@@ -86,7 +83,6 @@ define('APPLICATION_MODULE', call_user_func(
             $domain = array_pop($domainParts) . '.' . $tld;
             $subDomain = implode('.', $domainParts);
         }
-
 
         // if no subdomain present, then it should be handled as 'www'
         if (empty($subDomain)) {

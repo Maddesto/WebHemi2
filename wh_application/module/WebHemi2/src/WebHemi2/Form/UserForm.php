@@ -904,7 +904,7 @@ class UserForm extends AbstractForm
         $phoneNumber = preg_replace('/[^\d]/', '', $phoneNumberElement->getValue());
         if (!empty($phoneNumber)) {
             // this database contains only the mutually unambiguous mappings between phone codes and country codes
-            $phoneCodeData = include_once APPLICATION_PATH . '/resources/phonecode_to_countrycode.php';
+            $phoneCodeData = include_once APPLICATION_ROOT . '/library/phonecode_to_countrycode.php';
 
             // if the beginning of the code is in the database then we search for it (no success garantee)
             if (isset($phoneCodeData[$phoneNumber[0]])) {
