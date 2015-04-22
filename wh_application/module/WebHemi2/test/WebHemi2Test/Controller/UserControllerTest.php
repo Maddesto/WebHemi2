@@ -107,6 +107,7 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
         // Mock the system to be logged in.
         $this->mockLogin();
 
+
         $this->routeMatch->setParam('action', 'userProfile');
         $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
