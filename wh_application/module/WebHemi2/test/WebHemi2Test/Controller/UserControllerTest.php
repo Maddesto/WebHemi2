@@ -27,7 +27,6 @@
 namespace WebHemi2Test\Controller;
 
 use WebHemi2Test\Bootstrap;
-use WebHemi2Test\Fixture\AuthenticatedUserFixture;
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
 use Zend\Http\Request;
 use Zend\Http\Response;
@@ -35,6 +34,7 @@ use Zend\Mvc\MvcEvent;
 use Zend\Mvc\Router\RouteMatch;
 use PHPUnit_Framework_TestCase;
 use WebHemi2\Controller\UserController;
+use WebHemi2\Model\User as UserModel;
 
 /**
  * WebHemi2
@@ -50,7 +50,7 @@ use WebHemi2\Controller\UserController;
  */
 class UserControllerTest extends PHPUnit_Framework_TestCase
 {
-    /** @var  WebsiteController $controller */
+    /** @var  UserController $controller */
     protected $controller;
     /** @var  Request $request */
     protected $request;
@@ -64,16 +64,16 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
     /**
      * General setup for the tests
      */
-    public function setUp()
+    protected function setUp()
     {
         $serviceManager = Bootstrap::getServiceManager();
 
         $this->controller = new UserController();
         $this->request    = new Request();
-        $this->routeMatch = new RouteMatch(array('controller' => 'User'));
+        $this->routeMatch = new RouteMatch(['controller' => 'User']);
         $this->event      = new MvcEvent();
         $config = $serviceManager->get('Config');
-        $routerConfig = isset($config['router']) ? $config['router'] : array();
+        $routerConfig = isset($config['router']) ? $config['router'] : [];
         $router = HttpRouter::factory($routerConfig);
 
         $this->event->setRouter($router);
@@ -104,24 +104,46 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
      */
     public function testUserProfileActionCanBeAccessedWithLogin()
     {
+        // Mock the system to be logged in.
+        $this->mockLogin();
+
         $this->routeMatch->setParam('action', 'userProfile');
-
-        $mockedController = $this->getMockBuilder('UserController')
-            ->getMock();
-
-        $loggedInUserAuth = new AuthenticatedUserFixture();
-        $mockedController->method('getUserAuth')
-            ->willReturn($loggedInUserAuth);
-
-        $mockedController->setEvent($this->event);
-        $mockedController->setServiceLocator(Bootstrap::getServiceManager());
-        $mockedController->getPluginManager()
-            ->setInvokableClass('UserAuth', 'WebHemi2\Controller\Plugin\UserAuth');
-
         $result = $this->controller->dispatch($this->request);
         $response = $this->controller->getResponse();
 
         $this->assertInternalType('array', $result);
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * Mock the Auth Service to lie that the user is logged in
+     *
+     * @param string $role Set the user with the given role
+     */
+    protected function mockLogin($role = 'member')
+    {
+        $userModel = new UserModel();
+        $userModel->setUserId(1)
+            ->setUsername('Tester')
+            ->setRole($role)
+            ->setActive(true)
+            ->setEnabled(true);
+
+        $authService = $this->getMock('WebHemi2\Auth\Auth');
+        $authService->expects($this->any())
+            ->method('getIdentity')
+            ->will($this->returnValue($userModel));
+
+        $authService->expects($this->any())
+            ->method('hasIdentity')
+            ->will($this->returnValue(true));
+
+        $authServiceFactory = $this->getMock('WebHemi2\ServiceFactory\AuthServiceFactory');
+        $authServiceFactory->expects($this->any())
+            ->method('createService')
+            ->will($this->returnValue($authService));
+
+        Bootstrap::getServiceManager()->setAllowOverride(true)
+            ->setFactory('auth', $authServiceFactory);
     }
 }
