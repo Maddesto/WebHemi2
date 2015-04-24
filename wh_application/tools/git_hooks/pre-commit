@@ -1,14 +1,22 @@
 #!/bin/bash
-# Changed files
+
+# Define global variables
+project_root="$(git rev-parse --show-toplevel)"
+module_path="wh_application/module/WebHemi2"
 file_names_to_check="$(git diff --cached --name-only --diff-filter=ACM  | egrep '*.(php|phtml)')"
-file_number_to_check="$(git diff --cached --name-only --diff-filter=ACM  | egrep '*.(php|phtml)' | wc -l)"
+BOLD=$(tput bold)
+UNDERLINE=$(tput smul)
+RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput bold;tput setaf 3)
+MAGENTA=$(tput bold;tput setaf 5)
+ERROR=$(tput bold;tput setb 4)
+NORMAL=$(tput sgr0)
 
 # Check PHP Syntax Errors Before Committing
-#
-# @param string $1 The message on the left side
 function check_lint()
 {
-    echo -e "\e[1;35mCheck for PHP Syntax errors\e[0m"
+    echo -e "\n$MAGENTA  Check for PHP Syntax errors $NORMAL"
     echo "$file_names_to_check" | while read FILE; do
         if [[ "$FILE" =~ ^.+\.(php|phtml)$ ]]; then
             # Courtesy of swytsh from the comments below.
@@ -29,17 +37,24 @@ function check_lint()
 # Run PHPUnit tests
 function run_unit_tests()
 {
-    echo -e "\e[1;35mRun PHPUnit tests\e[0m"
-    echo "$file_names_to_check" | while read FILE; do
-    if [[ "$FILE" =~ ^.+(php|phtml)$ ]]; then
-        tmp=$(wh_application/vendor/phpunit/phpunit/phpunit 2>&1)
+    echo -e "\n$MAGENTA  Run PHPUnit tests $NORMAL"
+
+    # Get only the module files
+    local module_files="$(echo -e "$file_names_to_check" | egrep "$module_path")"
+    # Generate the UnitTest pair of the changed file
+    local test_files="$(echo -e "$module_files" | sed 's/src\/WebHemi2\//test\/WebHemi2Test\//' | sed 's/.php/Test.php/')"
+    # Go through the file list and check if the UnitTest exists. If so then run the test
+    echo "$test_files" | while read FILE; do
+    if [[ -f "$FILE" ]]; then
+        output="$($project_root/wh_application/vendor/phpunit/phpunit/phpunit -c "$project_root/$module_path/test/phpunit_nolog.xml" "$FILE" 2>&1)"
         if [ $? -ne 0 ]; then
-            print_check_fail "$FILE"
+            print_check_fail "$FILE" "$output"
         else
-            print_check_good "$FILE"
+            print_check_good "$FILE" "$output"
         fi
     fi
     done
+
 
     check_errors "Aborting commit due some PHPUnit test failed."
 }
@@ -49,15 +64,18 @@ function run_unit_tests()
 # @param string $1 The message on the left side
 function print_check_good()
 {
+    correcture=""
+    local result="$(echo "$2" | egrep "^OK")"
     local msg="$1"
-    local msg_length=${#msg}
-    GREEN=$(tput setaf 2)
-    NORMAL=$(tput sgr0)
-    col=`expr $(tput cols) - ${#msg} - 3`
+    if [ -n "$result" ];then
+        msg="$msg - $GREEN$result$NORMAL"
+        correcture="+ 11"
+    fi
+    local col=`expr $(tput cols) - ${#msg} $correcture`
 
-    echo -en "$msg"
-    printf '%*s%s%s%s%s' $col '  [' "$GREEN" 'OK' "$NORMAL" ']'
-    # Make sure it's closed
+    echo -en "    $msg"
+    printf '%*s%s' $col "  [$GREEN OK $NORMAL]"
+    # Make sure it's reseted
     echo "$NORMAL"
 }
 
@@ -66,19 +84,23 @@ function print_check_good()
 # @param string $1 The message on the left side
 function print_check_fail()
 {
-    local msg="$1"
-
     # Set commit blocker
     touch /tmp/block.git.commit
 
-    RED=$(tput setaf 1)
-    NORMAL=$(tput sgr0)
-    col=`expr $(tput cols) - ${#msg} - 5`
+    correcture="- 3"
+    local result="$(echo "$2" | egrep "(^Tests: |^Failed |_Exception: |^[0-9])")"
+    local msg="$1"
+    local col=`expr $(tput cols) - ${#msg} $correcture`
 
-    echo -en "$msg"
-    printf '%*s%s%s%s%s' $col '  [' "$RED" 'FAIL' "$NORMAL" ']'
-    # Make sure it's closed
+    echo -en "    $ERROR!$NORMAL$YELLOW $msg $NORMAL"
+    printf '%*s%s' $col "  [$RED FAIL $NORMAL]"
+    # Make sure it's reseted
     echo "$NORMAL"
+
+    if [ -n "$result" ];then
+        result="$(echo -e "$result" | sed 's/^/       &/g' | sed 's/^       [A-Z]/   &/g')"
+        echo "$result"
+    fi
 }
 
 # Checks if there were errors and exit
@@ -89,10 +111,32 @@ function check_errors()
     local msg="$1"
 
     if [ -f /tmp/block.git.commit ]; then
-        echo -e "\n\e[1;31m\t$msg" >&2
-        echo -e "\e[0m"
+        echo -en "\n$ERROR ERROR: $msg " >&2
+        echo -e "$NORMAL\n"
         exit 1
     fi
+}
+
+# Prepare environment
+function init()
+{
+    echo -e "\n$MAGENTA  Prepare environment $NORMAL"
+
+    # Do cleanup
+    if [ -f /tmp/block.git.commit ]; then
+        local msg="Delete lock file..."
+        local tmp=$(rm -f /tmp/block.git.commit 2>&1)
+        if [[ $? -ne 0 ]];then
+            print_check_fail "$msg"
+        else
+            print_check_good "$msg"
+        fi
+
+        check_errors "Aborting commit. Cannot remove file /tmp/block.git.commit Permission denied."
+    fi
+
+    # Just a message for what we already done
+    print_check_good "Collect changed PHP files..."
 }
 
 # Main task
@@ -104,17 +148,18 @@ function main()
     fi
 
     # Quit if there are no PHP files to commit
-    if [[ $file_number_to_check -lt "1" ]];then
+    if [[ ! -n $file_names_to_check ]];then
         exit;
     fi
 
-    # Do cleanup
-    rm -f /tmp/block.git.commit
+    clear
+    echo -e "$YELLOW \bStarting pre-commit hooks. $NORMAL"
 
     # Run tasks
+    init
     check_lint
     run_unit_tests
 }
 
 main
-echo -e "\e[0m"
+echo -e "$NORMAL"
