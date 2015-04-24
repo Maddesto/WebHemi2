@@ -1,0 +1,110 @@
+#!/bin/bash
+# Changed files
+file_names_to_check="$(git diff --cached --name-only --diff-filter=ACM  | egrep '*.(php|phtml)')"
+file_number_to_check="$(git diff --cached --name-only --diff-filter=ACM  | egrep '*.(php|phtml)' | wc -l)"
+
+# Check PHP Syntax Errors Before Committing
+#
+# @param string $1 The message on the left side
+function check_lint()
+{
+    echo -e "\e[1;35mCheck for PHP Syntax errors\e[0m"
+    echo "$file_names_to_check" | while read FILE; do
+        if [[ "$FILE" =~ ^.+\.(php|phtml)$ ]]; then
+            # Courtesy of swytsh from the comments below.
+            if [[ -f $FILE ]]; then
+                tmp=$(php -l "$FILE" 2>&1 /dev/null)
+                if [ $? -ne 0 ]; then
+                    print_check_fail "$FILE"
+                    touch /tmp/block.git.commit
+                else
+                    print_check_good "$FILE"
+                fi
+            fi
+        fi
+    done
+
+    check_errors "Aborting commit due to files with syntax errors"
+}
+
+# Run PHPUnit
+function run_unit_test()
+{
+    echo "$file_names_to_check" | while read FILE; do
+    if [[ "$FILE" =~ ^.+(php|phtml)$ ]]; then
+        wh_application/vendor/phpunit/phpunit/phpunit 1> /dev/null
+        if [ $? -ne 0 ]; then
+          echo -e "\e[1;31m\tUnit tests failed ! Aborting commit." >&2
+          exit 1;
+        fi
+    fi
+    done
+}
+
+# Prints sylish [OK]
+function print_check_good()
+{
+    local msg="$1"
+    local msg_length=${#msg}
+    GREEN=$(tput setaf 2)
+    NORMAL=$(tput sgr0)
+    col=`expr $(tput cols) - ${#msg} - 3`
+
+    echo -en "$msg"
+    printf '%*s%s%s%s%s' $col '  [' "$GREEN" 'OK' "$NORMAL" ']'
+    # Make sure it's closed
+    echo "$NORMAL"
+}
+
+# Prints sylish [FAIL]
+#
+# @param string $1 The message on the left side
+function print_check_fail()
+{
+    local msg="$1"
+
+    RED=$(tput setaf 1)
+    NORMAL=$(tput sgr0)
+    col=`expr $(tput cols) - ${#msg} - 5`
+
+    echo -en "$msg"
+    printf '%*s%s%s%s%s' $col '  [' "$RED" 'FAIL' "$NORMAL" ']'
+    # Make sure it's closed
+    echo "$NORMAL"
+}
+
+# Checks if there were errors and exit
+#
+# @param string $1 The message to print when abort the commit
+function check_errors()
+{
+    local msg="$1"
+
+    if [ -f /tmp/block.git.commit ]; then
+        echo -e "\n\e[1;31m\t$msg" >&2
+        echo ""
+        exit 1
+    fi
+}
+
+function main()
+{
+    # Quit if the commit is not executed from shell (but from some nested shells within an IDE)
+    if [[ $SHLVL -lt "2" ]]; then
+        exit;
+    fi
+
+    # Quit if there are no PHP files to commit
+    if [[ $file_number_to_check -lt "1" ]];then
+        exit;
+    fi
+
+    # Do cleanup
+    rm -f /tmp/block.git.commit
+
+    # Run tasks
+    check_lint
+}
+
+main
+echo -e "\e[0m"
