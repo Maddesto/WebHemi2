@@ -13,10 +13,9 @@ function check_lint()
         if [[ "$FILE" =~ ^.+\.(php|phtml)$ ]]; then
             # Courtesy of swytsh from the comments below.
             if [[ -f $FILE ]]; then
-                tmp=$(php -l "$FILE" 2>&1 /dev/null)
+                tmp=$(php -l "$FILE" 2>&1)
                 if [ $? -ne 0 ]; then
                     print_check_fail "$FILE"
-                    touch /tmp/block.git.commit
                 else
                     print_check_good "$FILE"
                 fi
@@ -24,24 +23,30 @@ function check_lint()
         fi
     done
 
-    check_errors "Aborting commit due to files with syntax errors"
+    check_errors "Aborting commit due to files with syntax errors."
 }
 
-# Run PHPUnit
-function run_unit_test()
+# Run PHPUnit tests
+function run_unit_tests()
 {
+    echo -e "\e[1;35mRun PHPUnit tests\e[0m"
     echo "$file_names_to_check" | while read FILE; do
     if [[ "$FILE" =~ ^.+(php|phtml)$ ]]; then
-        wh_application/vendor/phpunit/phpunit/phpunit 1> /dev/null
+        tmp=$(wh_application/vendor/phpunit/phpunit/phpunit 2>&1)
         if [ $? -ne 0 ]; then
-          echo -e "\e[1;31m\tUnit tests failed ! Aborting commit." >&2
-          exit 1;
+            print_check_fail "$FILE"
+        else
+            print_check_good "$FILE"
         fi
     fi
     done
+
+    check_errors "Aborting commit due some PHPUnit test failed."
 }
 
-# Prints sylish [OK]
+# Print stylish [OK]
+#
+# @param string $1 The message on the left side
 function print_check_good()
 {
     local msg="$1"
@@ -56,12 +61,15 @@ function print_check_good()
     echo "$NORMAL"
 }
 
-# Prints sylish [FAIL]
+# Print stylish [FAIL]
 #
 # @param string $1 The message on the left side
 function print_check_fail()
 {
     local msg="$1"
+
+    # Set commit blocker
+    touch /tmp/block.git.commit
 
     RED=$(tput setaf 1)
     NORMAL=$(tput sgr0)
@@ -82,11 +90,12 @@ function check_errors()
 
     if [ -f /tmp/block.git.commit ]; then
         echo -e "\n\e[1;31m\t$msg" >&2
-        echo ""
+        echo -e "\e[0m"
         exit 1
     fi
 }
 
+# Main task
 function main()
 {
     # Quit if the commit is not executed from shell (but from some nested shells within an IDE)
@@ -104,6 +113,7 @@ function main()
 
     # Run tasks
     check_lint
+    run_unit_tests
 }
 
 main
