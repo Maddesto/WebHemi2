@@ -224,7 +224,7 @@ function init()
 
     # Information about the commit
     file_num="$(echo -e $file_names_to_check | wc -w)"
-    echo -e "        There are $YELLOW$file_num$NORMAL to commit..."
+    echo -e "        There are $YELLOW$file_num$NORMAL files to commit..."
 
     # Do cleanup
     if [ -f /tmp/block.git.commit ]; then
