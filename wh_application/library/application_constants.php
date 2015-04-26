@@ -25,7 +25,7 @@
  */
 
 
-define('WEBHEMI_VERSION', '2.0.1.0');
+define('WEBHEMI_VERSION', '2.0.3-p2');
 
 define('ADMIN_MODULE', 'Admin');
 define('WEBSITE_MODULE', 'Website');

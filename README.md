@@ -1,7 +1,7 @@
 WebHemi2
 ========
 
-Version 2.0.3-p1 Created by Gixx.
+Version 2.0.3-p2 Created by Gixx.
 
 **THIS PROJECT IS UNDER DEVELOPMENT. EXPERIMENTAL USE ONLY!**
 
@@ -48,10 +48,15 @@ Installation
 
 - Download and unzip the source files or clone the repository into your document root
 - [Install composer](https://getcomposer.org/doc/00-intro.md#installation-nix) and run `php composer.phar install --no-dev` to get the required packages
-- Edit the `wh_application\config\autoload\db.global.php` and add the database connection data.
-- Rename the `wh_application\module\WebHemi2\config\application.config.php.template` to `application.config.php`.
-- Import the `wh_application\module\WebHemi2\schema\dump.sql` into your database
+- Edit the `wh_application/config/autoload/db.global.php` and add the database connection data.
+- Rename the `wh_application/module/WebHemi2/config/application.config.php.template` to `application.config.php`.
+- Import the `wh_application/module/WebHemi2/schema/dump.sql` into your database
+- Run the `wh_application/tools/fix_resource` script that creates simboly links to for the frontend resources.
 - Login to the http://yourdomain.com/wh_admin with admin / admin (l/p).
+
+Additional task
+- Run the `wh_application/tools/encode_password` script to generate password. Use the hash in the database schema.
+- Run the `wh_application/tools/install_git_hooks` script if you are a developer and you fork the WebHemi2 project.
 
 Credits
 -------

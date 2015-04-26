@@ -2,6 +2,12 @@ Change log
 ==========
 
 ----------------
+Version 2.0.3-p2
+----------------
+- Added pre-commit git hook script
+- Added unit test
+- PHPCS and PHPMD fixes
+
 Version 2.0.3-p1
 ----------------
 - Added the first working UnitTest
