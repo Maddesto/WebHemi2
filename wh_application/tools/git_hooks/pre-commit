@@ -100,12 +100,14 @@ function run_unit_tests()
 {
     echo -e "\n$MAGENTA  Run PHPUnit tests for changed module files $NORMAL"
 
-    # Get only the module files
-    local module_files="$(echo -e "$file_names_to_check" | egrep "$module_path")"
-    # Generate the UnitTest pair of the changed file
-    local test_files="$(echo -e "$module_files" | sed 's/src\/WebHemi2\//test\/WebHemi2Test\//' | sed 's/.php/Test.php/')"
+    # Get the changed test files
+    test_files="$(echo -e "$file_names_to_check" | egrep "$module_path" | egrep "/test/")"
+    # Get the changed module files and generate the UnitTest pair of them
+    module_files="$(echo -e "$file_names_to_check" | egrep "$module_path" | egrep "/src/" | sed 's/src\/WebHemi2\//test\/WebHemi2Test\//' | sed 's/.php/Test.php/') "
+    # Sort and remove duplicates
+    watched_files="$(echo -e "$test_files\n$module_files" | sort -u)"
     # Go through the file list and check if the UnitTest exists. If so then run the test
-    echo "$test_files" | while read FILE; do
+    echo "$watched_files" | while read FILE; do
         if [[ -f "$FILE" ]]; then
             output="$($project_root/wh_application/vendor/phpunit/phpunit/phpunit -c "$project_root/$module_path/test/phpunit_nolog.xml" "$FILE" 2>&1)"
             if [ $? -ne 0 ]; then
@@ -127,7 +129,6 @@ function run_unit_tests()
             fi
         fi
     done
-
 
     check_errors "Aborting commit due to some PHPUnit test failed."
 }
