@@ -72,18 +72,18 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Id
      *
      * @param int $userId
-     * @param string $loadRoleForApplication
+     * @param string $application
      *
      * @return UserModel
      */
-    public function getUserById($userId, $loadRoleForApplication = null)
+    public function getUserById($userId, $application = null)
     {
         $rowSet = $this->select(['user_id' => (int)$userId]);
         /** @var UserModel $userModel */
         $userModel = $rowSet->current();
 
         if ($userModel) {
-            $this->initUser($userModel, $loadRoleForApplication);
+            $this->initUser($userModel, $application);
         }
 
         return $userModel;
@@ -93,11 +93,11 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Username
      *
      * @param string $username
-     * @param string $loadRoleForApplication
+     * @param string $application
      *
      * @return UserModel
      */
-    public function getUserByName($username, $loadRoleForApplication = null)
+    public function getUserByName($username, $application = null)
     {
         /** @var ResultSet $rowSet */
         $rowSet = $this->select(['username' => $username]);
@@ -105,7 +105,7 @@ class User extends AbstractTableGateway
         $userModel = $rowSet->current();
 
         if ($userModel) {
-            $this->initUser($userModel, $loadRoleForApplication);
+            $this->initUser($userModel, $application);
         }
 
         return $userModel;
@@ -115,11 +115,11 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Username
      *
      * @param string $email
-     * @param string $loadRoleForApplication
+     * @param string $application
      *
      * @return UserModel
      */
-    public function getUserByEmail($email, $loadRoleForApplication = null)
+    public function getUserByEmail($email, $application = null)
     {
         /** @var ResultSet $rowSet */
         $rowSet = $this->select(['email' => $email]);
@@ -127,7 +127,7 @@ class User extends AbstractTableGateway
         $userModel = $rowSet->current();
 
         if ($userModel) {
-            $this->initUser($userModel, $loadRoleForApplication);
+            $this->initUser($userModel, $application);
         }
 
         return $userModel;
@@ -137,11 +137,11 @@ class User extends AbstractTableGateway
      * Retrieve UserModel by Hash
      *
      * @param string $hash
-     * @param string $loadRoleForApplication
+     * @param string $application
      *
      * @return UserModel
      */
-    public function getUserByHash($hash, $loadRoleForApplication = null)
+    public function getUserByHash($hash, $application = null)
     {
         /** @var ResultSet $rowSet */
         $rowSet = $this->select(['hash' => $hash]);
@@ -149,7 +149,7 @@ class User extends AbstractTableGateway
         $userModel = $rowSet->current();
 
         if ($userModel) {
-            $this->initUser($userModel, $loadRoleForApplication);
+            $this->initUser($userModel, $application);
         }
 
         return $userModel;
@@ -159,20 +159,21 @@ class User extends AbstractTableGateway
      * Init UserModel: set attached data
      *
      * @param UserModel &$userModel
-     * @param string $loadRoleForApplication
+     * @param string $application
      *
      * @return UserModel
      */
-    public function initUser(UserModel &$userModel, $loadRoleForApplication = null)
+    public function initUser(UserModel &$userModel, $application = null)
     {
         if (!$userModel instanceof UserModel) {
             throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
         }
 
-        if ($loadRoleForApplication) {
-            $this->loadUserRole($userModel, $loadRoleForApplication);
+        if (empty($application)) {
+            $application = APPLICATION_MODULE;
         }
 
+        $this->loadUserRole($userModel, $application);
         $this->loadUserMeta($userModel);
     }
 
@@ -198,13 +199,16 @@ class User extends AbstractTableGateway
         /** @var ResultSet $rowSet */
         $rowSet = $this->selectWith($select);
 
-        while ($userModel = $rowSet->current()) {
+        do {
             /** @var UserModel $userModel */
-            $this->loadUserMeta($userModel);
-            $index = $userModel->getDisplayName();
-            $users[$index] = $userModel;
-            $rowSet->next();
-        }
+            $userModel = $rowSet->current();
+            if ($userModel) {
+                $this->loadUserMeta($userModel);
+                $index = $userModel->getDisplayName();
+                $users[$index] = $userModel;
+                $rowSet->next();
+            }
+        } while ($userModel);
         ksort($users);
         return $users;
     }
@@ -221,9 +225,14 @@ class User extends AbstractTableGateway
         $userAclModel = $userAclTable->getUserAcl($userModel->getUserId(), $application);
 
         if ($userAclModel) {
-            $userModel->setRole($userAclModel->getRole());
+            $userModel->setRole($userAclModel);
         } else {
-            $userModel->setRole(AclModel::ROLE_GUEST);
+            $guestAclModel = new UserAclModel();
+            $guestAclModel->setUserId($userModel->getUserId());
+            $guestAclModel->setApplication($application);
+            $guestAclModel->setRole(AclModel::ROLE_GUEST);
+
+            $userModel->setRole($guestAclModel);
         }
     }
 
@@ -337,6 +346,7 @@ class User extends AbstractTableGateway
         if ($result !== false) {
             $userId = $this->lastInsertValue;
             $userMeta = $userModel->getUserMetaData();
+            // @TODO: save user role
             try {
                 $metaResult = $this->saveUserMeta($userMeta, $userId);
                 if ($metaResult === false) {
@@ -378,11 +388,13 @@ class User extends AbstractTableGateway
 
         // start the transaction
         $connection->beginTransaction();
+
+
         $result = parent::update($userModel->toArray(), ['user_id' => $userModel->getUserId()]);
         // if the update was successful, we may go on
         if ($result !== false) {
             $userMeta = $userModel->getUserMetaData();
-
+            // @TODO: save user role
             try {
                 $metaResult = $this->saveUserMeta($userMeta, $userModel->getUserId());
                 if ($metaResult === false) {

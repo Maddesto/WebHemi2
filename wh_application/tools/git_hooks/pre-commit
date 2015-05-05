@@ -298,15 +298,30 @@ function main()
     echo -e "$NORMAL"
 
     if [ -f /tmp/prompt.git.commit ]; then
-        echo ""
-        read -p "You have warnings. Are you sure you want to proceed with commit? [y|N] " -n 1 -r
-        echo ""
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            echo -en "\n$ERROR Commit aborted " >&2
-            echo -e "$NORMAL"
-            exit 1
-        fi
+#        echo ""
+#        read -p "You have warnings. Are you sure you want to proceed with commit? [y|N] " -n 1 -r
+#        echo ""
+#        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+#            echo -en "\n$ERROR Commit aborted " >&2
+#            echo -e "$NORMAL"
+#            exit 1
+#        fi
+
+        exec < /dev/tty
+
+        while true; do
+          read -p "You have warnings. Are you sure you want to proceed with commit? [Y|n] " yn
+          if [ "$yn" = "" ]; then
+            yn='Y'
+          fi
+          case $yn in
+              [Yy] ) exit;;
+              [Nn] ) echo -en "\n$ERROR Commit aborted " >&2;echo -e "$NORMAL";exit 1;;
+              * ) exit;;
+          esac
+        done
     fi
+
 }
 
 main

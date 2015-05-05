@@ -26,7 +26,9 @@
 
 namespace WebHemi2\Model;
 
+use WebHemi2\Model\Acl as AclModel;
 use WebHemi2\Model\UserMeta as UserMetaModel;
+use WebHemi2\Model\UserAcl as UserAclModel;
 
 /**
  * WebHemi2
@@ -85,8 +87,6 @@ class User extends \ArrayObject
     protected $lastIp;
     /** @var string $registerIp */
     protected $registerIp;
-    /** @var string $role */
-    protected $role;
     /** @var bool $isActive */
     protected $isActive;
     /** @var bool $isEnabled */
@@ -95,6 +95,8 @@ class User extends \ArrayObject
     protected $timeLogin;
     /** @var \DateTime $timeRegister */
     protected $timeRegister;
+    /** @var UserAclModel $userRole */
+    protected $userRole;
     /** @var UserMetaModel[] $userMeta */
     protected $userMeta;
 
@@ -145,7 +147,7 @@ class User extends \ArrayObject
     /**
      * Retrieve all user meta data.
      *
-     * @return array
+     * @return UserMetaModel[]
      */
     public function getUserMetaData()
     {
@@ -155,7 +157,7 @@ class User extends \ArrayObject
     /**
      * Set user meta data.
      *
-     * @param array $userMeta
+     * @param UserMetaModel[] $userMeta
      *
      * @return User
      */
@@ -360,19 +362,25 @@ class User extends \ArrayObject
      */
     public function getRole()
     {
-        return $this->role;
+        if (isset($this->userRole)
+            && $this->userRole instanceof UserAclModel
+        ) {
+            return $this->userRole->getRole();
+        }
+
+        return AclModel::ROLE_GUEST;
     }
 
     /**
      * Set role
      *
-     * @param string $role
+     * @param UserAclModel $role
      *
      * @return User
      */
-    public function setRole($role)
+    public function setRole(UserAclModel $role)
     {
-        $this->role = $role;
+        $this->userRole = $role;
         return $this;
     }
 
@@ -559,7 +567,6 @@ class User extends \ArrayObject
             'email' => $this->email,
             'password' => $this->password,
             'hash' => $this->hash,
-            'role' => $this->role,
             'last_ip' => $this->lastIp,
             'register_ip' => $this->registerIp,
             'is_active' => $this->isActive ? 1 : 0,
@@ -581,7 +588,7 @@ class User extends \ArrayObject
                 'user_id' => $this->userId,
                 'username' => $this->username,
                 'email' => $this->email,
-                'role' => $this->role,
+                'role' => $this->getRole(),
             ],
             'personalInfo' => [
                 'displayname' => $this->getDisplayName(),
