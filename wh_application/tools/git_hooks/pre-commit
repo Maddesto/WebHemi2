@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Define global variables
-project_root="$(git rev-parse --show-toplevel)"
-module_path="wh_application/module/WebHemi2"
-file_names_to_check="$(git diff --cached --name-only --diff-filter=ACM  | egrep '*.(php|phtml)')"
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+MODULE_PATH="wh_application/module/WebHemi2"
+FILES_NAME_TO_CHECK="$(git diff --cached --name-only --diff-filter=ACM  | egrep '*.(php|phtml)')"
+ASK_PROMPT=0
 BOLD=$(tput bold)
 UNDERLINE=$(tput smul)
 RED=$(tput setaf 1)
@@ -14,11 +15,15 @@ ERROR=$(tput bold;tput setb 4)
 WARN=$(tput bold;tput setb 6)
 NORMAL=$(tput sgr0)
 
+INDEX_ERROR=0
+INDEX_WARNING=1
+INDEX_VALID_TEST=2
+
 # Check PHP Syntax Errors Before Committing
 function check_lint()
 {
     echo -e "\n$MAGENTA  Check for PHP Syntax errors $NORMAL"
-    echo "$file_names_to_check" | while read FILE; do
+    echo "$FILES_NAME_TO_CHECK" | while read FILE; do
         if [[ "$FILE" =~ ^.+\.(php|phtml)$ ]]; then
             # Courtesy of swytsh from the comments below.
             if [[ -f $FILE ]]; then
@@ -41,7 +46,12 @@ function check_dump()
     echo -e "\n$MAGENTA  Check for debug code in module files $NORMAL"
 
     # Get only the module files
-    local module_files="$(echo -e "$file_names_to_check" | egrep "$module_path")"
+    module_files="$(echo -e "$FILES_NAME_TO_CHECK" | egrep "$MODULE_PATH")"
+
+    if [[ ! -n $module_files ]];then
+        echo "    No module files to check"
+        return
+    fi
 
     echo "$module_files" | while read FILE; do
         result=$(grep "dump(" "$FILE" | wc -l)
@@ -59,8 +69,8 @@ function check_dump()
 function check_phpcs()
 {
     echo -e "\n$MAGENTA  Run PHP Code Sniffer $NORMAL"
-    phpcs_path="$project_root/wh_application/vendor/squizlabs/php_codesniffer"
-    echo "$file_names_to_check" | while read FILE; do
+    phpcs_path="$PROJECT_ROOT/wh_application/vendor/squizlabs/php_codesniffer"
+    echo "$FILES_NAME_TO_CHECK" | while read FILE; do
         result="$($phpcs_path/scripts/phpcs --standard=$phpcs_path/CodeSniffer/Standards/PSR2 "$FILE" 2>&1)"
         if [ $? -ne 0 ]; then
             print_check_warn "$FILE" " + 4"
@@ -78,12 +88,12 @@ function check_phpcs()
 function check_phpmd()
 {
     echo -e "\n$MAGENTA  Run PHP Mess Detector $NORMAL"
-    phpmd_path="$project_root/wh_application/vendor/phpmd/phpmd/src/bin"
-    echo "$file_names_to_check" | while read FILE; do
+    phpmd_path="$PROJECT_ROOT/wh_application/vendor/phpmd/phpmd/src/bin"
+    echo "$FILES_NAME_TO_CHECK" | while read FILE; do
         result="$($phpmd_path/phpmd "$FILE" text cleancode 2>&1)"
         if [ $? -ne 0 ]; then
             print_check_warn "$FILE" " + 4"
-            file_absolue_path="$(echo -e "$project_root/$FILE:")"
+            file_absolue_path="$(echo -e "$PROJECT_ROOT/$FILE:")"
             result="$(echo -e "$result" | sed 's,'"$file_absolue_path"',Line ,g' | sed 's/^/       &/g' | sed 's/	/ - /g')"
             echo "$result"
             echo ""
@@ -101,15 +111,18 @@ function run_unit_tests()
     echo -e "\n$MAGENTA  Run PHPUnit tests for changed module files $NORMAL"
 
     # Get the changed test files
-    test_files="$(echo -e "$file_names_to_check" | egrep "$module_path" | egrep "/test/")"
+    test_files="$(echo -e "$FILES_NAME_TO_CHECK" | egrep "$MODULE_PATH" | egrep "/test/")"
     # Get the changed module files and generate the UnitTest pair of them
-    module_files="$(echo -e "$file_names_to_check" | egrep "$module_path" | egrep "/src/" | sed 's/src\/WebHemi2\//test\/WebHemi2Test\//' | sed 's/.php/Test.php/') "
+    module_files="$(echo -e "$FILES_NAME_TO_CHECK" | egrep "$MODULE_PATH" | egrep "/src/" | sed 's/src\/WebHemi2\//test\/WebHemi2Test\//' | sed 's/.php/Test.php/') "
     # Sort and remove duplicates
     watched_files="$(echo -e "$test_files\n$module_files" | sort -u)"
+
     # Go through the file list and check if the UnitTest exists. If so then run the test
     echo "$watched_files" | while read FILE; do
         if [[ -f "$FILE" ]]; then
-            output="$($project_root/wh_application/vendor/phpunit/phpunit/phpunit -c "$project_root/$module_path/test/phpunit_nolog.xml" "$FILE" 2>&1)"
+            # Set test for message
+            touch /tmp/test.git.commit
+            output="$($PROJECT_ROOT/wh_application/vendor/phpunit/phpunit/phpunit -c "$PROJECT_ROOT/$MODULE_PATH/test/phpunit_nolog.xml" "$FILE" 2>&1)"
             if [ $? -ne 0 ]; then
                 print_check_fail "$FILE"
 
@@ -119,7 +132,7 @@ function run_unit_tests()
                     echo "$result"
                 fi
             else
-                local msg="$FILE"
+                msg="$FILE"
 
                 result="$(echo "$output" | egrep "^OK")"
                 if [ -n "$result" ];then
@@ -129,6 +142,10 @@ function run_unit_tests()
             fi
         fi
     done
+
+    if [ ! -f /tmp/test.git.commit ]; then
+        echo "    No valid test files"
+    fi
 
     check_errors "Aborting commit due to some PHPUnit test failed."
 }
@@ -156,7 +173,8 @@ function print_check_warn()
 
     # Set commit warning
     touch /tmp/warn.git.commit
-
+    # Set prompt for abort
+    touch /tmp/prompt.git.commit
     # Count the gap
     col=`expr $(tput cols) - ${#1} $correcture`
 
@@ -186,7 +204,7 @@ function print_check_fail()
 # @param string $1 The message to print when abort the commit
 function check_errors()
 {
-    local msg="$1"
+    msg="$1"
 
     if [ -f /tmp/block.git.commit ]; then
         echo -en "\n$ERROR ERROR: $msg " >&2
@@ -198,8 +216,6 @@ function check_errors()
         tmp=$(rm -f /tmp/warn.git.commit 2>&1)
         echo -en "\n$WARN WARNING: $msg " >&2
         echo -e "$NORMAL"
-        # Give some time to read the message
-        sleep 2
     fi
 }
 
@@ -224,13 +240,13 @@ function init()
     print_check_good "Collect changed PHP files..."
 
     # Information about the commit
-    file_num="$(echo -e $file_names_to_check | wc -w)"
+    file_num="$(echo -e $FILES_NAME_TO_CHECK | wc -w)"
     echo -e "        There are $YELLOW$file_num$NORMAL files to commit..."
 
     # Do cleanup
     if [ -f /tmp/block.git.commit ]; then
-        local msg="Delete lock file..."
-        local tmp=$(rm -f /tmp/block.git.commit 2>&1)
+        msg="Delete lock file..."
+        tmp=$(rm -f /tmp/block.git.commit 2>&1)
         if [[ $? -ne 0 ]];then
             print_check_fail "$msg"
         else
@@ -241,11 +257,22 @@ function init()
     fi
 
     if [ -f /tmp/warn.git.commit ]; then
-        local msg="Delete warn file..."
-        local tmp=$(rm -f /tmp/warn.git.commit 2>&1)
+        msg="Delete warn file..."
+        tmp=$(rm -f /tmp/warn.git.commit 2>&1)
         print_check_good "$msg"
     fi
 
+    if [ -f /tmp/warn.git.commit ]; then
+        msg="Delete prompt file..."
+        tmp=$(rm -f /tmp/prompt.git.commit 2>&1)
+        print_check_good "$msg"
+    fi
+
+    if [ -f /tmp/test.git.commit ]; then
+        msg="Delete test file..."
+        tmp=$(rm -f /tmp/test.git.commit 2>&1)
+        print_check_good "$msg"
+    fi
 }
 
 # Main task
@@ -257,7 +284,7 @@ function main()
     fi
 
     # Quit if there are no PHP files to commit
-    if [[ ! -n $file_names_to_check ]];then
+    if [[ ! -n $FILES_NAME_TO_CHECK ]];then
         exit;
     fi
 
@@ -269,6 +296,17 @@ function main()
     check_phpmd
     run_unit_tests
     echo -e "$NORMAL"
+
+    if [ -f /tmp/prompt.git.commit ]; then
+        echo ""
+        read -p "You have warnings. Are you sure you want to proceed with commit? [y|N] " -n 1 -r
+        echo ""
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo -en "\n$ERROR Commit aborted " >&2
+            echo -e "$NORMAL"
+            exit 1
+        fi
+    fi
 }
 
 main
