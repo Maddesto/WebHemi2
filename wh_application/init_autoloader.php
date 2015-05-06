@@ -13,7 +13,7 @@
  * @link      http://www.gixx-web.com
  */
 
-define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
+defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
 
 // Composer autoloading
 if (file_exists(__DIR__ . '/vendor/autoload.php')) {

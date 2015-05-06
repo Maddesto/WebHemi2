@@ -25,7 +25,7 @@
  */
 
 // define environment
-define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
+defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
 
 // create applitacion-wide constants
 require_once(__DIR__ . '/wh_application/library/application_constants.php');

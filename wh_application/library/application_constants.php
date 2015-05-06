@@ -32,8 +32,8 @@ define('WEBSITE_MODULE', 'Website');
 
 define('AUTOLOGIN_COOKIE_PREFIX', 'atln');
 
+defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
 define('APPLICATION_ROOT', dirname(__DIR__));
-define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
 define('APPLICATION_MODULE_PATH', APPLICATION_ROOT . '/module/WebHemi2');
 define('APPLICATION_MODULE_TYPE_SUBDOMAIN', 'subdomain');
 define('APPLICATION_MODULE_TYPE_SUBDIR', 'subdir');
@@ -45,6 +45,13 @@ if (file_exists($configFile)) {
 } else {
     $modules = [];
 }
+
+define('APPLICATION_MODULE_LIST', call_user_func(
+    function ($modules) {
+        return json_encode(array_keys($modules));
+    },
+    $modules
+));
 
 // For the unit test it is required to define these keys
 if (php_sapi_name() === 'cli') {
@@ -119,20 +126,29 @@ define('APPLICATION_MODULE', call_user_func(
         }
 
         return $module;
-    }, $modules)
-);
-define('APPLICATION_MODULE_TYPE', call_user_func(function ($moduleName, $modules) {
+    },
+    $modules
+));
+
+define('APPLICATION_MODULE_TYPE', call_user_func(
+    function ($moduleName, $modules) {
         return isset($modules[$moduleName])
             ? $modules[$moduleName]['type']
             : (WEBSITE_MODULE == $moduleName ? 'subdomain' : 'subdir');
-    }, APPLICATION_MODULE, $modules)
-);
-define('APPLICATION_MODULE_URI', call_user_func(function ($moduleName, $modules) {
+    },
+    APPLICATION_MODULE,
+    $modules
+));
+
+define('APPLICATION_MODULE_URI', call_user_func(
+    function ($moduleName, $modules) {
         return isset($modules[$moduleName])
             ? $modules[$moduleName]['path']
             : (WEBSITE_MODULE == $moduleName ? 'www' : '/');
-    }, APPLICATION_MODULE, $modules)
-);
+    },
+    APPLICATION_MODULE,
+    $modules
+));
 
 // remove global variable
 unset($modules);

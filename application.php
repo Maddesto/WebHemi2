@@ -36,4 +36,4 @@ if (php_sapi_name() === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['RE
 require 'wh_application/init_autoloader.php';
 
 // Run the application!
-Zend\Mvc\Application::init(require 'wh_application/config/application.config.php')->run();
+WebHemi2\Mvc\Application::init()->run();

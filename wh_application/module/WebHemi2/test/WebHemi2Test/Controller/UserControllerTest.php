@@ -35,6 +35,7 @@ use Zend\Mvc\Router\RouteMatch;
 use PHPUnit_Framework_TestCase;
 use WebHemi2\Controller\UserController;
 use WebHemi2\Model\User as UserModel;
+use WebHemi2\Model\UserAcl as UserAclModel;
 
 /**
  * WebHemi2
@@ -123,10 +124,15 @@ class UserControllerTest extends PHPUnit_Framework_TestCase
      */
     protected function mockLogin($role = 'member')
     {
+        $userAclModel = new UserAclModel();
+        $userAclModel->setUserId(1)
+            ->setApplication(WEBSITE_MODULE)
+            ->setRole($role);
+
         $userModel = new UserModel();
         $userModel->setUserId(1)
             ->setUsername('Tester')
-            ->setRole($role)
+            ->setRole($userAclModel)
             ->setActive(true)
             ->setEnabled(true);
 

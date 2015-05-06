@@ -370,13 +370,13 @@ class User extends AbstractTableGateway
      * Update user record
      *
      * @param UserModel $userModel
-     * @param  string|array|\Closure $where
+     * @param array $condition
      *
      * @return int
      *
      * @throws Exception\InvalidArgumentException
      */
-    public function update($userModel, $where = null)
+    public function update($userModel, $condition = null)
     {
         if (!$userModel instanceof UserModel) {
             throw new Exception\InvalidArgumentException('Given parameter is not a valid UserModel');
@@ -389,8 +389,9 @@ class User extends AbstractTableGateway
         // start the transaction
         $connection->beginTransaction();
 
+        $condition['user_id'] = $userModel->getUserId();
 
-        $result = parent::update($userModel->toArray(), ['user_id' => $userModel->getUserId()]);
+        $result = parent::update($userModel->toArray(), $condition);
         // if the update was successful, we may go on
         if ($result !== false) {
             $userMeta = $userModel->getUserMetaData();

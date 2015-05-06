@@ -118,7 +118,7 @@ class Module implements
     public function getConfig()
     {
         // for the first call, we set the Config
-        if (!isset($configs)) {
+        if (!isset(self::$configs)) {
             // There's only tho physical modules (Admin and Website) the others are virtual modules and inherit
             // from Website module
             $mainModule = APPLICATION_MODULE == ADMIN_MODULE
