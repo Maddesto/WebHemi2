@@ -73,7 +73,9 @@ class UserController extends AbstractController
      */
     public function indexAction()
     {
+        $path = (!$this->getUserAuth()->hasIdentity()) ? 'index/login' : 'index/user/profile';
 
+        return $this->redirect()->toRoute($path);
     }
 
     /**

@@ -26,7 +26,7 @@ echo $this->theme;
         <div class="container">
             <h1>HEMI WEBSITE LAYOUT</h1>
 <?php if ($this->getIdentity()) : ?>
-            <a href="<?php echo $this->url('index/user'); ?>">My Profile</a> |
+            <a href="<?php echo $this->url('index/user/profile'); ?>">My Profile</a> |
             <a href="<?php echo $this->url('index/logout'); ?>">Logout</a>
 <?php else : ?>
             <a href="<?php echo $this->url('index/login'); ?>">Login</a>

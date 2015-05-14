@@ -27,8 +27,8 @@
 
 /**
  * If there is rewrite enabled for the webserver the primary entry point will be the application.php.
- * 
- * If there is no rewrite enabled for the webserver this file - as the default entry point -  will provide an error page.
+ *
+ * If there is no rewrite enabled for the webserver this file - as the default entry point - will provide an error page.
  *
  */
 // create applitacion-wide constants

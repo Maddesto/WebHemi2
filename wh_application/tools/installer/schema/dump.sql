@@ -60,6 +60,7 @@ INSERT INTO `webhemi_acl` VALUES
   (NULL,'user-management:user-list',1,1,1,1,1,0),
   (NULL,'user-management:user-profile',1,1,1,1,1,0),
   (NULL,'user-management:user-view',1,1,1,1,1,0),
+  (NULL,'user:index',1,1,1,1,1,1),
   (NULL,'user:login',1,1,1,1,1,1),
   (NULL,'user:logout',1,1,1,1,1,0),
   (NULL,'user:user-profile',1,1,1,1,1,0),
