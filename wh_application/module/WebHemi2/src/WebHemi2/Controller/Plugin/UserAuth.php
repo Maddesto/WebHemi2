@@ -76,26 +76,28 @@ class UserAuth extends AbstractPlugin
 
             // decrypting the hash for this module
             $decryptedHash = Cipher::decode(
+                $encryptedHash,
                 md5(APPLICATION_MODULE),
-                base64_decode($encryptedHash),
                 md5(md5(APPLICATION_MODULE))
             );
 
-            // check for the hash
-            /** @var \Zend\Db\Adapter\Adapter $adapter */
-            $adapter = $this->getServiceLocator()->get('database');
-            $userTable = new UserTable($adapter);
-            $userModel = $userTable->getUserByHash($decryptedHash);
+            if ($decryptedHash) {
+                // check for the hash
+                /** @var \Zend\Db\Adapter\Adapter $adapter */
+                $adapter = $this->getServiceLocator()->get('database');
+                $userTable = new UserTable($adapter);
+                $userModel = $userTable->getUserByHash($decryptedHash);
 
-            if ($userModel instanceof UserModel) {
-                $authAdapter = $this->getAuthAdapter();
-                $authAdapter->setVerifiedUser($userModel);
+                if ($userModel instanceof UserModel) {
+                    $authAdapter = $this->getAuthAdapter();
+                    $authAdapter->setVerifiedUser($userModel);
 
-                $authResult = $this->getAuthService()->authenticate($authAdapter);
+                    $authResult = $this->getAuthService()->authenticate($authAdapter);
 
-                // if user is authenticated
-                if (Result::SUCCESS == $authResult->getCode()) {
-                    $identity = true;
+                    // if user is authenticated
+                    if (Result::SUCCESS == $authResult->getCode()) {
+                        $identity = true;
+                    }
                 }
             }
         }

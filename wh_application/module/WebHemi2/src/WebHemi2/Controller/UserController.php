@@ -290,20 +290,18 @@ class UserController extends AbstractController
 
                                     // if no hash has been set yet
                                     if (empty($hash)) {
+                                        /** @var UserTable $userTable */
                                         $userTable = $userAuth->getAuthAdapter()->getUserTable();
                                         $hash      = md5($userModel->getUsername() . '-' . $userModel->getEmail());
 
                                         $userModel->setHash($hash);
                                         $userTable->update($userModel);
                                     }
-
                                     // encrypting the hash for this module
-                                    $encryptedHash = base64_encode(
-                                        Cipher::encode(
-                                            md5(APPLICATION_MODULE),
-                                            $hash,
-                                            md5(md5(APPLICATION_MODULE))
-                                        )
+                                    $encryptedHash = Cipher::encode(
+                                        $hash,
+                                        md5(APPLICATION_MODULE),
+                                        md5(md5(APPLICATION_MODULE))
                                     );
 
                                     // set cookie for this module

@@ -51,16 +51,16 @@ class Cipher
      * @param string $data   The data that will be encrypted with the given cipher and mode. If the size of the data is
      *     not n * blocksize, the data will be padded with '\0'. The returned crypttext can be larger than the size of
      *     the data that was given by data.
-     * @param string $key   The key with which the data will be encrypted. If it's smaller than the required keysize, it
+     * @param string $key    The key with which the data will be encrypted. If it's smaller than the required keysize, it
      *     is padded with '\0'. It is better not to use ASCII strings for keys.
      * @param string $salt   [optional] Used for the initialization in CBC, CFB, OFB modes, and in some algorithms in
      *     STREAM mode. If you do not supply an IV, while it is needed for an algorithm, the function issues a warning
      *     and uses an IV with all its bytes set to '\0'.
-     * @param string $cipher   [optional] One of the MCRYPT_ciphername constants, or the name of the algorithm as string
-     * @param string $mode  [optional] One of the MCRYPT_MODE_modename constants, or one of the following strings:
+     * @param string $cipher [optional] One of the MCRYPT_ciphername constants, or the name of the algorithm as string
+     * @param string $mode   [optional] One of the MCRYPT_MODE_modename constants, or one of the following strings:
      *     "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".
      *
-     * @return string   The encrypted data, as a string.
+     * @return string The encrypted data, as a string.
      */
     public static function encode($data, $key, $salt = null, $cipher = MCRYPT_RIJNDAEL_256, $mode = MCRYPT_MODE_CBC)
     {
@@ -73,7 +73,7 @@ class Cipher
                 $tmp = ord($character) + ord($key[$index]);
                 $characterArray[$index] = chr($tmp > 255 ? ($tmp - 256) : $tmp);
             }
-            return join('', $characterArray);
+            $encodedData = join('', $characterArray);
         } else {
             $blockCipher = new BlockCipher(
                 new Mcrypt(
@@ -86,8 +86,10 @@ class Cipher
                 )
             );
 
-            return $blockCipher->encrypt($data);
+            $encodedData = $blockCipher->setKey($key)->encrypt($data);
         }
+
+        return $encodedData;
     }
 
     /**
@@ -97,16 +99,16 @@ class Cipher
      *
      * @param string $data   The data that will be decrypted with the given cipher and mode. If the size of the data is
      *     not n * blocksize, the data will be padded with '\0'.
-     * @param string $key   The key with which the data was encrypted. If it's smaller than the required keysize, it is
+     * @param string $key    The key with which the data was encrypted. If it's smaller than the required keysize, it is
      *     padded with '\0'.
      * @param string $salt   [optional] The iv parameter is used for the initialization in CBC, CFB, OFB modes, and in
      *     some algorithms in STREAM mode. If you do not supply an IV, while it is needed for an algorithm, the function
      *     issues a warning and uses an IV with all its bytes set to '\0'.
-     * @param string $cipher   [optional] One of the MCRYPT_ciphername constants, or the name of the algorithm as string
+     * @param string $cipher [optional] One of the MCRYPT_ciphername constants, or the name of the algorithm as string
      * @param string $mode   [optional] One of the MCRYPT_MODE_modename constants, or one of the following strings:
      *     "ecb", "cbc", "cfb", "ofb", "nofb" or "stream".
      *
-     * @return string   The decrypted data as a string.
+     * @return string The decrypted data as a string.
      */
     public static function decode($data, $key, $salt = null, $cipher = MCRYPT_RIJNDAEL_256, $mode = MCRYPT_MODE_CBC)
     {
@@ -119,7 +121,8 @@ class Cipher
                 $tmp = ord($character) - ord($key[$index]);
                 $characterArray[$index] = chr($tmp < 0 ? ($tmp + 256) : $tmp);
             }
-            return join('', $characterArray);
+
+            $decodedData = join('', $characterArray);
         } else {
             $blockCipher = new BlockCipher(
                 new Mcrypt(
@@ -132,7 +135,9 @@ class Cipher
                 )
             );
 
-            return trim(rtrim($blockCipher->decrypt($data), "\0"));
+            $decodedData = $blockCipher->setKey($key)->decrypt($data);
         }
+
+        return $decodedData;
     }
 }
