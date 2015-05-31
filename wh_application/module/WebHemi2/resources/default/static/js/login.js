@@ -22,12 +22,49 @@
  * @link      http://www.gixx-web.com
  */
 
+var path = '//' + STATIC_DOMAIN + '/resources/theme/' + THEME_NAME + '/img/login/';
+var images = [
+    '7-themes-com-7028725-green-foliage-branches.jpg',
+    '7-themes-com-7033392-autumn-red-leaves.jpg',
+    '7-themes-com-7038256-autumn-colors-leaves.jpg',
+    '7-themes-com-7041505-tree-red-leaves.jpg',
+    '7-themes-com-7041410-magnolia-flowers.jpg'
+];
+var cache = [];
+var min = 0;
+var max = images.length - 2;
+var loadedIndex = Math.floor(Math.random()*(max - min + 1) + min);
+console.log(loadedIndex);
+for (var i = 0; i < images.length; i++) {
+    cache[i] = document.createElement('img');
+    cache[i].src = path + images[i];
+}
 
 $(document).ready(function() {
-    var videoTag = '<div id="wrapper"><div id="videoContainer"><video autoplay="autoplay" muted="muted" loop="loop">' +
-        '<source src="http://' + STATIC_DOMAIN + '/resources/theme/default/video/minty-fresh.webm" type="video/webm">' +
-        //'<source src="http://' + STATIC_DOMAIN + '/resources/theme/default/video/minty-fresh.ogv" type="video/ogg">' +
-        '</video></div></div>';
+    $('body').css('background-image', 'url(' + path + images[loadedIndex] + ')');
 
-    $('body').append(videoTag);
+    var switcher = document.createElement('div');
+    switcher.setAttribute('id', 'switcher');
+    $(switcher).css('background-image', 'url(' + path + images[++loadedIndex] + ')');
+    $('body').append(switcher);
+
+    var license = document.createElement('div');
+    license.setAttribute('id', 'license');
+    $(license).html('Images: <a href="http://7-themes.com" target="_blank">7-themes.com</a>');
+    $('body').append(license);
+
+    setInterval(function() {
+        $('#switcher').fadeIn(1000, function(){
+            $('body').css('background-image', 'url(' + path + images[loadedIndex] + ')');
+
+            if(++loadedIndex >= images.length) {
+                loadedIndex = 0;
+            }
+
+            $('#switcher').css({
+                'display' : 'none',
+                'background-image': 'url(' + path + images[loadedIndex] + ')'
+            });
+        })
+    }, 10000);
 });
