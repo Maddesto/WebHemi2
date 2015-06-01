@@ -54,7 +54,7 @@ $(document).ready(function() {
     $('body').append(license);
 
     setInterval(function() {
-        $('#switcher').fadeIn(1000, function(){
+        $('#switcher').fadeIn(1500, function(){
             $('body').css('background-image', 'url(' + path + images[loadedIndex] + ')');
 
             if(++loadedIndex >= images.length) {

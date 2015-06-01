@@ -86,6 +86,7 @@ class LoginForm extends AbstractForm
                 'maxlength' => 255,
                 'tabindex' => self::$tabindex++,
                 'pattern' => '^[a-z]{1}\w+$',
+                'placeholder' => $identification->getLabel(),
                 //'validity' => 'Some alert'
             ]
         );
@@ -116,7 +117,8 @@ class LoginForm extends AbstractForm
                 'accesskey' => 'p',
                 'maxlength' => 255,
                 'tabindex' => self::$tabindex++,
-                'pattern' => '^\w+$'
+                'pattern' => '^\w+$',
+                'placeholder' => $password->getLabel()
             ]
         );
 
