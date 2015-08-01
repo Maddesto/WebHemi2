@@ -75,8 +75,9 @@ class AdminController extends UserController
             // TODO: make this an editable config value
             $view->setVariables(
                 [
-                    'headerTitle' => 'WebHemi2 Administration Login',
-                    'siteTitle' => 'WH Admin',
+                    'headerTitle' => $config['headerTitle'],
+                    'siteTitle' => $config['siteTitle'],
+                    'loginTitle' => $config['loginTitle'],
                     'theme' => isset($config['wh_themes']['current_theme'])
                         ? $config['wh_themes']['current_theme']
                         : 'default',
