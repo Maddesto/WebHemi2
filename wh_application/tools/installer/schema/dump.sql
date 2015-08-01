@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `gixxweb` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `gixxweb`;
 -- MySQL dump 10.13  Distrib 5.6.19, for linux-glibc2.5 (x86_64)
 --
 -- Host: 127.0.0.1    Database: gixxweb
