@@ -41,7 +41,7 @@ use Zend\Mvc\MvcEvent;
 class LayoutEvent
 {
     /**
-     * Event handler. Fires upon dispatching the application
+     * Event handler. Fires BEFORE the Controller Action runs
      *
      * @param MvcEvent $event
      *
@@ -50,6 +50,7 @@ class LayoutEvent
     public static function preDispatch(MvcEvent $event)
     {
         $controller = $event->getTarget();
+
         $controllerClass = get_class($controller);
         $moduleNamespace = substr($controllerClass, 0, strpos($controllerClass, '\\'));
         $config = $event->getApplication()->getServiceManager()->get('Configuration');

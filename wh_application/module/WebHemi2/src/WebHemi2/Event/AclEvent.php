@@ -28,6 +28,7 @@ namespace WebHemi2\Event;
 
 use WebHemi2\Model\Acl as AclModel;
 use Zend\Mvc\MvcEvent;
+use Zend\Http\PhpEnvironment\Response;
 
 /**
  * ACL checker event
@@ -84,8 +85,8 @@ class AclEvent
                     $url = '/' . APPLICATION_MODULE_URI . $url;
                 }
 
-                /** @var \Zend\Http\PhpEnvironment\Response $response */
-                $response = $event->getTarget()->getMvcEvent()->getResponse();
+                /** @var Response $response */
+                $response = $event->getResponse();
                 $response->getHeaders()->addHeaderLine('Location', $url);
                 $response->setStatusCode(302);
                 $response->send();
@@ -96,7 +97,8 @@ class AclEvent
                     ->setParam('controller', $routeMatch->getParam('controller'))
                     ->setParam('action', $routeMatch->getParam('action'));
 
-                $eventManager->trigger('dispatch.error', $event);
+                // and trigger the dispatch error event
+                $eventManager->trigger(MvcEvent::EVENT_DISPATCH_ERROR, $event);
             }
         }
     }

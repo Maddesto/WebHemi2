@@ -333,6 +333,7 @@ class UserController extends AbstractController
                 }
             }
         }
+
         $view = new ViewModel(['loginForm' => $form]);
         return $view;
     }

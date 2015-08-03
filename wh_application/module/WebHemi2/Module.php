@@ -100,10 +100,15 @@ class Module implements
             return $helper;
         });
 
-        // attach events to the event manager
-        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'preDispatch'], -500);
-        $eventManager->attach(Mvc\MvcEvent::EVENT_ROUTE, ['WebHemi2\Event\AclEvent',    'onRoute'], -100);
-        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH, ['WebHemi2\Event\LayoutEvent', 'preDispatch'], 10);
+        // attach MVC events to the event manager
+        // AFTER the router event is processed, we check the permissions
+        $eventManager->attach(Mvc\MvcEvent::EVENT_ROUTE,          ['WebHemi2\Event\AclEvent',    'onRoute'],           -10);
+        // BEFORE the controller/action is being called we inject the correct layout
+        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH,       ['WebHemi2\Event\LayoutEvent', 'preDispatch'],        10);
+        // AFTER the controller/action is being called and have error we overwrite the default error pages
+        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'postDispatchError'], -50);
+        // BEFORE rendering the output we change it, if it is an Ajax request
+        $eventManager->attach(Mvc\MvcEvent::EVENT_RENDER,         ['WebHemi2\Event\AjaxEvent',   'preRender'],         -10);
 
         // link the event manager to the modoule route listener
         $moduleRouteListener = new Mvc\ModuleRouteListener();
@@ -119,7 +124,7 @@ class Module implements
     {
         // for the first call, we set the Config
         if (!isset(self::$configs)) {
-            // There's only tho physical modules (Admin and Website) the others are virtual modules and inherit
+            // There's only two physical modules (Admin and Website) the others are virtual modules which inherit
             // from Website module
             $mainModule = APPLICATION_MODULE == ADMIN_MODULE
                     ? ADMIN_MODULE

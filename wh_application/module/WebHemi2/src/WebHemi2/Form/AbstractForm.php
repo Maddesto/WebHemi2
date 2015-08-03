@@ -26,6 +26,7 @@
 
 namespace WebHemi2\Form;
 
+use Traversable;
 use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\Form\Fieldset;
@@ -214,6 +215,58 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         }
 
         return self::$validatedForms[$this->getName()];
+    }
+
+    /**
+     * Get validation error messages, if any
+     *
+     * Returns a hash of element names/messages for all elements failing
+     * validation, or, if $elementName is provided, messages for that element
+     * only.
+     *
+     * @param  null|string $elementName
+     * @return array|Traversable
+     * @throws Exception\InvalidArgumentException
+     */
+    public function getMessages($elementName = null)
+    {
+        $messages = array();
+
+        if (null === $elementName) {
+            /** @var \Zend\Form\Fieldset $fieldSet */
+            foreach ($this->getFieldsets() as $fieldSet) {
+                /** @var \Zend\Form\Element $element */
+                foreach ($fieldSet->getElements() as $name => $element) {
+                    $messageSet = $element->getMessages();
+                    if (!is_array($messageSet)
+                        && !$messageSet instanceof Traversable
+                        || empty($messageSet)
+                    ) {
+                        continue;
+                    }
+                    $messages[$name] = $messageSet;
+                }
+            }
+        } else {
+            if (!$this->has($elementName)) {
+                throw new Exception\InvalidArgumentException(sprintf(
+                    'Invalid element name "%s" provided to %s',
+                    $elementName,
+                    __METHOD__
+                ));
+            }
+            $element = $this->get($elementName);
+
+            $messageSet = $element->getMessages();
+            if ((is_array($messageSet)
+                || $messageSet instanceof Traversable)
+                && !empty($messageSet)
+            ) {
+                $messages[$elementName] = $messageSet;
+            }
+        }
+
+        return $messages;
     }
 
 

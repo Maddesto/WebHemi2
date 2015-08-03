@@ -54,7 +54,7 @@ class ErrorEvent
      * @param MvcEvent $event
      * @return void
      */
-    public static function preDispatch(MvcEvent $event)
+    public static function postDispatchError(MvcEvent $event)
     {
         // Do nothing if the result is a response object
         $result = $event->getResult();

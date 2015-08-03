@@ -34,7 +34,7 @@ var cache = [];
 var min = 0;
 var max = images.length - 2;
 var loadedIndex = Math.floor(Math.random()*(max - min + 1) + min);
-console.log(loadedIndex);
+
 for (var i = 0; i < images.length; i++) {
     cache[i] = document.createElement('img');
     cache[i].src = path + images[i];
@@ -67,4 +67,7 @@ $(document).ready(function() {
             });
         })
     }, 10000);
+
+
+    $('form#login').ajaxForm({url: '/login/', type: 'post'});
 });
