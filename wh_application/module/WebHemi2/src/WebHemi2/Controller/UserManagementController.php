@@ -30,6 +30,7 @@ use Exception;
 use WebHemi2\Model\Table\User as UserTable;
 use WebHemi2\Model\User as UserModel;
 use WebHemi2\Auth\Adapter\Adapter as AuthAdapter;
+use WebHemi2\Form\AbstractForm;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Mvc\MvcEvent;
 
@@ -45,7 +46,7 @@ use Zend\Mvc\MvcEvent;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  *
- * @method getForm() getForm(string $formName, string $name) retrieve a WebHemi Form instance with controller plugin
+ * @method AbstractForm getForm($formName, $name = null) Instantiate a WebHemi2 form
  */
 class UserManagementController extends AdminController
 {

@@ -47,8 +47,7 @@ use WebHemi2\Component\Cipher\Cipher;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  *
- * @method bool isAllowed() Controller plugin call to check access
- * @method AbstractForm getForm() Instantiate a WebHemi2 form
+ * @method AbstractForm getForm($formName, $name = null) Instantiate a WebHemi2 form
  * @method Plugin\Redirect redirect() Redirect to url
   */
 class UserController extends AbstractController

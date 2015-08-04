@@ -41,7 +41,7 @@ use WebHemi2\Form\AbstractForm;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  *
- * @method AbstractForm getForm() Instantiate a WebHemi2 form
+ * @method AbstractForm getForm($formName, $name = null) Instantiate a WebHemi2 form
  */
 class AdminController extends UserController
 {

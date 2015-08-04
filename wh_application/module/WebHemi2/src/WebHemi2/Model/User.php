@@ -43,24 +43,24 @@ use WebHemi2\Model\UserAcl as UserAclModel;
  * @link      http://www.gixx-web.com
  *
  * @method string getAvatar() Retrieve user meta avatar.
- * @method string setAvatar() Set user meta avatar.
+ * @method string setAvatar($string) Set user meta avatar.
  * @method string getHeadLine() Retrieve user meta headline.
- * @method string setHeadLine() Set user meta headline.
- * @method string setDisplayName() Set user meta display name.
+ * @method string setHeadLine($string) Set user meta headline.
+ * @method string setDisplayName($string) Set user meta display name.
  * @method string getDisplayEmail() Retrieve user meta display email.
- * @method string setDisplayEmail() Set user meta display email.
+ * @method string setDisplayEmail($string) Set user meta display email.
  * @method string getDetails() Retrieve user meta details.
- * @method string setDetails() Set user meta details.
+ * @method string setDetails($string) Set user meta details.
  * @method string getPhoneNumber() Retrieve user meta phone number.
- * @method string setPhoneNumber() Set user meta phone number.
+ * @method string setPhoneNumber($string) Set user meta phone number.
  * @method string getLocation() Retrieve user meta location.
- * @method string setLocation() Set user meta location.
+ * @method string setLocation($string) Set user meta location.
  * @method string getInstantMessengers() Retrieve user meta instant messenger data (JSON).
- * @method string setInstantMessengers() Set user meta instant messenger data (JSON).
+ * @method string setInstantMessengers($string) Set user meta instant messenger data (JSON).
  * @method string getSocialNetworks() Retrieve user meta social network data (JSON).
- * @method string setSocialNetworks() Set user meta social network data (JSON).
+ * @method string setSocialNetworks($string) Set user meta social network data (JSON).
  * @method string getWebsites() Retrieve user meta websites (JSON).
- * @method string setWebsites() Set user meta websites (JSON).
+ * @method string setWebsites($string) Set user meta websites (JSON).
  */
 class User extends \ArrayObject
 {
