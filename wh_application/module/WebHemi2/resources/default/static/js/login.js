@@ -69,5 +69,46 @@ $(document).ready(function() {
     }, 10000);
 
 
-    $('form#login').ajaxForm({url: '/login/', type: 'post'});
+    $('#loginForm').ajaxForm(
+        {
+            url: '/login/',
+            type: 'post',
+            success: function(data) {
+                if (data.success) {.
+                    location.href = 'http://' + DOMAIN + '/';
+                } else {
+                    // remove all previous errors
+                    $('div.error').remove();
+
+                    // for all elements with errors
+                    for (var i in data.error) {
+                        // if we have form error
+                        if (i.lastIndexOf('Form') != -1) {
+                            var formId = i;
+
+                            // for all form elements with errors
+                            for (var j in data.error[i]) {
+                                var elementId = j;
+                                var errorBlock = null;
+                                var message = data.error[i][j];
+
+                                if ($('#' + formId + ' div.element.' + elementId + ' div.error').length < 1) {
+                                    $('#' + formId + ' div.element.' + elementId).append('<div class="error"><ul></ul></div>');
+                                }
+
+                                if (errorBlock == null) {
+                                    errorBlock = $('#' + formId + ' div.element.' + elementId + ' div.error ul');
+                                }
+
+                                errorBlock.append('<li>' + message + '</li>');
+                            }
+                        } else {
+                            // it's not a form error, so redirect to index page to see
+                            location.href = 'http://' + DOMAIN + '/';
+                        }
+                    }
+                }
+            }
+        }
+    );
 });

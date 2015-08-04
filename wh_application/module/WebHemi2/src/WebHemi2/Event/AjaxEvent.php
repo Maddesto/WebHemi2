@@ -94,6 +94,8 @@ class AjaxEvent
                 case $response::STATUS_CODE_404:
                 case $response::STATUS_CODE_500:
                     $responseData['error'][$response->getStatusCode()] = $response->getReasonPhrase();
+                    // set the status code back to 200 OK, to not fail the Ajax request on the client side
+                    $response->setStatusCode($response::STATUS_CODE_200);
                     break;
             }
 
