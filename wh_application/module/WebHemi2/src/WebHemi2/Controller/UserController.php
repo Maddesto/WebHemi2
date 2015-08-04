@@ -317,9 +317,12 @@ class UserController extends AbstractController
                             }
                         }
 
-                        // redirect to main page
-                        // @TODO: implement redirect to referer if needed
-                        return $this->redirect()->toRoute('index');
+                        // if it was not an Ajax request, then redirect to main page
+                        if (!$request->isXmlHttpRequest()) {
+                            // @TODO: implement redirect to referer if needed
+                            return $this->redirect()->toRoute('index');
+                        }
+
                         break;
                     case Result::FAILURE_CREDENTIAL_INVALID:
                         // attach error message to the form
