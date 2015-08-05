@@ -56,18 +56,34 @@ class ErrorEvent
             return;
         }
 
+        $layout = new ViewModel();
+        $layout->setTemplate('layout/layout');
+
         $error = $event->getError();
         switch ($error) {
             case 'error-unauthorized-controller':
             case 'error-unauthorized-route':
-                $layout = self::get403($event);
+                self::set403Layout($layout, $event);
                 $code = 403;
                 break;
 
             default:
                 $code = 404;
-                $layout = self::get404($event);
+                self::set404Layout($layout, $event);
         }
+
+        $headerBlock = new ViewModel();
+        $headerBlock->setTemplate('block/header');
+
+        $menuBlock = new ViewModel();
+        $menuBlock->setTemplate('block/menu');
+
+        $footerBlock = new ViewModel();
+        $footerBlock->setTemplate('block/footer');
+
+        $layout->addChild($headerBlock, 'headerBlock')
+            ->addChild($menuBlock, 'menuBlock')
+            ->addChild($footerBlock, 'footerBlock');
 
         $event->setViewModel($layout);
 
@@ -85,10 +101,11 @@ class ErrorEvent
     /**
      * Prepares the 403 error page
      *
+     * @param ViewModel &$layout
      * @param MvcEvent $event
      * @return ViewModel
      */
-    protected static function get403(MvcEvent $event)
+    protected static function set403Layout(ViewModel &$layout, MvcEvent $event)
     {
         // Common view variables
         $viewVariables = [
@@ -108,34 +125,29 @@ class ErrorEvent
         }
 
         // add our error page to the view model
-        $layout = $event->getViewModel();
         $layout->setVariable('title', '403 Forbidden');
 
-        $model = new ViewModel($viewVariables);
-        $model->setTemplate('error/403');
-        $model->setVariable('error', $error);
-        $layout->addChild($model, 'content');
-
-        return $layout;
+        $content = new ViewModel($viewVariables);
+        $content->setTemplate('error/403');
+        $content->setVariable('reason', $error);
+        $layout->addChild($content, 'content');
     }
 
     /**
      * Prepares the 404 error page
      *
+     * @param ViewModel $layout
      * @param MvcEvent $event
-     * @return ViewModel
+     * @return void
      */
-    protected static function get404(MvcEvent $event)
+    protected static function set404Layout(ViewModel &$layout, MvcEvent $event)
     {
         // add our error page to the view model
-        $layout = $event->getViewModel();
         $layout->setVariable('title', '404 Not Found');
 
-        $model = new ViewModel();
-        $model->setTemplate('error/404');
-        $model->setVariable('reason', $event->getError());
-        $layout->addChild($model);
-
-        return $layout;
+        $content = new ViewModel();
+        $content->setTemplate('error/404');
+        $content->setVariable('reason', $event->getError());
+        $layout->addChild($content, 'content');
     }
 }

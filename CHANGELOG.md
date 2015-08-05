@@ -7,7 +7,7 @@ Version 2.0.3-p3
 - Add universal Ajax response generator 
 - Make admin login Ajax-based
 - Standardize view block and error page rendering
-- TODO fix issue with menus on error pages in the admin module
+- ~~TODO fix issue with menus on error pages in the admin module~~ (fixed)
 - Tagging standalone version commits
 
 Version 2.0.3-p2
