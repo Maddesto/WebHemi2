@@ -52,6 +52,12 @@ return [
         ],
         'template_map' => [
             'layout/layout' => __DIR__ . '/../resources/default/view/layout/default.phtml',
+            'error/500'     => __DIR__ . '/../resources/default/view/error/500.phtml',
+            'error/403'     => __DIR__ . '/../resources/default/view/error/403.phtml',
+            'error/404'     => __DIR__ . '/../resources/default/view/error/404.phtml',
+            'block/header'  => __DIR__ . '/../resources/default/view/block/website/header.phtml',
+            'block/footer'  => __DIR__ . '/../resources/default/view/block/website/footer.phtml',
+            'block/menu'    => __DIR__ . '/../resources/default/view/block/website/menu.phtml',
         ],
     ],
     'router' => [

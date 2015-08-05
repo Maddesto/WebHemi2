@@ -56,21 +56,19 @@ abstract class AbstractController extends AbstractActionController
      */
     public function onDispatch(MvcEvent $event)
     {
-        if (APPLICATION_MODULE == ADMIN_MODULE) {
-            $headerBlock = new ViewModel();
-            $headerBlock->setTemplate('block/AdminHeaderBlock');
+        $headerBlock = new ViewModel();
+        $headerBlock->setTemplate('block/header');
 
-            $menuBlock = new ViewModel();
-            $menuBlock->setVariable('activeMenu', 'application');
-            $menuBlock->setTemplate('block/AdminMenuBlock');
+        $menuBlock = new ViewModel();
+        $menuBlock->setTemplate('block/menu');
 
-            $footerBlock = new ViewModel();
-            $footerBlock->setTemplate('block/AdminFooterBlock');
+        $footerBlock = new ViewModel();
+        $footerBlock->setTemplate('block/footer');
 
-            $this->layout()->addChild($headerBlock, 'headerBlock')
-                ->addChild($menuBlock, 'menuBlock')
-                ->addChild($footerBlock, 'footerBlock');
-        }
+        $this->layout()
+            ->addChild($headerBlock, 'headerBlock')
+            ->addChild($menuBlock, 'menuBlock')
+            ->addChild($footerBlock, 'footerBlock');
 
         return parent::onDispatch($event);
     }

@@ -26,6 +26,7 @@
 
 namespace WebHemi2\Event;
 
+use WebHemi2\Controller\AbstractController;
 use Zend\Mvc\MvcEvent;
 
 /**
@@ -49,6 +50,7 @@ class LayoutEvent
      */
     public static function preDispatch(MvcEvent $event)
     {
+        /** @var AbstractController $controller */
         $controller = $event->getTarget();
 
         $controllerClass = get_class($controller);

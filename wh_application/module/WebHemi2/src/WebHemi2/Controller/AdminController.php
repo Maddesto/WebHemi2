@@ -72,7 +72,6 @@ class AdminController extends UserController
 
         // if we display the login page
         if ($view instanceof ViewModel) {
-            // TODO: make this an editable config value
             $view->setVariables(
                 [
                     'headerTitle' => $config['headerTitle'],

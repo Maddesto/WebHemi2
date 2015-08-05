@@ -32,7 +32,25 @@ echo $this->theme;
             <a href="<?php echo $this->url('index/login'); ?>">Login</a>
 <?php endif; ?>
             <hr>
-            <?php echo $this->content; ?>
+            <aside>
+                <?php echo $this->menuBlock; ?>
+            </aside>
+            <section>
+                <header>
+                    <h1><?php echo $this->sectionTitle; ?></h1>
+                </header>
+                <article>
+                    <header>
+                        <?php echo $this->headerBlock; ?>
+                    </header>
+                    <div>
+                        <?php echo $this->content; ?>
+                    </div>
+                    <footer>
+                        <?php echo $this->footerBlock; ?>
+                    </footer>
+                </article>
+            </section>
         </div> <!-- /container -->
     </body>
 </html>

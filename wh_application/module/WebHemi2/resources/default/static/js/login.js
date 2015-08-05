@@ -74,7 +74,7 @@ $(document).ready(function() {
             url: '/login/',
             type: 'post',
             success: function(data) {
-                if (data.success) {.
+                if (data.success) {
                     location.href = 'http://' + DOMAIN + '/';
                 } else {
                     // remove all previous errors

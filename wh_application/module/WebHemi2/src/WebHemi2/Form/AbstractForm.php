@@ -161,7 +161,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                     /* @var $element \Zend\Form\Element */
                     $result = $this->isValid($element) && $result;
                 }
-//                $result = parent::isValid() && $result;
+
                 self::$validatedForms[$this->getName()] = $result;
             } elseif ($formElement instanceof Fieldset) {
                 // the fieldsets may contain other fieldsets and elements
