@@ -11,7 +11,7 @@ $js        = $this->headScript()->appendScript('var THEME_NAME = \'' . $this->th
                     'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
                     'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
                 )
-                ->appendFile('//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+                ->appendFile('/resources/common/js/jquery-2.1.4.min.js')
                 ->appendFile('/resources/common/js/plugins/jquery.form.min.js')
                 ->appendFile('/resources/common/js/common.js')
                 ->appendFile('/resources/theme/' . $this->theme . '/js/login.js');

@@ -68,7 +68,6 @@ $(document).ready(function() {
         })
     }, 10000);
 
-
     $('#loginForm').ajaxForm(
         {
             url: '/login/',
@@ -107,6 +106,14 @@ $(document).ready(function() {
                             location.href = 'http://' + DOMAIN + '/';
                         }
                     }
+
+                    $('#loginForm input').on('focus select change', function() {
+                        if ($('div.error').length > 0) {
+                            $('div.error').fadeOut(function() {
+                                $(this).remove();
+                            });
+                        }
+                    });
                 }
             }
         }
