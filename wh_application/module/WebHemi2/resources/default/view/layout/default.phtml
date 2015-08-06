@@ -7,8 +7,6 @@ $headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - 
 
 $this->headLink()
     ->appendStylesheet('/resources/common/css/reset.css')
-    ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css')
-    ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons')
     ->appendStylesheet('/resources/theme/default/css/website.css');
 
 $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
@@ -16,9 +14,15 @@ $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' .
         'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
     )
     ->appendFile('http://code.jquery.com/jquery-2.1.4.min.js')
-    ->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js')
     ->appendFile('/resources/common/js/common.js')
     ->appendFile('/resources/theme/default/js/website.js');
+
+if ($this->useMdl) {
+    $this->headLink()
+        ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css')
+        ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
+    $this->headScript()->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js');
+}
 
 echo $this->doctype();
 echo $this->theme;

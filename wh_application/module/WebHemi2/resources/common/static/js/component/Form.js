@@ -47,9 +47,11 @@ var Form = {
         $('input[autocomplete=off]').each(function(){
             var copy = $(this).clone();
             copy.val('');
+            copy.removeAttr('autocomplete');
             copy.insertAfter($(this));
             $(this).hide().removeAttr('required');
             $(this).hide().removeAttr('id');
+            $(this).hide().removeAttr('class');
         });
 
         this.initialized = true;

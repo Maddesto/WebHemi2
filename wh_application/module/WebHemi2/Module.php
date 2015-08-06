@@ -77,10 +77,6 @@ class Module implements
         $serviceManager->get('translator');
         $serviceManager->get('acl');
 
-        if ($serviceManager->has('theme_manager')) {
-            $serviceManager->get('theme_manager');
-        }
-
         // update view helper url
         $viewHelperManager->setFactory('url', function () use ($serviceManager) {
             $helper = new Url;
@@ -134,6 +130,17 @@ class Module implements
             $this->setConfig(__DIR__ . '/config/' . $mainModule . '.module.config.php');
             // load the customizable configs
             $this->setConfig(__DIR__ . '/config/application.config.php', false, APPLICATION_MODULE);
+
+            // overwrite default theme settings if needed
+            if (APPLICATION_MODULE !== ADMIN_MODULE
+                && 'default' != self::$configs['view_themes']['current_theme']
+            ) {
+                $themeConfig = include self::$configs['view_themes']['theme_paths'][0]
+                    . '/' . self::$configs['view_themes']['current_theme']
+                    . '/theme.config.php';
+
+                self::$configs = $this->mergeConfig(self::$configs, $themeConfig);
+            }
         }
 
         return self::$configs;

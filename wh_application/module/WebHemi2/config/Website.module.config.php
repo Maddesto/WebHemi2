@@ -24,18 +24,9 @@
  * @link      http://www.gixx-web.com
  */
 return [
-    'wh_themes' => [
-        'current_theme' => 'default',
-        'theme_paths' => [
-            APPLICATION_MODULE_PATH . '/resources/themes/'
-        ],
-        'adapters' => [
-            'WebHemi2\Theme\Adapter\ConfigurationAdapter',
-        ],
-    ],
     'service_manager' => [
         'factories' => [
-            'theme_manager' => 'WebHemi2\ServiceFactory\ThemeManagerServiceFactory'
+//            'theme_manager' => 'WebHemi2\ServiceFactory\ThemeManagerServiceFactory'
         ],
     ],
     'controllers' => [
@@ -47,14 +38,7 @@ return [
         'WebHemi2' => 'layout/default',
     ],
     'view_manager' => [
-        'template_path_stack' => [
-            'website' => __DIR__ . '/../resources/default/view',
-        ],
         'template_map' => [
-            'layout/layout' => __DIR__ . '/../resources/default/view/layout/default.phtml',
-            'error/500'     => __DIR__ . '/../resources/default/view/error/500.phtml',
-            'error/403'     => __DIR__ . '/../resources/default/view/error/403.phtml',
-            'error/404'     => __DIR__ . '/../resources/default/view/error/404.phtml',
             'block/header'  => __DIR__ . '/../resources/default/view/block/website/header.phtml',
             'block/footer'  => __DIR__ . '/../resources/default/view/block/website/footer.phtml',
             'block/menu'    => __DIR__ . '/../resources/default/view/block/website/menu.phtml',

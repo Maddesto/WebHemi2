@@ -28,6 +28,8 @@ body {
 #loginForm {
     position: absolute;
     z-index: 2;
+    top: 5px;
+    left: 5px;
 }
 
 #loginForm form {

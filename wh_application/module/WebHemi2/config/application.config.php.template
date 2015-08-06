@@ -10,7 +10,7 @@ return [
         'headerTitle' => 'WebHemi2 Admin',
         'siteTitle' => 'WebHemi2 Admin',
         'loginTitle' => 'Login to WebHemi2 Admin',
-        'wh_themes' => [
+        'view_themes' => [
             'current_theme' => 'default',
         ],
     ],
@@ -23,7 +23,7 @@ return [
         'headerTitle' => 'WebHemi2 Website',
         'siteTitle' => 'WebHemi2 Website',
         'loginTitle' => 'Login to WebHemi2 Website',
-        'wh_themes' => [
+        'view_themes' => [
             'current_theme' => 'default',
         ],
     ],

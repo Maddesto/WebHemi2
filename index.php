@@ -44,26 +44,27 @@ if (file_exists($applicationConfigFile)) {
         APPLICATION_MODULE => array(
             'type' => APPLICATION_MODULE_TYPE,
             'path' => APPLICATION_MODULE_URI,
-            'wh_themes' => array(
+            'view_themes' => array(
                 'current_theme' => 'default',
             ),
         )
     );
 }
 
-$theme = $applicationConfig[APPLICATION_MODULE]['wh_themes']['current_theme'];
+$theme = $applicationConfig[APPLICATION_MODULE]['view_themes']['current_theme'];
 
 // include common config to get the error template
 $commonConfig = include(APPLICATION_MODULE_PATH . '/config/common.module.config.php');
 $errorTemplate = $commonConfig['view_manager']['exception_template'];
 
 if ($theme == 'default') {
-    $themePath = APPLICATION_MODULE_PATH . '/resources/default';
+    $errorTemplateFile = $commonConfig['view_manager']['template_map'][$errorTemplate];
 } else {
     $themePath = APPLICATION_MODULE_PATH . '/resources/themes/' . $theme;
     // include theme config to get the theme error template if defined
     $templateConfig = include($themePath . '/theme.config.php');
-    $errorTemplate = $templateConfig['exception_template'];
+    $errorTemplate = $templateConfig['view_manager']['exception_template'];
+    $errorTemplateFile = $templateConfig['view_manager']['template_map'][$errorTemplate];
 }
 
-include $themePath . '/view/' . $errorTemplate . '.phtml';
+include $errorTemplateFile;

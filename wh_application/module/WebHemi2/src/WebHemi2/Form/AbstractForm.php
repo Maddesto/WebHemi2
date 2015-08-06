@@ -358,14 +358,8 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
     {
         $label  = $element->getLabel();
         $id     = $element->getOption('id');
-
-        // TODO solve to read up the proper config
-        if ($this->getServiceLocator()->has('theme_manager')) {
-            $useMDL = $this->getServiceLocator()->get('theme_manager')->getOption('use_mdl');
-        } else {
-            $config = $this->getConfig();
-            $useMDL = isset($config['view_manager']['use_mdl']) ? $config['view_manager']['use_mdl'] : false;
-        }
+        $config = $this->getConfig();
+        $useMDL = isset($config['view_manager']['use_mdl']) ? $config['view_manager']['use_mdl'] : false;
 
         // if no ID present, we use the name to add one
         if (empty($id)) {

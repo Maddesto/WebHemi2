@@ -56,6 +56,8 @@ abstract class AbstractController extends AbstractActionController
      */
     public function onDispatch(MvcEvent $event)
     {
+        $config = $this->getServiceLocator()->get('Configuration');
+
         $headerBlock = new ViewModel();
         $headerBlock->setTemplate('block/header');
 
@@ -68,7 +70,8 @@ abstract class AbstractController extends AbstractActionController
         $this->layout()
             ->addChild($headerBlock, 'headerBlock')
             ->addChild($menuBlock, 'menuBlock')
-            ->addChild($footerBlock, 'footerBlock');
+            ->addChild($footerBlock, 'footerBlock')
+            ->setVariable('useMdl', $config['view_manager']['use_mdl']);
 
         return parent::onDispatch($event);
     }

@@ -43,19 +43,32 @@ return [
             'WebHemi2\Controller\User' => 'WebHemi2\Controller\UserController'
         ],
     ],
-    'view_manager' => [
-        'display_not_found_reason' => true,
-        'display_exceptions' => true,
-        'doctype' => 'HTML5',
-        'not_found_template' => 'error/404',
-        'exception_template' => 'error/500',
-    ],
     'controller_plugins' => [
         'invokables' => [
             'getForm' => 'WebHemi2\Controller\Plugin\GetForm',
             'userAuth' => 'WebHemi2\Controller\Plugin\UserAuth',
             'isAllowed' => 'WebHemi2\Controller\Plugin\IsAllowed',
             'redirect ' => 'WebHemi2\Controller\Plugin\Redirect',
+        ],
+    ],
+    'view_manager' => [
+        'use_mdl'                  => true,
+        'doctype'                  => 'HTML5',
+        'not_found_template'       => 'error/404',
+        'exception_template'       => 'error/500',
+        'display_exceptions'       => true,
+        'display_not_found_reason' => true,
+        'template_path_stack'      => [
+            'website' => __DIR__ . '/../resources/default/view',
+        ],
+        'template_map' => [
+            'layout/layout' => __DIR__ . '/../resources/default/view/layout/default.phtml',
+            'error/500'     => __DIR__ . '/../resources/default/view/error/500.phtml',
+            'error/403'     => __DIR__ . '/../resources/default/view/error/403.phtml',
+            'error/404'     => __DIR__ . '/../resources/default/view/error/404.phtml',
+            'block/header'  => __DIR__ . '/../resources/default/view/block/website/header.phtml',
+            'block/footer'  => __DIR__ . '/../resources/default/view/block/website/footer.phtml',
+            'block/menu'    => __DIR__ . '/../resources/default/view/block/website/menu.phtml',
         ],
     ],
     'view_helpers' => [
@@ -71,6 +84,15 @@ return [
         'factories' => [
             'isAllowed' => 'WebHemi2\View\Helper\Factory\IsAllowedFactory',
             'getIdentity' => 'WebHemi2\View\Helper\Factory\GetIdentityFactory',
+        ],
+    ],
+    'view_themes' => [
+        'current_theme' => 'default',
+        'theme_paths' => [
+            APPLICATION_MODULE_PATH . '/resources/themes/'
+        ],
+        'adapters' => [
+            'WebHemi2\Theme\Adapter\ConfigurationAdapter',
         ],
     ],
     'access_control' => [

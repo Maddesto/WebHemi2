@@ -72,11 +72,9 @@ class AdminController extends UserController
 
         $layout = new ViewModel();
         $layout->setTemplate('layout/login');
-        $layout->setVariable('loginForm',$form);
+        $layout->setVariable('loginForm', $form);
         $layout->setTerminal(true);
-
-
-        $config = $this->getServiceLocator()->get('Config');
+        $config = $this->getServiceLocator()->get('Configuration');
 
         // if we display the login page
         if ($layout instanceof ViewModel) {
@@ -85,9 +83,10 @@ class AdminController extends UserController
                     'headerTitle' => $config['headerTitle'],
                     'siteTitle' => $config['siteTitle'],
                     'loginTitle' => $config['loginTitle'],
-                    'theme' => isset($config['wh_themes']['current_theme'])
-                        ? $config['wh_themes']['current_theme']
+                    'theme' => isset($config['view_themes']['current_theme'])
+                        ? $config['view_themes']['current_theme']
                         : 'default',
+                    'useMdl' => $config['view_manager']['use_mdl'],
                 ]
             );
         }
