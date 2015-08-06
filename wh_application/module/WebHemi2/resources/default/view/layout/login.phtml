@@ -6,19 +6,34 @@
 $form      = $this->loginForm;
 $headTitle = $this->headTitle($this->translate($this->headerTitle))->setSeparator(' - ')->setAutoEscape(false);
 
-$css       = $this->headLink()->appendStylesheet('/resources/common/css/reset.css')
-                ->appendStylesheet('/resources/common/css/library/material.min.css')
-                ->appendStylesheet('/resources/theme/' . $this->theme . '/css/login.css');
+$this->headLink()->appendStylesheet('/resources/common/css/reset.css')
+    ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css')
+    ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-$js        = $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
-                    'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
-                    'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
-                )
-                ->appendFile('/resources/common/js/library/jquery-2.1.4.min.js')
-                ->appendFile('/resources/common/js/library/material.min.js')
-                ->appendFile('/resources/common/js/plugins/jquery.form.min.js')
-                ->appendFile('/resources/common/js/common.js')
-                ->appendFile('/resources/theme/' . $this->theme . '/js/login.js');
+$this->headScript()->appendScript(
+        'var THEME_NAME = \'' . (
+            file_exists(APPLICATION_MODULE_PATH . '/resources/themes/' . $this->theme . '/static/css/login.css')
+                ? $this->theme
+                : 'default'
+        ) . '\';' . PHP_EOL .
+        'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
+        'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
+    )
+    ->appendFile('http://code.jquery.com/jquery-2.1.4.min.js')
+    ->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js')
+    ->appendFile('/resources/common/js/plugins/jquery.form.min.js')
+    ->appendFile('/resources/common/js/common.js');
+
+if (file_exists(APPLICATION_MODULE_PATH . '/resources/themes/' . $this->theme . '/static/css/login.css')) {
+    $this->headLink()->appendStylesheet('/resources/theme/' . $this->theme . '/css/login.css');
+
+    if (file_exists(APPLICATION_MODULE_PATH . '/resources/themes/' . $this->theme . '/static/js/login.js')) {
+        $this->headScript()->appendFile('/resources/theme/' . $this->theme . '/js/login.js');
+    }
+} else {
+    $this->headLink()->appendStylesheet('/resources/theme/default/css/login.css');
+    $this->headScript()->appendFile('/resources/theme/default/js/login.js');
+}
 
 echo $this->doctype();
 
@@ -30,7 +45,7 @@ echo $this->doctype();
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
     echo "\t\t" . $headTitle . PHP_EOL;
-    echo "\t\t" . $css . PHP_EOL;
+    echo "\t\t" . $this->headLink() . PHP_EOL;
 ?>
     </head>
     <body>
@@ -39,7 +54,7 @@ echo $this->doctype();
             <?php echo $form; ?>
         </div>
         <?php
-            echo "\t\t" . $js . PHP_EOL;
+            echo "\t\t" . $this->headScript() . PHP_EOL;
         ?>
     </body>
 </html>

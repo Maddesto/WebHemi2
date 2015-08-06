@@ -8,19 +8,20 @@ $this->headTitle($this->sectionTitle);
 
 $headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - ')->setAutoEscape(false);
 
-$css       = $this->headLink()
-                ->appendStylesheet('/resources/common/css/reset.css')
-                ->appendStylesheet('/resources/common/css/library/material.min.css')
-                ->appendStylesheet('/resources/theme/default/css/admin.css');
+$this->headLink()
+    ->appendStylesheet('/resources/common/css/reset.css')
+    ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css')
+    ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons')
+    ->appendStylesheet('/resources/theme/default/css/admin.css');
 
-$js        = $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
-                    'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
-                    'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
-                )
-                ->appendFile('/resources/common/js/library/jquery-2.1.4.min.js')
-                ->appendFile('/resources/common/js/library/material.min.js')
-                ->appendFile('/resources/common/js/common.js')
-                ->appendFile('/resources/theme/default/js/admin.js');
+$this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
+    'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
+    'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
+)
+    ->appendFile('http://code.jquery.com/jquery-2.1.4.min.js')
+    ->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js')
+    ->appendFile('/resources/common/js/common.js')
+    ->appendFile('/resources/theme/default/js/admin.js');
 
 echo $this->doctype();
 ?>
@@ -33,7 +34,7 @@ echo $this->doctype();
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
 <?php
     echo $headTitle . PHP_EOL;
-    echo $css . PHP_EOL;
+    echo $this->headLink() . PHP_EOL;
 ?>
     </head>
     <body class="<?php echo $this->sectionClass; ?>">
@@ -57,7 +58,7 @@ echo $this->doctype();
             </article>
         </section>
         <?php
-            echo "\t\t" . $js . PHP_EOL;
+            echo "\t\t" . $this->headScript() . PHP_EOL;
         ?>
     </body>
 </html>

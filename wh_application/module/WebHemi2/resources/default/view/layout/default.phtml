@@ -5,19 +5,20 @@ if (empty($this->title)) {
 }
 $headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - ')->setAutoEscape(false);
 
-$css       = $this->headLink()
-                ->appendStylesheet('/resources/common/css/reset.css')
-                ->appendStylesheet('/resources/common/css/library/material.min.css')
-                ->appendStylesheet('/resources/theme/default/css/website.css');
+$this->headLink()
+    ->appendStylesheet('/resources/common/css/reset.css')
+    ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css')
+    ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons')
+    ->appendStylesheet('/resources/theme/default/css/website.css');
 
-$js        = $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
-                    'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
-                    'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
-                )
-                ->appendFile('/resources/common/js/library/jquery-2.1.4.min.js')
-                ->appendFile('/resources/common/js/library/material.min.js')
-                ->appendFile('/resources/common/js/common.js')
-                ->appendFile('/resources/theme/default/js/website.js');
+$this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
+        'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
+        'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
+    )
+    ->appendFile('http://code.jquery.com/jquery-2.1.4.min.js')
+    ->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js')
+    ->appendFile('/resources/common/js/common.js')
+    ->appendFile('/resources/theme/default/js/website.js');
 
 echo $this->doctype();
 echo $this->theme;
@@ -27,8 +28,7 @@ echo $this->theme;
         <meta charset="utf-8">
 <?php
     echo "\t\t" . $headTitle . PHP_EOL;
-    echo "\t\t" . $css . PHP_EOL;
-    echo "\t\t" . $js . PHP_EOL;
+    echo "\t\t" . $this->headLink() . PHP_EOL;
 ?>
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -62,6 +62,9 @@ echo $this->theme;
                     </footer>
                 </article>
             </section>
-        </div> <!-- /container -->
+        </div>
+        <?php
+            echo "\t\t" . $this->headScript() . PHP_EOL;
+        ?>
     </body>
 </html>
