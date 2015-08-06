@@ -48,7 +48,8 @@ var Form = {
             var copy = $(this).clone();
             copy.val('');
             copy.insertAfter($(this));
-            $(this).hide();
+            $(this).hide().removeAttr('required');
+            $(this).hide().removeAttr('id');
         });
 
         this.initialized = true;

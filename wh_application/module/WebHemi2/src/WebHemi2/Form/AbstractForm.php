@@ -356,8 +356,16 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      */
     protected function renderElement(Element $element)
     {
-        $label      = $element->getLabel();
-        $id         = $element->getOption('id');
+        $label  = $element->getLabel();
+        $id     = $element->getOption('id');
+
+        // TODO solve to read up the proper config
+        if ($this->getServiceLocator()->has('theme_manager')) {
+            $useMDL = $this->getServiceLocator()->get('theme_manager')->getOption('use_mdl');
+        } else {
+            $config = $this->getConfig();
+            $useMDL = isset($config['view_manager']['use_mdl']) ? $config['view_manager']['use_mdl'] : false;
+        }
 
         // if no ID present, we use the name to add one
         if (empty($id)) {
@@ -371,6 +379,11 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         }
 
         $required   = $element->getOption('required');
+
+        if ($required) {
+            $element->setAttribute('required', 'required');
+        }
+
         $type       = $element->getAttribute('type');
 
         // button element fix
@@ -475,6 +488,16 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
 
         // close tag and return
         return $tag . '</fieldset>' . PHP_EOL;
+    }
+
+    /**
+     * Retrieve application config
+     *
+     * @return array|object
+     */
+    public function getConfig()
+    {
+        return $this->getServiceLocator()->get('Config');
     }
 
     /**

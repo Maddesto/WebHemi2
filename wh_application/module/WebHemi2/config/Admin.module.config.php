@@ -48,6 +48,7 @@ return [
             'block/footer'  => __DIR__ . '/../resources/default/view/block/admin/footer.phtml',
             'block/menu'    => __DIR__ . '/../resources/default/view/block/admin/menu.phtml',
         ],
+        'use_mdl' => true,
     ],
     'router' => [
         'routes' => [

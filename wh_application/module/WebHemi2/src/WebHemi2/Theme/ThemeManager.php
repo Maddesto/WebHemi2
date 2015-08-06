@@ -143,6 +143,7 @@ class ThemeManager
         // get the theme configuration
         $config = $this->getThemeConfig($this->currentTheme);
         // we're about to change the system-default view settings to custom
+        /** @var AggregateResolver $viewResolver */
         $viewResolver = $this->serviceManager->get('ViewResolver');
         $themeResolver = new AggregateResolver();
 
@@ -158,8 +159,24 @@ class ThemeManager
             $themeResolver->attach($pathResolver);
         }
 
+        if (isset($config['use_mdl'])) {
+            $this->options['use_mdl'] = $config['use_mdl'];
+        }
+
         $viewResolver->attach($themeResolver, 100);
         return true;
+    }
+
+    /**
+     * Retrieve a ThemeManager option
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getOption($key)
+    {
+        return (isset($this->options[$key])) ? $this->options[$key] : null;
     }
 
     /**

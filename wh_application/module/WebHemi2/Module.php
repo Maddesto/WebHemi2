@@ -103,8 +103,6 @@ class Module implements
         // attach MVC events to the event manager
         // AFTER the router event is processed, we check the permissions
         $eventManager->attach(Mvc\MvcEvent::EVENT_ROUTE,          ['WebHemi2\Event\AclEvent',    'onRoute'],           -10);
-        // BEFORE the controller/action is being called we inject the correct layout
-        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH,       ['WebHemi2\Event\LayoutEvent', 'preDispatch'],        10);
         // AFTER the controller/action is being called and have error we overwrite the default error pages
         $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'postDispatchError'], -150);
         // BEFORE rendering the output we change it, if it is an Ajax request
