@@ -7,10 +7,18 @@ if (empty($this->title)) {
 $this->headTitle($this->sectionTitle);
 
 $headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - ')->setAutoEscape(false);
-$css       = $this->headLink()->appendStylesheet('/resources/common/css/reset.css')
+
+$css       = $this->headLink()
+                ->appendStylesheet('/resources/common/css/reset.css')
+                ->appendStylesheet('/resources/common/css/library/material.min.css')
                 ->appendStylesheet('/resources/theme/default/css/admin.css');
-$js        = $this->headScript()
-                ->appendFile('/resources/common/js/jquery-2.1.4.min.js')
+
+$js        = $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
+                    'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
+                    'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
+                )
+                ->appendFile('/resources/common/js/library/jquery-2.1.4.min.js')
+                ->appendFile('/resources/common/js/library/material.min.js')
                 ->appendFile('/resources/common/js/common.js')
                 ->appendFile('/resources/theme/default/js/admin.js');
 

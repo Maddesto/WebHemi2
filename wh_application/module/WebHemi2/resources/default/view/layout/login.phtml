@@ -5,16 +5,21 @@
 
 $form      = $this->loginForm;
 $headTitle = $this->headTitle($this->translate($this->headerTitle))->setSeparator(' - ')->setAutoEscape(false);
+
 $css       = $this->headLink()->appendStylesheet('/resources/common/css/reset.css')
+                ->appendStylesheet('/resources/common/css/library/material.min.css')
                 ->appendStylesheet('/resources/theme/' . $this->theme . '/css/login.css');
+
 $js        = $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
                     'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
                     'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
                 )
-                ->appendFile('/resources/common/js/jquery-2.1.4.min.js')
+                ->appendFile('/resources/common/js/library/jquery-2.1.4.min.js')
+                ->appendFile('/resources/common/js/library/material.min.js')
                 ->appendFile('/resources/common/js/plugins/jquery.form.min.js')
                 ->appendFile('/resources/common/js/common.js')
                 ->appendFile('/resources/theme/' . $this->theme . '/js/login.js');
+
 echo $this->doctype();
 
 ?>

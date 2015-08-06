@@ -66,7 +66,7 @@ class UserForm extends AbstractForm
 
         parent::__construct($name);
 
-        // --- account info filedset -----------------------------------------------------------------------------------
+        // --- account info fieldset -----------------------------------------------------------------------------------
         $accountInfoFieldset = new Fieldset('accountInfo');
         $accountInfoFieldset
             ->setLabel('Account information');
@@ -152,7 +152,7 @@ class UserForm extends AbstractForm
             ->add($userName)
             ->add($email);
 
-        // --- security info filedset ----------------------------------------------------------------------------------
+        // --- security info fieldset ----------------------------------------------------------------------------------
         $securityInfoFieldset = new Fieldset('securityInfo');
         $securityInfoFieldset->setLabel('Secutity information');
 

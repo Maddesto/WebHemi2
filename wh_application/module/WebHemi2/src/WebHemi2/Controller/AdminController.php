@@ -59,20 +59,28 @@ class AdminController extends UserController
     }
 
     /**
-     * Login page
+     * Login page for admin
      *
      * @return ViewModel
      */
     public function loginAction()
     {
-        $view = parent::loginAction();
+        parent::loginAction();
+
         /** @var \WebHemi2\Form\LoginForm $form */
         $form = $this->getForm('LoginForm');
+
+        $layout = new ViewModel();
+        $layout->setTemplate('layout/login');
+        $layout->setVariable('loginForm',$form);
+        $layout->setTerminal(true);
+
+
         $config = $this->getServiceLocator()->get('Config');
 
         // if we display the login page
-        if ($view instanceof ViewModel) {
-            $view->setVariables(
+        if ($layout instanceof ViewModel) {
+            $layout->setVariables(
                 [
                     'headerTitle' => $config['headerTitle'],
                     'siteTitle' => $config['siteTitle'],
@@ -82,15 +90,12 @@ class AdminController extends UserController
                         : 'default',
                 ]
             );
-
-            // the login page has its built-in layout
-            $view->setTerminal(true);
         }
 
         // Cleanup standard input error messages to hide from attackers which data is invalid.
         $form->cleanupMessages();
 
-        return $view;
+        return $layout;
     }
 
     /**

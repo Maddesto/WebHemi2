@@ -40,6 +40,7 @@ return [
         ],
         'template_map' => [
             'layout/layout' => __DIR__ . '/../resources/default/view/layout/admin.phtml',
+            'layout/login'  => __DIR__ . '/../resources/default/view/layout/login.phtml',
             'error/500'     => __DIR__ . '/../resources/default/view/error/500.phtml',
             'error/403'     => __DIR__ . '/../resources/default/view/error/403.phtml',
             'error/404'     => __DIR__ . '/../resources/default/view/error/404.phtml',
