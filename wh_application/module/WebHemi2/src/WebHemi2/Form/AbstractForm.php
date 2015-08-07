@@ -356,10 +356,15 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      */
     protected function renderElement(Element $element)
     {
-        $label  = $element->getLabel();
-        $id     = $element->getOption('id');
-        $config = $this->getConfig();
-        $useMDL = (bool)$config['view_manager']['theme_settings']['mdl_enabled'];
+        $labelText      = $element->getLabel();
+        $id             = $element->getOption('id');
+        $required       = $element->getOption('required');
+        $type           = $element->getAttribute('type');
+        $config         = $this->getConfig();
+        $useMDL         = (bool)$config['view_manager']['theme_settings']['mdl_enabled'];
+        $containerClass = ['element'];
+        $elementClass   = [];
+        $labelClass     = [];
 
         // if no ID present, we use the name to add one
         if (empty($id)) {
@@ -372,39 +377,76 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
             }
         }
 
-        $required   = $element->getOption('required');
-
+        // mark field as required
         if ($required) {
             $element->setAttribute('required', 'required');
         }
-
-        $type       = $element->getAttribute('type');
 
         // button element fix
         if ($element instanceof Element\Button) {
             $type = 'button';
         }
 
-        if ($type == $id) {
-            $id = '';
+        $containerClass[] = $type;
+
+        if ($type != $id) {
+            $containerClass[] = $id;
         }
 
-        $class = trim("element {$type} {$id}");
+        // setup element type styles for MDL
+        if ($useMDL) {
+            switch ($type) {
+                case 'text':
 
-        $openTag    = sprintf('<div class="%s">', $class);
-        $closeTag   = '</div>' . PHP_EOL;
-        $labelTag   =
-        $errorTag   =
-        $tag        = '';
+                    break;
+                case 'textarea':
+
+                    break;
+                case 'password':
+
+                    break;
+                case 'button':
+
+                    break;
+                case 'submit':
+
+                    break;
+                case 'checkbox':
+
+                    break;
+                case 'toggle':
+
+                    break;
+                case 'radio':
+
+                    break;
+                case 'file':
+
+                    break;
+            }
+        }
+
+        $openTag  = sprintf('<div class="%s">', implode(' ', $containerClass));
+        $closeTag = '</div>' . PHP_EOL;
+        $labelTag = '';
+        $errorTag = '';
 
         // build label
-        if ($required || !empty($label)) {
+        if (!empty($labelText)) {
+            $labelAttributes = [
+                'for' =>  $element->getAttribute('id')
+            ];
+
+            if ($useMDL) {
+
+            }
+
             /** @var \Zend\Form\View\Helper\FormLabel $formLabel */
             $formLabel = $this->getViewRenderer()->plugin('formLabel');
-            $labelTag  = $formLabel->openTag($element);
-            $labelTag .= $label;
+            $labelTag  = $formLabel->openTag($labelAttributes);
+            $labelTag .= $labelText;
 
-            if ($required) {
+            if (!$useMDL && $required) {
                 $labelTag .= '<span class="required">*</span>';
             }
 
@@ -414,8 +456,8 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         // build errors
         if ($element->getMessages()) {
             $errorTag = '<div class="error">'
-                    . $this->getViewRenderer()->formElementErrors($element)
-                    . '</div>';
+                . $this->getViewRenderer()->formElementErrors($element)
+                . '</div>';
         }
 
         $helper = 'form' . ucfirst(strtolower($type));
@@ -428,11 +470,11 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 $tag = $inputTag . $errorTag;
                 break;
             case 'checkbox':
+            case 'toggle':
             case 'radio':
                 $tag = $openTag . $inputTag . $labelTag . $errorTag . $closeTag;
                 break;
             case 'file':
-                // @TODO: create hidden input for MAX_FILE_SIZE
                 $tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
                 break;
             default:

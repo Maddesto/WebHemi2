@@ -27,6 +27,7 @@ namespace WebHemi2\Form\View\Helper;
 
 use WebHemi2\Form\Element\PlainText;
 use WebHemi2\Form\Element\Location;
+use WebHemi2\Form\Element\Toggle;
 use Zend\Form\View\Helper\FormElement as OriginalFormElement;
 use Zend\Form\ElementInterface;
 
@@ -68,6 +69,11 @@ class FormElement extends OriginalFormElement
 
         if ($element instanceof Location) {
             $helper = $renderer->plugin('form_location');
+            return $helper($element);
+        }
+
+        if ($element instanceof Toggle) {
+            $helper = $renderer->plugin('form_toggle');
             return $helper($element);
         }
 

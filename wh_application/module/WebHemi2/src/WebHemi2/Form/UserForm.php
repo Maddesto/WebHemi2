@@ -28,6 +28,7 @@ namespace WebHemi2\Form;
 
 use WebHemi2\Form\Element\PlainText;
 use WebHemi2\Form\Element\Location;
+use WebHemi2\Form\Element\Toggle;
 use WebHemi2\Model\User;
 use Zend\Form\Fieldset;
 use Zend\Form\Element;
@@ -270,7 +271,7 @@ class UserForm extends AbstractForm
             );
 
         // the email input
-        $displayEmail = new Element\Checkbox('displayemail');
+        $displayEmail = new Toggle('displayemail');
         $displayEmail
             ->setLabel('Show your email address for others?')
             ->setOptions(

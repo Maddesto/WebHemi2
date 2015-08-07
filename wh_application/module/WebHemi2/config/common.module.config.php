@@ -90,6 +90,7 @@ return [
             'formElement' => 'WebHemi2\Form\View\Helper\FormElement',
             'formPlainText' => 'WebHemi2\Form\View\Helper\FormPlainText',
             'formLocation' => 'WebHemi2\Form\View\Helper\FormLocation',
+            'formToggle' => 'WebHemi2\Form\View\Helper\FormToggle',
         ],
         'factories' => [
             'isAllowed' => 'WebHemi2\View\Helper\Factory\IsAllowedFactory',
