@@ -54,73 +54,81 @@ class LoginForm extends AbstractForm
     {
         parent::__construct('login');
 
-        // filed set for form elements
-        $fieldSet = new Fieldset('loginInfo');
-        $fieldSet->setLabel('Login information');
+        $submit = new Element\Button('submit');
+        $submit->setLabel('Login')
+            ->setAttributes(
+                [
+                    'accesskey' => 's',
+                    'type' => 'submit',
+                    'tabindex' => self::$tabindex++
+                ]
+            );
 
-        // the identification input
+        $url = '/login/';
+
+        if (APPLICATION_MODULE_TYPE == APPLICATION_MODULE_TYPE_SUBDIR && APPLICATION_MODULE != WEBSITE_MODULE) {
+            $url = '/' . APPLICATION_MODULE_URI . $url;
+        }
+
+        $this->setAttribute('action', $url);
+        $this->add($this->getLoginFieldset())
+            ->add($submit);
+
+        $this->init();
+    }
+
+    /**
+     * Retrieve Login fieldset
+     *
+     * @return Fieldset
+     */
+    protected function getLoginFieldset()
+    {
+        $fieldset = new Fieldset('loginInfo');
+        $fieldset->setLabel('Login information');
+
         $identification = new Element\Text('identification');
-        $identification->setOptions(
-            [
-                'required' => true,
-                'filters' => [
-                    new Filter\StringTrim(),
-                ],
-                'validators' => [
-                    new Validator\StringLength(
-                        [
-                            'min' => 4,
-                            'max' => 255,
-                            'encoding' => 'UTF-8'
-                        ]
-                    ),
-                    new Validator\Regex('/^[a-z]{1}\w+$/i')
-                ],
-            ]
-        )
-        ->setLabel('Identification')
-        ->setAttributes(
-            [
-                'id' => 'identification',
-                'accesskey' => 'u',
-                'maxlength' => 255,
-                'tabindex' => self::$tabindex++,
-                'pattern' => '^[a-z]{1}\w+$',
-                'placeholder' => $identification->getLabel(),
-                //'validity' => 'Some alert'
-            ]
-        );
+        $identification->setLabel('Identification')
+            ->setOptions(
+                [
+                    'required' => true,
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [
+                        new Validator\StringLength(['min' => 4, 'max' => 255, 'encoding' => 'UTF-8']),
+                        new Validator\Regex('/^[a-z]{1}\w+$/i')
+                    ],
+                ]
+            )
+            ->setAttributes(
+                [
+                    'id' => 'identification',
+                    'accesskey' => 'u',
+                    'maxlength' => 255,
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^[a-z]{1}\w+$',
+                    'placeholder' => $identification->getLabel(),
+                ]
+            );
 
-        // password input
         $password = new Element\Password('password');
-        $password->setOptions(
-            [
-                'required' => true,
-                'filters' => [
-                    new Filter\StringTrim(),
-                ],
-                'validators' => [
-                    new Validator\StringLength(
-                        [
-                            'min' => 4,
-                            'max' => 255,
-                            'encoding' => 'UTF-8'
-                        ]
-                    ),
-                ],
-            ]
-        )
-        ->setLabel('Password')
-        ->setAttributes(
-            [
-                'id' => 'password',
-                'accesskey' => 'p',
-                'maxlength' => 255,
-                'tabindex' => self::$tabindex++,
-                'pattern' => '^\w+$',
-                'placeholder' => $password->getLabel()
-            ]
-        );
+        $password->setLabel('Password')
+            ->setOptions(
+                [
+                    'required' => true,
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [new Validator\StringLength(['min' => 4, 'max' => 255, 'encoding' => 'UTF-8'])],
+                ]
+            )
+            ->setAttributes(
+                [
+                    'id' => 'password',
+                    'accesskey' => 'p',
+                    'maxlength' => 255,
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^\w+$',
+                    'placeholder' => $password->getLabel()
+                ]
+            );
 
         // in ADMIN module there's no way to remember the password or auto-complete the input fields
         if (APPLICATION_MODULE == ADMIN_MODULE) {
@@ -129,8 +137,8 @@ class LoginForm extends AbstractForm
             $this->setAttribute('autocomplete', 'off');
         }
 
-        $fieldSet->add($identification)
-                ->add($password);
+        $fieldset->add($identification)
+            ->add($password);
 
         // if NOT in ADMIN module, then we supply "remember me" functionality
         if (APPLICATION_MODULE != ADMIN_MODULE) {
@@ -151,49 +159,14 @@ class LoginForm extends AbstractForm
                     ]
                 );
 
-            $fieldSet->add($remember);
+            $fieldset->add($remember);
         }
 
-        $submit = new Element\Button('submit');
-        $submit->setLabel('Login')
-            ->setAttributes(
-                [
-                    'accesskey' => 's',
-                    'type' => 'submit',
-                    'tabindex' => self::$tabindex++
-                ]
-            );
-
-        $url = '/login/';
-        if (APPLICATION_MODULE_TYPE == APPLICATION_MODULE_TYPE_SUBDIR && APPLICATION_MODULE != WEBSITE_MODULE) {
-            $url = '/' . APPLICATION_MODULE_URI . $url;
-        }
-
-        $this->setAttribute('action', $url);
-        $this->add($fieldSet)
-            ->add($submit);
-
-        $this->init();
-    }
-
-    /**
-     * This function is automatically called when creating element with factory. It
-     * allows to perform various operations (add elements...)
-     *
-     * @return void
-     */
-    public function init()
-    {
-        parent::init();
-        // Here, we have $this->serviceLocator !!
+        return $fieldset;
     }
 
     /**
      * Clean up error messages to hide sensitive information from attackers
-     *
-     * @author Gabor Ivan <gabor.ivan@westwing.de>
-     *
-     * @TODO log original error messages for admin
      */
     public function cleanupMessages()
     {

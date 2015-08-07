@@ -67,97 +67,35 @@ class UserForm extends AbstractForm
 
         parent::__construct($name);
 
-        // --- account info fieldset -----------------------------------------------------------------------------------
-        $accountInfoFieldset = new Fieldset('accountInfo');
-        $accountInfoFieldset
-            ->setLabel('Account information');
-
-        // the userId
-        $userId = new Element\Hidden('user_id');
-
-        // the username input
-        $userName = new Element\Text('username');
-        $userName
-            ->setOptions(
-                [
-                    'required' => true,
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
-                    'validators' => [
-                        new Validator\StringLength(
-                            [
-                                'min' => '4',
-                                'max' => '255',
-                                'encoding' => 'UTF-8'
-                            ]
-                        ),
-                        new Validator\Regex('/^[a-z]{1}[a-z0-9\-\_]{3,254}$/i')
-                    ],
-                ]
-            )
-            ->setLabel('User Name')
+        $submit = new Element\Button('submit');
+        $submit
+            ->setLabel('Save')
             ->setAttributes(
                 [
-                    'id' => 'username',
-                    'accesskey' => 'u',
-                    'maxlength' => '255',
-                    'tabindex' => self::$tabindex++,
-                    'pattern' => '^[a-zA-Z]{1}[a-zA-Z0-9\.\-\_]{3,254}$',
+                    'accesskey' => 's',
+                    'type' => 'submit',
+                    'tabindex' => self::$tabindex++
                 ]
             );
 
-        // the email input
-        $email = new Element\Email('email');
-        $email
-            ->setOptions(
-                [
-                    'required' => true,
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
-                    'validators' => [
-                        new Validator\EmailAddress(
-                            [
-                                'allow' => Validator\Hostname::ALLOW_DNS,
-                                'useDomainCheck' => true,
-                                'useMxCheck' => true,
-                                'useDeepMxCheck' => true
-                            ]
-                        ),
-                        new Validator\StringLength(
-                            [
-                                'min' => '6',
-                                'max' => '255',
-                                'encoding' => 'UTF-8'
-                            ]
-                        ),
-                        new Validator\Regex('/^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$/'),
-                    ],
-                ]
-            )
-            ->setLabel('Email')
-            ->setAttributes(
-                [
-                    'id' => 'email',
-                    'type' => 'email',
-                    'accesskey' => 'e',
-                    'maxlength' => '255',
-                    'tabindex' => self::$tabindex++,
-                    'pattern' => '^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$',
-                ]
-            );
+        $this
+            ->add($this->getAccountInfoFieldset())
+            ->add($this->getSecurityInfoFieldset())
+            ->add($this->getPersonalInfoFieldset())
+            ->add($this->getContactFieldset())
+            ->add($submit);
+    }
 
-        $accountInfoFieldset
-            ->add($userId)
-            ->add($userName)
-            ->add($email);
-
-        // --- security info fieldset ----------------------------------------------------------------------------------
+    /**
+     * Retrieve Security info fieldset
+     *
+     * @return Fieldset
+     */
+    protected function getSecurityInfoFieldset()
+    {
         $securityInfoFieldset = new Fieldset('securityInfo');
         $securityInfoFieldset->setLabel('Secutity information');
 
-        // the password input
         $password = new Element\Password('password');
         $password
             ->setOptions(
@@ -189,7 +127,6 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the password confirmation input
         $confirmation = new Element\Password('confirmation');
         $confirmation
             ->setLabel('Confirm password')
@@ -203,34 +140,32 @@ class UserForm extends AbstractForm
                 ]
             );
 
-
         $securityInfoFieldset
             ->add($password)
             ->add($confirmation);
 
-        // --- perosnal info fieldset ----------------------------------------------------------------------------------
+        return $securityInfoFieldset;
+    }
+
+    /**
+     * Retrieve Personal Info fieldset
+     *
+     * @return Fieldset
+     */
+    protected function getPersonalInfoFieldset()
+    {
         $personalInfoFieldset = new Fieldset('personalInfo');
         $personalInfoFieldset->setLabel('Personal information');
 
         // the displayname input
         $displayName = new Element\Text('displayname');
-        $displayName
+        $displayName->setLabel('Display Name')
             ->setOptions(
                 [
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
-                    'validators' => [
-                        new Validator\StringLength(
-                            [
-                                'max' => '255',
-                                'encoding' => 'UTF-8'
-                            ]
-                        ),
-                    ],
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [new Validator\StringLength(['max' => '255','encoding' => 'UTF-8'])],
                 ]
             )
-            ->setLabel('Display Name')
             ->setAttributes(
                 [
                     'id' => 'displayname',
@@ -241,25 +176,14 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the headline input
         $headLine = new Element\Text('headline');
-        $headLine
+        $headLine->setLabel('Headline')
             ->setOptions(
                 [
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
-                    'validators' => [
-                        new Validator\StringLength(
-                            [
-                                'max' => '255',
-                                'encoding' => 'UTF-8'
-                            ]
-                        ),
-                    ],
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [new Validator\StringLength(['max' => '255','encoding' => 'UTF-8'])],
                 ]
             )
-            ->setLabel('Headline')
             ->setAttributes(
                 [
                     'id' => 'headline',
@@ -270,10 +194,8 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the email input
         $displayEmail = new Toggle('displayemail');
-        $displayEmail
-            ->setLabel('Show your email address for others?')
+        $displayEmail->setLabel('Show your email address for others?')
             ->setOptions(
                 [
                     'use_hidden_element' => true,
@@ -290,9 +212,8 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the displayname input
         $details = new Element\Textarea('details');
-        $details
+        $details->setLabel('Details')
             ->setOptions(
                 [
                     'filters' => [
@@ -300,7 +221,6 @@ class UserForm extends AbstractForm
                     ],
                 ]
             )
-            ->setLabel('Details')
             ->setAttributes(
                 [
                     'id' => 'details',
@@ -310,69 +230,63 @@ class UserForm extends AbstractForm
                 ]
             );
 
+        $personalInfoFieldset
+            ->add($this->getAvatarSubfieldset())
+            ->add($displayName)
+            ->add($headLine)
+            ->add($displayEmail)
+            ->add($details);
+
+        return $personalInfoFieldset;
+    }
+
+    /**
+     * Retrive Avatar fieldset
+     *
+     * @return Fieldset
+     */
+    protected function getAvatarSubfieldset()
+    {
         $avatarSubFieldset = new Fieldset('avatarInfo');
         $avatarSubFieldset->setLabel('Avatar');
 
-        // the exact value of the avatar property
         $avatar = new Element\Hidden('avatar');
 
-        // the image represented by the avatar
         $avatarImage = new PlainText('avatarimage');
-        $avatarImage
-            ->setValue('')
-            ->setAttributes(
-                [
-                    'id' => 'avatarimage',
-                ]
-            );
+        $avatarImage->setValue('')
+            ->setAttributes(['id' => 'avatarimage']);
 
-        // the type of the avatar
         $avatarType = new Element\Radio('avatartype');
-        $avatarType
+        $avatarType->setValue(User::USER_AVATAR_TYPE_NONE)
             ->setOptions(
                 [
                     'value_options' => [
                         [
                             'label' => 'Default',
                             'value' => User::USER_AVATAR_TYPE_NONE,
-                            'attributes' => [
-                                'accesskey' => 'y',
-                                'tabindex' => self::$tabindex++,
-                            ]
+                            'attributes' => ['accesskey' => 'y','tabindex' => self::$tabindex++]
                         ],
                         [
                             'label' => 'GR Avatar',
                             'value' => User::USER_AVATAR_TYPE_GRAVATAR,
-                            'attributes' => [
-                                'accesskey' => 'g',
-                                'tabindex' => self::$tabindex++,
-                            ]
+                            'attributes' => ['accesskey' => 'g','tabindex' => self::$tabindex++]
                         ],
                         [
                             'label' => 'File',
                             'value' => User::USER_AVATAR_TYPE_BASE64,
-                            'attributes' => [
-                                'accesskey' => 'f',
-                                'tabindex' => self::$tabindex++,
-                            ]
+                            'attributes' => ['accesskey' => 'f','tabindex' => self::$tabindex++]
                         ],
                         [
                             'label' => 'URL',
                             'value' => User::USER_AVATAR_TYPE_URL,
-                            'attributes' => [
-                                'accesskey' => 'l',
-                                'tabindex' => self::$tabindex++,
-                            ]
+                            'attributes' => ['accesskey' => 'l','tabindex' => self::$tabindex++]
                         ],
                     ]
                 ]
-            )
-            ->setValue(User::USER_AVATAR_TYPE_NONE);
+            );
 
-        // GRavatar ID
         $avatarGrId = new Element\Text('avatargrid');
-        $avatarGrId
-            ->setLabel('GR Avatar ID')
+        $avatarGrId->setLabel('GR Avatar ID')
             ->setAttributes(
                 [
                     'id' => 'avatargrid',
@@ -384,10 +298,8 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // external image location
         $avatarUrl = new Element\Text('avatarurl');
-        $avatarUrl
-            ->setLabel('Image location')
+        $avatarUrl->setLabel('Image location')
             ->setAttributes(
                 [
                     'id' => 'avatarurl',
@@ -399,7 +311,6 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // file upload
         $avatarFile = new Element\File('avatarfile');
         $avatarFile
             ->setLabel('Upload your avatar')
@@ -411,10 +322,8 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // allow to upload file of size at most 100KB
         $avatarFileUpload = new Element\Hidden('MAX_FILE_SIZE');
-        $avatarFileUpload
-            ->setValue(102400);
+        $avatarFileUpload->setValue(102400);
 
         $avatarSubFieldset
             ->add($avatar)
@@ -425,37 +334,27 @@ class UserForm extends AbstractForm
             ->add($avatarUrl)
             ->add($avatarFile);
 
-        $personalInfoFieldset
-            ->add($avatarSubFieldset)
-            ->add($displayName)
-            ->add($headLine)
-            ->add($displayEmail)
-            ->add($details);
+        return $avatarSubFieldset;
+    }
 
-        // --- contact fieldset ----------------------------------------------------------------------------------------
+    /**
+     * Retrieve Contact fieldset
+     *
+     * @return Fieldset
+     */
+    protected function getContactFieldset()
+    {
         $contactFieldset = new Fieldset('contactInfo');
-        $contactFieldset
-            ->setLabel('Contact Information');
+        $contactFieldset->setLabel('Contact Information');
 
-        // the displayname input
         $phoneNumber = new Element\Text('phonenumber');
-        $phoneNumber
+        $phoneNumber->setLabel('Phone number')
             ->setOptions(
                 [
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
-                    'validators' => [
-                        new Validator\StringLength(
-                            [
-                                'max' => '255',
-                                'encoding' => 'UTF-8'
-                            ]
-                        ),
-                    ],
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [new Validator\StringLength(['max' => '255', 'encoding' => 'UTF-8'])],
                 ]
             )
-            ->setLabel('Phone number')
             ->setAttributes(
                 [
                     'type' => 'tel',
@@ -468,25 +367,14 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the displayname input
         $location = new Location('location');
-        $location
+        $location->setLabel('Location')
             ->setOptions(
                 [
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
-                    'validators' => [
-                        new Validator\StringLength(
-                            [
-                                'max' => '255',
-                                'encoding' => 'UTF-8'
-                            ]
-                        ),
-                    ],
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [new Validator\StringLength(['max' => '255','encoding' => 'UTF-8'])],
                 ]
             )
-            ->setLabel('Location')
             ->setAttributes(
                 [
                     'id' => 'location',
@@ -497,17 +385,13 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the instantmessengers input
         $instantMessengers = new Element\Textarea('instantmessengers');
-        $instantMessengers
+        $instantMessengers->setLabel('Instant Messengers')
             ->setOptions(
                 [
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
+                    'filters' => [new Filter\StringTrim()],
                 ]
             )
-            ->setLabel('Instant Messengers')
             ->setAttributes(
                 [
                     'id' => 'instantmessengers',
@@ -516,17 +400,13 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the socialnetworks input
         $socialNetworks = new Element\Textarea('socialnetworks');
-        $socialNetworks
+        $socialNetworks->setLabel('Social Networks')
             ->setOptions(
                 [
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
+                    'filters' => [new Filter\StringTrim()],
                 ]
             )
-            ->setLabel('Social Networks')
             ->setAttributes(
                 [
                     'id' => 'socialnetworks',
@@ -535,17 +415,13 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        // the websites input
         $websites = new Element\Textarea('websites');
-        $websites
+        $websites->setLabel('Websites')
             ->setOptions(
                 [
-                    'filters' => [
-                        new Filter\StringTrim(),
-                    ],
+                    'filters' => [new Filter\StringTrim()],
                 ]
             )
-            ->setLabel('Websites')
             ->setAttributes(
                 [
                     'id' => 'websites',
@@ -561,25 +437,92 @@ class UserForm extends AbstractForm
             ->add($socialNetworks)
             ->add($websites);
 
-        // --- rest of the form ----------------------------------------------------------------------------------------
+        return $contactFieldset;
+    }
 
-        $submit = new Element\Button('submit');
-        $submit
-            ->setLabel('Save')
+    /**
+     * Retrieve Account fieldset
+     *
+     * @return Fieldset
+     */
+    protected function getAccountInfoFieldset()
+    {
+        $accountInfoFieldset = new Fieldset('accountInfo');
+        $accountInfoFieldset->setLabel('Account information');
+
+        $userId = new Element\Hidden('user_id');
+
+        $userName = new Element\Text('username');
+        $userName->setLabel('User Name')
+            ->setOptions(
+                [
+                    'required' => true,
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [
+                        new Validator\StringLength(
+                            [
+                                'min' => '4',
+                                'max' => '255',
+                                'encoding' => 'UTF-8'
+                            ]
+                        ),
+                        new Validator\Regex('/^[a-z]{1}[a-z0-9\-\_]{3,254}$/i')
+                    ],
+                ]
+            )
             ->setAttributes(
                 [
-                    'accesskey' => 's',
-                    'type' => 'submit',
-                    'tabindex' => self::$tabindex++
+                    'id' => 'username',
+                    'accesskey' => 'u',
+                    'maxlength' => '255',
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^[a-zA-Z]{1}[a-zA-Z0-9\.\-\_]{3,254}$',
                 ]
             );
 
-        $this
-            ->add($accountInfoFieldset)
-            ->add($securityInfoFieldset)
-            ->add($personalInfoFieldset)
-            ->add($contactFieldset)
-            ->add($submit);
+        $email = new Element\Email('email');
+        $email->setLabel('Email')
+            ->setOptions(
+                [
+                    'required' => true,
+                    'filters' => [new Filter\StringTrim()],
+                    'validators' => [
+                        new Validator\EmailAddress(
+                            [
+                                'allow' => Validator\Hostname::ALLOW_DNS,
+                                'useDomainCheck' => true,
+                                'useMxCheck' => true,
+                                'useDeepMxCheck' => true
+                            ]
+                        ),
+                        new Validator\StringLength(
+                            [
+                                'min' => '6',
+                                'max' => '255',
+                                'encoding' => 'UTF-8'
+                            ]
+                        ),
+                        new Validator\Regex('/^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$/'),
+                    ],
+                ]
+            )
+            ->setAttributes(
+                [
+                    'id' => 'email',
+                    'type' => 'email',
+                    'accesskey' => 'e',
+                    'maxlength' => '255',
+                    'tabindex' => self::$tabindex++,
+                    'pattern' => '^[a-z]{1}[a-z0-9\-\_\.]+@[a-z0-9\-\_\.]+\.[a-z]{2,4}$',
+                ]
+            );
+
+        $accountInfoFieldset
+            ->add($userId)
+            ->add($userName)
+            ->add($email);
+
+        return $accountInfoFieldset;
     }
 
     /**
@@ -647,11 +590,11 @@ class UserForm extends AbstractForm
      */
     protected function renderElement(Element $element)
     {
-        $id = $element->getAttribute('id');
+        $idemtifier = $element->getAttribute('id');
         /* @var $acl \WebHemi2\Acl\Acl */
         $acl = $this->getAclService();
 
-        switch ($id) {
+        switch ($idemtifier) {
             case 'avatarimage':
                 $element->setValue(
                     $this->getViewRenderer()->avatar(

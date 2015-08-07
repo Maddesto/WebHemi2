@@ -146,7 +146,6 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      */
     public function isValid(Element $formElement = null)
     {
-        // @TODO: find out why is this method called twice (isValid)
         if (!isset(self::$validatedForms[$this->getName()])) {
             $result = true;
             // if no element specified to validate we go through the entire form
@@ -230,7 +229,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      */
     public function getMessages($elementName = null)
     {
-        $messages = array();
+        $messages = [];
 
         if (null === $elementName) {
             /** @var \Zend\Form\Fieldset $fieldSet */
@@ -340,7 +339,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 }
             }
 
-            $form .= $this->getFormHelper()->closeTag($this);
+            $form .= $this->getFormHelper()->closeTag();
         } catch (\Exception $e) {
             $form = '';
         }
@@ -357,7 +356,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
     protected function renderElement(Element $element)
     {
         $labelText      = $element->getLabel();
-        $id             = $element->getOption('id');
+        $identifier     = $element->getOption('id');
         $required       = $element->getOption('required');
         $type           = $element->getAttribute('type');
         $config         = $this->getConfig();
@@ -367,13 +366,13 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         $labelClass     = [];
 
         // if no ID present, we use the name to add one
-        if (empty($id)) {
+        if (empty($identifier)) {
             $name = $element->getName();
             $matches = [];
 
             if (preg_match('/(?:.*\[)?([^\]]+)\]?$/', $name, $matches)) {
-                $id = $matches[1];
-                $element->setAttribute('id', $id);
+                $identifier = $matches[1];
+                $element->setAttribute('id', $identifier);
             }
         }
 
@@ -389,39 +388,30 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
 
         $containerClass[] = $type;
 
-        if ($type != $id) {
-            $containerClass[] = $id;
+        if ($type != $identifier) {
+            $containerClass[] = $identifier;
         }
 
         // setup element type styles for MDL
         if ($useMDL) {
             switch ($type) {
                 case 'text':
-
                     break;
                 case 'textarea':
-
                     break;
                 case 'password':
-
                     break;
                 case 'button':
-
                     break;
                 case 'submit':
-
                     break;
                 case 'checkbox':
-
                     break;
                 case 'toggle':
-
                     break;
                 case 'radio':
-
                     break;
                 case 'file':
-
                     break;
             }
         }
@@ -438,7 +428,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
             ];
 
             if ($useMDL) {
-
+                ;
             }
 
             /** @var \Zend\Form\View\Helper\FormLabel $formLabel */
