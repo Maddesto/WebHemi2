@@ -24,11 +24,6 @@
  * @link      http://www.gixx-web.com
  */
 return [
-    'service_manager' => [
-        'factories' => [
-//            'theme_manager' => 'WebHemi2\ServiceFactory\ThemeManagerServiceFactory'
-        ],
-    ],
     'controllers' => [
         'invokables' => [
             'WebHemi2\Controller\Website' => 'WebHemi2\Controller\WebsiteController'

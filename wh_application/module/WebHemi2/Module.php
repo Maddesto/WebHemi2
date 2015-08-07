@@ -98,11 +98,11 @@ class Module implements
 
         // attach MVC events to the event manager
         // AFTER the router event is processed, we check the permissions
-        $eventManager->attach(Mvc\MvcEvent::EVENT_ROUTE,          ['WebHemi2\Event\AclEvent',    'onRoute'],           -10);
+        $eventManager->attach(Mvc\MvcEvent::EVENT_ROUTE, ['WebHemi2\Event\AclEvent', 'onRoute'], -10);
         // AFTER the controller/action is being called and have error we overwrite the default error pages
-        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent',  'postDispatchError'], -150);
+        $eventManager->attach(Mvc\MvcEvent::EVENT_DISPATCH_ERROR, ['WebHemi2\Event\ErrorEvent', 'postDispatchError'], -150);
         // BEFORE rendering the output we change it, if it is an Ajax request
-        $eventManager->attach(Mvc\MvcEvent::EVENT_RENDER,         ['WebHemi2\Event\AjaxEvent',   'preRender'],         -10);
+        $eventManager->attach(Mvc\MvcEvent::EVENT_RENDER, ['WebHemi2\Event\AjaxEvent', 'preRender'], -10);
 
         // link the event manager to the modoule route listener
         $moduleRouteListener = new Mvc\ModuleRouteListener();
@@ -131,15 +131,38 @@ class Module implements
             // load the customizable configs
             $this->setConfig(__DIR__ . '/config/application.config.php', false, APPLICATION_MODULE);
 
-            // overwrite default theme settings if needed
-            if (APPLICATION_MODULE !== ADMIN_MODULE
-                && 'default' != self::$configs['view_themes']['current_theme']
-            ) {
-                $themeConfig = include self::$configs['view_themes']['theme_paths'][0]
-                    . '/' . self::$configs['view_themes']['current_theme']
-                    . '/theme.config.php';
+            // overwrite default theme settings for the website
+            if ('default' != self::$configs['view_themes']['current_theme']) {
+                $themePath = self::$configs['view_themes']['theme_paths'][0]
+                    . self::$configs['view_themes']['current_theme'];
 
-                self::$configs = $this->mergeConfig(self::$configs, $themeConfig);
+                if (file_exists($themePath . '/theme.config.json')) {
+                    $themeConfig = file_get_contents($themePath . '/theme.config.json');
+
+                    // trust only if it's a valid JSON
+                    $themeConfig = json_decode($themeConfig, true);
+
+                    if ($themeConfig) {
+                        $themeConfig = $this->fixConfigValues('#DIR#', $themePath, $themeConfig);
+
+                        // trust only allowed content
+                        if (isset($themeConfig['view_manager'])) {
+                            if (APPLICATION_MODULE == ADMIN_MODULE) {
+                                // for admin we allow template settings for the login page only
+                                $loginConfig = [
+                                    'view_manager' => [
+                                        'theme_settings' => $themeConfig['view_manager']['theme_settings'],
+                                    ]
+                                ];
+
+                                self::$configs = $this->mergeConfig(self::$configs, $loginConfig);
+                            } else {
+                                // otherwise we allow full access to view manager settings
+                                self::$configs = $this->mergeConfig(self::$configs, $themeConfig);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -228,6 +251,31 @@ class Module implements
             }
         }
         return $merged;
+    }
+
+    /**
+     * Recursively search and replace values in config
+     *
+     * @param string $search
+     * @param string $replace
+     * @param mixed $config
+     *
+     * @return mixed
+     */
+    protected function fixConfigValues($search, $replace, $config)
+    {
+        if (is_array($config)) {
+            foreach ($config as $key => $value) {
+                if (is_string($value)) {
+                    $config[$key] = str_replace($search, $replace, $value);
+                } elseif (is_array($value)) {
+                    $config[$key] = $this->fixConfigValues($search, $replace, $value);
+                }
+            }
+        } elseif (is_string($config)) {
+            $config = str_replace($search, $replace, $config);
+        }
+        return $config;
     }
 
     /**

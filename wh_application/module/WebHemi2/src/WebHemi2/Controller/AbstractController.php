@@ -71,7 +71,7 @@ abstract class AbstractController extends AbstractActionController
             ->addChild($headerBlock, 'headerBlock')
             ->addChild($menuBlock, 'menuBlock')
             ->addChild($footerBlock, 'footerBlock')
-            ->setVariable('useMdl', $config['view_manager']['use_mdl']);
+            ->setVariable('themeSettings', $config['view_manager']['theme_settings']);
 
         return parent::onDispatch($event);
     }

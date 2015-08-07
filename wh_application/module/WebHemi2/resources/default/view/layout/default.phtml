@@ -9,7 +9,8 @@ $this->headLink()
     ->appendStylesheet('/resources/common/css/reset.css')
     ->appendStylesheet('/resources/theme/default/css/website.css');
 
-$this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
+$this->headScript()
+    ->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
         'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
         'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
     )
@@ -17,11 +18,14 @@ $this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' .
     ->appendFile('/resources/common/js/common.js')
     ->appendFile('/resources/theme/default/js/website.js');
 
-if ($this->useMdl) {
+if ($this->themeSettings['mdl_enabled']) {
     $this->headLink()
-        ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css')
+        ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.'
+            . $this->themeSettings['mdl_primary'] . '-' . $this->themeSettings['mdl_accent'] . '.min.css'
+        )
         ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons');
-    $this->headScript()->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js');
+    $this->headScript()
+        ->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js');
 }
 
 echo $this->doctype();
@@ -30,6 +34,8 @@ echo $this->theme;
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
     echo "\t\t" . $headTitle . PHP_EOL;
     echo "\t\t" . $this->headLink() . PHP_EOL;

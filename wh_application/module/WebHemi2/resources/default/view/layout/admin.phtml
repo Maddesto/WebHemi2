@@ -10,14 +10,17 @@ $headTitle = $this->headTitle($this->translate($this->title))->setSeparator(' - 
 
 $this->headLink()
     ->appendStylesheet('/resources/common/css/reset.css')
-    ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.indigo-pink.min.css')
+    ->appendStylesheet('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.'
+        . $this->themeSettings['mdl_primary'] . '-' . $this->themeSettings['mdl_accent'] . '.min.css'
+    )
     ->appendStylesheet('https://fonts.googleapis.com/icon?family=Material+Icons')
     ->appendStylesheet('/resources/theme/default/css/admin.css');
 
-$this->headScript()->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
-    'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
-    'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
-)
+$this->headScript()
+    ->appendScript('var THEME_NAME = \'' . $this->theme . '\';' . PHP_EOL .
+        'var DOMAIN = \'' . APPLICATION_DOMAIN . '\';' . PHP_EOL .
+        'var STATIC_DOMAIN = \'' . APPLICATION_STATIC_DOMAIN . '\';' . PHP_EOL
+    )
     ->appendFile('http://code.jquery.com/jquery-2.1.4.min.js')
     ->appendFile('https://storage.googleapis.com/code.getmdl.io/1.0.2/material.min.js')
     ->appendFile('/resources/common/js/common.js')
@@ -29,13 +32,13 @@ echo $this->doctype();
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="viewport" content="width=device-width">
-        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-        <link rel="icon" type="image/x-icon" href="favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
     echo $headTitle . PHP_EOL;
     echo $this->headLink() . PHP_EOL;
 ?>
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
     <body class="<?php echo $this->sectionClass; ?>">
         <aside>

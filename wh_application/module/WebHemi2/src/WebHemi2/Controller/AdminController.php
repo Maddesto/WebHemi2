@@ -86,7 +86,7 @@ class AdminController extends UserController
                     'theme' => isset($config['view_themes']['current_theme'])
                         ? $config['view_themes']['current_theme']
                         : 'default',
-                    'useMdl' => $config['view_manager']['use_mdl'],
+                    'themeSettings' => $config['view_manager']['theme_settings'],
                 ]
             );
         }

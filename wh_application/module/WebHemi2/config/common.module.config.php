@@ -52,12 +52,22 @@ return [
         ],
     ],
     'view_manager' => [
-        'use_mdl'                  => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/500',
         'display_exceptions'       => true,
         'display_not_found_reason' => true,
+        'theme_settings' => [
+            'title'       => 'WebHemi2',
+            'description' => 'WebHemi2 default theme. Built upon the Google\'s "Material Design Light" library.',
+            'version'     => '0.1',
+            'author'      => 'Gixx',
+            'link'        => 'http://www.gixx-web.com',
+            'license'     => 'BSD-3-Clause',
+            'mdl_enabled' => true,
+            'mdl_primary' => 'blue_grey',
+            'mdl_accent'  => 'red'
+        ],
         'template_path_stack'      => [
             'website' => __DIR__ . '/../resources/default/view',
         ],
@@ -90,9 +100,6 @@ return [
         'current_theme' => 'default',
         'theme_paths' => [
             APPLICATION_MODULE_PATH . '/resources/themes/'
-        ],
-        'adapters' => [
-            'WebHemi2\Theme\Adapter\ConfigurationAdapter',
         ],
     ],
     'access_control' => [

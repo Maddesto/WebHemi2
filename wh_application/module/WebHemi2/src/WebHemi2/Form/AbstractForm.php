@@ -359,7 +359,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         $label  = $element->getLabel();
         $id     = $element->getOption('id');
         $config = $this->getConfig();
-        $useMDL = isset($config['view_manager']['use_mdl']) ? $config['view_manager']['use_mdl'] : false;
+        $useMDL = (bool)$config['view_manager']['theme_settings']['mdl_enabled'];
 
         // if no ID present, we use the name to add one
         if (empty($id)) {
@@ -421,7 +421,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         $helper = 'form' . ucfirst(strtolower($type));
         $inputTag = $this->getViewRenderer()->$helper($element);
 
-        switch($type) {
+        switch ($type) {
             case 'hidden':
             case 'button':
             case 'submit':
