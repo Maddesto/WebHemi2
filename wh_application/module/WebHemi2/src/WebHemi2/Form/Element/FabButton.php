@@ -17,30 +17,33 @@
  * to license@gixx-web.com so we can send you a copy immediately.
  *
  * @category  WebHemi2
- * @package   WebHemi2_Form_View_Helper
+ * @package   WebHemi2_Form_Element
  * @author    Gabor Ivan <gixx@gixx-web.com>
  * @copyright 2015 Gixx-web (http://www.gixx-web.com)
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-namespace WebHemi2\Form\View\Helper;
 
-use Zend\Form\Exception;
-use Zend\Form\View\Helper\FormCheckbox;
+namespace WebHemi2\Form\Element;
+
+use Zend\Form\Element\Button;
 
 /**
  * WebHemi2
  *
- * Form view helper for the Toggle element
+ * Form FAB Button element
  *
  * @category  WebHemi2
- * @package   WebHemi2_Form_View_Helper
+ * @package   WebHemi2_Form_Element
  * @author    Gabor Ivan <gixx@gixx-web.com>
  * @copyright 2015 Gixx-web (http://www.gixx-web.com)
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class FormToggle extends FormCheckbox
+class FabButton extends Button
 {
-
+    /** @var array $attributes */
+    protected $attributes = [
+        'type' => 'button',
+    ];
 }

@@ -91,6 +91,7 @@ return [
             'formPlainText' => 'WebHemi2\Form\View\Helper\FormPlainText',
             'formLocation' => 'WebHemi2\Form\View\Helper\FormLocation',
             'formToggle' => 'WebHemi2\Form\View\Helper\FormToggle',
+            'formFabButton' => 'WebHemi2\Form\View\Helper\FormFabButton',
         ],
         'factories' => [
             'isAllowed' => 'WebHemi2\View\Helper\Factory\IsAllowedFactory',

@@ -25,13 +25,14 @@
  */
 namespace WebHemi2\Form\View\Helper;
 
+use Zend\Form\View\Helper\FormButton;
 use Zend\Form\Exception;
-use Zend\Form\View\Helper\FormCheckbox;
+use Zend\Form\LabelAwareInterface;
 
 /**
  * WebHemi2
  *
- * Form view helper for the Toggle element
+ * Form view helper for the FAB Button element
  *
  * @category  WebHemi2
  * @package   WebHemi2_Form_View_Helper
@@ -40,7 +41,7 @@ use Zend\Form\View\Helper\FormCheckbox;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class FormToggle extends FormCheckbox
+class FormFabButton extends FormButton
 {
 
 }

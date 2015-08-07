@@ -27,6 +27,8 @@
 namespace WebHemi2\Form;
 
 use Traversable;
+use WebHemi2\Form\Element\FabButton;
+use WebHemi2\Form\View\Helper\FormFabButton;
 use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\Form\Fieldset;
@@ -35,6 +37,7 @@ use Zend\Form\FormInterface;
 use Zend\Filter\AbstractFilter;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\Form\View\Helper\Form as FormHelper;
+use Zend\Form\View\Helper\FormLabel;
 use Zend\Validator\AbstractValidator;
 use Zend\ServiceManager;
 use WebHemi2\Acl\Acl;
@@ -80,7 +83,9 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      * Does the fieldset have an element/fieldset by the given name?
      *
      * @param string  $elementOrFieldset   The name of the element
+     *
      * @param boolean $searchInFieldsets   Also search in fieldsets.
+     *
      * @return bool
      */
     public function has($elementOrFieldset, $searchInFieldsets = false)
@@ -141,7 +146,9 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      * Typically, will proxy to the composed input filter.
      *
      * @param Element $formElement
+     *
      * @return bool
+     *
      * @throws Exception\DomainException
      */
     public function isValid(Element $formElement = null)
@@ -224,7 +231,9 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      * only.
      *
      * @param  null|string $elementName
+     *
      * @return array|Traversable
+     *
      * @throws Exception\InvalidArgumentException
      */
     public function getMessages($elementName = null)
@@ -329,7 +338,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
 
             foreach ($this->fieldsets as $fieldset) {
                 if ($fieldset instanceof Fieldset) {
-                    $form .= $this->renderFieldset($fieldset);
+                    $form .= $this->renderFieldset($fieldset, $useMDL);
                 }
             }
 
@@ -348,22 +357,15 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
     }
 
     /**
-     * Creates element output for __toString() method
+     * Get element identifier. If not present the name will be used as identifier.
      *
      * @param Element $element
+     *
      * @return string
      */
-    protected function renderElement(Element $element)
+    protected function getElementIdentifier(Element &$element)
     {
-        $labelText      = $element->getLabel();
-        $identifier     = $element->getOption('id');
-        $required       = $element->getOption('required');
-        $type           = $element->getAttribute('type');
-        $config         = $this->getConfig();
-        $useMDL         = (bool)$config['view_manager']['theme_settings']['mdl_enabled'];
-        $containerClass = ['element'];
-        $elementClass   = [];
-        $labelClass     = [];
+        $identifier = $element->getOption('id');
 
         // if no ID present, we use the name to add one
         if (empty($identifier)) {
@@ -376,50 +378,230 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
             }
         }
 
-        // mark field as required
-        if ($required) {
-            $element->setAttribute('required', 'required');
-        }
+        return $identifier;
+    }
+
+    /**
+     * Get proper element type
+     *
+     * @param Element $element
+     *
+     * @return string
+     *
+     */
+    protected function getElementType(Element $element)
+    {
+        $type = $element->getAttribute('type');
 
         // button element fix
-        if ($element instanceof Element\Button) {
+        if ($element instanceof FabButton) {
+            $type = 'fabbutton';
+        } elseif ($element instanceof Element\Button) {
             $type = 'button';
         }
 
-        $containerClass[] = $type;
+        return $type;
+    }
+
+    /**
+     * Render error tag for the output
+     *
+     * @param Element $element
+     *
+     * @return string
+     */
+    protected function renderElementError(Element $element)
+    {
+        $errorTag = '';
+
+        if ($element->getMessages()) {
+            $errorTag .= '<div class="error">'
+                . $this->getViewRenderer()->formElementErrors($element)
+                . '</div>';
+        }
+
+        return $errorTag;
+    }
+
+    /**
+     * Render the form element
+     *
+     * @param Element $element
+     *
+     * @return string
+     */
+    protected function renderElement(Element $element)
+    {
+        $config = $this->getConfig();
+        $useMDL = (bool)$config['view_manager']['theme_settings']['mdl_enabled'];
+
+        return $useMDL
+            ? $this->renderMdlElement($element)
+            : $this->renderHtmlElement($element);
+    }
+
+    /**
+     * Creates element output with MDL for __toString() method
+     *
+     * @param Element $element
+     *
+     * @return string
+     */
+    protected function renderMdlElement(Element $element)
+    {
+        $labelText       = $element->getLabel();
+        $identifier      = $this->getElementIdentifier($element);
+        $type            = $this->getElementType($element);
+        $helper          = 'form' . ucfirst(strtolower($type));
+        /** @var FormFabButton $inputHelper */
+        $inputHelper     = $this->getViewRenderer()->plugin($helper);
+        /** @var FormLabel $formLabelHelper */
+        $formLabelHelper = $this->getViewRenderer()->plugin('formLabel');
+        $required        = $element->getOption('required');
+        $containerClass  = ['element', $type];
+        $elementClass    = '';
+        $labelClass      = '';
 
         if ($type != $identifier) {
             $containerClass[] = $identifier;
         }
 
-        // setup element type styles for MDL
-        if ($useMDL) {
-            switch ($type) {
-                case 'text':
-                    break;
-                case 'textarea':
-                    break;
-                case 'password':
-                    break;
-                case 'button':
-                    break;
-                case 'submit':
-                    break;
-                case 'checkbox':
-                    break;
-                case 'toggle':
-                    break;
-                case 'radio':
-                    break;
-                case 'file':
-                    break;
-            }
+        if ($required) {
+            $element->setAttribute('required', 'required');
+        }
+
+        // No need for placeholder with MDL
+        if ($element->hasAttribute('placeholder')) {
+            $element->removeAttribute('placeholder');
+        }
+
+        switch ($type) {
+            case 'text':
+            case 'email':
+            case 'url':
+            case 'password':
+            case 'location':
+            case 'tel':
+                $containerClass[] = 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
+                $elementClass = 'mdl-textfield__input';
+                $labelClass = 'mdl-textfield__label';
+                break;
+            case 'textarea':
+                $containerClass[] = 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label';
+                $elementClass = 'mdl-textfield__input';
+                $labelClass = 'mdl-textfield__label';
+                break;
+            case 'fabbutton':
+                $elementClass = 'mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored';
+                break;
+            case 'button':
+                $elementClass = 'mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored';
+                break;
+            case 'checkbox':
+                break;
+            case 'toggle':
+                $labelClass = 'mdl-switch mdl-js-switch mdl-js-ripple-effect';
+                $elementClass = 'mdl-switch__input';
+                break;
+            case 'radio':
+                break;
+            case 'file':
+                break;
+        }
+
+        if (!empty($elementClass)) {
+            $element->setAttribute('class', $elementClass);
         }
 
         $openTag  = sprintf('<div class="%s">', implode(' ', $containerClass));
         $closeTag = '</div>' . PHP_EOL;
         $labelTag = '';
-        $errorTag = '';
+        $labelClose = '';
+        $errorTag = $this->renderElementError($element);
+
+        // build label
+        if (!empty($labelText)) {
+            $labelAttributes = [
+                'for' =>  $element->getAttribute('id'),
+                'class' => $labelClass
+            ];
+
+            $labelTag  = $formLabelHelper->openTag($labelAttributes);
+
+            switch ($type) {
+                case 'toggle':
+                    $labelClose = '<span class="mdl-switch__label">' . $labelText . '</span>' . PHP_EOL;
+                    $labelClose .= $formLabelHelper->closeTag() . PHP_EOL;
+                    break;
+                default:
+                    $labelTag .= $labelText;
+                    $labelTag .= $formLabelHelper->closeTag() . PHP_EOL;
+            }
+        }
+
+        $inputTag = $this->getViewRenderer()->$helper($element);
+
+
+        switch ($type) {
+            case 'hidden':
+            case 'button':
+            case 'submit':
+                $tag = $inputTag . $errorTag;
+                break;
+            case 'fabbutton':
+                $tag = $inputHelper->openTag($element) .
+                    '<i class="material-icons">' .
+                    $labelText .
+                    '</i>' .
+                    $inputHelper->closeTag() .
+                    $errorTag;
+                break;
+            case 'toggle':
+                $tag = $openTag . $labelTag . $inputTag . $labelClose . $errorTag . $closeTag;
+                break;
+            case 'checkbox':
+            case 'radio':
+                $tag = $openTag . $inputTag . $labelTag . $errorTag . $closeTag;
+                break;
+            case 'file':
+                $tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
+                break;
+            default:
+                $tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
+                break;
+        }
+
+        return $tag . PHP_EOL;
+    }
+
+    /**
+     * Creates element output for __toString() method
+     *
+     * @param Element $element
+     * @return string
+     */
+    protected function renderHtmlElement(Element $element)
+    {
+        /** @var \Zend\Form\View\Helper\FormLabel $formLabelHelper */
+        $formLabelHelper = $this->getViewRenderer()->plugin('formLabel');
+        $labelText       = $element->getLabel();
+        $identifier      = $this->getElementIdentifier($element);
+        $type            = $this->getElementType($element);
+        $required        = $element->getOption('required');
+        $containerClass  = ['element', $type];
+
+        if ($type != $identifier) {
+            $containerClass[] = $identifier;
+        }
+
+        if ($required) {
+            $element->setAttribute('required', 'required');
+        }
+
+        $openTag  = sprintf('<div class="%s">', implode(' ', $containerClass));
+        $closeTag = '</div>' . PHP_EOL;
+        $labelTag = '';
+        $errorTag = $this->renderElementError($element);
 
         // build label
         if (!empty($labelText)) {
@@ -427,27 +609,14 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 'for' =>  $element->getAttribute('id')
             ];
 
-            if ($useMDL) {
-                ;
-            }
-
-            /** @var \Zend\Form\View\Helper\FormLabel $formLabel */
-            $formLabel = $this->getViewRenderer()->plugin('formLabel');
-            $labelTag  = $formLabel->openTag($labelAttributes);
+            $labelTag  = $formLabelHelper->openTag($labelAttributes);
             $labelTag .= $labelText;
 
-            if (!$useMDL && $required) {
+            if ($required) {
                 $labelTag .= '<span class="required">*</span>';
             }
 
-            $labelTag .= $formLabel->closeTag() . PHP_EOL;
-        }
-
-        // build errors
-        if ($element->getMessages()) {
-            $errorTag = '<div class="error">'
-                . $this->getViewRenderer()->formElementErrors($element)
-                . '</div>';
+            $labelTag .= $formLabelHelper->closeTag() . PHP_EOL;
         }
 
         $helper = 'form' . ucfirst(strtolower($type));
@@ -459,8 +628,8 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
             case 'submit':
                 $tag = $inputTag . $errorTag;
                 break;
-            case 'checkbox':
             case 'toggle':
+            case 'checkbox':
             case 'radio':
                 $tag = $openTag . $inputTag . $labelTag . $errorTag . $closeTag;
                 break;
@@ -479,6 +648,8 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      * Creates fieldset output for __toString() method
      *
      * @param Fieldset $fieldset
+     * @param bool     $useMDL
+     *
      * @return string
      */
     protected function renderFieldset(Fieldset $fieldset)

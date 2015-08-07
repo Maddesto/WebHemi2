@@ -25,6 +25,7 @@
  */
 namespace WebHemi2\Form\View\Helper;
 
+use WebHemi2\Form\Element\FabButton;
 use WebHemi2\Form\Element\PlainText;
 use WebHemi2\Form\Element\Location;
 use WebHemi2\Form\Element\Toggle;
@@ -74,6 +75,11 @@ class FormElement extends OriginalFormElement
 
         if ($element instanceof Toggle) {
             $helper = $renderer->plugin('form_toggle');
+            return $helper($element);
+        }
+
+        if ($element instanceof FabButton) {
+            $helper = $renderer->plugin('form_fab_button');
             return $helper($element);
         }
 

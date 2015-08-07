@@ -26,6 +26,7 @@
 
 namespace WebHemi2\Form;
 
+use WebHemi2\Form\Element\FabButton;
 use WebHemi2\Form\Element\PlainText;
 use WebHemi2\Form\Element\Location;
 use WebHemi2\Form\Element\Toggle;
@@ -68,8 +69,7 @@ class UserForm extends AbstractForm
         parent::__construct($name);
 
         $submit = new Element\Button('submit');
-        $submit
-            ->setLabel('Save')
+        $submit->setLabel('Save')
             ->setAttributes(
                 [
                     'accesskey' => 's',
@@ -97,26 +97,16 @@ class UserForm extends AbstractForm
         $securityInfoFieldset->setLabel('Secutity information');
 
         $password = new Element\Password('password');
-        $password
+        $password->setLabel('Change password')
             ->setOptions(
                 [
-                    'allow_empty' => false,
-                    'required' => true,
+                    'allow_empty' => true,
+                    'required' => false,
                     'filters' => [
                         new Filter\StringTrim(),
                     ],
-                    'validators' => [
-                        new Validator\StringLength(
-                            [
-                                'min' => '8',
-                                'max' => '255',
-                                'encoding' => 'UTF-8'
-                            ]
-                        ),
-                    ],
                 ]
             )
-            ->setLabel('Change password')
             ->setAttributes(
                 [
                     'id' => 'password',
@@ -128,8 +118,16 @@ class UserForm extends AbstractForm
             );
 
         $confirmation = new Element\Password('confirmation');
-        $confirmation
-            ->setLabel('Confirm password')
+        $confirmation->setLabel('Confirm password')
+            ->setOptions(
+                [
+                    'allow_empty' => true,
+                    'required' => false,
+                    'filters' => [
+                        new Filter\StringTrim(),
+                    ],
+                ]
+            )
             ->setAttributes(
                 [
                     'id' => 'password',
@@ -695,30 +693,29 @@ class UserForm extends AbstractForm
         $passwordElement = $securityFieldset->get('password');
         /* @var Element\Password $confirmElement */
         $confirmElement = $securityFieldset->get('confirmation');
-        // If there were no password change attempt, than we remove the required flag.
+        // If there were password change attempt, than we add the required flag.
         if ($this->defaultFormId == $this->getName()
-            && '' == $passwordElement->getValue()
+            && '' != $passwordElement->getValue()
         ) {
             $passwordElement->setOptions(
                 [
-                    'required' => false,
-                    'allow_empty' => true,
-                ]
-            );
-            $confirmElement->setOptions(
-                [
-                    'required' => false,
-                    'allow_empty' => true,
-                ]
-            );
-        } else {
-            $confirmElement->setOptions(
-                [
-                    'allow_empty' => false,
                     'required' => true,
-                    'filters' => [
-                        new Filter\StringTrim(),
+                    'allow_empty' => false,
+                    'validators' => [
+                        new Validator\StringLength(
+                            [
+                                'min' => '8',
+                                'max' => '255',
+                                'encoding' => 'UTF-8'
+                            ]
+                        ),
                     ],
+                ]
+            );
+            $confirmElement->setOptions(
+                [
+                    'required' => true,
+                    'allow_empty' => false,
                     'validators' => [
                         new Validator\Identical(
                             [
