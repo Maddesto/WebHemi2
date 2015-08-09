@@ -27,7 +27,6 @@ namespace WebHemi2\Form\View\Helper;
 
 use Zend\Form\View\Helper\FormButton;
 use Zend\Form\Exception;
-use Zend\Form\LabelAwareInterface;
 
 /**
  * WebHemi2
@@ -43,5 +42,28 @@ use Zend\Form\LabelAwareInterface;
  */
 class FormFabButton extends FormButton
 {
+    /**
+     * Generate an opening button tag
+     *
+     * @param  null|array|ElementInterface $attributesOrElement
+     * @throws Exception\InvalidArgumentException
+     * @throws Exception\DomainException
+     * @return string
+     */
+    public function openTag($attributesOrElement = null)
+    {
+        $openTag = parent::openTag($attributesOrElement);
 
+        return $openTag . '<i class="material-icons">';
+    }
+
+    /**
+     * Return a closing button tag
+     *
+     * @return string
+     */
+    public function closeTag()
+    {
+        return '</i></button>';
+    }
 }

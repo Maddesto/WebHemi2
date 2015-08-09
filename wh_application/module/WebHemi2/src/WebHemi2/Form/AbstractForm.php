@@ -453,10 +453,10 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         $identifier      = $this->getElementIdentifier($element);
         $type            = $this->getElementType($element);
         $helper          = 'form' . ucfirst(strtolower($type));
-        /** @var FormFabButton $inputHelper */
-        $inputHelper     = $this->getViewRenderer()->plugin($helper);
+        /** @var PhpRenderer $viewRenderer */
+        $viewRenderer    = $this->getViewRenderer();
         /** @var FormLabel $formLabelHelper */
-        $formLabelHelper = $this->getViewRenderer()->plugin('formLabel');
+        $formLabelHelper = $viewRenderer->plugin('formLabel');
         $required        = $element->getOption('required');
         $containerClass  = ['element', $type];
         $elementClass    = '';
@@ -515,7 +515,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
 
         $openTag  = sprintf('<div class="%s">', implode(' ', $containerClass));
         $closeTag = '</div>' . PHP_EOL;
-        $labelTag = '';
+        $labelOpen = '';
         $labelClose = '';
         $errorTag = $this->renderElementError($element);
 
@@ -526,21 +526,11 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 'class' => $labelClass
             ];
 
-            $labelTag  = $formLabelHelper->openTag($labelAttributes);
-
-            switch ($type) {
-                case 'toggle':
-                    $labelClose = '<span class="mdl-switch__label">' . $labelText . '</span>' . PHP_EOL;
-                    $labelClose .= $formLabelHelper->closeTag() . PHP_EOL;
-                    break;
-                default:
-                    $labelTag .= $labelText;
-                    $labelTag .= $formLabelHelper->closeTag() . PHP_EOL;
-            }
+            $labelOpen  = $formLabelHelper->openTag($labelAttributes);
+            $labelClose = $formLabelHelper->closeTag() . PHP_EOL;
         }
 
-        $inputTag = $this->getViewRenderer()->$helper($element);
-
+        $inputTag = $viewRenderer->$helper($element);
 
         switch ($type) {
             case 'hidden':
@@ -549,25 +539,21 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 $tag = $inputTag . $errorTag;
                 break;
             case 'fabbutton':
-                $tag = $inputHelper->openTag($element) .
-                    '<i class="material-icons">' .
-                    $labelText .
-                    '</i>' .
-                    $inputHelper->closeTag() .
-                    $errorTag;
+                $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;
             case 'toggle':
-                $tag = $openTag . $labelTag . $inputTag . $labelClose . $errorTag . $closeTag;
+                $tag = $openTag . $labelOpen . $inputTag . '<span class="mdl-switch__label">' . $labelText . '</span>' .
+                    $labelClose . $errorTag . $closeTag;
                 break;
             case 'checkbox':
             case 'radio':
-                $tag = $openTag . $inputTag . $labelTag . $errorTag . $closeTag;
+                $tag = $openTag . $labelOpen . $inputTag . $labelText . $labelClose . $errorTag . $closeTag;
                 break;
             case 'file':
-                $tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
+                $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;
             default:
-                $tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
+                $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;
         }
 
@@ -582,11 +568,14 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      */
     protected function renderHtmlElement(Element $element)
     {
-        /** @var \Zend\Form\View\Helper\FormLabel $formLabelHelper */
-        $formLabelHelper = $this->getViewRenderer()->plugin('formLabel');
         $labelText       = $element->getLabel();
         $identifier      = $this->getElementIdentifier($element);
         $type            = $this->getElementType($element);
+        $helper          = 'form' . ucfirst(strtolower($type));
+        /** @var PhpRenderer $viewRenderer */
+        $viewRenderer    = $this->getViewRenderer();
+        /** @var FormLabel $formLabelHelper */
+        $formLabelHelper = $viewRenderer->plugin('formLabel');
         $required        = $element->getOption('required');
         $containerClass  = ['element', $type];
 
@@ -600,7 +589,8 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
 
         $openTag  = sprintf('<div class="%s">', implode(' ', $containerClass));
         $closeTag = '</div>' . PHP_EOL;
-        $labelTag = '';
+        $labelOpen = '';
+        $labelClose = '';
         $errorTag = $this->renderElementError($element);
 
         // build label
@@ -609,18 +599,15 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 'for' =>  $element->getAttribute('id')
             ];
 
-            $labelTag  = $formLabelHelper->openTag($labelAttributes);
-            $labelTag .= $labelText;
+            $labelOpen  = $formLabelHelper->openTag($labelAttributes);
+            $labelClose = $formLabelHelper->closeTag() . PHP_EOL;
 
             if ($required) {
-                $labelTag .= '<span class="required">*</span>';
+                $labelClose = '<span class="required">*</span>' . $labelClose;
             }
-
-            $labelTag .= $formLabelHelper->closeTag() . PHP_EOL;
         }
 
-        $helper = 'form' . ucfirst(strtolower($type));
-        $inputTag = $this->getViewRenderer()->$helper($element);
+        $inputTag = $viewRenderer->$helper($element);
 
         switch ($type) {
             case 'hidden':
@@ -631,13 +618,13 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
             case 'toggle':
             case 'checkbox':
             case 'radio':
-                $tag = $openTag . $inputTag . $labelTag . $errorTag . $closeTag;
+                $tag = $openTag . $labelOpen . $inputTag . $labelText . $labelClose . $errorTag . $closeTag;
                 break;
             case 'file':
-                $tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
+                $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;
             default:
-                $tag = $openTag . $labelTag . $inputTag . $errorTag . $closeTag;
+                $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;
         }
 

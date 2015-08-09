@@ -1,5 +1,11 @@
 SetEnvIf Host .*\.dev APPLICATION_ENV=dev
 
+<If "req('Host') =~ /.*\.dev$/">
+    php_value xdebug.var_display_max_children 512
+    php_value xdebug.var_display_max_data 1024
+    php_value xdebug.var_display_max_depth 10
+</If>
+
 # Disable cookies for static subdomain
 <IfModule mod_headers.c>
     SetEnvIf Host static\..* IS_STATIC_DOMAIN

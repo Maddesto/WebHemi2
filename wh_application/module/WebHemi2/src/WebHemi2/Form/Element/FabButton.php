@@ -46,4 +46,21 @@ class FabButton extends Button
     protected $attributes = [
         'type' => 'button',
     ];
+
+    /**
+     * @param  null|int|string  $name    Optional name for the element
+     * @param  array            $options Optional options for the element
+     * @throws Exception\InvalidArgumentException
+     */
+    public function __construct($name = null, $options = [])
+    {
+        parent::__construct($name, $options);
+
+        if (null !== $name) {
+            $this->setLabel($name);
+            $this->setValue($name);
+        }
+
+        $this->setAttribute('type', 'button');
+    }
 }
