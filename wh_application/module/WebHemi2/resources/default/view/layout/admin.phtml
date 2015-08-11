@@ -1,5 +1,7 @@
 <?php
 
+
+
 if (empty($this->title)) {
     $this->title = 'WebHemi2 Admin';
 }
@@ -27,6 +29,7 @@ $this->headScript()
     ->appendFile('/resources/theme/default/js/admin.js');
 
 echo $this->doctype();
+
 ?>
 <html lang="en">
     <head>
@@ -41,27 +44,17 @@ echo $this->doctype();
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
     <body class="<?php echo $this->sectionClass; ?>">
-        <aside>
+        <!-- Always shows a header, even in smaller screens. -->
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <?php echo $this->headerBlock; ?>
             <?php echo $this->menuBlock; ?>
-        </aside>
-        <section>
-            <header>
-                <h1><?php echo $this->sectionTitle; ?></h1>
-            </header>
-            <article>
-                <header>
-                    <?php echo $this->headerBlock; ?>
-                </header>
-                <div>
+            <main class="mdl-layout__content">
+                <div class="page-content">
                     <?php echo $this->content; ?>
                 </div>
-                <footer>
-                    <?php echo $this->footerBlock; ?>
-                </footer>
-            </article>
-        </section>
-        <?php
-            echo "\t\t" . $this->headScript() . PHP_EOL;
-        ?>
+                <?php echo $this->footerBlock; ?>
+            </main>
+        </div>
+        <?php echo $this->headScript() . PHP_EOL; ?>
     </body>
 </html>

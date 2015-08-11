@@ -52,8 +52,7 @@ class AdminController extends UserController
      */
     public function indexAction()
     {
-        $this->layout()->setVariable('sectionTitle', 'Dashboard');
-        $this->layout()->setVariable('sectionClass', 'dashboard');
+        $this->setSection('Dashboard');
 
         return [];
     }
@@ -104,10 +103,7 @@ class AdminController extends UserController
      */
     public function aboutAction()
     {
-        if (APPLICATION_MODULE == ADMIN_MODULE) {
-            $this->layout()->setVariable('sectionTitle', 'About');
-            $this->layout()->setVariable('sectionClass', 'about');
-        }
+        $this->setSection('About');
 
         return [];
     }
@@ -119,10 +115,7 @@ class AdminController extends UserController
      */
     public function applicationAction()
     {
-        if (APPLICATION_MODULE == ADMIN_MODULE) {
-            $this->layout()->setVariable('sectionTitle', 'Application');
-            $this->layout()->setVariable('sectionClass', 'application');
-        }
+        $this->setSection('Application');
 
         return [];
     }
@@ -134,10 +127,7 @@ class AdminController extends UserController
      */
     public function controlPanelAction()
     {
-        if (APPLICATION_MODULE == ADMIN_MODULE) {
-            $this->layout()->setVariable('sectionTitle', 'Control Panel');
-            $this->layout()->setVariable('sectionClass', 'control-panel');
-        }
+        $this->setSection('Control Panel');
 
         return [];
     }

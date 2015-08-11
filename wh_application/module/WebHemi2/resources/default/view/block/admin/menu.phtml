@@ -1,23 +1,42 @@
+<div class="mdl-layout__drawer">
+    <span class="mdl-layout-title"><?php echo $this->sectionTitle; ?></span>
 <?php if ($this->getIdentity()): ?>
-<nav class="menu">
-    <ul>
+    <nav class="mdl-navigation">
 <?php if ($this->isAllowed('admin:index')): ?>
-        <li class="dashboard"><a href="<?php echo $this->url('index'); ?>"><span>Dashboard</span></a></li>
+        <a class="dashboard mdl-navigation__link" href="<?php echo $this->url('index'); ?>">
+            <button class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">dashboard</i>
+            </button>
+            <span>Dashboard</span>
+        </a>
 <?php endif; ?>
 <?php if ($this->isAllowed('admin:application')): ?>
-        <li class="application"><a href="<?php echo $this->url('index/application'); ?>"><span>Application</span></a></li>
+        <a class="application mdl-navigation__link" href="<?php echo $this->url('index/application'); ?>">
+            <button class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">folder_open</i>
+            </button>
+            <span>Application</a></span>
 <?php endif; ?>
 <?php if ($this->isAllowed('admin:control-panel')): ?>
-        <li class="control-panel"><a href="<?php echo $this->url('index/control-panel'); ?>"><span>Control Panel</span></a></li>
+        <a class="control-panel mdl-navigation__link" href="<?php echo $this->url('index/control-panel'); ?>">
+            <button class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">tune</i>
+            </button>
+            <span>Control Panel</span>
+        </a>
 <?php endif; ?>
 <?php if ($this->isAllowed('admin:about')): ?>
-        <li class="about"><a href="<?php echo $this->url('index/about'); ?>"><span>About</span></a></li>
+        <a class="about mdl-navigation__link" href="<?php echo $this->url('index/about'); ?>">
+            <button class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">info_ouline</i>
+            </button>
+            <span>About</a></span>
 <?php endif; ?>
-    </ul>
-</nav>
-<nav class="logout">
-    <ul>
-        <li class="logout"><a href="<?php echo $this->url('index/logout'); ?>"><span>Logout</span></a></li>
-    </ul>
-</nav>
+        <a class="logout mdl-navigation__link" href="<?php echo $this->url('index/logout'); ?>">
+            <button class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">exit_to_app</i>
+            </button>
+            <span>Logout</a></span>
+    </nav>
 <?php endif; ?>
+</div>

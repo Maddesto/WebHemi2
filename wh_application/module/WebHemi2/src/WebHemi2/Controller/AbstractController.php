@@ -77,6 +77,33 @@ abstract class AbstractController extends AbstractActionController
     }
 
     /**
+     * Set section variables
+     *
+     * @param string      $title
+     * @param string|null $class
+     */
+    protected function setSection($title, $class = null)
+    {
+        // if no class give, generate one from the title
+        if (empty($class)) {
+            $class = strtolower(preg_replace(['/[[:^print:]]/', '/\s/'], ['', '-'], $title));
+        }
+
+        $this->layout()->setVariable('sectionTitle', $title);
+        $this->layout()->setVariable('sectionClass', $class);
+
+
+        // also use the title in the children templates
+        $partials = $this->layout()->getChildren();
+
+        foreach ($partials as $viewModel) {
+            if ($viewModel instanceof ViewModel) {
+                $viewModel->setVariable('sectionTitle', $title);
+            }
+        }
+    }
+
+    /**
      * Retrieve UserAuth controller plugin
      *
      * @return UserAuth
