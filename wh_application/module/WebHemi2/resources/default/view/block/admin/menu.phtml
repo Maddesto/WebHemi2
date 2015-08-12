@@ -4,38 +4,28 @@
     <nav class="mdl-navigation">
 <?php if ($this->isAllowed('admin:index')): ?>
         <a class="dashboard mdl-navigation__link" href="<?php echo $this->url('index'); ?>">
-            <button class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">dashboard</i>
-            </button>
+            <i class="material-icons">dashboard</i>
             <span>Dashboard</span>
         </a>
 <?php endif; ?>
 <?php if ($this->isAllowed('admin:application')): ?>
         <a class="application mdl-navigation__link" href="<?php echo $this->url('index/application'); ?>">
-            <button class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">folder_open</i>
-            </button>
+            <i class="material-icons">folder_open</i>
             <span>Application</a></span>
 <?php endif; ?>
 <?php if ($this->isAllowed('admin:control-panel')): ?>
         <a class="control-panel mdl-navigation__link" href="<?php echo $this->url('index/control-panel'); ?>">
-            <button class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">tune</i>
-            </button>
+            <i class="material-icons">tune</i>
             <span>Control Panel</span>
         </a>
 <?php endif; ?>
 <?php if ($this->isAllowed('admin:about')): ?>
         <a class="about mdl-navigation__link" href="<?php echo $this->url('index/about'); ?>">
-            <button class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">info_ouline</i>
-            </button>
+            <i class="material-icons">info_outline</i>
             <span>About</a></span>
 <?php endif; ?>
         <a class="logout mdl-navigation__link" href="<?php echo $this->url('index/logout'); ?>">
-            <button class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">exit_to_app</i>
-            </button>
+            <i class="material-icons">exit_to_app</i>
             <span>Logout</a></span>
     </nav>
 <?php endif; ?>

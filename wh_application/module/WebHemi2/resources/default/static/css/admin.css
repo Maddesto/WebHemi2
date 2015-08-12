@@ -19,3 +19,14 @@ body {
     outline-style:none;/*IE*/
 }
 
+a.mdl-navigation__link > i.material-icons {
+    vertical-align: middle;
+}
+
+a.mdl-navigation__link > i.material-icons + span {
+    display: inline-flex;
+    /*color: inherit;*/
+    line-height: 24px;
+    height: 24px;
+    vertical-align: middle;
+}
