@@ -49,7 +49,7 @@ var Form = {
             copy.val('');
             copy.removeAttr('autocomplete');
             copy.insertAfter($(this));
-            $(this).hide().removeAttr('required id class');
+            $(this).hide().removeAttr('required id class tabindex accesskey');
         });
 
         this.initialized = true;

@@ -27,13 +27,24 @@ body {
 
 #loginForm {
     position: absolute;
-    z-index: 2;
-    top: 5px;
-    left: 5px;
+    top: calc(50% - 105px);
+    left: calc(50% - 160px);
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.85);
+    z-index: 9000;
+    border-radius: 10px;
+}
+
+#loginForm h1 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 #loginForm form {
-
+    width: 300px;
 }
 
 #loginForm form div.element {
@@ -54,7 +65,11 @@ body {
 
 #loginForm form input[type=text],
 #loginForm form input[type=password] {
+    text-align: center;
+}
 
+#loginForm form button {
+    width: 300px;
 }
 
 #switcher {
