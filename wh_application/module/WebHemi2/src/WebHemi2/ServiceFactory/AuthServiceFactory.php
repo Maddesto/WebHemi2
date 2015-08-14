@@ -55,7 +55,7 @@ class AuthServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         /** @var StorageInterface $storage */
-        $storage = $serviceLocator->get('authStorageDb');
+        $storage = $serviceLocator->get('authStorageSession');
         /** @var AdapterInterface $adapter */
         $adapter = $serviceLocator->get('authAdapter');
 

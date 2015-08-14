@@ -29,6 +29,7 @@ return [
         'invokables' => [
             'authAdapterDb' => 'WebHemi2\Auth\Adapter\Db',
             'authStorageDb' => 'WebHemi2\Auth\Storage\Db',
+            'authStorageSession' => 'WebHemi2\Auth\Storage\Session',
             'authAdapter' => 'WebHemi2\Auth\Adapter\Adapter',
             'formService' => 'WebHemi2\Form\FormService',
         ],
