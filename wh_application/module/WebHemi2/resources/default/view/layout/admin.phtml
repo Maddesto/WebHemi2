@@ -43,16 +43,24 @@ echo $this->doctype();
         <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
         <link rel="icon" type="image/x-icon" href="favicon.ico" />
     </head>
-    <body class="<?php echo $this->sectionClass; ?>">
+    <body class="<?php echo $this->sectionClass; ?><?php if (isset($this->error)) { echo ' exception'; } ?>">
         <!-- Always shows a header, even in smaller screens. -->
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-            <?php echo $this->headerBlock; ?>
-            <?php echo $this->menuBlock; ?>
+            <?php
+            if ($this->getIdentity()) {
+                echo $this->headerBlock;
+                echo $this->menuBlock;
+            }
+            ?>
             <main class="mdl-layout__content">
                 <div class="page-content">
                     <?php echo $this->content; ?>
                 </div>
-                <?php echo $this->footerBlock; ?>
+                <?php
+                if ($this->getIdentity()) {
+                    echo $this->footerBlock;
+                }
+                ?>
             </main>
         </div>
         <?php echo $this->headScript() . PHP_EOL; ?>

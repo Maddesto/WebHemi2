@@ -117,7 +117,7 @@ class Db implements StorageInterface, ServiceManager\ServiceLocatorAwareInterfac
     /**
      * Retrieve storage
      *
-     * @return StorageInterface
+     * @return Session
      */
     public function getStorage()
     {
