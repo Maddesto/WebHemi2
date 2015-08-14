@@ -272,11 +272,16 @@ class UserController extends AbstractController
                 $authAdapter->setIdentity($identification);
                 $authAdapter->setCredential($password);
 
+
+//                var_dump($userAuth->getAuthService()->getStorage());exit;
                 $authResult = $userAuth->getAuthService()->authenticate($authAdapter);
 
-                switch($authResult->getCode()) {
+
+                switch ($authResult->getCode()) {
                     // if user is authenticated
                     case Result::SUCCESS:
+                        // for security reasons we regenerate the Session ID
+                        $userAuth->getAuthService()->getStorage()->regenerateStorageId();
                         if ($form->has('remember', true)) {
                             /** @var \Zend\Form\Element\Checkbox $rememberMe */
                             $rememberMe = $form->get('remember');

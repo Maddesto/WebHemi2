@@ -26,9 +26,11 @@
 
 namespace WebHemi2\Auth\Storage;
 
-use Zend\Authentication\Storage\Session;
-use Zend\Authentication\Storage\StorageInterface;
+use Zend\Session\Container as SessionContainer;
+use Zend\Session\ManagerInterface as SessionManage;
 use Zend\ServiceManager;
+use Zend\Authentication\Storage\StorageInterface;
+use Zend\Db\Adapter\Adapter;
 use WebHemi2\Model\Table\User as UserTable;
 
 /**
@@ -43,25 +45,84 @@ use WebHemi2\Model\Table\User as UserTable;
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-class Db implements StorageInterface, ServiceManager\ServiceLocatorAwareInterface
+class Session implements StorageInterface, ServiceManager\ServiceLocatorAwareInterface
 {
-    /** @var StorageInterface $storage */
-    protected $storage;
+    /** Default session namespace */
+    const NAMESPACE_DEFAULT = 'Zend_Auth';
+    /** Default session object member name */
+    const MEMBER_DEFAULT = 'storage';
+    /** Default session id salt */
+    const SESSION_SALT_DEFAULT = 'WebHemi 2';
+
     /** @var UserTable $userTable */
     protected $userTable;
     /** @var mixed $resolvedIdentity */
     protected $resolvedIdentity;
-    /** @var  ServiceManager\ServiceLocatorInterface $serviceLocator */
+    /** @var ServiceManager\ServiceLocatorAwareInterface $serviceLocator */
     protected $serviceLocator;
+    /** @var SessionContainer $session */
+    protected $session;
+    /**@var mixed $namespace */
+    protected $namespace = self::NAMESPACE_DEFAULT;
+    /**@var mixed $member */
+    protected $member = self::MEMBER_DEFAULT;
+
+    /**
+     * Sets session storage options and initializes session namespace object
+     *
+     * @param  mixed $namespace
+     * @param  mixed $member
+     * @param  SessionManager $manager
+     */
+    public function __construct($namespace = null, $member = null, SessionManager $manager = null)
+    {
+        if ($namespace !== null) {
+            $this->namespace = $namespace;
+        }
+        if ($member !== null) {
+            $this->member = $member;
+        }
+
+        $this->secureConfigSession();
+
+        $this->session = new SessionContainer($this->namespace, $manager);
+    }
+
+    /**
+     * Overwrite PHP settings to be more secure
+     */
+    protected function secureConfigSession()
+    {
+        ini_set('session.entropy_file', '/dev/urandom');
+        ini_set('session.entropy_length', '16');
+        ini_set('session.hash_function', 'sha256');
+        ini_set('session.use_only_cookies', '1');
+        ini_set('session.use_cookies', '1');
+        ini_set('session.use_trans_sid', '0');
+        ini_set('session.cookie_httponly', '1');
+
+        // hide session name
+        session_name(SESSION_COOKIE_PREFIX . '-' . bin2hex(self::SESSION_SALT_DEFAULT));
+        // set session lifetime to 1 hour
+        session_set_cookie_params(3600);
+    }
+
+    /**
+     * Regenerate Storage Session Id
+     */
+    public function regenerateStorageId()
+    {
+        $this->session->getManager()->regenerateId();
+    }
 
     /**
      * Check whether the storage is empty
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty()
     {
-        return $this->getStorage()->isEmpty();
+        return !isset($this->session->{$this->member});
     }
 
     /**
@@ -75,7 +136,7 @@ class Db implements StorageInterface, ServiceManager\ServiceLocatorAwareInterfac
             return $this->resolvedIdentity;
         }
 
-        $identity = $this->getStorage()->read();
+        $identity = $this->session->{$this->member};
 
         if (is_int($identity) || is_scalar($identity)) {
             $identity = $this->getTable()->getUserById($identity);
@@ -94,13 +155,12 @@ class Db implements StorageInterface, ServiceManager\ServiceLocatorAwareInterfac
      * Write contents to storage
      *
      * @param  mixed $contents
-     *
      * @return void
      */
     public function write($contents)
     {
         $this->resolvedIdentity = null;
-        $this->getStorage()->write($contents);
+        $this->session->{$this->member} = $contents;
     }
 
     /**
@@ -111,34 +171,7 @@ class Db implements StorageInterface, ServiceManager\ServiceLocatorAwareInterfac
     public function clear()
     {
         $this->resolvedIdentity = null;
-        $this->getStorage()->clear();
-    }
-
-    /**
-     * Retrieve storage
-     *
-     * @return Session
-     */
-    public function getStorage()
-    {
-        if (null === $this->storage) {
-            $this->setStorage(new Session());
-        }
-        return $this->storage;
-    }
-
-    /**
-     * Set storage
-     *
-     * @param StorageInterface $storage
-     *
-     * @return Db
-     */
-    public function setStorage(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-
-        return $this;
+        unset($this->session->{$this->member});
     }
 
     /**
@@ -148,7 +181,7 @@ class Db implements StorageInterface, ServiceManager\ServiceLocatorAwareInterfac
      */
     public function getTable()
     {
-        /** @var \Zend\Db\Adapter\Adapter $adapter */
+        /** @var Adapter $adapter */
         $adapter = $this->getServiceLocator()->get('database');
 
         if (!isset($this->userTable)) {

@@ -31,6 +31,7 @@ define('ADMIN_MODULE', 'Admin');
 define('WEBSITE_MODULE', 'Website');
 
 define('AUTOLOGIN_COOKIE_PREFIX', 'atln');
+define('SESSION_COOKIE_PREFIX', 'atsn');
 
 defined('APPLICATION_ENV') || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ?: 'live'));
 define('APPLICATION_ROOT', dirname(__DIR__));

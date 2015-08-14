@@ -96,6 +96,7 @@ class UserAuth extends AbstractPlugin
 
                     // if user is authenticated
                     if (Result::SUCCESS == $authResult->getCode()) {
+                        $this->getAuthService()->getStorage()->regenerateStorageId();
                         $identity = true;
                     }
                 }
