@@ -27,7 +27,7 @@
 namespace WebHemi2\Auth\Storage;
 
 use Zend\Session\Container as SessionContainer;
-use Zend\Session\ManagerInterface as SessionManage;
+use Zend\Session\ManagerInterface as SessionManager;
 use Zend\ServiceManager;
 use Zend\Authentication\Storage\StorageInterface;
 use Zend\Db\Adapter\Adapter;
