@@ -21,12 +21,3 @@
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
-
-$(document).ready(function() {
-    $('#avatarfileName').on('click', function() {
-        $('#avatarfileName + div.mdl-button').trigger('click');
-    });
-    $('#avatarfile').on('change', function() {
-        $('#avatarfileFileName').value = this.files[0].name;
-    });
-});
