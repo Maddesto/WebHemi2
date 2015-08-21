@@ -27,6 +27,7 @@
 namespace WebHemi2\Form;
 
 use WebHemi2\Form\Element\FabButton;
+use WebHemi2\Form\Element\SingleFileUpload;
 use WebHemi2\Form\Element\PlainText;
 use WebHemi2\Form\Element\Location;
 use WebHemi2\Form\Element\Toggle;
@@ -309,7 +310,7 @@ class UserForm extends AbstractForm
                 ]
             );
 
-        $avatarFile = new Element\File('avatarfile');
+        $avatarFile = new SingleFileUpload('avatarfile');
         $avatarFile
             ->setLabel('Upload your avatar')
             ->setAttributes(

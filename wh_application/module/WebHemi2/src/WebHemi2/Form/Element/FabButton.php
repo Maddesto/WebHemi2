@@ -27,6 +27,7 @@
 namespace WebHemi2\Form\Element;
 
 use Zend\Form\Element\Button;
+use Zend\Form\Exception;
 
 /**
  * WebHemi2

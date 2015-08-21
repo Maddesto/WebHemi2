@@ -28,7 +28,7 @@ namespace WebHemi2\Form;
 
 use Traversable;
 use WebHemi2\Form\Element\FabButton;
-use WebHemi2\Form\View\Helper\FormFabButton;
+use WebHemi2\Form\Element\SingleFileUpload;
 use Zend\Form\Form;
 use Zend\Form\Element;
 use Zend\Form\Fieldset;
@@ -396,6 +396,8 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         // button element fix
         if ($element instanceof FabButton) {
             $type = 'fabbutton';
+        } elseif ($element instanceof SingleFileUpload) {
+            $type = 'singlefileupload';
         } elseif ($element instanceof Element\Button) {
             $type = 'button';
         }
@@ -449,18 +451,23 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
      */
     protected function renderMdlElement(Element $element)
     {
-        $labelText       = $element->getLabel();
         $identifier      = $this->getElementIdentifier($element);
         $type            = $this->getElementType($element);
         $helper          = 'form' . ucfirst(strtolower($type));
         /** @var PhpRenderer $viewRenderer */
         $viewRenderer    = $this->getViewRenderer();
-        /** @var FormLabel $formLabelHelper */
-        $formLabelHelper = $viewRenderer->plugin('formLabel');
         $required        = $element->getOption('required');
         $containerClass  = ['element', $type];
         $elementClass    = '';
+
+        /** @var FormLabel $formLabelHelper */
+        $formLabelHelper = $viewRenderer->plugin('formLabel');
+        $labelText       = $element->getLabel();
         $labelClass      = '';
+        $labelFor        = $element->getAttribute('id');
+
+        // mark element as an MDL element
+        $element->setAttribute('data-mdl', 'true');
 
         if ($type != $identifier) {
             $containerClass[] = $identifier;
@@ -505,6 +512,17 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 break;
             case 'radio':
                 break;
+            case 'singlefileupload':
+                $containerClass[] = 'mdl-textfield mdl-js-textfield mdl-textfield--file mdl-textfield--floating-label';
+                $elementClass = 'mdl-textfield__input';
+                $labelClass = 'mdl-textfield__label';
+                $labelFor .= 'FileName';
+
+                // this element can't be multiple
+                if ($element->hasAttribute('multiple')) {
+                    $element->removeAttribute('multiple');
+                }
+                break;
             case 'file':
                 break;
         }
@@ -522,7 +540,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
         // build label
         if (!empty($labelText)) {
             $labelAttributes = [
-                'for' =>  $element->getAttribute('id'),
+                'for' =>  $labelFor,
                 'class' => $labelClass
             ];
 
@@ -549,9 +567,10 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
             case 'radio':
                 $tag = $openTag . $labelOpen . $inputTag . $labelText . $labelClose . $errorTag . $closeTag;
                 break;
-            case 'file':
+            case 'singlefileupload':
                 $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;
+            case 'file':
             default:
                 $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;
@@ -613,6 +632,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
             case 'hidden':
             case 'button':
             case 'submit':
+            case 'fabbutton':
                 $tag = $inputTag . $errorTag;
                 break;
             case 'toggle':
@@ -621,8 +641,7 @@ abstract class AbstractForm extends Form implements ServiceManager\ServiceLocato
                 $tag = $openTag . $labelOpen . $inputTag . $labelText . $labelClose . $errorTag . $closeTag;
                 break;
             case 'file':
-                $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
-                break;
+            case 'singlefileupload':
             default:
                 $tag = $openTag . $labelOpen . $labelText . $labelClose . $inputTag . $errorTag . $closeTag;
                 break;

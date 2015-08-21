@@ -1,3 +1,5 @@
+<?php
+
 /**
  * WebHemi2
  *
@@ -14,19 +16,35 @@
  * obtain it through the world-wide-web, please send an email
  * to license@gixx-web.com so we can send you a copy immediately.
  *
- * @category  Script
- * @package   Script
+ * @category  WebHemi2
+ * @package   WebHemi2_Form_Element
  * @author    Gabor Ivan <gixx@gixx-web.com>
  * @copyright 2015 Gixx-web (http://www.gixx-web.com)
  * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
  * @link      http://www.gixx-web.com
  */
 
-$(document).ready(function() {
-    $('#avatarfileName').on('click', function() {
-        $('#avatarfileName + div.mdl-button').trigger('click');
-    });
-    $('#avatarfile').on('change', function() {
-        $('#avatarfileFileName').value = this.files[0].name;
-    });
-});
+namespace WebHemi2\Form\Element;
+
+use Zend\Form\Element\File;
+use Zend\Form\Exception;
+
+/**
+ * WebHemi2
+ *
+ * Form Single File Upload (MDL) element
+ *
+ * @category  WebHemi2
+ * @package   WebHemi2_Form_Element
+ * @author    Gabor Ivan <gixx@gixx-web.com>
+ * @copyright 2015 Gixx-web (http://www.gixx-web.com)
+ * @license   http://webhemi.gixx-web.com/license/new-bsd   New BSD License
+ * @link      http://www.gixx-web.com
+ */
+class SingleFileUpload extends File
+{
+    /** @var array $attributes */
+    protected $attributes = [
+        'type' => 'file',
+    ];
+}
