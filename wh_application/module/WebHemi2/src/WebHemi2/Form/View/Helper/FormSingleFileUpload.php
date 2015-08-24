@@ -82,13 +82,16 @@ class FormSingleFileUpload extends FormFile
                 </div>
                 <script type="text/javascript">
                     document.getElementById("{$element->getAttribute('id')}").onchange = function () {
-                        $('#{$element->getAttribute('id')}FileName').trigger('focus');
+                        var element = $('#{$element->getAttribute('id')}FileName');
+                        if (!element.parent().hasClass('is-focused') && !element.parent().hasClass('is-dirty')) {
+                            element.trigger('focus');
+                        }
                         if (this.files.length > 0 && typeof this.files[0].name != 'undefined') {
-                            $('#{$element->getAttribute('id')}FileName').val(this.files[0].name);
-                            $('#{$element->getAttribute('id')}FileName').parent().addClass('is-dirty');
+                            element.val(this.files[0].name);
+                            element.parent().addClass('is-dirty');
                         } else {
-                            $('#{$element->getAttribute('id')}FileName').val('');
-                            $('#{$element->getAttribute('id')}FileName').parent().removeClass('is-dirty');
+                            element.val('');
+                            element.parent().removeClass('is-dirty');
                         }
                     };
                 </script>
